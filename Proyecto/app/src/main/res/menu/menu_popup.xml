@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/reply_all"
+        android:title="Reply All"
+        android:orderInCategory="10" />
+
+    <item android:id="@+id/forward"
+        android:title="Forward"
+        android:orderInCategory="20" />
+</menu>
