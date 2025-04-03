@@ -1,4 +1,4 @@
-package com.example.clase2;
+package com.example.hotroid;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,9 +18,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.clase2.bean.Persona;
-
-import org.w3c.dom.Text;
+import com.example.hotroid.R;
+import com.example.hotroid.bean.Persona;
 
 public class MainActivity extends AppCompatActivity {
 

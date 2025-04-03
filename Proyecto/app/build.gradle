@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.clase2'
+    namespace 'com.example.hotroid'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.clase2"
+        applicationId "com.example.hotroid"
         minSdk 27
         targetSdk 33
         versionCode 1

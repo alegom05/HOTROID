@@ -1,4 +1,4 @@
-package com.example.clase2;
+package com.example.hotroid;
 
 import org.junit.Test;
 

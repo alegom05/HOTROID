@@ -1,4 +1,4 @@
-package com.example.clase2;
+package com.example.hotroid;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.clase2.bean.Persona;
+import com.example.hotroid.R;
+import com.example.hotroid.bean.Persona;
 
 public class MainActivity2 extends AppCompatActivity {
 

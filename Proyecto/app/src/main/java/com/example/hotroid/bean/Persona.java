@@ -1,4 +1,4 @@
-package com.example.clase2.bean;
+package com.example.hotroid.bean;
 
 import java.io.Serializable;
 
