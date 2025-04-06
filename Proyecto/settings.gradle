@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Clase2"
+rootProject.name = "Hotroid"
 include ':app'
