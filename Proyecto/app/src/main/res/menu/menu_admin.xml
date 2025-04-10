@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_registros"
+        android:icon="@drawable/ic_registros"
+        android:title="Registros" />
+    <item
+        android:id="@+id/nav_taxistas"
+        android:icon="@drawable/ic_taxistas"
+        android:title="Taxistas" />
+    <item
+        android:id="@+id/nav_checkout"
+        android:icon="@drawable/ic_checkout"
+        android:title="Checkout" />
+    <item
+        android:id="@+id/nav_reportes"
+        android:icon="@drawable/ic_reportes"
+        android:title="Reportes" />
+</menu>

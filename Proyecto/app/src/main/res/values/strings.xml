@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hotroid</string>
+    <string name="spinner_prompt">Selecciona aquí</string>
 </resources>

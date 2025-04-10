@@ -4,93 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="incrementarContador"
     tools:context=".MainActivity">
 
+    <!-- Título -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Hotroid Taxi"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_marginStart="16dp"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginTop="32dp" />
+
+    <!-- Contenedor de botones -->
+    <LinearLayout
+        android:id="@+id/role_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="98dp">
-        <!--android:fontFamily="@font/calibri"-->
-
-        <TextView
-            android:id="@+id/contadorEnVista"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textSize="34sp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp">
 
         <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
+            android:id="@+id/btnCliente"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:onClick="incrementarContador"
-            android:text="Aumentar contador" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-
-        <EditText
-            android:id="@+id/editTextNombre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:ems="10"
-            android:hint="Nombre"
-            android:inputType="text" />
+            android:text="Cliente"
+            android:layout_marginBottom="12dp"/>
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="170dp"
+            android:id="@+id/btnTaxista"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="#FFA726"
-            android:onClick="irAVentana2"
-            android:text="Ir a la ventana 2" />
-
-        <View
-            android:id="@+id/divider3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:text="Taxista"
+            android:layout_marginBottom="12dp"/>
 
         <Button
-            android:id="@+id/button3"
-            android:layout_width="170dp"
+            android:id="@+id/btnAdmin"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Abrir For Result" />
+            android:text="Admin"
+            android:layout_marginBottom="12dp"
+            android:onClick="irAAdmin"/>
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnSuperAdmin"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-
+            android:text="SuperAdmin"
+            android:layout_marginBottom="12dp"/>
     </LinearLayout>
 
+    <!-- Barra inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"

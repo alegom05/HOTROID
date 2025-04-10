@@ -31,22 +31,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "oncreate");
 
-        /*Button button = findViewById(R.id.button2);
-        button.setOnClickListener(view -> {
-            TextView textView = findViewById(R.id.contadorEnVista);
-            String contadorStr = textView.getText().toString();
-            int contador = Integer.parseInt(contadorStr);
-            textView.setText(String.valueOf(++contador));
-
-        });*/
-
-        Button button3 = findViewById(R.id.button3);
-        button3.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, MainActivity3.class);
-            launcher.launch(intent);
-        });
-
-        registerForContextMenu((TextView) findViewById(R.id.contadorEnVista));
 
     }
 
@@ -182,5 +166,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
     );
+    //**************************ADMINISTRADOR DE HOTEL**************************************************************************
+    public void irAAdmin(View view) {
+        Intent intent = new Intent(this, AdminActivity.class);
+        startActivity(intent);
+    }
 
 }

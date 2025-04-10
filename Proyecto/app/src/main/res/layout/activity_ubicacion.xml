@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UbicacionActivity">
+
+    <!-- Título REGISTROS -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registros"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Card con datos del administrador -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAdmin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="6dp"
+
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/imagenPerfil"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/foto_admin"
+                android:scaleType="centerCrop"
+                android:background="@drawable/border_circle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Christopher Terrones"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
+                app:layout_constraintBottom_toTopOf="@id/tvRol"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvRol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Administrador de Hotel"
+                android:textStyle="italic"
+                app:layout_constraintTop_toBottomOf="@id/tvNombre"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/seccionesCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/cardAdmin"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:background="@drawable/border_black"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:id="@+id/seccionesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvSeccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ubicación"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="18dp" />
+
+            <!-- Subtítulo del formulario -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agregar la ubicación del hotel"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Campo de dirección -->
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Escribe aquí"
+                android:inputType="textPostalAddress"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Imagen ilustrativa (puedes reemplazarla por un fragment de mapa o una imagen local) -->
+            <ImageView
+                android:id="@+id/mapa"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/mapa_placeholder"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Subtítulo: Lugares turísticos -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lugares turísticos"
+                android:textStyle="bold" />
+
+            <!-- Selector múltiple con CheckBoxes -->
+            <Spinner
+                android:id="@+id/spinnerLugares"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/spinner_prompt"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Botón Guardar -->
+            <Button
+                android:id="@+id/btnGuardarUbicacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guardar"
+                android:backgroundTint="@color/black"
+                android:textColor="@android:color/white" />
+
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Contenedor de secciones -->
+
+    <!-- Barra inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/menu_admin"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
