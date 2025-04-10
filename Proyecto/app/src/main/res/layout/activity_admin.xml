@@ -80,6 +80,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
+<!--
+    Notificaciones
+-->
     <androidx.cardview.widget.CardView
         android:id="@+id/seccionesCard"
         android:layout_width="0dp"
