@@ -30,7 +30,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "oncreate");
+        Button btnCliente = findViewById(R.id.btnCliente);
+        Button btnTaxista = findViewById(R.id.btnTaxista);
+        Button btnAdmin = findViewById(R.id.btnAdmin);
+        Button btnSuperAdmin = findViewById(R.id.btnSuperAdmin);
 
+        btnCliente.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ClienteActivity.class);
+            startActivity(intent);
+        });
+
+        btnTaxista.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TaxiActivity.class);
+            startActivity(intent);
+        });
+
+        btnAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+            startActivity(intent);
+        });
+
+        btnSuperAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SuperActivity.class);
+            startActivity(intent);
+        });
 
     }
 
