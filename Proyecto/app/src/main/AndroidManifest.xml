@@ -8,6 +8,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:theme="@style/Theme.Hotroid"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:targetApi="31">
@@ -38,7 +39,7 @@
         <activity android:name=".ClienteActivity" />
         <activity
             android:name=".TaxiActivity"
-            android:theme="@style/Theme.Clase2" />
+            android:theme="@style/Theme.Hotroid" />
         <activity android:name=".SuperActivity" />
     </application>
 
