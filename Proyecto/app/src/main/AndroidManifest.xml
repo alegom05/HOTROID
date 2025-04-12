@@ -41,6 +41,8 @@
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
         <activity android:name=".SuperActivity" />
+        <activity android:name=".SuperDetallesActivity" />
+        <activity android:name=".SuperReservasActivity" />
     </application>
 
 </manifest>
