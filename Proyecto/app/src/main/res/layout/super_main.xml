@@ -163,12 +163,12 @@
                             </LinearLayout>
 
                             <!-- Imagen a la derecha -->
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_aranwa"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_aranwa_desc"/>
+                                android:contentDescription="@string/hotel_aranwa_desc"/>-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -212,12 +212,12 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:contentDescription="@string/hotel_decameron_desc"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/hotel_decameron" />
+                                android:src="@drawable/hotel_decameron" />-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -261,12 +261,12 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_oro_verde"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_oro_verde_desc"/>
+                                android:contentDescription="@string/hotel_oro_verde_desc"/>-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -310,12 +310,12 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_boca_raton"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_boca_raton_desc"/>
+                                android:contentDescription="@string/hotel_boca_raton_desc"/>-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -359,12 +359,12 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_libertador"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_libertador_desc"/>
+                                android:contentDescription="@string/hotel_libertador_desc"/>-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -408,12 +408,12 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_costa_sol"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_costa_sol_desc"/>
+                                android:contentDescription="@string/hotel_costa_sol_desc"/>-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -456,12 +456,12 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <ImageView
+                            <!--<ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_sonesta"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_sonesta_desc"/>
+                                android:contentDescription="@string/hotel_sonesta_desc"/>-->
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
