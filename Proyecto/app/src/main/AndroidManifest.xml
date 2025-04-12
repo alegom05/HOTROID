@@ -45,6 +45,9 @@
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperDetallesActivity" />
         <activity android:name=".SuperReservasActivity" />
+
+
+        <activity android:name=".SuperUsuariosActivity" />
     </application>
 
 </manifest>

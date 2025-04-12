@@ -131,7 +131,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -145,7 +146,8 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                >
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -182,7 +184,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -231,7 +234,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -280,7 +284,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -329,7 +334,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -378,7 +384,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -426,7 +433,8 @@
                         app:cardElevation="2dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
+                        android:foreground="?attr/selectableItemBackground"
+                        android:backgroundTint="#E3DFFF">
 
                         <LinearLayout
                             android:layout_width="match_parent"
