@@ -134,7 +134,7 @@
 
                 <!-- Botón Ver Reservas -->
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btnVerReservas"
                     android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
