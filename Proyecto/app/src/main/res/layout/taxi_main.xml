@@ -16,14 +16,14 @@
         android:text="Hotroid Taxi"
         android:textSize="36sp"
         android:textStyle="bold"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Card con datos del administrador -->
+    <!-- Card con datos del usuario -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardAdmin"
+        android:id="@+id/cardTaxista"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardCornerRadius="4dp"
@@ -31,6 +31,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="6dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
 
         app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +82,7 @@
                 android:layout_marginEnd="8dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
 
@@ -92,7 +96,7 @@
         android:layout_marginTop="8dp"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/cardAdmin"
+        app:layout_constraintTop_toBottomOf="@id/cardTaxista"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -314,7 +318,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/menu_admin"
+        app:menu="@menu/bottom_taxista"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
