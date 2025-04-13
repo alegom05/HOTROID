@@ -42,6 +42,7 @@
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
         <activity android:name=".TaxiCuenta" />
+        <activity android:name=".TaxiAlertas" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />
         <activity android:name=".SuperDetallesActivity" />

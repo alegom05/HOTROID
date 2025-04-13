@@ -16,8 +16,16 @@ public class TaxiActivity extends AppCompatActivity {
 
 
         CardView cardTaxista = findViewById(R.id.cardTaxista);
+        CardView cardAlertas = findViewById(R.id.cardAlertas);
+
+
         cardTaxista.setOnClickListener(v -> {
             Intent intent = new Intent(TaxiActivity.this, TaxiCuenta.class);
+            startActivity(intent);
+        });
+
+        cardAlertas.setOnClickListener(v -> {
+            Intent intent = new Intent(TaxiActivity.this, TaxiAlertas.class);
             startActivity(intent);
         });
 
