@@ -4,6 +4,13 @@
     <!-- Tema vacío pero válido que hereda de AppCompat -->
     <style name="Theme.Hotroid" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- No necesitas definir nada si no quieres -->
+        <item name="colorPrimary">#2875AF</item>
+
+    </style>
+
+    <style name="Theme.Hotroid.User" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/azulNoti</item>
+        <item name="colorSecondary">@color/verdeNoti</item>
     </style>
 
 </resources>
