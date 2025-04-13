@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hotroid.R;
-import com.example.hotroid.bean.Persona;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -158,20 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
     /**** Context Menu - End ****/
 
-    public void irAVentana2(View view) {
 
-        EditText editText = findViewById(R.id.editTextNombre);
-        String texto = editText.getText().toString();
-
-        Persona persona = new Persona("Claudia");
-
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("texto", texto);
-        //se envia un objeto
-        intent.putExtra("alumna", persona);
-        startActivity(intent);
-
-    }
 
     /*
         El callback (lo que ejecutará al regreso)
