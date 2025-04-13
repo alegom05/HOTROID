@@ -27,5 +27,7 @@ public class SuperActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 }
