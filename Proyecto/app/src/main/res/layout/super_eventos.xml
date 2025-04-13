@@ -5,15 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SuperReservasActivity">
+    tools:context=".SuperEventosActivity">
 
 
-    <!-- Título Hoteles -->
+    <!-- Título Eventos -->
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hoteles"
+        android:text="Eventos"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginStart="16dp"
@@ -105,10 +105,11 @@
                 android:id="@+id/tvHotelNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hotel Aranwa Paracas"
+                android:text="Log de eventos"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"/>
+
 
             <!-- Encabezados de la tabla -->
             <LinearLayout
@@ -118,272 +119,249 @@
                 android:padding="12dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cliente"
+                    android:text="Hora"
                     android:textStyle="bold"
-                    android:gravity="center"/>
+                    />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Llegada"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Salida"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Habitación"
+                    android:layout_weight="5"
+                    android:text="Evento"
                     android:textStyle="bold"
                     android:gravity="center"
                     />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Hotel"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
             </LinearLayout>
 
-            <!-- Cliente 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:padding="4dp"
+                android:weightSum="10">
+
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="José del Solar"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="2"
+                    android:text="20:10"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
+
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="30/03/2025"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="5"
+                    android:text="Corte de energía en la torre A"
+                    android:gravity="start"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="05/04/2025"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="456"
-                    android:gravity="center"
-                    android:textAlignment="center"
+                    android:layout_weight="3"
+                    android:text="El Mirador"
+                    android:gravity="start"
                     android:textColor="@color/black" />
             </LinearLayout>
 
-            <!-- Cliente 2 -->
+            <!-- Fila 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:weightSum="10"
+                android:padding="4dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Alejandro Guiarra"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="2"
+                    android:text="19:30"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="24/03/2025"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="5"
+                    android:text="Caída de objeto en pasillo"
+                    android:gravity="start"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="29/03/2025"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:text="356"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="3"
+                    android:text="Hotel Sol"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-            <!-- Cliente 3 -->
+            <!-- Fila 2 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:weightSum="10"
+                android:padding="4dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Piero Rodríguez"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="2"
+                    android:text="20:45"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="22/03/2025"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="5"
+                    android:text="Fuga de agua en cuarto 210"
+                    android:gravity="start"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="29/03/2025"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:text="126"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="3"
+                    android:text="Costa del Mar"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-            <!-- Cliente 4 -->
+            <!-- Fila 3 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:weightSum="10"
+                android:padding="4dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Rafael Fuentes"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="2"
+                    android:text="21:15"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="20/03/2025"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="5"
+                    android:text="Persona sospechosa vista en ingreso"
+                    android:gravity="start"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="26/03/2025"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:text="126"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="3"
+                    android:text="Vista Alegre"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-            <!-- Cliente 5 -->
+            <!-- Fila 4 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:weightSum="10"
+                android:padding="4dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Rafael Fuentes"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="2"
+                    android:text="22:00"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="10/03/2025"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="5"
+                    android:text="Alarma activada por error"
+                    android:gravity="start"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="13/03/2025"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:text="145"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="3"
+                    android:text="Palmas Reales"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-            <!-- Más clientes de ejemplo -->
+            <!-- Fila 5 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:weightSum="10"
+                android:padding="4dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="María Fernández"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="2"
+                    android:text="22:45"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="15/04/2025"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="5"
+                    android:text="Ruido fuerte en azotea"
+                    android:gravity="start"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="20/04/2025"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:text="201"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="3"
+                    android:text="San Borja Suites"
+                    android:gravity="start"
+                    android:textColor="@color/black" />
             </LinearLayout>
+
+
+
+
+
+
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -400,6 +378,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_super"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
