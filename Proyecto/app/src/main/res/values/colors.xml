@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="azulNoti">#8E9DF5</color>
+    <color name="azulNoti">#D0D5F3</color>
     <color name="verdeNoti">#5F996B</color>
-    <color name="plomoTransparen">#DADAE2</color>
+    <color name="plomoTransparen">#ABABBB</color>
 
 </resources>
