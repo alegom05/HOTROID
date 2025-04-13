@@ -12,6 +12,12 @@ public class SuperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_main);
 
+        CardView cardSuper = findViewById(R.id.cardSuper);
+        cardSuper.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperActivity.this, SuperCuentaActivity.class);
+            startActivity(intent);
+        });
+
         // Ejemplo para un Hotel (debes hacerlo para cada hotel)
         CardView cardAranwa = findViewById(R.id.cardHotel1); // Asegúrate que este ID coincida con tu XML
         cardAranwa.setOnClickListener(new View.OnClickListener() {

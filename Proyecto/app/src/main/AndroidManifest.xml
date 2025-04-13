@@ -28,10 +28,7 @@
         <activity
             android:name=".MainActivity3"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -47,6 +44,7 @@
             android:theme="@style/Theme.Hotroid" />
         <activity android:name=".TaxiCuenta" />
         <activity android:name=".SuperActivity" />
+        <activity android:name=".SuperCuentaActivity" />
         <activity android:name=".SuperDetallesActivity" />
         <activity android:name=".SuperReservasActivity" />
         <activity android:name=".SuperUsuariosActivity" />
