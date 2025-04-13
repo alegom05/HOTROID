@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_hoteles_user"
+        android:icon="@drawable/ic_hotels_menu"
+        android:title="Hoteles"/>
+    <item
+        android:id="@+id/nav_reservas_user"
+        android:icon="@drawable/ic_reservations_menu"
+        android:title="Reservas"/>
+    <item
+        android:id="@+id/nav_chat_user"
+        android:icon="@drawable/comentario_alt"
+        android:title="Chat"/>
+    <item
+        android:id="@+id/nav_cuenta"
+        android:icon="@drawable/baseline_account"
+        android:title="Cuenta"/>
+</menu>
