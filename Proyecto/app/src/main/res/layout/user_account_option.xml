@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="60dp"
+                android:layout_marginBottom="50dp"
                 android:text="Luis Alberto Mendoza"
                 android:textAlignment="center"
                 android:textSize="25dp"
@@ -94,6 +94,7 @@
                 app:strokeWidth="1dp"--><!--para agregar borde-->
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/hotelesFavoritosButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
@@ -122,6 +123,7 @@
                 app:iconTint="@color/black" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/politicasPrivacidadButtom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"

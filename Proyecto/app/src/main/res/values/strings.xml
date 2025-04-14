@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Hotroid</string>
     <string name="spinner_prompt">Selecciona aquí</string>
+    <string name="texto_politicas_seguridad">Tratamiento de Datos Personales
+En HOTROID, nos comprometemos a proteger y respetar la privacidad de nuestros usuarios. Los datos personales que recolectamos a través de nuestra aplicación serán tratados de acuerdo con las leyes y normativas vigentes en materia de protección de datos. En cumplimiento con la Ley General de Protección de Datos Personales (Ley 29733) en Perú, así como las regulaciones internacionales como el Reglamento General de Protección de Datos (GDPR) de la Unión Europea, garantizamos que toda la información proporcionada será utilizada de manera confidencial y exclusiva para los fines establecidos en nuestra política de privacidad.
+Uso de los Datos
+Los datos recolectados serán utilizados para mejorar la experiencia del usuario dentro de la aplicación, tales como personalizar la interfaz, ofrecer servicios relevantes y realizar comunicaciones necesarias relacionadas con las funcionalidades de la app. En ningún caso se compartirán, venderán o cederán los datos personales a terceros sin el consentimiento expreso del usuario, salvo cuando sea requerido por la ley.
+Seguridad de los Datos
+Implementamos medidas técnicas y organizativas adecuadas para proteger la información personal contra el acceso no autorizado, la alteración, la divulgación o la destrucción. La seguridad de sus datos es una prioridad para nosotros, y realizamos revisiones periódicas para garantizar que nuestros sistemas cumplan con los más altos estándares de protección.
+Derechos del Usuario
+De acuerdo con la legislación aplicable, los usuarios tienen derecho a acceder, rectificar, cancelar o oponerse al tratamiento de sus datos personales en cualquier momento. Si desea ejercer alguno de estos derechos o tiene alguna consulta sobre el tratamiento de sus datos, puede ponerse en contacto con nosotros a través de [correo electrónico de contacto] o consultar nuestra política de privacidad completa disponible dentro de la aplicación.
+En HOTROID, nos comprometemos a garantizar que su información personal sea tratada con el más alto nivel de seguridad y de acuerdo con la ley.</string>
 </resources>

@@ -26,7 +26,15 @@ public class AccountOptionUser extends AppCompatActivity {
             startActivity(intent);
         });
 
+        binding.politicasPrivacidadButtom.setOnClickListener(v -> {
+            Intent intent =new Intent(AccountOptionUser.this, SecurityPoliticsUser.class);
+            startActivity(intent);
+        });
 
+        binding.hotelesFavoritosButton.setOnClickListener(v -> {
+            Intent intent =new Intent(AccountOptionUser.this, FavoriteHotelsUser.class);
+            startActivity(intent);
+        });
 
     }
 }
