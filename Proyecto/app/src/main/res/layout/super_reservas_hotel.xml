@@ -110,14 +110,6 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Buscador -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp">
-            </LinearLayout>
-
             <!-- Encabezados de la tabla -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -130,28 +122,33 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Cliente"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Llegada"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Salida"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Habitación"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
             </LinearLayout>
 
             <!-- Cliente 1 -->

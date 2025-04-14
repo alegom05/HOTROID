@@ -7,4 +7,152 @@
     android:layout_height="match_parent"
     tools:context=".AccountOptionUser">
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/account_card_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="24dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@android:color/transparent"
+        app:strokeWidth="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/user_profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:textAlignment="gravity"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/baseline_account" />
+                <!-- Botón de editar encima de la foto -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/edit_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignEnd="@id/user_profile_image"
+                    android:layout_alignBottom="@id/user_profile_image"
+                    android:layout_marginBottom="4dp"
+                    android:contentDescription="Usuario"
+                    android:src="@drawable/outline_create_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/name_profile_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="60dp"
+                android:text="Luis Alberto Mendoza"
+                android:textAlignment="center"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintHorizontal_bias="0.5" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="start|center_vertical"
+                android:paddingVertical="20dp"
+                android:text="Informacion personal"
+                android:textColor="?android:textColorPrimary"
+                app:cornerRadius="8dp"
+                app:elevation="5dp"
+                app:icon="@drawable/outline_account_circle_24"
+                app:iconGravity="textStart"
+                app:iconTint="@color/black"
+                app:iconPadding="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:src="@drawable/favorite_24"
+                android:textColor="?android:textColorPrimary"
+                app:iconGravity="textStart"
+                android:gravity="start|center_vertical"
+                app:iconTint="@color/black"
+                app:iconPadding="20dp"
+                app:icon="@drawable/favorite_24"
+                app:cornerRadius="8dp"
+                android:text="Hoteles Favoritos" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:gravity="start|center_vertical"
+                android:textColor="?android:textColorPrimary"
+                app:icon="@drawable/baseline_brightness_medium_24"
+                app:iconTint="@color/black"
+                app:iconPadding="20dp"
+                app:iconGravity="textStart"
+                app:cornerRadius="8dp"
+                android:text="Tema" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:text="Politicas de Privacidad"
+                android:gravity="start|center_vertical"
+                android:textColor="?android:textColorPrimary"
+                app:icon="@drawable/politicas_priv"
+                app:iconTint="@color/black"
+                app:cornerRadius="8dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logout_24"
+                android:gravity="start|center_vertical"
+                android:paddingVertical="20dp"
+                android:textColor="?android:textColorPrimary"
+                app:icon="@drawable/logout_24"
+                app:iconPadding="20dp"
+                app:iconGravity="textStart"
+                android:text="Cerrar Sesion"
+                app:cornerRadius="8dp"
+                app:iconTint="@color/black" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_menu_user"
+        app:labelVisibilityMode="labeled" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
