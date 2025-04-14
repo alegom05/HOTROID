@@ -3,7 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="azulNoti">#D0D5F3</color>
-    <color name="verdeNoti">#5F996B</color>
-    <color name="plomoTransparen">#ABABBB</color>
+    <color name="moradoNoti">#ABABBB</color>
+    <color name="plomoTransparen">#A2A2AC</color>
+    <color name="colorBackground">#A5A8A5</color>
 
 </resources>

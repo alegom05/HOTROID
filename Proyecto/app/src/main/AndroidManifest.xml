@@ -13,9 +13,13 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
-            android:name=".AccountOptionUser"
+            android:name=".InfoAccountUser"
             android:theme="@style/Theme.Hotroid.User"
             android:exported="false" />
+        <activity
+            android:name=".AccountOptionUser"
+            android:exported="false"
+            android:theme="@style/Theme.Hotroid.User" />
         <activity
             android:name=".NotificacionesUser"
             android:exported="false" />
@@ -28,7 +32,6 @@
         <activity
             android:name=".MainActivity3"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -43,7 +46,6 @@
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
         <activity android:name=".TaxiCuenta" />
-        <activity android:name=".TaxiAlertas" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />
         <activity android:name=".SuperDetallesActivity" />
