@@ -89,12 +89,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+
 
             <!-- CardView con eventos -->
             <androidx.cardview.widget.CardView
@@ -152,13 +152,19 @@
                             android:gravity="center"/>
                     </LinearLayout>
 
-                    <!-- Filas de eventos -->
+                    <!-- Evento 1 - Clickable -->
                     <LinearLayout
+                        android:id="@+id/evento1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="4dp"
-                        android:weightSum="10">
+                        android:padding="12dp"
+                        android:weightSum="10"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        >
+
 
                         <TextView
                             android:layout_width="0dp"
@@ -187,14 +193,18 @@
                             android:textColor="@color/black" />
                     </LinearLayout>
 
-                    <!-- Repite las filas como necesites -->
-                    <!-- Fila 2 -->
+                    <!-- Evento 2 - Clickable -->
                     <LinearLayout
+                        android:id="@+id/evento2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="4dp"
-                        android:weightSum="10">
+                        android:padding="12dp"
+                        android:weightSum="10"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        >
 
                         <TextView
                             android:layout_width="0dp"
@@ -208,7 +218,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
-                            android:text="Caída de objeto en pasillo"
+                            android:text="Caída de objeto en pasillo del restaurante"
                             android:gravity="start"
                             android:textColor="@color/black"
                             android:maxLines="2"
@@ -223,13 +233,18 @@
                             android:textColor="@color/black" />
                     </LinearLayout>
 
-                    <!-- Fila 3 -->
+                    <!-- Evento 3 - Clickable -->
                     <LinearLayout
+                        android:id="@+id/evento3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="4dp"
-                        android:weightSum="10">
+                        android:padding="12dp"
+                        android:weightSum="10"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        >
 
                         <TextView
                             android:layout_width="0dp"
@@ -257,8 +272,6 @@
                             android:gravity="start"
                             android:textColor="@color/black" />
                     </LinearLayout>
-
-                    <!-- Agrega más filas aquí si es necesario -->
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

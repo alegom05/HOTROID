@@ -1,8 +1,11 @@
 package com.example.hotroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class TaxiAlertas extends AppCompatActivity {
     @Override
@@ -13,6 +16,27 @@ public class TaxiAlertas extends AppCompatActivity {
 
 
 
+
+
+        // BottomNavigationView o Barra inferior de menú
+        BottomNavigationView bottomNavigationView = null;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.wifi) {
+                Intent intentInicio = new Intent(TaxiAlertas.this, TaxiCuenta.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.location) {
+                Intent intentUbicacion = new Intent(TaxiAlertas.this, TaxiAlertas.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.notify) {
+                Intent intentAlertas = new Intent(TaxiAlertas.this, TaxiAlertas.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
+            }
+        });
 
 
 
