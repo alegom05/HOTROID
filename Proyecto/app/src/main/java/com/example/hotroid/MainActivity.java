@@ -56,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void incrementarContador (View view) {
+   /* public void incrementarContador (View view) {
         TextView textView = findViewById(R.id.contadorEnVista);
         String contadorStr = textView.getText().toString();
         int contador = Integer.parseInt(contadorStr);
         contador++;
         Log.d ("contador", "" +  String.valueOf(contador));
         textView.setText(String.valueOf(contador));
-    }
+    }*/
 
     /**** App Bar - Start ****/
     @Override
