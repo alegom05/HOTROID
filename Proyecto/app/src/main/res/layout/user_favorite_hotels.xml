@@ -30,9 +30,10 @@
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="Back"
             android:scrollbarSize="4dp"
-            android:src="@drawable/baseline_arrow_back_24" />
+            android:src="@drawable/baseline_arrow_back_24"/>
         <!-- Título -->
         <TextView
+            android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -45,7 +46,7 @@
             android:textSize="20dp"
             android:textStyle="bold" />
 
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/imageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -53,9 +54,9 @@
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="Buscar"
             app:srcCompat="@android:drawable/ic_menu_search"
-            app:tint="@android:color/black" />
+            app:tint="@android:color/black" />-->
 
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/imageButton2"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -63,7 +64,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="Borrar"
             app:srcCompat="@android:drawable/ic_menu_delete"
-            app:tint="@color/black" /> <!-- Fondo transparente -->
+            app:tint="@color/black" />--> <!-- Fondo transparente -->
 
     </LinearLayout>
 
@@ -94,6 +95,7 @@
                 app:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -132,6 +134,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -159,6 +162,13 @@
                             android:paddingTop="8dp"
                             android:text="Spa Palace"
                             android:textAlignment="center" />
+                        <ImageView
+                            android:id="@+id/checkicon2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@android:drawable/ic_menu_delete"
+                            android:visibility="gone">
+                        </ImageView>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
