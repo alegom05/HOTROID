@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Hotroid</string>
     <string name="spinner_prompt">Selecciona aquí</string>
+    <string name="seleccione_tipo_documento">Seleccione tipo de documento</string>
     <string name="texto_politicas_seguridad">Tratamiento de Datos Personales
 En HOTROID, nos comprometemos a proteger y respetar la privacidad de nuestros usuarios. Los datos personales que recolectamos a través de nuestra aplicación serán tratados de acuerdo con las leyes y normativas vigentes en materia de protección de datos. En cumplimiento con la Ley General de Protección de Datos Personales (Ley 29733) en Perú, así como las regulaciones internacionales como el Reglamento General de Protección de Datos (GDPR) de la Unión Europea, garantizamos que toda la información proporcionada será utilizada de manera confidencial y exclusiva para los fines establecidos en nuestra política de privacidad.
 Uso de los Datos
