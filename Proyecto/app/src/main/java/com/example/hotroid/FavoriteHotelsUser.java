@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
-
 import com.example.hotroid.R;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,7 +59,6 @@ public class FavoriteHotelsUser extends AppCompatActivity {
         handleLongPress();
     }
 
-
      /**cambiando la vista (barra superior) al mantener presionado un card*/
     private void handleLongPress(){
         LinearLayout backAndTitle = findViewById(R.id.back_and_tittle);
@@ -82,7 +80,6 @@ public class FavoriteHotelsUser extends AppCompatActivity {
                 Toast.makeText(FavoriteHotelsUser.this, "Eliminando seleccionados", Toast.LENGTH_SHORT).show();
             });
             backAndTitle.addView(deleSelectionButton); *///se agrega el boton de delete a la barra(toolbar)
-
             return true;
         });
 
@@ -91,12 +88,14 @@ public class FavoriteHotelsUser extends AppCompatActivity {
             titleText.setText("Holteles Favoritos");
             backButtom.setImageResource(R.drawable.baseline_arrow_back_24);
             backButtom.setContentDescription("Volver");
-
+            // Restaura el color de fondo original desde el tema
+            backAndTitle.setBackgroundColor(
+                    ContextCompat.getColor(FavoriteHotelsUser.this, android.R.color.transparent) // o usa el valor de fondo original
+            );
             // Ocultar botón de eliminar y check
             if (deleSelectionButton != null)
                 deleSelectionButton.setVisibility(View.GONE);
             check1.setVisibility(View.GONE);  // Hide the checkmark
         });
     }
-
 }

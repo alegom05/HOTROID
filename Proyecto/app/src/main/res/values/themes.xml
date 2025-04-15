@@ -5,7 +5,6 @@
     <style name="Theme.Hotroid" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- No necesitas definir nada si no quieres -->
         <!--B3BBB8<item name="colorPrimary">#45525C</item>-->
-
     </style>
 
     <style name="Theme.Hotroid.User" parent="Theme.Material3.DayNight.NoActionBar">

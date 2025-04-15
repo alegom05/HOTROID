@@ -45,27 +45,6 @@
             android:textColor="@android:color/black"
             android:textSize="20dp"
             android:textStyle="bold" />
-
-        <!--<ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="Buscar"
-            app:srcCompat="@android:drawable/ic_menu_search"
-            app:tint="@android:color/black" />-->
-
-        <!--<ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="Borrar"
-            app:srcCompat="@android:drawable/ic_menu_delete"
-            app:tint="@color/black" />--> <!-- Fondo transparente -->
-
     </LinearLayout>
 
     <ScrollView
@@ -111,11 +90,62 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <!-- FrameLayout para superponer la imagen y el icono de check -->
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/hotel_aranwa" />
+                            android:layout_height="wrap_content">
+
+                            <!-- Imagen del hotel -->
+                            <ImageView
+                                android:id="@+id/hotel_image_1"
+                                android:layout_width="match_parent"
+                                android:layout_height="150dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/hotel_aranwa" />
+
+                            <!-- Check con fondo circular azul y elevación -->
+                            <!--<com.google.android.material.card.MaterialCardView
+                                android:id="@+id/check_container1"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="end|top"
+                                android:layout_margin="5dp"
+                                app:cardElevation="10dp"
+
+                                android:background="@drawable/shape_circle"
+                                app:cardUseCompatPadding="true"
+                                app:cardPreventCornerOverlap="false"
+                                app:strokeWidth="0dp">
+
+                                <ImageView
+                                    android:id="@+id/checkicon1"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:padding="1dp"
+                                    android:src="@drawable/check_circle_24"
+                                    android:scaleType="centerInside"
+                                    android:visibility="gone"
+
+                                    app:tint="@android:color/white" />
+
+                            </com.google.android.material.card.MaterialCardView>-->
+
+                            <ImageView
+                                android:id="@+id/checkicon1"
+                                android:layout_width="33dp"
+                                android:layout_height="33dp"
+                                android:layout_gravity="end|top"
+                                android:layout_margin="2dp"
+                                android:src="@drawable/check_circle_24"
+                                android:background="@drawable/shape_circle"
+                                android:scaleType="centerInside"
+                                app:tint="@android:color/white"
+                                android:elevation="15dp"
+                                android:visibility="gone">
+                            </ImageView>
+
+
+                        </FrameLayout>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -123,13 +153,6 @@
                             android:paddingTop="8dp"
                             android:text="Hotel Riviera"
                             android:textAlignment="center" />
-                        <ImageView
-                            android:id="@+id/checkicon1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@android:drawable/ic_menu_delete"
-                            android:visibility="gone">
-                        </ImageView>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

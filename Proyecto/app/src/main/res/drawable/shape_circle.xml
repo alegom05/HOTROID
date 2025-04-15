@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/azulNoti" />
+    <!- Puedes agregar otros atributos aquí si deseas, como stroke o padding ->
+</shape>-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Capa de sombra -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#40000000" /> <!-- Sombra semitransparente -->
+        </shape>
+    </item>
+
+    <!-- Capa principal azul -->
+    <item android:left="2dp" android:top="2dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/azulNoti" />
+        </shape>
+    </item>
+
+</layer-list>
