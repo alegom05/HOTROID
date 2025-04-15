@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SuperCuentaActivity extends AppCompatActivity {
@@ -33,6 +33,13 @@ public class SuperCuentaActivity extends AppCompatActivity {
             } else {
                 return false;
             }
+        });
+
+        Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+
+        btnCerrarSesion.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperCuentaActivity.this, MainActivity.class);
+            startActivity(intent);
         });
     }
 
