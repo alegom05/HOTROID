@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SuperEventosActivity">
+    tools:context=".SuperListaClientesActivity">
 
     <!-- Título Eventos -->
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eventos"
+        android:text="Gestión de Usuarios"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginStart="16dp"
@@ -95,6 +95,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+
             <!-- CardView con eventos -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardHotel"
@@ -110,11 +111,11 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                <TextView
+                    <TextView
                         android:id="@+id/tvHotelNombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Log de eventos"
+                        android:text="Lista de clientes"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
@@ -130,30 +131,23 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Hora"
+                            android:layout_weight="5"
+                            android:text="Usuario"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
-                            android:text="Evento"
+                            android:text="Estado"
                             android:textStyle="bold"
                             android:gravity="center"/>
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:text="Hotel"
-                            android:textStyle="bold"
-                            android:gravity="center"/>
                     </LinearLayout>
 
-                    <!-- Evento 1 - Clickable -->
+                    <!-- Estado 1 - Clickable -->
                     <LinearLayout
-                        android:id="@+id/evento1"
+                        android:id="@+id/estado1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -168,8 +162,8 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="20:10"
+                            android:layout_weight="7"
+                            android:text="Victor Díaz "
                             android:gravity="start"
                             android:textColor="@color/black" />
 
@@ -177,24 +171,17 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
-                            android:text="Corte de energía en la torre A"
+                            android:text="ACTIVADO"
                             android:gravity="start"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:text="El Mirador"
-                            android:gravity="start"
-                            android:textColor="@color/black" />
                     </LinearLayout>
 
-                    <!-- Evento 2 - Clickable -->
+                    <!-- Estado 2 - Clickable -->
                     <LinearLayout
-                        android:id="@+id/evento2"
+                        android:id="@+id/estado2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -208,8 +195,8 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="19:30"
+                            android:layout_weight="7"
+                            android:text="Moises Castro"
                             android:gravity="start"
                             android:textColor="@color/black" />
 
@@ -217,24 +204,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
-                            android:text="Caída de objeto en pasillo del restaurante"
+                            android:text="DESACTIVADO"
                             android:gravity="start"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:text="Hotel Sol"
-                            android:gravity="start"
-                            android:textColor="@color/black" />
+
                     </LinearLayout>
 
                     <!-- Evento 3 - Clickable -->
                     <LinearLayout
-                        android:id="@+id/evento3"
+                        android:id="@+id/estado3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -248,8 +229,8 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="20:45"
+                            android:layout_weight="7"
+                            android:text="Manuel Yarleque"
                             android:gravity="start"
                             android:textColor="@color/black" />
 
@@ -257,20 +238,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
-                            android:text="Fuga de agua en cuarto 210"
+                            android:text="ACTIVADO"
                             android:gravity="start"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:text="Costa del Mar"
-                            android:gravity="start"
-                            android:textColor="@color/black" />
+
                     </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

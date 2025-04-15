@@ -2,33 +2,33 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class SuperUsuariosActivity extends AppCompatActivity {
+public class SuperDetallesClienteActivadoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.super_usuarios);
+        setContentView(R.layout.super_detalles_cliente_activado);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_hoteles) {
-                Intent intentInicio = new Intent(SuperUsuariosActivity.this, SuperActivity.class);
+                Intent intentInicio = new Intent(SuperDetallesClienteActivadoActivity.this, SuperActivity.class);
                 startActivity(intentInicio);
                 return true;
             } else if (item.getItemId() == R.id.nav_usuarios) {
-                Intent intentUbicacion = new Intent(SuperUsuariosActivity.this, SuperUsuariosActivity.class);
+                Intent intentUbicacion = new Intent(SuperDetallesClienteActivadoActivity.this, SuperUsuariosActivity.class);
                 startActivity(intentUbicacion);
                 return true;
             } else if (item.getItemId() == R.id.nav_eventos) {
-                Intent intentAlertas = new Intent(SuperUsuariosActivity.this, SuperEventosActivity.class);
+                Intent intentAlertas = new Intent(SuperDetallesClienteActivadoActivity.this, SuperEventosActivity.class);
                 startActivity(intentAlertas);
                 return true;
             } else {
@@ -36,20 +36,17 @@ public class SuperUsuariosActivity extends AppCompatActivity {
             }
         });
 
-        CardView cardSuper = findViewById(R.id.cardSuper);
-        cardSuper.setOnClickListener(v -> {
-            Intent intent = new Intent(SuperUsuariosActivity.this, SuperCuentaActivity.class);
+        Button btnCerrarSesion = findViewById(R.id.btnDesactivar);
+
+        btnCerrarSesion.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperDetallesClienteActivadoActivity.this, SuperListaClientesActivity.class);
             startActivity(intent);
         });
 
-
-        CardView cardAdmin = findViewById(R.id.cardCliente);
-        cardAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SuperUsuariosActivity.this, SuperListaClientesActivity.class);
-                startActivity(intent);
-            }
+        CardView cardSuper2 = findViewById(R.id.cardPerfil);
+        cardSuper2.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperDetallesClienteActivadoActivity.this, SuperCuentaActivity.class);
+            startActivity(intent);
         });
     }
 }
