@@ -39,6 +39,14 @@ public class FavoriteHotelsUser extends AppCompatActivity {
         deleSelectionButton.setImageResource(R.drawable.delete_24);
         deleSelectionButton.setContentDescription("Eliminar de favoritos");
         deleSelectionButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0,2,5,2);
+        deleSelectionButton.setLayoutParams(params);
+
         // Agrega el botón al layout y lo oculta
         backAndTitle.addView(deleSelectionButton);
         deleSelectionButton.setVisibility(View.GONE);
@@ -90,4 +98,5 @@ public class FavoriteHotelsUser extends AppCompatActivity {
             check1.setVisibility(View.GONE);  // Hide the checkmark
         });
     }
+
 }
