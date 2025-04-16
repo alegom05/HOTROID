@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UbicacionActivity">
+    tools:context=".AdminFotosActivity">
 
     <!-- Título REGISTROS -->
     <TextView
@@ -92,7 +92,9 @@
         android:background="@drawable/border_black"
         app:cardElevation="3dp"
         app:cardCornerRadius="4dp">
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <LinearLayout
             android:id="@+id/seccionesLayout"
             android:layout_width="match_parent"
@@ -101,63 +103,112 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/tvSeccion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ubicación"
+                android:text="Fotos"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="18dp" />
+                android:textSize="24sp"
+                android:layout_marginBottom="8dp"/>
 
-            <!-- Subtítulo del formulario -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Agregar la ubicación del hotel"
-                android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                android:text="Agregar imágenes del hotel"
+                android:layout_marginBottom="16dp"/>
 
-            <!-- Campo de dirección -->
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteDireccion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Escribe aquí"
-                android:inputType="textPostalAddress"
-                android:layout_marginBottom="12dp" />
-
-            <!-- Imagen ilustrativa (puedes reemplazarla por un fragment de mapa o una imagen local) -->
+            <!-- Contenedor para mostrar imágenes -->
+            <!-- Botón "+" -->
             <ImageView
-                android:id="@+id/mapa"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/mapa_placeholder"
-                android:layout_marginBottom="12dp" />
-
-            <!-- Subtítulo: Lugares turísticos -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lugares turísticos"
-                android:textStyle="bold" />
-
-            <!-- Selector múltiple con CheckBoxes -->
-            <TextView
-                android:id="@+id/tvSeleccionLugares"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
+                android:id="@+id/btnSeleccionarImagenes"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/baseline_add_24"
                 android:background="@drawable/border_black"
-                android:text="Selecciona lugares turísticos"
-                android:textSize="16sp"
-                android:drawableEnd="@android:drawable/arrow_down_float"
-                android:gravity="center_vertical"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:padding="12dp"
+                android:scaleType="centerInside"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="16dp" />
+
+            <!-- Contenedor de imágenes -->
+            <FrameLayout
+                android:id="@+id/frame1"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/border_black"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_add_24"
+                    android:scaleType="centerCrop" />
+            </FrameLayout>
+
+            <!-- Repite lo mismo para frame2, frame3, frame4 -->
+            <FrameLayout
+                android:id="@+id/frame2"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/border_black"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_add_24"
+                    android:scaleType="centerCrop" />
+            </FrameLayout>
+
+            <!-- Repite lo mismo para frame2, frame3, frame4 -->
+
+            <FrameLayout
+                android:id="@+id/frame3"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/border_black"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_add_24"
+                    android:scaleType="centerCrop" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frame4"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/border_black"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_add_24"
+                    android:scaleType="centerCrop" />
+            </FrameLayout>
+
+            <!-- Repite lo mismo para frame2, frame3, frame4 -->
+
+
+            <!-- Repite lo mismo para frame2, frame3, frame4 -->
+
+
+
 
 
             <!-- Botón Guardar -->
@@ -169,9 +220,8 @@
                 android:backgroundTint="@color/black"
                 android:textColor="@android:color/white" />
 
-
-
         </LinearLayout>
+        </ScrollView>
     </androidx.cardview.widget.CardView>
 
     <!-- Contenedor de secciones -->

@@ -13,9 +13,15 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
-            android:name=".FavoriteHotelsUser"
-            android:theme="@style/Theme.Hotroid.User"
+            android:name=".AdminFotosActivity"
             android:exported="false" />
+        <activity
+            android:name=".AdminCuentaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FavoriteHotelsUser"
+            android:exported="false"
+            android:theme="@style/Theme.Hotroid.User" />
         <activity
             android:name=".SecurityPoliticsUser"
             android:exported="false"
@@ -60,18 +66,13 @@
         <activity android:name=".SuperReservasActivity" />
         <activity android:name=".SuperUsuariosActivity" />
         <activity android:name=".SuperEventosActivity" />
-        <activity android:name="SuperDetallesEventosActivity"/>
-
-
-        <activity android:name=".SuperListaClientesActivity"/>
-        <activity android:name=".SuperDetallesClienteActivadoActivity"/>
-        <activity android:name=".SuperDetallesClienteDesactivadoActivity"/>
-
-        <activity android:name=".SuperListaAdminActivity"/>
-        <activity android:name=".SuperDetallesAdminActivadoActivity"/>
-        <activity android:name=".SuperDetallesAdminDesactivadoActivity"/>
-
-
+        <activity android:name=".SuperDetallesEventosActivity" />
+        <activity android:name=".SuperListaClientesActivity" />
+        <activity android:name=".SuperDetallesClienteActivadoActivity" />
+        <activity android:name=".SuperDetallesClienteDesactivadoActivity" />
+        <activity android:name=".SuperListaAdminActivity" />
+        <activity android:name=".SuperDetallesAdminActivadoActivity" />
+        <activity android:name=".SuperDetallesAdminDesactivadoActivity" />
     </application>
 
 </manifest>
