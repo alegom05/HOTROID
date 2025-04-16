@@ -24,13 +24,13 @@ public class ClienteActivity extends AppCompatActivity {
         binding.bottomNavigation.setOnItemSelectedListener(item ->{
         int itemId = item.getItemId();
         if (itemId ==R.id.nav_hoteles_user){
-            startActivity(new Intent(ClienteActivity.this, MainActivity.class));
+            startActivity(new Intent(ClienteActivity.this, HotelesUser.class));
             return true;
         } else if (itemId == R.id.nav_reservas_user) {
             startActivity(new Intent(ClienteActivity.this, MainActivity.class));
             return true;
         } else if (itemId == R.id.nav_chat_user) {
-            startActivity(new Intent(ClienteActivity.this , MainActivity.class));
+            startActivity(new Intent(ClienteActivity.this , ChatUser.class));
             return true;
         } else if (itemId == R.id.nav_cuenta) {
             startActivity(new Intent(ClienteActivity.this, AccountOptionUser.class));
