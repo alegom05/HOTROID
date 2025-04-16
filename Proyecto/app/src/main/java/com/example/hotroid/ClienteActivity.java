@@ -27,7 +27,7 @@ public class ClienteActivity extends AppCompatActivity {
             startActivity(new Intent(ClienteActivity.this, HotelesUser.class));
             return true;
         } else if (itemId == R.id.nav_reservas_user) {
-            startActivity(new Intent(ClienteActivity.this, MainActivity.class));
+            startActivity(new Intent(ClienteActivity.this, ReservaUser.class));
             return true;
         } else if (itemId == R.id.nav_chat_user) {
             startActivity(new Intent(ClienteActivity.this , ChatUser.class));
