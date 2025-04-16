@@ -61,9 +61,15 @@
         <activity android:name=".SuperUsuariosActivity" />
         <activity android:name=".SuperEventosActivity" />
         <activity android:name="SuperDetallesEventosActivity"/>
+
+
         <activity android:name=".SuperListaClientesActivity"/>
         <activity android:name=".SuperDetallesClienteActivadoActivity"/>
         <activity android:name=".SuperDetallesClienteDesactivadoActivity"/>
+
+        <activity android:name=".SuperListaAdminActivity"/>
+        <activity android:name=".SuperDetallesAdminActivadoActivity"/>
+        <activity android:name=".SuperDetallesAdminDesactivadoActivity"/>
 
 
     </application>

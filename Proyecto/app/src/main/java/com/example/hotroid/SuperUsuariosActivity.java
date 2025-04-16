@@ -51,5 +51,14 @@ public class SuperUsuariosActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        CardView cardAdmin2 = findViewById(R.id.cardAdmin);
+        cardAdmin2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SuperUsuariosActivity.this, SuperListaAdminActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
