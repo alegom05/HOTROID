@@ -6,25 +6,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.hotroid.HotelAdapter;
 import com.example.hotroid.databinding.UserHotelesBinding;
+import com.example.hotroid.Hotel;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.slider.Slider;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HotelesFragment extends Fragment {
 
     private UserHotelesBinding binding;
     private int numHabitaciones = 1;
     private int numPersonas = 2;
+    private int valoracionMinima = 3;
+    private List<Hotel> hotelList;
+    private HotelAdapter hotelAdapter;
 
     public HotelesFragment() {}
 
@@ -35,7 +39,15 @@ public class HotelesFragment extends Fragment {
 
         configurarCalendario();
         configurarSelectorPersonas();
-        configurarValoracionSlider();
+        configurarSelectorValoracion();
+        cargarHotelesEstaticos();
+
+        // Animación de entrada
+        binding.searchCard.setAlpha(0f);
+        binding.searchCard.animate().alpha(1f).setDuration(500).start();
+
+        // Configurar botón de búsqueda
+        binding.searchButton.setOnClickListener(v -> realizarBusqueda());
 
         return binding.getRoot();
     }
@@ -45,6 +57,13 @@ public class HotelesFragment extends Fragment {
             MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> builder =
                     MaterialDatePicker.Builder.dateRangePicker();
             builder.setTitleText("Selecciona las fechas");
+
+            // Establecer fecha predeterminada (inicio: hoy, fin: mañana)
+            long today = System.currentTimeMillis();
+            long tomorrow = today + (24 * 60 * 60 * 1000);
+            androidx.core.util.Pair<Long, Long> defaultDateRange =
+                    new androidx.core.util.Pair<>(today, tomorrow);
+            builder.setSelection(defaultDateRange);
 
             MaterialDatePicker<?> picker = builder.build();
             picker.show(getParentFragmentManager(), picker.toString());
@@ -78,24 +97,110 @@ public class HotelesFragment extends Fragment {
                     .setPositiveButton("Aceptar", (dialog, which) -> {
                         numHabitaciones = habitacionesPicker.getValue();
                         numPersonas = personasPicker.getValue();
-                        binding.roomGuestsText.setText(
-                                numHabitaciones + " habitación" + (numHabitaciones > 1 ? "es" : "") +
-                                        " · " + numPersonas + " adulto" + (numPersonas > 1 ? "s" : ""));
+                        actualizarTextoHabitacionesPersonas();
                     })
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
     }
 
-    private void configurarValoracionSlider() {
-        Slider slider = new Slider(requireContext());
-        slider.setValueFrom(1f);
-        slider.setValueTo(5f);
-        slider.setStepSize(1f);
-        slider.setValue(5f);
+    private void configurarSelectorValoracion() {
+        binding.ratingLayout.setOnClickListener(v -> {
+            View dialogView = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.user_rating_selector, null);
 
-        // Puedes usar este slider programáticamente si decides mostrarlo en un popup
-        // Aquí se asume que usas el RecyclerView para mostrar las opciones gráficas de valoración.
+            RatingBar ratingBar = dialogView.findViewById(R.id.ratingSelector);
+            TextView ratingValue = dialogView.findViewById(R.id.ratingValue);
+
+            // Establecer valor inicial
+            ratingBar.setRating(valoracionMinima);
+            ratingValue.setText(String.valueOf(valoracionMinima));
+
+            // Configurar listener para actualizar el texto mientras se cambia la valoración
+            ratingBar.setOnRatingBarChangeListener((rBar, rating, fromUser) -> {
+                int ratingInt = Math.round(rating);
+                ratingValue.setText(String.valueOf(ratingInt));
+            });
+
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Valoración mínima")
+                    .setView(dialogView)
+                    .setPositiveButton("Aceptar", (dialog, which) -> {
+                        valoracionMinima = Math.round(ratingBar.getRating());
+                        actualizarTextoValoracion();
+                        filtrarHotelesPorValoracion();
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
+
+        // Establecer texto inicial
+        actualizarTextoValoracion();
+    }
+
+    private void actualizarTextoHabitacionesPersonas() {
+        binding.roomGuestsText.setText(
+                numHabitaciones + " habitación" + (numHabitaciones > 1 ? "es" : "") +
+                        " · " + numPersonas + " adulto" + (numPersonas > 1 ? "s" : ""));
+    }
+
+    private void actualizarTextoValoracion() {
+        binding.ratingValueText.setText(valoracionMinima + " estrellas o más");
+    }
+
+    private void realizarBusqueda() {
+        // Aquí implementarías la lógica para realizar la búsqueda con los parámetros seleccionados
+        String destino = binding.searchEditText.getText().toString();
+        String fechas = binding.selectedDatesText.getText().toString();
+
+        // Filtramos los hoteles por valoración
+        filtrarHotelesPorValoracion();
+
+        // Mostramos mensaje informativo
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Búsqueda iniciada")
+                .setMessage("Buscando en: " + (destino.isEmpty() ? "Todos los destinos" : destino) + "\n" +
+                        "Fechas: " + fechas + "\n" +
+                        "Habitaciones: " + numHabitaciones + "\n" +
+                        "Adultos: " + numPersonas + "\n" +
+                        "Valoración mínima: " + valoracionMinima + " estrellas")
+                .setPositiveButton("Aceptar", null)
+                .show();
+    }
+
+    private void cargarHotelesEstaticos() {
+        // Inicializar la lista de hoteles
+        hotelList = new ArrayList<>();
+
+        // Agregar hoteles estáticos
+        // Nota: Reemplaza R.drawable.hotel1, R.drawable.hotel2, etc. con tus propias imágenes
+        hotelList.add(new Hotel("Grand Hotel Madrid", 4.5f, "€145/noche", R.drawable.hotel_decameron));
+        hotelList.add(new Hotel("Barcelona Royal Suite", 5.0f, "€210/noche", R.drawable.hotel_aranwa));
+        hotelList.add(new Hotel("Valencia Beach Resort", 4.0f, "€125/noche", R.drawable.hotel_boca_raton));
+        hotelList.add(new Hotel("Sevilla Boutique Hotel", 3.5f, "€95/noche", R.drawable.hotel_oro_verde));
+        hotelList.add(new Hotel("Granada Historic Palace", 4.8f, "€180/noche", R.drawable.hotel_sheraton));
+
+        // Configurar el RecyclerView
+        binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        hotelAdapter = new HotelAdapter(hotelList);
+        binding.hotelRecyclerView.setAdapter(hotelAdapter);
+    }
+
+    private void filtrarHotelesPorValoracion() {
+        // Filtrar hoteles por valoración mínima
+        List<Hotel> hotelesFiltrados = new ArrayList<>();
+        for (Hotel hotel : hotelList) {
+            if (hotel.getRating() >= valoracionMinima) {
+                hotelesFiltrados.add(hotel);
+            }
+        }
+
+        // Actualizar el adaptador con la lista filtrada
+        hotelAdapter = new HotelAdapter(hotelesFiltrados);
+        binding.hotelRecyclerView.setAdapter(hotelAdapter);
+
+        // Actualizar el título de resultados con el conteo
+        binding.resultsTitle.setText("Hoteles recomendados (" + hotelesFiltrados.size() + ")");
     }
 
     @Override

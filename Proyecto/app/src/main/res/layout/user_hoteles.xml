@@ -6,10 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".HotelesFragment">
 
-    <!-- Toolbar con título -->
-
-    <!-- ScrollView para contenido principal -->
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -45,7 +41,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,7 +107,8 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="12dp"
-                            android:src="@drawable/ic_calendar" />
+                            android:src="@drawable/ic_calendar"
+                            android:tint="@color/black"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -151,7 +148,8 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="12dp"
-                            android:src="@drawable/ic_person" />
+                            android:src="@drawable/ic_person"
+                            android:tint="@color/black"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -174,6 +172,47 @@
                         </LinearLayout>
                     </LinearLayout>
 
+                    <!-- Nuevo selector de valoración -->
+                    <LinearLayout
+                        android:id="@+id/ratingLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/outlined_background"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="12dp"
+                            android:src="@drawable/ic_star"
+                            android:tint="@color/black"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Valoración mínima"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/ratingValueText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3 estrellas o más"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                     <!-- Botón de búsqueda -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/searchButton"
@@ -188,28 +227,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Filtros de valoración por estrellas -->
-            <TextView
-                android:id="@+id/filterTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Filtrar por valoración"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/searchCard" />
-
-            <!-- Lista de filtros de valoración -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ratingFilterRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                app:layout_constraintTop_toBottomOf="@id/filterTitle"
-                tools:itemCount="5"
-                tools:listitem="@layout/user_item_rating_filter" />
-
             <!-- Sección de resultados -->
             <TextView
                 android:id="@+id/resultsTitle"
@@ -219,7 +236,7 @@
                 android:text="Hoteles recomendados"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/ratingFilterRecyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/searchCard" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hotelRecyclerView"
@@ -233,7 +250,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

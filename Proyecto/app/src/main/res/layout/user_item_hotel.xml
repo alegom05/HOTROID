@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,70 +18,50 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/hotel_placeholder" />
+            android:contentDescription="Foto del hotel" />
 
+        <!-- Información del hotel -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="16dp">
 
             <!-- Nombre del hotel -->
             <TextView
                 android:id="@+id/hotelName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Grand Hotel Barcelona"
-                android:textColor="@android:color/black"
+                android:text="Nombre del Hotel"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="6dp" />
 
-            <!-- Ubicación -->
-            <TextView
-                android:id="@+id/hotelLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:drawableStart="@drawable/ic_location"
-                android:drawablePadding="4dp"
-                android:text="Centro de Barcelona"
-                android:textSize="14sp" />
-
-            <!-- Valoración y puntuación -->
+            <!-- Valoración -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="6dp">
 
-                <TextView
-                    android:id="@+id/ratingLabel"
+                <RatingBar
+                    android:id="@+id/hotelRating"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rating_background"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    android:text="9.2"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center_vertical"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:stepSize="0.5" />
 
                 <TextView
                     android:id="@+id/ratingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Excelente"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/reviewCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="354 opiniones"
-                    android:textColor="@android:color/darker_gray"
+                    android:text="4.5"
+                    android:textColor="@android:color/black"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -89,26 +69,36 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="end"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/priceLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Precio por noche desde"
-                    android:textSize="12sp" />
+                    android:text="Precio desde:"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="8dp" />
 
                 <TextView
-                    android:id="@+id/priceValue"
+                    android:id="@+id/hotelPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="€120"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:text="€125/noche"
+                    android:textColor="#3F51B5"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
             </LinearLayout>
+
+            <!-- Botón Ver Detalle -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewDetailButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Ver detalles"
+                android:textAllCaps="false"
+                android:backgroundTint="#FF9800" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
