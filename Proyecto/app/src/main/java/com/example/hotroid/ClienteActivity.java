@@ -1,11 +1,9 @@
 package com.example.hotroid;
 
-import android.content.Intent;
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.hotroid.databinding.ActivityMainBinding;
+import androidx.fragment.app.Fragment;
 import com.example.hotroid.databinding.ClienteMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -16,27 +14,38 @@ public class ClienteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cliente_main);
-
         binding = ClienteMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.bottomNavigation.setOnItemSelectedListener(item ->{
-        int itemId = item.getItemId();
-        if (itemId ==R.id.nav_hoteles_user){
-            startActivity(new Intent(ClienteActivity.this, HotelesUser.class));
-            return true;
-        } else if (itemId == R.id.nav_reservas_user) {
-            startActivity(new Intent(ClienteActivity.this, ReservaUser.class));
-            return true;
-        } else if (itemId == R.id.nav_chat_user) {
-            startActivity(new Intent(ClienteActivity.this , ChatUser.class));
-            return true;
-        } else if (itemId == R.id.nav_cuenta) {
-            startActivity(new Intent(ClienteActivity.this, AccountOptionUser.class));
-            return true;
-        }
-        return false;
+        // Cargar fragmento por defecto
+        loadFragment(new HotelesFragment());
+
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_hoteles_user) {
+                selectedFragment = new HotelesFragment();
+            } else if (itemId == R.id.nav_reservas_user) {
+                selectedFragment = new ReservasFragment();
+            } else if (itemId == R.id.nav_chat_user) {
+                selectedFragment = new ChatFragment();
+            } else if (itemId == R.id.nav_cuenta) {
+                selectedFragment = new CuentaFragment();
+            }
+
+            if (selectedFragment != null) {
+                loadFragment(selectedFragment);
+                return true;
+            }
+            return false;
         });
+    }
+
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 }

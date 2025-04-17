@@ -1,75 +1,77 @@
 package com.example.hotroid;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 
-import com.example.hotroid.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+
 import com.example.hotroid.databinding.UserAccountOptionBinding;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+public class CuentaFragment extends Fragment {
 
-public class AccountOptionUser extends AppCompatActivity {
     private UserAccountOptionBinding binding;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
 
-        // Aplica el tema según preferencia guardada
-        SharedPreferences prefs = getSharedPreferences("ajustes", MODE_PRIVATE);
+    public CuentaFragment() {
+        // Constructor vacío obligatorio
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = UserAccountOptionBinding.inflate(inflater, container, false);
+
+        // Tema guardado
+        SharedPreferences prefs = requireContext().getSharedPreferences("ajustes", 0);
         boolean oscuro = prefs.getBoolean("modo_oscuro", false);
         AppCompatDelegate.setDefaultNightMode(
                 oscuro ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
         );
 
-        /*setContentView(R.layout.user_account_option);*/
-        binding = UserAccountOptionBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         binding.informacionPersonalButton.setOnClickListener(v -> {
-            Intent intent = new Intent(AccountOptionUser.this, InfoAccountUser.class);
-            startActivity(intent);
+            startActivity(new Intent(requireContext(), InfoAccountUser.class));
         });
 
         binding.politicasPrivacidadButtom.setOnClickListener(v -> {
-            Intent intent =new Intent(AccountOptionUser.this, SecurityPoliticsUser.class);
-            startActivity(intent);
+            startActivity(new Intent(requireContext(), SecurityPoliticsUser.class));
         });
 
         binding.hotelesFavoritosButton.setOnClickListener(v -> {
-            Intent intent =new Intent(AccountOptionUser.this, FavoriteHotelsUser.class);
-            startActivity(intent);
+            startActivity(new Intent(requireContext(), FavoriteHotelsUser.class));
         });
 
-        // Mostrar selector de tema al presionar el botón
         binding.temaButton.setOnClickListener(v -> mostrarDialogoDeTema());
     }
 
-    /**Método para mostrar el popup de selección de tema*/
-    private void mostrarDialogoDeTema(){
-        View view = LayoutInflater.from(this).inflate(R.layout.menu_opcion_tema, null);
+    private void mostrarDialogoDeTema() {
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.menu_opcion_tema, null);
         RadioButton rbClaro = view.findViewById(R.id.rbClaro);
         RadioButton rbOscuro = view.findViewById(R.id.rbOscuro);
         Button btnOK = view.findViewById(R.id.btnOK);
         Button btnCancelar = view.findViewById(R.id.btnCancelar);
 
-        SharedPreferences prefs = getSharedPreferences("ajustes", MODE_PRIVATE);
+        SharedPreferences prefs = requireContext().getSharedPreferences("ajustes", 0);
         boolean esOscuro = prefs.getBoolean("modo_oscuro", false);
         rbClaro.setChecked(!esOscuro);
         rbOscuro.setChecked(esOscuro);
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setView(view)
                 .setCancelable(false)
                 .create();
@@ -82,8 +84,15 @@ public class AccountOptionUser extends AppCompatActivity {
                     modoOscuroSeleccionado ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
             );
             dialog.dismiss();
-            recreate(); // recargar actividad con nuevo tema
+            requireActivity().recreate(); // recarga el fragmento desde la actividad
         });
+
         dialog.show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // evitar memory leaks
     }
 }

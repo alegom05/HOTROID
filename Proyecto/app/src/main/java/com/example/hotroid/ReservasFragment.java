@@ -1,27 +1,34 @@
 package com.example.hotroid;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-public class ReservaUser extends AppCompatActivity {
+public class ReservasFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private ReservaPagerAdapter pagerAdapter;
 
+    public ReservasFragment() {}
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_reserva);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.user_reserva, container, false);
 
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.viewPager);
 
-        pagerAdapter = new ReservaPagerAdapter(this);
+        pagerAdapter = new ReservaPagerAdapter(requireActivity()); // Usa el FragmentActivity
         viewPager.setAdapter(pagerAdapter);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
@@ -31,5 +38,7 @@ public class ReservaUser extends AppCompatActivity {
                 case 2: tab.setText("Cancelados"); break;
             }
         }).attach();
+
+        return view;
     }
 }

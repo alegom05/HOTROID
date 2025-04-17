@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReservaUser">
+    tools:context=".ReservasFragment">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -56,5 +56,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_menu_user" />
+         />
 </androidx.constraintlayout.widget.ConstraintLayout>
