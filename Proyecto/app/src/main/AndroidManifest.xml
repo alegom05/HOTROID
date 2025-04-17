@@ -80,6 +80,7 @@
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
+        <activity android:name=".HotelDetalladoUser" />
         <activity android:name=".TaxiCuenta" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />

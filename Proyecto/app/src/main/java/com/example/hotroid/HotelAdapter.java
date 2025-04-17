@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,10 +45,25 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.hotelImage.setImageResource(hotel.getImageResourceId());
 
         holder.viewDetailButton.setOnClickListener(v -> {
+
             // Por ahora, solo mostramos un Toast con el nombre del hotel
             Toast.makeText(v.getContext(),
                     "Ver detalles de " + hotel.getName(),
                     Toast.LENGTH_SHORT).show();
+            // Crear un Intent para abrir la actividad HotelDetalladoUser
+            Intent intent = new Intent(v.getContext(), HotelDetalladoUser.class);
+            intent.putExtra("nombre", hotel.getName());
+            intent.putExtra("rating", hotel.getRating());
+            intent.putExtra("precio", hotel.getPrice());
+            intent.putExtra("imagen", hotel.getImageResourceId());
+
+
+
+            // Iniciar la actividad
+            v.getContext().startActivity(intent);
+
+
+
         });
     }
 
