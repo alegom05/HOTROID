@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".SuperDetallesClienteDesactivadoActivity">
+    tools:context=".SuperDetallesTaxiDesactivadoActivity">
 
     <!-- Titulo principal -->
     <TextView
@@ -180,6 +180,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
+
+                <!-- Nuevo campo: Placa de vehículo -->
+                <TextView android:text="Placa de vehículo"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView android:text="ABC-1234"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
             </LinearLayout>
 
             <!-- Contenedor para las fotos con sus títulos -->
@@ -206,6 +218,22 @@
                     android:src="@drawable/foto_admin"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="16dp"/>
+
+                <!-- Foto de vehículo con título -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Foto de vehículo"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="4dp"/>
+
+                <ImageView
+                    android:id="@+id/fotoVehiculo"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/carrito"
+                    android:scaleType="centerCrop"/>
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -221,7 +249,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"/>
 
-    <!-- Boton de activar -->
+    <!-- Boton de desactivar -->
     <Button
         android:id="@+id/btnActivar"
         android:layout_width="wrap_content"

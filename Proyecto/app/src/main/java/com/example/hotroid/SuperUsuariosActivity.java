@@ -60,5 +60,14 @@ public class SuperUsuariosActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        CardView cardAdmin3 = findViewById(R.id.cardTaxista);
+        cardAdmin3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SuperUsuariosActivity.this, SuperListaTaxisActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

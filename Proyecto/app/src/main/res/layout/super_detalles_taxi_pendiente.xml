@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".SuperDetallesClienteDesactivadoActivity">
+    tools:context=".SuperDetallesTaxiPendienteActivity">
 
     <!-- Titulo principal -->
     <TextView
@@ -180,9 +180,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
+
+                <!-- Placa de vehículo -->
+                <TextView android:text="Placa de vehículo"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView android:text="ABC-1234"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
             </LinearLayout>
 
-            <!-- Contenedor para las fotos con sus títulos -->
+            <!-- Fotos con títulos -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -190,7 +202,7 @@
                 android:orientation="vertical"
                 android:layout_marginStart="12dp">
 
-                <!-- Foto de perfil con título -->
+                <!-- Foto de perfil -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -206,6 +218,22 @@
                     android:src="@drawable/foto_admin"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="16dp"/>
+
+                <!-- Foto de vehículo -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Foto de vehículo"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="4dp"/>
+
+                <ImageView
+                    android:id="@+id/fotoVehiculo"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/carrito"
+                    android:scaleType="centerCrop"/>
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -221,16 +249,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"/>
 
-    <!-- Boton de activar -->
-    <Button
-        android:id="@+id/btnActivar"
-        android:layout_width="wrap_content"
+    <!-- Contenedor para los botones Aprobar y Rechazar -->
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Activar"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintTop_toBottomOf="@id/flecha"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+        <!-- Botón Aprobar -->
+        <Button
+            android:id="@+id/btnAprobar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aprobar"
+            app:layout_constraintTop_toBottomOf="@id/flecha"
+            app:layout_constraintEnd_toStartOf="@id/btnRechazar"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="16dp"/>
+
+        <!-- Botón Rechazar -->
+        <Button
+            android:id="@+id/btnRechazar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rechazar"
+            app:layout_constraintTop_toBottomOf="@id/flecha"
+            app:layout_constraintStart_toEndOf="@id/btnAprobar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
 
     <!-- Barra de navegación inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
