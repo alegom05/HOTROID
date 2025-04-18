@@ -7,5 +7,6 @@
     <color name="plomoTransparen">#A2A2AC</color>
     <color name="colorBackground">#A5A8A5</color>
     <color name="bordergreen">#CDDBD5</color>
-    <color name="cliente1">#FFC107</color>
+    <color name="cliente1">#FF9800</color>
+    <color name="cliente2">#3F51B5</color>
 </resources>

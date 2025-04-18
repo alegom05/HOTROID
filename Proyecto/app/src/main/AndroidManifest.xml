@@ -65,8 +65,13 @@
             android:name=".AdminActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity3"
-            android:exported="false" />
+            android:name=".OpcionesHabitacionUser"
+            android:label="Opciones de Habitación"
+            android:parentActivityName=".HotelDetalladoUser"> <!-- Asegúrate de usar el nombre correcto de tu actividad parent -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HotelDetalladoUser" /> <!-- Esto también debe coincidir con el nombre correcto -->
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true" >

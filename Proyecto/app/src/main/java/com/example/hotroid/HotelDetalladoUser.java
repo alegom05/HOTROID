@@ -1,7 +1,9 @@
 package com.example.hotroid;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -10,10 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.hotroid.HotelImageAdapter;
 import com.example.hotroid.databinding.UserHotelDetalladoBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -54,8 +59,19 @@ public class HotelDetalladoUser extends AppCompatActivity {
         configurarCalendario();
         configurarSelectorPersonas();
 
-        // Configurar botón de reserva
-        binding.bookButton.setOnClickListener(v -> reservarHotel());
+        // Configurar botones de acción
+        configurarBotones();
+
+        // Configurar términos y condiciones
+        configurarTerminosYCondiciones();
+    }
+
+    private void configurarBotones() {
+        // Configurar botón de opciones de habitación (antes era reservar)
+        binding.roomOptionsButton.setOnClickListener(v -> mostrarOpcionesHabitacion());
+
+        // Configurar botón de chat
+        binding.chatButton.setOnClickListener(v -> iniciarChat());
     }
 
     private void configurarBotonFavoritos() {
@@ -203,27 +219,82 @@ public class HotelDetalladoUser extends AppCompatActivity {
                 numeroDias > 1 ? "noches" : "noche"));
     }
 
-    private void reservarHotel() {
+    // NUEVOS MÉTODOS PARA LAS FUNCIONALIDADES AÑADIDAS
+
+    private void mostrarOpcionesHabitacion() {
+        Intent intent = new Intent(this, OpcionesHabitacionUser.class);
+        startActivity(intent);
+    }
+
+
+    private void reservarHabitacion(String tipoHabitacion, double precio) {
         // Simulamos el proceso de reserva
         new AlertDialog.Builder(this)
                 .setTitle("Confirmar reserva")
                 .setMessage(String.format(
-                        "¿Deseas reservar %d habitación%s en %s para %d adulto%s?\n\n" +
+                        "¿Deseas reservar %d habitación%s %s en %s para %d adulto%s?\n\n" +
                                 "Fechas: %s\n" +
-                                "Precio total: %s",
+                                "Precio total: €%.2f",
                         numHabitaciones,
                         numHabitaciones > 1 ? "es" : "",
+                        tipoHabitacion,
                         binding.hotelName.getText(),
                         numPersonas,
                         numPersonas > 1 ? "s" : "",
                         binding.selectedDatesText.getText(),
-                        binding.hotelPrice.getText()
+                        precio * numHabitaciones * (binding.selectedDatesText.getText().toString().contains("–") ? 2 : 1)
                 ))
                 .setPositiveButton("Confirmar", (dialog, which) -> {
                     procesarReserva();
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
+    }
+
+    private void iniciarChat() {
+        // En una implementación real, esto abriría una actividad de chat con el hotel
+        Intent chatIntent = new Intent(this, ChatDetalladoUser.class);
+        chatIntent.putExtra("HOTEL_ID", getIntent().getStringExtra("HOTEL_ID"));
+        chatIntent.putExtra("HOTEL_NAME", binding.hotelName.getText().toString());
+
+        // Por ahora, mostramos un mensaje de que esta característica estará disponible pronto
+        Toast.makeText(this, "Próximamente: Chat con " + binding.hotelName.getText(), Toast.LENGTH_LONG).show();
+
+        // En una implementación real, iniciaríamos la actividad
+        // startActivity(chatIntent);
+    }
+
+    private void configurarTerminosYCondiciones() {
+        binding.termsAndConditionsLink.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Términos y Condiciones");
+
+            // Contenido de los términos y condiciones
+            builder.setMessage(
+                    "TÉRMINOS Y CONDICIONES DE RESERVA\n\n" +
+                            "1. POLÍTICA DE PAGO\n" +
+                            "• Se requiere un depósito del 30% del total para confirmar la reserva.\n" +
+                            "• El saldo restante se pagará a la llegada al hotel.\n" +
+                            "• Aceptamos tarjetas de crédito/débito y efectivo.\n\n" +
+                            "2. POLÍTICA DE CANCELACIÓN\n" +
+                            "• Cancelaciones realizadas con más de 48 horas de antelación: reembolso completo.\n" +
+                            "• Cancelaciones realizadas con menos de 48 horas: cargo del 30% del total.\n" +
+                            "• No presentación: cargo del 100% de la primera noche.\n\n" +
+                            "3. CHECK-IN Y CHECK-OUT\n" +
+                            "• Check-in: a partir de las 14:00h.\n" +
+                            "• Check-out: antes de las 12:00h.\n" +
+                            "• Late check-out disponible con cargo adicional (sujeto a disponibilidad).\n\n" +
+                            "4. NORMAS GENERALES\n" +
+                            "• No se permiten mascotas excepto animales de asistencia.\n" +
+                            "• Prohibido fumar en todas las instalaciones.\n" +
+                            "• Los huéspedes son responsables de cualquier daño causado.\n\n" +
+                            "Para cualquier consulta adicional, contacte con nuestro servicio de atención al cliente."
+            );
+
+            builder.setPositiveButton("Aceptar", null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
 
     private void procesarReserva() {
@@ -260,13 +331,13 @@ public class HotelDetalladoUser extends AppCompatActivity {
     // Este método se llamaría desde un menú de opciones o botón de compartir
     public void compartirHotel() {
         // Implementar funcionalidad para compartir los detalles del hotel
-        android.content.Intent shareIntent = new android.content.Intent(android.content.Intent.ACTION_SEND);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Mira este hotel");
-        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mira este hotel");
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
                 "He encontrado este increíble hotel en Hotroid: " + binding.hotelName.getText() +
                         " en " + binding.hotelLocation.getText());
-        startActivity(android.content.Intent.createChooser(shareIntent, "Compartir hotel"));
+        startActivity(Intent.createChooser(shareIntent, "Compartir hotel"));
     }
 
     // Método para mostrar información detallada de los servicios

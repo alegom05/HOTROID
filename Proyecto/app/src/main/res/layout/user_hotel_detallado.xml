@@ -69,7 +69,6 @@
                 app:tabRippleColor="@android:color/transparent"
                 app:tabMode="fixed" />
 
-
             <!-- Detalles del hotel -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -453,20 +452,249 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Botón de reserva -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/bookButton"
+                <!-- Botones de acción -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginTop="8dp"
-                    android:backgroundTint="#FF9800"
-                    android:padding="12dp"
-                    android:text="Reservar ahora"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:layout_marginBottom="16dp">
 
+                    <!-- Botón de opciones de habitación (antes: Reservar ahora) -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/roomOptionsButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FF9800"
+                        android:padding="12dp"
+                        android:text="Opciones de habitación"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <!-- Botón de chat con el hotel -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/chatButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="8dp"
+                        android:insetLeft="0dp"
+                        android:insetTop="0dp"
+                        android:insetRight="0dp"
+                        android:insetBottom="0dp"
+                        app:cornerRadius="28dp"
+                        app:icon="@drawable/ic_chat"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:iconTint="@android:color/white"
+                        android:backgroundTint="#4CAF50" />
+                </LinearLayout>
+
+                <!-- Separador -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DDDDDD"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- NUEVA SECCIÓN: Comentarios de clientes -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Comentarios de clientes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Comentario 1 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Ana Martínez"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="12/04/2025 10:30"
+                                android:textSize="12sp"
+                                android:textColor="#777777" />
+                        </LinearLayout>
+
+                        <RatingBar
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:rating="5"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="¡Experiencia fantástica! El hotel está muy bien ubicado, las habitaciones son amplias y el personal es muy amable. El desayuno es variado y de calidad. Volveré seguro." />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Comentario 2 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Juan Carlos López"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10/04/2025 18:45"
+                                android:textSize="12sp"
+                                android:textColor="#777777" />
+                        </LinearLayout>
+
+                        <RatingBar
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:rating="4"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Hotel muy confortable y bien situado. El personal es atento y las instalaciones están muy limpias. El único punto negativo es que el wifi iba un poco lento en algunas zonas del hotel." />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Comentario 3 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="María Rodríguez"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="05/04/2025 09:15"
+                                android:textSize="12sp"
+                                android:textColor="#777777" />
+                        </LinearLayout>
+
+                        <RatingBar
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:rating="5"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Increíble estancia de fin de semana. El spa es maravilloso y las vistas desde la terraza son espectaculares. Recomiendo especialmente la cena en el restaurante del hotel. ¡Una delicia!" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- NUEVA SECCIÓN: Términos y condiciones -->
+                <TextView
+                    android:id="@+id/termsAndConditionsLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Términos y condiciones"
+                    android:textColor="#3F51B5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Botón flotante de chat (alternativa) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_chat"
+        android:tint="@android:color/white"
+        android:contentDescription="Chat con el hotel"
+        app:backgroundTint="#4CAF50"
+        android:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
