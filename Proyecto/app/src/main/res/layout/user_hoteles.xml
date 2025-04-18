@@ -11,23 +11,27 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#FF9800"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-31dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/toolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@android:color/transparent"
             android:text="Hotroid"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="172dp"
+            tools:layout_editor_absoluteY="18dp" />
 
         <ImageView
             android:id="@+id/notificationIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -108,7 +112,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="12dp"
                             android:src="@drawable/ic_calendar"
-                            android:tint="@color/black"/>
+                            app:tint="@color/black"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -149,7 +153,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="12dp"
                             android:src="@drawable/ic_person"
-                            android:tint="@color/black"/>
+                            app:tint="@color/black"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -190,7 +194,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="12dp"
                             android:src="@drawable/ic_star"
-                            android:tint="@color/black"/>
+                            app:tint="@color/black"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"

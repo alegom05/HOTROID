@@ -59,7 +59,7 @@
                     android:padding="10dp">
                     <!--icono de nombre-->
                     <ImageView
-                        android:layout_width="40dp"
+                        android:layout_width="38dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/baseline_account" />
@@ -74,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:text="Nombre Completo"
                             android:textColor="?android:textColorPrimary"
-                            android:textSize="22dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -83,7 +83,7 @@
                             android:layout_weight="1"
                             android:text="Jean Paul Quispe"
                             android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="18dp" />
+                            android:textSize="12dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -108,7 +108,7 @@
                     android:padding="10dp">
                     <!--icono de telefono-->
                     <ImageView
-                        android:layout_width="40dp"
+                        android:layout_width="38dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/baseline_call_24" />
@@ -123,7 +123,7 @@
                             android:layout_height="wrap_content"
                             android:text="Teléfono"
                             android:textColor="?android:textColorPrimary"
-                            android:textSize="22dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -132,7 +132,7 @@
                             android:layout_weight="1"
                             android:text="999 999 999"
                             android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="18dp" />
+                            android:textSize="12dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -157,7 +157,7 @@
                     android:padding="10dp">
                     <!--icono de telefono-->
                     <ImageView
-                        android:layout_width="40dp"
+                        android:layout_width="38dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/outline_email_24" />
@@ -173,7 +173,7 @@
                             android:layout_weight="2"
                             android:text="Correo Electrónico"
                             android:textColor="?android:textColorPrimary"
-                            android:textSize="22dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -182,7 +182,7 @@
                             android:layout_weight="1"
                             android:text="jpaul@gmail.com"
                             android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="18dp" />
+                            android:textSize="12dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -207,7 +207,7 @@
                     android:padding="10dp">
                     <!--icono de namcimiento-->
                     <ImageView
-                        android:layout_width="40dp"
+                        android:layout_width="38dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/ic_event" />
@@ -223,7 +223,7 @@
                             android:layout_weight="2"
                             android:text="Nacimiento"
                             android:textColor="?android:textColorPrimary"
-                            android:textSize="22dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -232,7 +232,7 @@
                             android:layout_weight="1"
                             android:text="12/07/2000"
                             android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="18dp" />
+                            android:textSize="12dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -257,7 +257,7 @@
                     android:padding="10dp">
                     <!--icono de dni-->
                     <ImageView
-                        android:layout_width="40dp"
+                        android:layout_width="38dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/outline_contact_emergency_24" />
@@ -273,7 +273,7 @@
                             android:layout_weight="2"
                             android:text="DNI"
                             android:textColor="?android:textColorPrimary"
-                            android:textSize="22dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -282,7 +282,7 @@
                             android:layout_weight="1"
                             android:text="45612545"
                             android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="18dp" />
+                            android:textSize="12dp" />
 
                     </LinearLayout>
                 </LinearLayout>

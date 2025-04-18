@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,10 @@ public class CuentaFragment extends Fragment {
                     modoOscuroSeleccionado ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
             );
             dialog.dismiss();
+            Log.d("FragmentInfo", "Este fragment pertenece a: " + requireActivity().getClass().getSimpleName());
             requireActivity().recreate(); // recarga el fragmento desde la actividad
+            Log.d("FragmentInfo", "Este fragment pertenece a: " + requireActivity().getClass().getSimpleName());
+
         });
 
         dialog.show();

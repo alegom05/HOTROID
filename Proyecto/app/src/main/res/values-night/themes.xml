@@ -6,10 +6,10 @@
     </style>
 
     <style name="Theme.Hotroid.User" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#707072</item>
+        <!--<item name="colorPrimary">#707072</item>
         <item name="colorSecondary">#5C5C66</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:background">@color/white</item>
-        <item name="colorOnBackground">#ACACCC</item>
+        <item name="colorOnBackground">#ACACCC</item>-->
     </style>
 </resources>
