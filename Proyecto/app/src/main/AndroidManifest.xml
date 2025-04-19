@@ -107,11 +107,25 @@
         </activity>
         <activity android:name=".ClienteActivity"
             android:theme="@style/Theme.Hotroid.User"/>
+<!--
+        Taxista
+-->
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
-        <activity android:name=".HotelDetalladoUser" />
+        <activity android:name=".TaxiAlertas" />
         <activity android:name=".TaxiCuenta" />
+        <activity android:name=".TaxiLocation" />
+        <activity android:name=".TaxiFin" />
+        <activity android:name=".TaxiUsuario" />
+
+
+
+
+        <!--
+                .
+        -->
+        <activity android:name=".HotelDetalladoUser" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />
         <activity android:name=".SuperDetallesActivity" />
