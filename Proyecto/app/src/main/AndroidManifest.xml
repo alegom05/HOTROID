@@ -13,7 +13,31 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
-            android:name=".NotificacionesAdapterUser"
+            android:name=".AdminEditarServicioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminReportes"
+            android:exported="false" />
+        <activity
+            android:name=".AdminServiciosDetallesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminNuevoServicioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminServiciosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEditarHabitacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHabitacionDetallesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminNuevaHabitacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHabitacionesActivity"
             android:exported="false" />
         <activity
             android:name=".FragmentReservaCancelados"
@@ -57,7 +81,7 @@
         <activity
             android:name=".NotificacionesUser"
             android:exported="false"
-            android:theme="@style/Theme.Hotroid.User" />
+            android:theme="@style/Theme.Hotroid.User"/>
         <activity
             android:name=".UbicacionActivity"
             android:exported="false" />
@@ -81,9 +105,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ClienteActivity"
-            android:theme="@style/Theme.Hotroid.User" />
+        <activity android:name=".ClienteActivity"
+            android:theme="@style/Theme.Hotroid.User"/>
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />

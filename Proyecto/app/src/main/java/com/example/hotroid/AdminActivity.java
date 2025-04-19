@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,42 @@ public class AdminActivity extends AppCompatActivity {
         cardFotos.setOnClickListener(v -> {
             Intent intent = new Intent(AdminActivity.this, AdminFotosActivity.class);
             startActivity(intent);
+        });
+
+        CardView cardHabitaciones = findViewById(R.id.cardHabitaciones);
+        cardHabitaciones.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminActivity.this, AdminHabitacionesActivity.class);
+            startActivity(intent);
+        });
+        CardView cardServicios = findViewById(R.id.cardServicios);
+        cardServicios.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminActivity.this, AdminServiciosActivity.class);
+            startActivity(intent);
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // BottomNavigationView o Barra inferior de menú
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminActivity.this, AdminActivity.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.nav_taxistas) {
+                Intent intentUbicacion = new Intent(AdminActivity.this, SuperUsuariosActivity.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.nav_checkout) {
+                Intent intentAlertas = new Intent(AdminActivity.this, SuperEventosActivity.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (item.getItemId() == R.id.nav_reportes) {
+                Intent intentAlertas = new Intent(AdminActivity.this, AdminReportes.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
+            }
         });
 
     }
