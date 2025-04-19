@@ -4,43 +4,30 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class TaxiActivity extends AppCompatActivity {
-
+public class TaxiLocation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxi_main);
+        setContentView(R.layout.taxi_location);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        CardView cardTaxista = findViewById(R.id.cardTaxista);
-        CardView cardAlertas = findViewById(R.id.cardAlertas);
 
-        cardTaxista.setOnClickListener(v -> {
-            Intent intent = new Intent(TaxiActivity.this, TaxiCuenta.class);
-            startActivity(intent);
-        });
-
-        cardAlertas.setOnClickListener(v -> {
-            Intent intent = new Intent(TaxiActivity.this, TaxiAlertas.class);
-            startActivity(intent);
-        });
-
+        // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
                 return true;
             }
             else if (item.getItemId() == R.id.location) {
-                Intent intentUbicacion = new Intent(TaxiActivity.this, TaxiLocation.class);
+                Intent intentUbicacion = new Intent(TaxiLocation.this, TaxiLocation.class);
                 startActivity(intentUbicacion);
                 return true;
             }
             else if (item.getItemId() == R.id.notify) {
-                Intent intentAlertas = new Intent(TaxiActivity.this, TaxiAlertas.class);
+                Intent intentAlertas = new Intent(TaxiLocation.this, TaxiAlertas.class);
                 startActivity(intentAlertas);
                 return true;
             }

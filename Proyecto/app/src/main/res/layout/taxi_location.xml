@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".TaxiActivity">
+    tools:context=".TaxiLocation">
 
     <!-- Título -->
     <TextView
@@ -42,16 +42,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"/>
 
-        <EditText
-            android:id="@+id/searchClient"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@drawable/search"
-            android:hint="Buscar cliente"
-            android:paddingStart="8dp"
-            android:textSize="14sp" />
     </LinearLayout>
 
     <!-- Card con datos del usuario -->
