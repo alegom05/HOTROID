@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -15,10 +16,18 @@ public class TaxiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_main);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        Button btnFinViaje = findViewById(R.id.btnFinViaje);
+
+        btnFinViaje.setOnClickListener(v -> {
+            // Acción cuando el botón es clickeado
+            Intent intent = new Intent(TaxiActivity.this, TaxiFin.class); // Redirige a TaxiCuenta
+            startActivity(intent); // Inicia la nueva actividad
+        });
 
         CardView cardTaxista = findViewById(R.id.cardTaxista);
         CardView cardAlertas = findViewById(R.id.cardAlertas);
+
+
 
         cardTaxista.setOnClickListener(v -> {
             Intent intent = new Intent(TaxiActivity.this, TaxiCuenta.class);
@@ -29,6 +38,9 @@ public class TaxiActivity extends AppCompatActivity {
             Intent intent = new Intent(TaxiActivity.this, TaxiAlertas.class);
             startActivity(intent);
         });
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {

@@ -12,12 +12,14 @@ public class TaxiFin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxi_cuenta);
+        setContentView(R.layout.taxi_fin);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
+                Intent intentInicio = new Intent(TaxiFin.this, TaxiActivity.class);
+                startActivity(intentInicio);
                 return true;
             }
             else if (item.getItemId() == R.id.location) {

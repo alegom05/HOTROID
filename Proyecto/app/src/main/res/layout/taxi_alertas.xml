@@ -2,133 +2,283 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".TaxiAlertas">
+    tools:context=".TaxiActivity">
 
-    <!-- Título -->
+    <!-- Título REGISTROS -->
     <TextView
         android:id="@+id/tvTitulo"
-        style="@style/TextViewDefault"
-        android:text="Usuario"
-        android:textSize="28sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alertas"
+        android:textSize="36sp"
         android:textStyle="bold"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Card del taxista -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardTaxista"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:gravity="center_vertical">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/TextViewDefault"
-                    android:text="Alejandro Gómez"
-                    android:textStyle="bold"
-                    android:textSize="18sp" />
-
-                <TextView
-                    style="@style/TextViewDefault"
-                    android:text="Taxista"
-                    android:textStyle="italic" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/taxipic1"
-                android:scaleType="centerCrop"
-                android:background="@drawable/border_circle" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
     <!-- Card con datos del usuario -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardUsuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/cardTaxista"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="6dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
-
-            <LinearLayout
-                android:id="@+id/layoutInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView style="@style/TextViewDefault" android:text="Nombres" android:textStyle="bold" />
-                <TextView style="@style/TextViewDefault" android:text="Bárbara" />
-
-                <TextView style="@style/TextViewDefault" android:text="Apellidos" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="Homeidan" />
-
-                <TextView style="@style/TextViewDefault" android:text="Modo de identificación" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="DNI" />
-
-                <TextView style="@style/TextViewDefault" android:text="Número de identidad" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="12341234" />
-
-                <TextView style="@style/TextViewDefault" android:text="Fecha de nacimiento" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="21 de mayo de 1998" />
-
-                <TextView style="@style/TextViewDefault" android:text="Correo electrónico" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="agomez@gmail.com" />
-
-                <TextView style="@style/TextViewDefault" android:text="Teléfono" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="934567213" />
-
-                <TextView style="@style/TextViewDefault" android:text="Domicilio" android:textStyle="bold" android:layout_marginTop="8dp" />
-                <TextView style="@style/TextViewDefault" android:text="Av. Benavides 123, Miraflores" />
-            </LinearLayout>
+            android:padding="8dp">
 
             <ImageView
-                android:id="@+id/fotoUsuario"
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/clientepic1"
-                android:layout_marginStart="12dp"
-                android:scaleType="centerCrop" />
-        </RelativeLayout>
+                android:id="@+id/imagenPerfil2"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/foto_admin"
+                android:scaleType="centerCrop"
+                android:background="@drawable/border_circle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Alejandro Gomez"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imagenPerfil2"
+                app:layout_constraintBottom_toTopOf="@id/tvRol"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvRol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Taxista"
+                android:textStyle="italic"
+                app:layout_constraintTop_toBottomOf="@id/tvNombre"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
-    <!-- Bottom Navigation -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardEstado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="6dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+
+        app:layout_constraintTop_toBottomOf="@id/cardUsuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tvRol2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Estado"
+                android:textStyle="italic"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tvNombre2"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNombre2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Habilitado"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/tvRol2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAlertas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/cardEstado"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:background="@drawable/border_black"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:id="@+id/seccionesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvSeccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notificaciones"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="18dp" />
+
+            <!-- Botón: Ubicación -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp"
+                android:backgroundTint="#E3DFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ubicación"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guarda la dirección del hotel, ciudad, zona turísticas y puntos de referencia cercanos" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botón: Fotos -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp"
+                android:backgroundTint="#E3DFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fotos"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Registra fotos reales de las habitaciones e instalaciones del hotel" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botón: Habitaciones -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp"
+                android:backgroundTint="#E3DFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Habitaciones"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guarda número, tipo, capacidad y área de los departamentos" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botón: Servicios -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp"
+                android:backgroundTint="#E3DFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Servicios"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Registra los servicios a ofrecer como WiFi, desayuno buffet, limpieza, etc." />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Contenedor de secciones -->
+
+    <!-- Barra inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
@@ -141,3 +291,4 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
