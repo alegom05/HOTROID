@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".TaxiUsuario">
+    tools:context=".UsuarioActivity">
 
     <!-- Título -->
-    <!--<TextView
+    <TextView
         android:id="@+id/tvTitulo"
         style="@style/TextViewDefault"
         android:text="Usuario"
@@ -17,10 +17,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />-->
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Card del taxista -->
-    <!--<androidx.cardview.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardTaxista"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -61,11 +61,11 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/taxipic1"
+                android:src="@drawable/foto_admin"
                 android:scaleType="centerCrop"
                 android:background="@drawable/border_circle" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>-->
+    </androidx.cardview.widget.CardView>
 
     <!-- Card con datos del usuario -->
     <androidx.cardview.widget.CardView
@@ -81,7 +81,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!--<RelativeLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp">
@@ -122,10 +122,10 @@
                 android:layout_width="100dp"
                 android:layout_height="120dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/usuariopic1"
+                android:src="@drawable/foto_usuario"
                 android:layout_marginStart="12dp"
                 android:scaleType="centerCrop" />
-        </RelativeLayout>-->
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <!-- Bottom Navigation -->
