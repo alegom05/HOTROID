@@ -3,33 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:layout_marginBottom="6dp"
+    android:layout_margin="6dp"
+    android:layout_marginBottom="4dp"
     android:elevation="8dp"
     app:cardElevation="6dp"
     android:padding="8dp"
     app:background="?attr/colorSurfaceVariant"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="8dp">
+    <!--app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"-->
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="5dp">
+
+        <ImageView
+            android:id="@+id/imgAdjunto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_weight="1"
+            android:src="@drawable/qr_code_2_24" />
 
         <TextView
             android:id="@+id/tvMensajeResumen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Resumen del mensaje..."
-            android:textSize="14sp"
-            android:maxLines="3"
+            android:textSize="12sp"
+            android:layout_weight="3"
+            android:layout_gravity="start|center_vertical"
+            android:maxLines="2"
             android:ellipsize="end"
             android:lineSpacingExtra="4dp"/>
 
-        <ImageView
-            android:id="@+id/imgAdjunto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_calendar" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

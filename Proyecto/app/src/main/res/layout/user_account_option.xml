@@ -89,9 +89,7 @@
                 app:icon="@drawable/outline_account_circle_24"
                 app:iconGravity="textStart"
                 app:iconPadding="20dp"
-                app:iconTint="?android:textColorPrimary"
-                app:strokeColor="@color/moradoNoti"
-                app:strokeWidth="1dp"/>
+                app:iconTint="?android:textColorPrimary" />
             <!--app:strokeColor="@color/moradoNoti"
             app:iconTint="?attr/colorOnPrimary"    asignar el color dinamico al icono de acuerdo al tema
                 app:strokeWidth="1dp"--><!--para agregar borde-->
