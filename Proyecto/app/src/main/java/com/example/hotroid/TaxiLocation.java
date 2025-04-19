@@ -15,10 +15,11 @@ public class TaxiLocation extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
+                Intent intentInicio = new Intent(TaxiLocation.this, TaxiActivity.class);
+                startActivity(intentInicio);
                 return true;
             }
             else if (item.getItemId() == R.id.location) {

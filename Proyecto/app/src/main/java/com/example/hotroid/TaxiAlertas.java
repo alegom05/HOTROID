@@ -22,6 +22,8 @@ public class TaxiAlertas extends AppCompatActivity {
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
+                Intent intentInicio = new Intent(TaxiAlertas.this, TaxiActivity.class);
+                startActivity(intentInicio);
                 return true;
             }
             else if (item.getItemId() == R.id.location) {

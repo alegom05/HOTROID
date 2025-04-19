@@ -61,7 +61,7 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/foto_admin"
+                android:src="@drawable/taxipic1"
                 android:scaleType="centerCrop"
                 android:background="@drawable/border_circle" />
         </LinearLayout>
@@ -122,7 +122,7 @@
                 android:layout_width="100dp"
                 android:layout_height="120dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/foto_usuario"
+                android:src="@drawable/clientepic1"
                 android:layout_marginStart="12dp"
                 android:scaleType="centerCrop" />
         </RelativeLayout>
