@@ -41,12 +41,19 @@ public class NotificacionesUser extends AppCompatActivity {
         lista.add(new Notificacion(
                 "Se realiza el envio del código que debe presentar al taxista cuando llegue...",
                 "Se realiza el envio del código que debe presentar al taxista cuando llegue al hotel para que pueda dirigirse al aeropuerto",
-                R.drawable.outline_contact_emergency_24
+                R.drawable.qr_code_2_24,
+                "Ay6gfJGg2r67g54"
         ));
         lista.add(new Notificacion(
-                "Se ha realizado con éxito el pago por la reservación...",
+                "Se ha realizado con éxito el pago por la reservación de 1 habitación y servicio al cuarto, además se está registrando su salida del hotel. ¡Gracias por su preferencia!...",
                 "Se ha realizado con éxito el pago por la reservación de 1 habitación y servicio al cuarto, además se está registrando su salida del hotel. ¡Gracias por su preferencia!",
-                R.drawable.ic_check_double
+                R.drawable.ic_euro
+        ));
+        lista.add(new Notificacion(
+                "A partir de este momento se registra su ingreso al hotel y se le brindará acceso a todos los servicios...",
+                "A partir de este momento se registra su ingreso al hotel y se le brindará acceso a todos los servicios solicitados.",
+                R.drawable.qr_code_2_24,
+                "Ay6gfJGg2r67gF"
         ));
         return lista;
     }
