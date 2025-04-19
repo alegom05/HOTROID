@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:layout_marginBottom="6dp"
+    android:elevation="8dp"
+    app:cardElevation="6dp"
+    android:padding="8dp"
+    app:background="?attr/colorSurfaceVariant"
+    app:cardCornerRadius="12dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvMensajeResumen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resumen del mensaje..."
+            android:textSize="14sp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:lineSpacingExtra="4dp"/>
+
+        <ImageView
+            android:id="@+id/imgAdjunto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_calendar" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
