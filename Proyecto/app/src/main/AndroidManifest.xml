@@ -97,6 +97,9 @@
                 android:value=".HotelDetalladoUser" /> <!-- Esto también debe coincidir con el nombre correcto -->
         </activity>
         <activity
+            android:name=".DetalleReservaActivo"
+            android:label="Detalle de Reserva" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
