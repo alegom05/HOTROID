@@ -123,6 +123,7 @@
         <activity android:name=".TaxiLocation" />
         <activity android:name=".TaxiFin" />
         <activity android:name=".TaxiUsuario" />
+        <activity android:name=".TaxiVehiculo"></activity>
 
 
 

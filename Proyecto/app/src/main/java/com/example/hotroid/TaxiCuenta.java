@@ -2,7 +2,11 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class TaxiCuenta extends AppCompatActivity {
@@ -14,8 +18,12 @@ public class TaxiCuenta extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        Button btnVehiculo = findViewById(R.id.btnVehiculo);
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
+                Intent intentInicio = new Intent(TaxiCuenta.this, TaxiActivity.class);
+                startActivity(intentInicio);
                 return true;
             }
             else if (item.getItemId() == R.id.location) {
@@ -29,6 +37,12 @@ public class TaxiCuenta extends AppCompatActivity {
                 return true;
             }
             return false; // Devuelve false si no se seleccionó ningún ítem válido
+        });
+
+        btnVehiculo.setOnClickListener(v -> {
+            Log.d("TaxiCuenta", "Botón de Vehículo presionado");
+            Intent intent = new Intent(TaxiCuenta.this, TaxiVehiculo.class);
+            startActivity(intent);
         });
 
 

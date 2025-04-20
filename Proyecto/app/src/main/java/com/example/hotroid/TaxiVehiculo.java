@@ -12,7 +12,6 @@ public class TaxiVehiculo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxi_vehiculo);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 

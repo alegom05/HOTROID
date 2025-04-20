@@ -12,10 +12,9 @@ public class TaxiLocation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_location);
+        setContentView(R.layout.taxi_cuenta);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {
