@@ -1,8 +1,15 @@
 package com.example.hotroid;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,6 +22,7 @@ import java.util.List;
 import me.relex.circleindicator.CircleIndicator3;
 
 public class DetalleHabitacionUser extends AppCompatActivity {
+    private TextView roomGuestsText, precioText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,10 @@ public class DetalleHabitacionUser extends AppCompatActivity {
         });
 
         inicializarCarruselImagenes();
+        configurarSelectorHabitaciones();
+
+        ImageView backIcon = findViewById(R.id.back_icon);
+        backIcon.setOnClickListener(v -> finish());
     }
 
     private void inicializarCarruselImagenes() {
@@ -44,5 +56,35 @@ public class DetalleHabitacionUser extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         indicator.setViewPager(viewPager);
     }
+    private void configurarSelectorHabitaciones() {
+        LinearLayout roomGuestsLayout = findViewById(R.id.roomGuestsLayout);
+        roomGuestsText = findViewById(R.id.roomGuestsText);
+        precioText = findViewById(R.id.tvPrecio);
+
+        roomGuestsLayout.setOnClickListener(v -> mostrarDialogoHabitaciones());
+    }
+
+    private void mostrarDialogoHabitaciones() {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialogo_habitaciones, null);
+        NumberPicker npHabitaciones = dialogView.findViewById(R.id.npHabitaciones);
+
+        npHabitaciones.setMinValue(1);
+        npHabitaciones.setMaxValue(3);
+        npHabitaciones.setValue(1);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Selecciona cantidad de habitaciones")
+                .setView(dialogView)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    int cantidad = npHabitaciones.getValue();
+                    roomGuestsText.setText(cantidad + (cantidad == 1 ? " habitación" : " habitaciones"));
+
+                    int precio = (cantidad == 1) ? 1200 : (cantidad == 2) ? 1500 : 1800;
+                    precioText.setText("S/. " + precio);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
 
 }

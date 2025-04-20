@@ -10,17 +10,46 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/azulNoti"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="@color/cliente1"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/baseline_arrow_back_24"
-            app:title="Habitación Simple"
-            app:titleTextColor="@android:color/primary_text_light"
-            app:titleCentered="true"/>
+            android:layout_height="?attr/actionBarSize">
+            <!--app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:title="Habitación Estándar"
+            app:titleTextColor="@android:color/white"
+            app:titleCentered="true"/>-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Icono personalizado -->
+                <ImageView
+                    android:id="@+id/back_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/baseline_arrow_back_24"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Volver" />
+
+                <!-- Título centrado -->
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:text="Habitación Estándar"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:gravity="center" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Contenido principal -->
@@ -139,7 +168,9 @@
                 android:layout_height="wrap_content"
                 android:text="Precio por 3 noches"
                 android:textStyle="normal"
+                android:textColor="@color/design_default_color_on_secondary"
                 android:textSize="12sp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp" />
 
             <!-- Precio -->
@@ -150,7 +181,8 @@
                 android:text="S/. 1200"
                 android:textStyle="bold"
                 android:textColor="@color/cliente2"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:layout_marginStart="4dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="2dp" />
 
@@ -189,7 +221,7 @@
                         android:id="@+id/roomGuestsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1 habitación · 1 adulto"
+                        android:text="1 habitación"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -203,7 +235,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Reservar ahora"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="@color/material_dynamic_primary30"
+                android:backgroundTint="#009688"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
     </ScrollView>
