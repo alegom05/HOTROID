@@ -11,4 +11,6 @@ Implementamos medidas técnicas y organizativas adecuadas para proteger la infor
 Derechos del Usuario
 De acuerdo con la legislación aplicable, los usuarios tienen derecho a acceder, rectificar, cancelar o oponerse al tratamiento de sus datos personales en cualquier momento. Si desea ejercer alguno de estos derechos o tiene alguna consulta sobre el tratamiento de sus datos, puede ponerse en contacto con nosotros a través de [correo electrónico de contacto] o consultar nuestra política de privacidad completa disponible dentro de la aplicación.
 En HOTROID, nos comprometemos a garantizar que su información personal sea tratada con el más alto nivel de seguridad y de acuerdo con la ley.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

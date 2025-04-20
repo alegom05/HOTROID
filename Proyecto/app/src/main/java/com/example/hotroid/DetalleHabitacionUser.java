@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +43,13 @@ public class DetalleHabitacionUser extends AppCompatActivity {
 
         ImageView backIcon = findViewById(R.id.back_icon);
         backIcon.setOnClickListener(v -> finish());
+
+        MaterialButton btnReservar = findViewById(R.id.btnReservar);
+        btnReservar.setOnClickListener(v -> {
+            Intent intent = new Intent(DetalleHabitacionUser.this, ProcesoReservaUser.class);
+            startActivity(intent);
+        });
+
     }
 
     private void inicializarCarruselImagenes() {

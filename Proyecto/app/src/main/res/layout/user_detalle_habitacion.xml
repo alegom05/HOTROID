@@ -228,7 +228,7 @@
             </LinearLayout>
 
             <!-- Botón reservar -->
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReservar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
                 android:text="Reservar ahora"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="#009688"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </ScrollView>
 

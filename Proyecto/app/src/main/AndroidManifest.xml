@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
+            android:name=".ProcesoReservaUser"
+            android:exported="false" />
+        <activity
             android:name=".DetalleHabitacionUser"
             android:exported="false" />
         <activity

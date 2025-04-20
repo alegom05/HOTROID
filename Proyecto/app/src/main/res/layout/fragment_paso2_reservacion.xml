@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Paso2ReservacionFragment">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment" />
+
+</FrameLayout>-->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="16dp"
+    android:padding="16dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Proceso de reserva - Servicios"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchGimnasio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gimnasio PEN 100" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchDesayuno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Desayuno PEN 80" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchPiscina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Piscina PEN 100" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchParqueo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Parqueo PEN 100" />
+
+        <TextView android:id="@+id/tvSubtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reserva PEN 0" />
+
+        <TextView android:id="@+id/tvTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOTAL PEN 0"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSiguientePaso2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Siguiente" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
