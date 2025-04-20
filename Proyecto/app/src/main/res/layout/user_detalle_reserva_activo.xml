@@ -161,9 +161,21 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
-                            android:backgroundTint="#4CAF7F"
+                            android:backgroundTint="#3F51B5"
                             android:textColor="@android:color/white"
                             android:text="Check-In"
+                            android:drawableStart="@android:drawable/ic_menu_edit"
+                            android:padding="12dp"/>
+
+                        <Button
+                            android:id="@+id/btnCheckOut"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:backgroundTint="#BE3F51B5"
+                            android:textColor="@android:color/white"
+                            android:text="Check-Out"
                             android:drawableStart="@android:drawable/ic_menu_edit"
                             android:padding="12dp"/>
 
@@ -281,7 +293,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_info"
+                            android:src="@drawable/ic_wifi"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -302,7 +314,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_info"
+                            android:src="@drawable/ic_restaurant"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -323,7 +335,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_info"
+                            android:src="@drawable/ic_spa"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -373,7 +385,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_email"
+                            android:src="@drawable/ic_letter"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -394,13 +406,13 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_dialer"
+                            android:src="@drawable/ic_contact"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="+51 123 456 789"
+                            android:text="+51 966 456 789"
                             android:textSize="14sp"
                             android:textColor="#333333"
                             android:layout_marginStart="8dp"/>
