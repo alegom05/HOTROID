@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
+            android:name=".DetalleHabitacionUser"
+            android:exported="false" />
+        <activity
             android:name=".AdminEditarServicioActivity"
             android:exported="false" />
         <activity
@@ -81,7 +84,7 @@
         <activity
             android:name=".NotificacionesUser"
             android:exported="false"
-            android:theme="@style/Theme.Hotroid.User"/>
+            android:theme="@style/Theme.Hotroid.User" />
         <activity
             android:name=".UbicacionActivity"
             android:exported="false" />
@@ -105,11 +108,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ClienteActivity"
-            android:theme="@style/Theme.Hotroid.User"/>
-<!--
-        Taxista
--->
+        <activity
+            android:name=".ClienteActivity"
+            android:theme="@style/Theme.Hotroid.User" />
+        <!--         Taxista -->
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
@@ -118,13 +120,7 @@
         <activity android:name=".TaxiLocation" />
         <activity android:name=".TaxiFin" />
         <activity android:name=".TaxiUsuario" />
-
-
-
-
-        <!--
-                .
-        -->
+        <!--                 . -->
         <activity android:name=".HotelDetalladoUser" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />

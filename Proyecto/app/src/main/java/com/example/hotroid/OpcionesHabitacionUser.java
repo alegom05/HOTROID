@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,9 +44,10 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
                 // Aquí puedes navegar a una vista detallada de la habitación estándar
                 Toast.makeText(OpcionesHabitacionUser.this, "Ver detalles de habitación estándar", Toast.LENGTH_SHORT).show();
                 // Alternativa: Iniciar una nueva actividad
-                // Intent intent = new Intent(OpcionesHabitacionUser.this, DetalleHabitacionActivity.class);
+                Intent intent = new Intent(OpcionesHabitacionUser.this, DetalleHabitacionUser.class);
+                intent.putExtra("TIPO_HABITACION", "estandar");
+                startActivity(intent);
                 // intent.putExtra("TIPO_HABITACION", "estandar");
-                // startActivity(intent);
             }
         });
 

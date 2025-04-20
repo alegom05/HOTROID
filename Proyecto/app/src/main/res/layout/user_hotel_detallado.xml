@@ -204,7 +204,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_wifi"
-                            android:tint="@color/black" />
+                            app:tint="@color/black" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -273,7 +273,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_restaurant"
-                            android:tint="@color/black" />
+                            app:tint="@color/black" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -296,7 +296,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_gym"
-                            android:tint="@color/black" />
+                            app:tint="@color/black" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -319,7 +319,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_spa"
-                            android:tint="@color/black" />
+                            app:tint="@color/black" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -429,7 +429,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="12dp"
                         android:src="@drawable/ic_person"
-                        android:tint="@color/black"/>
+                        app:tint="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
