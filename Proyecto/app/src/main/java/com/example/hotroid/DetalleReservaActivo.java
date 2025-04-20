@@ -38,7 +38,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
     private TextView tvHotelName, tvHotelLocation, tvRoomDetails;
     private TextView tvStatus, tvArrivalDay, tvGuestsInfo;
     private TextView tvCheckIn, tvCheckOut, tvReservationCode;
-    private Button btnCheckIn, btnCancelReservation;
+    private Button btnCheckIn, btnCancelReservation,btnCheckOut;
     private Bitmap qrCodeBitmap;
 
     @Override
@@ -67,6 +67,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
         tvReservationCode = findViewById(R.id.tvReservationCode);
         btnCheckIn = findViewById(R.id.btnCheckIn);
         btnCancelReservation = findViewById(R.id.btnCancelReservation);
+        btnCheckOut = findViewById(R.id.btnCheckOut);
 
         // Obtener datos del intent
         Intent intent = getIntent();
@@ -106,7 +107,17 @@ public class DetalleReservaActivo extends AppCompatActivity {
         btnCancelReservation.setOnClickListener(v -> {
             showCancelReservationDialog();
         });
+
+        btnCheckOut.setOnClickListener(v -> {
+            Intent intent = new Intent(DetalleReservaActivo.this, CheckOutUser.class);
+            startActivity(intent);
+        });
+
+
+
     }
+
+
 
     private void showCheckInDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

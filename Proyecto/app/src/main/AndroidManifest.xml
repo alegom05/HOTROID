@@ -110,9 +110,11 @@
         </activity>
         <activity android:name=".ClienteActivity"
             android:theme="@style/Theme.Hotroid.User"/>
-<!--
-        Taxista
--->
+        <activity android:name=".CheckOutUser" />
+
+        <!--
+                Taxista
+        -->
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
