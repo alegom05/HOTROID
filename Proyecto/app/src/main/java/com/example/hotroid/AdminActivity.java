@@ -58,7 +58,7 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intentUbicacion);
                 return true;
             } else if (item.getItemId() == R.id.nav_checkout) {
-                Intent intentAlertas = new Intent(AdminActivity.this, SuperEventosActivity.class);
+                Intent intentAlertas = new Intent(AdminActivity.this, AdminCheckout.class);
                 startActivity(intentAlertas);
                 return true;
             } else if (item.getItemId() == R.id.nav_reportes) {

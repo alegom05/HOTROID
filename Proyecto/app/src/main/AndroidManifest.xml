@@ -2,16 +2,39 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_logo_louncher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_logo_louncher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
+        <activity
+            android:name=".AdminCheckoutCompletado"
+            android:exported="false" />
+        <activity
+            android:name=".AdminMontoCobrar"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckoutDetalles"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckout"
+            android:exported="false" />
+        <activity
+            android:name=".AdminVentasUsuario"
+            android:exported="false" />
+        <activity
+            android:name=".AdminVentasServicio"
+            android:exported="false" />
         <activity
             android:name=".AdminEditarServicioActivity"
             android:exported="false" />
@@ -81,7 +104,7 @@
         <activity
             android:name=".NotificacionesUser"
             android:exported="false"
-            android:theme="@style/Theme.Hotroid.User"/>
+            android:theme="@style/Theme.Hotroid.User" />
         <activity
             android:name=".UbicacionActivity"
             android:exported="false" />
@@ -108,13 +131,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ClienteActivity"
-            android:theme="@style/Theme.Hotroid.User"/>
-        <activity android:name=".CheckOutUser" />
-
-        <!--
-                Taxista
-        -->
+        <activity
+            android:name=".ClienteActivity"
+            android:theme="@style/Theme.Hotroid.User" />
+        <activity android:name=".CheckOutUser" /> <!-- Taxista -->
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
@@ -123,14 +143,7 @@
         <activity android:name=".TaxiLocation" />
         <activity android:name=".TaxiFin" />
         <activity android:name=".TaxiUsuario" />
-        <activity android:name=".TaxiVehiculo"></activity>
-
-
-
-
-        <!--
-                .
-        -->
+        <activity android:name=".TaxiVehiculo" /> <!-- . -->
         <activity android:name=".HotelDetalladoUser" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />
