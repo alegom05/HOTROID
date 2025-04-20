@@ -5,13 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminEditarServicioActivity">
+    tools:context=".AdminMontoCobrar">
 
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registros"
+        android:text="Check Out"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
@@ -105,100 +105,36 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Servicios"
+                    android:text="Cobro del checkout"
                     android:textStyle="bold"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Editar servicio"
-                    android:layout_marginBottom="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre del servicio"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/etNombreServicio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/tarjeta_credito"
                     android:layout_marginBottom="16dp" />
 
                 <TextView
+                    android:id="@+id/tvMontoTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Descripción"
-                    android:textStyle="bold" />
-                <EditText
-                    android:id="@+id/etDescripcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textLongMessage"
-                    android:layout_marginBottom="16dp" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio (S/.)"
+                    android:text="S/. 0000.00"
+                    android:textSize="28sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="24dp"/>
 
-                <EditText
-                    android:id="@+id/etPrecio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:layout_marginBottom="16dp" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp">
-
-                    <Button
-                        android:id="@+id/btnSeleccionarImagenes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="+ Añadir imágenes"
-                        android:backgroundTint="@color/black"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" />
-
-                    <Button
-                        android:id="@+id/btnLimpiarImagenes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Limpiar"
-                        android:backgroundTint="@color/black"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-                <LinearLayout
-                    android:id="@+id/contenedorImagenes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"/>
-
+                <!-- Botón para confirmar -->
                 <Button
-                    android:id="@+id/btnGuardarCambios"
+                    android:id="@+id/btnConfirmar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Guardar Cambios"
+                    android:text="Confirmar"
+                    android:layout_marginTop="16dp"
                     android:backgroundTint="@color/black"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"/>
+
+
 
 
             </LinearLayout>

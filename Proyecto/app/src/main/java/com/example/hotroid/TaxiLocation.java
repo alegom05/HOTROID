@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -12,10 +13,14 @@ public class TaxiLocation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_location);
+        CardView cardTaxista = findViewById(R.id.cardTaxista);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-
+        cardTaxista.setOnClickListener(v -> {
+            Intent intent = new Intent(TaxiLocation.this, TaxiCuenta.class);
+            startActivity(intent);
+        });
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {

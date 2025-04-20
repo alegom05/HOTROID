@@ -30,13 +30,13 @@ public class AdminReportes extends AppCompatActivity {
         cardVentasServicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminReportes.this, UbicacionActivity.class);
+                Intent intent = new Intent(AdminReportes.this, AdminVentasServicio.class);
                 startActivity(intent);
             }
         });
         CardView cardVentasUsuario = findViewById(R.id.cardVentasUsuario);
         cardVentasUsuario.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminReportes.this, AdminFotosActivity.class);
+            Intent intent = new Intent(AdminReportes.this, AdminVentasUsuario.class);
             startActivity(intent);
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

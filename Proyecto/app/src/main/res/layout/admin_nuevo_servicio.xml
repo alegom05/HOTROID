@@ -145,10 +145,13 @@
                 <EditText
                     android:id="@+id/etDescripcion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ej: 25"
-                    android:inputType="numberDecimal"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_height="150dp"
+                    android:hint="Escriba aquí"
+                    android:inputType="textMultiLine"
+                    android:gravity="top|start"
+                    android:padding="8dp"
+                    android:textColorHint="#999999"
+                    android:layout_marginBottom="16dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,6 +167,35 @@
                     android:hint="Ej: 25"
                     android:inputType="numberDecimal"
                     android:layout_marginBottom="16dp"/>
+
+                <!-- TÍTULO -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Imágenes del servicio"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Botón para seleccionar imágenes -->
+                <Button
+                    android:id="@+id/btnSeleccionarImagenes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Añadir imágenes"
+                    android:backgroundTint="@color/black"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Vista previa de imágenes seleccionadas -->
+                <LinearLayout
+                    android:id="@+id/contenedorImagenes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+
 
                 <Button
                     android:id="@+id/btnGuardarHabitacion"

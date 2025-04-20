@@ -1,14 +1,20 @@
 package com.example.hotroid;
 
+import android.net.Uri;
+
+import java.util.ArrayList;
+
 public class Servicios {
     private String nombre;
     private String descripcion;
     private String precio;
+    private ArrayList<Uri> imagenes;
 
-    public Servicios(String nombre, String descripcion, String precio) {
+    public Servicios(String nombre, String descripcion, String precio, ArrayList<Uri> imagenes) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.imagenes = imagenes;
     }
 
     public String getNombre() {
@@ -34,4 +40,7 @@ public class Servicios {
     public void setPrecio(String precio) {
         this.precio = precio;
     }
+
+    public ArrayList<Uri> getImagenes() { return imagenes; }
+    public void setImagenes(ArrayList<Uri> imagenes) { this.imagenes = imagenes; }
 }

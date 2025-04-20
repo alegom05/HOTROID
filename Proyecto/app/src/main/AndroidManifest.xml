@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +18,24 @@
         tools:targetApi="31">
         <activity
             android:name=".DetalleHabitacionUser"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckoutCompletado"
+            android:exported="false" />
+        <activity
+            android:name=".AdminMontoCobrar"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckoutDetalles"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckout"
+            android:exported="false" />
+        <activity
+            android:name=".AdminVentasUsuario"
+            android:exported="false" />
+        <activity
+            android:name=".AdminVentasServicio"
             android:exported="false" />
         <activity
             android:name=".AdminEditarServicioActivity"
@@ -100,6 +122,9 @@
                 android:value=".HotelDetalladoUser" /> <!-- Esto también debe coincidir con el nombre correcto -->
         </activity>
         <activity
+            android:name=".DetalleReservaActivo"
+            android:label="Detalle de Reserva" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -111,7 +136,7 @@
         <activity
             android:name=".ClienteActivity"
             android:theme="@style/Theme.Hotroid.User" />
-        <!--         Taxista -->
+        <activity android:name=".CheckOutUser" /> <!-- Taxista -->
         <activity
             android:name=".TaxiActivity"
             android:theme="@style/Theme.Hotroid" />
@@ -120,7 +145,7 @@
         <activity android:name=".TaxiLocation" />
         <activity android:name=".TaxiFin" />
         <activity android:name=".TaxiUsuario" />
-        <!--                 . -->
+        <activity android:name=".TaxiVehiculo" /> <!-- . -->
         <activity android:name=".HotelDetalladoUser" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />

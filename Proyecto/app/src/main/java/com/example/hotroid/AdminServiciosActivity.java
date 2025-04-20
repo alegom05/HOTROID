@@ -1,6 +1,7 @@
 package com.example.hotroid;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -31,12 +32,32 @@ public class AdminServiciosActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvServicios);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         // Initialize room data
         serviciosList = new ArrayList<>();
-        serviciosList.add(new Servicios("WIFI", "descripcion", "2"));
-        serviciosList.add(new Servicios("Desayuno Buffet", "descripcion", "2"));
-        serviciosList.add(new Servicios("Gimnasio", "descripcion", "2"));
-        serviciosList.add(new Servicios("Piscina", "descripcion", "2"));
+
+        // Lista 1: imagen de wifi
+        ArrayList<Uri> imagenesWifi = new ArrayList<>();
+        imagenesWifi.add(getUriFromDrawable(R.drawable.wifi));
+
+        // Lista 2: imagen de desayuno buffet
+        ArrayList<Uri> imagenesBuffet = new ArrayList<>();
+        imagenesBuffet.add(getUriFromDrawable(R.drawable.buffet));
+
+        // Lista 3: gimnasio
+        ArrayList<Uri> imagenesGimnasio = new ArrayList<>();
+        imagenesGimnasio.add(getUriFromDrawable(R.drawable.gimnasio));
+
+        // Lista 4: piscina
+        ArrayList<Uri> imagenesPiscina = new ArrayList<>();
+        imagenesPiscina.add(getUriFromDrawable(R.drawable.piscina));
+
+        // Ahora agrega los servicios con sus respectivas imágenes
+        serviciosList.add(new Servicios("WIFI", "descripcion", "2", imagenesWifi));
+        serviciosList.add(new Servicios("Desayuno Buffet", "descripcion", "2", imagenesBuffet));
+        serviciosList.add(new Servicios("Gimnasio", "descripcion", "2", imagenesGimnasio));
+        serviciosList.add(new Servicios("Piscina", "descripcion", "2", imagenesPiscina));
+
 
         // Set the adapter
         adapter = new ServiciosAdapter(serviciosList);
@@ -46,9 +67,10 @@ public class AdminServiciosActivity extends AppCompatActivity {
         findViewById(R.id.btnRegistrar).setOnClickListener(v -> {
             // Open AdminNuevaHabitacionActivity when Register button is clicked
             Intent intent = new Intent(AdminServiciosActivity.this, AdminNuevoServicioActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 100);
+
         });
-        // Set up click listener for each room item
+        // Set up click listener for each service item
         adapter.setOnItemClickListener((position) -> {
             Servicios selectedServicio = serviciosList.get(position);
 
@@ -57,7 +79,37 @@ public class AdminServiciosActivity extends AppCompatActivity {
             intent.putExtra("Service_name", selectedServicio.getNombre());
             intent.putExtra("Service_description", selectedServicio.getDescripcion());
             intent.putExtra("price", selectedServicio.getPrecio());
+
+            ArrayList<String> uriStrings = new ArrayList<>();
+            for (Uri uri : selectedServicio.getImagenes()) {
+                uriStrings.add(uri.toString());
+            }
+            intent.putStringArrayListExtra("imagenes", uriStrings);
             startActivity(intent);
         });
     }
+    private Uri getUriFromDrawable(int drawableId) {
+        return Uri.parse("android.resource://" + getPackageName() + "/" + drawableId);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            String nombre = data.getStringExtra("nombre");
+            String descripcion = data.getStringExtra("descripcion");
+            String precio = data.getStringExtra("precio");
+            ArrayList<String> uriStrings = data.getStringArrayListExtra("imagenes");
+
+            ArrayList<Uri> imagenes = new ArrayList<>();
+            for (String uriStr : uriStrings) {
+                imagenes.add(Uri.parse(uriStr));
+            }
+
+            Servicios nuevoServicio = new Servicios(nombre, descripcion, precio, imagenes);
+            serviciosList.add(nuevoServicio);
+            adapter.notifyItemInserted(serviciosList.size() - 1);
+        }
+    }
+
 }
