@@ -270,6 +270,31 @@
                                 android:textColor="#666666"
                                 android:layout_marginTop="4dp"/>
                         </LinearLayout>
+                        <!--<LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <Button
+                                android:id="@+id/btnSolicitarTaxi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="#FF9800"
+                                android:textColor="@android:color/white"
+                                android:text="Solicitar Taxi"
+                                android:padding="12dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Servicio"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginTop="4dp"/>
+                        </LinearLayout>-->
+
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -373,7 +398,36 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_info"
+                            android:src="@drawable/ic_servi_taxi"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Taxi"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            android:layout_marginStart="8dp"/>
+                        <Button
+                            android:id="@+id/btnSolicitarTaxi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#FF9800"
+                            android:textColor="@android:color/white"
+                            android:text="Solicitar Taxi"
+                            android:padding="12dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_wifi"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -394,7 +448,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_info"
+                            android:src="@drawable/ic_restaurant"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -415,7 +469,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_info"
+                            android:src="@drawable/ic_spa"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -465,7 +519,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_email"
+                            android:src="@drawable/ic_letter"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
@@ -486,13 +540,13 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_dialer"
+                            android:src="@drawable/ic_contact"
                             android:layout_gravity="center_vertical"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="+51 123 456 789"
+                            android:text="+51 966 456 789"
                             android:textSize="14sp"
                             android:textColor="#333333"
                             android:layout_marginStart="8dp"/>

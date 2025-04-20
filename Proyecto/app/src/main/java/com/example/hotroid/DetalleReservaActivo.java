@@ -38,7 +38,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
     private TextView tvHotelName, tvHotelLocation, tvRoomDetails;
     private TextView tvStatus, tvArrivalDay, tvGuestsInfo;
     private TextView tvCheckIn, tvCheckOut, tvReservationCode;
-    private Button btnCheckIn, btnCancelReservation,btnCheckOut;
+    private Button btnCheckIn, btnCancelReservation,btnCheckOut, btnSolicitarTaxi;
     private Bitmap qrCodeBitmap;
 
     @Override
@@ -49,6 +49,9 @@ public class DetalleReservaActivo extends AppCompatActivity {
         // Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        btnSolicitarTaxi = findViewById(R.id.btnSolicitarTaxi);
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -113,9 +116,29 @@ public class DetalleReservaActivo extends AppCompatActivity {
             startActivity(intent);
         });
 
+        btnSolicitarTaxi.setOnClickListener(v -> {
+            showTaxiConfirmationDialog();
+        });
+
+
 
 
     }
+    private void showTaxiConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Solicitar Taxi");
+        builder.setMessage("¿Estás seguro de solicitar el servicio de taxi?");
+
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            Intent intent = new Intent(DetalleReservaActivo.this, UserServTaxi.class);
+            startActivity(intent);
+        });
+
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+
+        builder.show();
+    }
+
 
 
 
@@ -132,6 +155,8 @@ public class DetalleReservaActivo extends AppCompatActivity {
         TextView tvGuestNameQR = dialogView.findViewById(R.id.tvGuestNameQR);
         Button btnCancelCheckIn = dialogView.findViewById(R.id.btnCancelCheckIn);
         Button btnDownloadQR = dialogView.findViewById(R.id.btnDownloadQR);
+
+
 
         // Establecer datos en las vistas
         tvReservationCodeQR.setText("RES123456");
