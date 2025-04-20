@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back">
+            app:navigationIcon="@drawable/back">
 
             <!-- Corazón de favoritos -->
             <ImageView
