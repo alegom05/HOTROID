@@ -20,6 +20,11 @@ public class TaxiCuenta extends AppCompatActivity {
 
         Button btnVehiculo = findViewById(R.id.btnVehiculo);
 
+        btnVehiculo.setOnClickListener(v -> {
+            Intent intent = new Intent(TaxiCuenta.this, TaxiVehiculo.class); // Redirige a TaxiCuenta
+            startActivity(intent); // Inicia la nueva actividad
+        });
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
                 Intent intentInicio = new Intent(TaxiCuenta.this, TaxiActivity.class);
