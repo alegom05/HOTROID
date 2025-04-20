@@ -11,6 +11,7 @@ public class TaxiAlertas extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.taxi_alertas);
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
