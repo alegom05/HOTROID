@@ -54,7 +54,7 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intentInicio);
                 return true;
             } else if (item.getItemId() == R.id.nav_taxistas) {
-                Intent intentUbicacion = new Intent(AdminActivity.this, SuperUsuariosActivity.class);
+                Intent intentUbicacion = new Intent(AdminActivity.this, AdminTaxistas.class);
                 startActivity(intentUbicacion);
                 return true;
             } else if (item.getItemId() == R.id.nav_checkout) {

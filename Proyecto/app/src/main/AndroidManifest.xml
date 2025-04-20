@@ -18,6 +18,12 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
+            android:name=".AdminTaxistaDetalles"
+            android:exported="false" />
+        <activity
+            android:name=".AdminTaxistas"
+            android:exported="false" />
+        <activity
             android:name=".AdminCheckoutCompletado"
             android:exported="false" />
         <activity
