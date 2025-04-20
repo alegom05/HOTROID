@@ -21,39 +21,107 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Buscador -->
-    <LinearLayout
+    <!-- Card con datos del usuario -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardTaxista"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="6dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+
         app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/imagenPerfil"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/foto_admin"
+                android:scaleType="centerCrop"
+                android:background="@drawable/border_circle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Alejandro Gomez"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
+                app:layout_constraintBottom_toTopOf="@id/tvRol"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvRol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Taxista"
+                android:textStyle="italic"
+                app:layout_constraintTop_toBottomOf="@id/tvNombre"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+    <!-- Buscador -->
+
+    <!-- Imagen del mapa -->
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardTaxista">
 
         <ImageView
             android:id="@+id/searchIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/search"
-            android:contentDescription="Icono de búsqueda"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Icono de búsqueda"
+            android:src="@drawable/search" />
     </LinearLayout>
 
-    <!-- Imagen del mapa -->
     <ImageView
         android:id="@+id/mapImageView"
-        android:layout_width="344dp"
-        android:layout_height="516dp"
+        android:layout_width="320dp"
+        android:layout_height="442dp"
+        android:layout_marginTop="18dp"
         android:contentDescription="Mapa con ruta de taxi"
         android:scaleType="centerCrop"
         android:src="@drawable/mapa"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         tools:ignore="NotSibling" />
 
     <!-- Barra inferior -->
@@ -69,3 +137,4 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
