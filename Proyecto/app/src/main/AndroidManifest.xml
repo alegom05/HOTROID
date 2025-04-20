@@ -10,10 +10,10 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_logo_louncher"
+        android:icon="@mipmap/ic_hotroid"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_logo_louncher_round"
+        android:roundIcon="@mipmap/ic_hotroid_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
