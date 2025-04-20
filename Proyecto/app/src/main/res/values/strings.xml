@@ -11,6 +11,20 @@ Implementamos medidas técnicas y organizativas adecuadas para proteger la infor
 Derechos del Usuario
 De acuerdo con la legislación aplicable, los usuarios tienen derecho a acceder, rectificar, cancelar o oponerse al tratamiento de sus datos personales en cualquier momento. Si desea ejercer alguno de estos derechos o tiene alguna consulta sobre el tratamiento de sus datos, puede ponerse en contacto con nosotros a través de [correo electrónico de contacto] o consultar nuestra política de privacidad completa disponible dentro de la aplicación.
 En HOTROID, nos comprometemos a garantizar que su información personal sea tratada con el más alto nivel de seguridad y de acuerdo con la ley.</string>
+
+    <!-- Cadenas para user_servicio_taxi.xml -->
+    <string name="finding_driver">Conductor encargado: Se está localizando el vehículo más cercano...</string>
+    <string name="driver_assigned">Conductor encargado: %1$s</string>
+    <string name="driver_details">Detalles del servicio</string>
+    <string name="cancel_service">Cancelar servicio</string>
+    <string name="map_description">Mapa de ubicación</string>
+
+    <!-- Cadenas para user_detalle_taxista.xml -->
+    <string name="driver_details_title">Detalles del Conductor</string>
+    <string name="driver_photo_description">Foto del conductor</string>
+    <string name="vehicle_details">Detalles del Vehículo</string>
+    <string name="driver_rating">Calificación del Conductor</string>
+    <string name="back_to_service">Volver al Servicio</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

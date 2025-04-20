@@ -139,6 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:minWidth="180dp"
+                    android:backgroundTint="#009688"
                     android:text="Ver Reservas" />
 
             </LinearLayout>

@@ -154,7 +154,8 @@
                                     android:layout_height="wrap_content"
                                     android:text="Aranwa"
                                     android:textStyle="bold"
-                                    android:textSize="18sp"/>
+                                    android:textSize="18sp"
+                                    />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -165,12 +166,12 @@
                             </LinearLayout>
 
                             <!-- Imagen a la derecha -->
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/hotel_aranwa"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_aranwa_desc"/>-->
+                               />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -215,12 +216,11 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
-                                android:contentDescription="@string/hotel_decameron_desc"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/hotel_decameron" />-->
+                                android:src="@drawable/hotel_decameron" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -265,12 +265,13 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/hotel_oro_verde"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_oro_verde_desc"/>-->
+                                android:src="@drawable/hotel_oro_verde" />
+
+
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -315,12 +316,11 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/hotel_boca_raton"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_boca_raton_desc"/>-->
+                                android:src="@drawable/hotel_boca_raton" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -365,12 +365,11 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/hotel_libertador"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_libertador_desc"/>-->
+                                android:src="@drawable/hotel_libertador" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -415,12 +414,11 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/hotel_costa_sol"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_costa_sol_desc"/>-->
+                                android:src="@drawable/hotel_costa_sol" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -464,12 +462,11 @@
                                     android:layout_marginTop="4dp"/>
                             </LinearLayout>
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/hotel_sonesta"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="@string/hotel_sonesta_desc"/>-->
+                                android:src="@drawable/hotel_sonesta" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
