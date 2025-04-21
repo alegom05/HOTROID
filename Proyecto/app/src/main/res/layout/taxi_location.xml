@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
@@ -49,7 +49,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/foto_admin"
+                android:src="@drawable/taxipic1"
                 android:scaleType="centerCrop"
                 android:background="@drawable/border_circle"
                 app:layout_constraintTop_toTopOf="parent"
@@ -81,7 +81,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginEnd="8dp"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
     <!-- Buscador -->
