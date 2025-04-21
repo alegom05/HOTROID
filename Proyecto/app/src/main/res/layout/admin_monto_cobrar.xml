@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:text="Confirmar"
                     android:layout_marginTop="16dp"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="#009688"
                     android:textColor="@android:color/white"/>
 
 
