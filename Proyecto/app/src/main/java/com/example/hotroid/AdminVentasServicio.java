@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -40,6 +41,11 @@ public class AdminVentasServicio extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+        CardView cardAdmin = findViewById(R.id.cardAdmin);
+        cardAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminVentasServicio.this, AdminCuentaActivity.class);
+            startActivity(intent);
         });
         Button btnGenerarPdf = findViewById(R.id.btnGenerarPdf);
 
@@ -108,6 +114,8 @@ public class AdminVentasServicio extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_reportes);
+
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

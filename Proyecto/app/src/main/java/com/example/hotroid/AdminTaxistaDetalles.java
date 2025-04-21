@@ -24,6 +24,7 @@ public class AdminTaxistaDetalles extends AppCompatActivity {
             return insets;
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_taxistas);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

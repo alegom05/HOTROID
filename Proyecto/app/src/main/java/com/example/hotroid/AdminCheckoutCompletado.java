@@ -39,6 +39,7 @@ public class AdminCheckoutCompletado extends AppCompatActivity {
             finish(); // Finaliza esta actividad para que no se pueda volver con "Back"
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_checkout);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

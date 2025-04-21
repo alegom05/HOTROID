@@ -25,6 +25,11 @@ public class AdminReportes extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        CardView cardAdmin = findViewById(R.id.cardAdmin);
+        cardAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminReportes.this, AdminCuentaActivity.class);
+            startActivity(intent);
+        });
 
         CardView cardVentasServicio = findViewById(R.id.cardVentasServicio); // Asegúrate que este ID coincida con tu XML
         cardVentasServicio.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +45,7 @@ public class AdminReportes extends AppCompatActivity {
             startActivity(intent);
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_reportes);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -48,11 +54,11 @@ public class AdminReportes extends AppCompatActivity {
                 startActivity(intentInicio);
                 return true;
             } else if (item.getItemId() == R.id.nav_taxistas) {
-                Intent intentUbicacion = new Intent(AdminReportes.this, SuperUsuariosActivity.class);
+                Intent intentUbicacion = new Intent(AdminReportes.this, AdminTaxistas.class);
                 startActivity(intentUbicacion);
                 return true;
             } else if (item.getItemId() == R.id.nav_checkout) {
-                Intent intentAlertas = new Intent(AdminReportes.this, SuperEventosActivity.class);
+                Intent intentAlertas = new Intent(AdminReportes.this, AdminCheckout.class);
                 startActivity(intentAlertas);
                 return true;
             } else if (item.getItemId() == R.id.nav_reportes) {

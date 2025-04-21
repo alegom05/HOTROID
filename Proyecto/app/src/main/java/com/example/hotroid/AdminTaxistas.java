@@ -31,6 +31,7 @@ public class AdminTaxistas extends AppCompatActivity {
         findViewById(R.id.cardTaxista6).setOnClickListener(v -> abrirDetalle("Arturo Delgado", "Asignado"));
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_taxistas);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
