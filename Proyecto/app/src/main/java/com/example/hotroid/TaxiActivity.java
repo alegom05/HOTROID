@@ -42,6 +42,8 @@ public class TaxiActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        bottomNavigationView.setSelectedItemId(R.id.wifi);
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
                 return true;
