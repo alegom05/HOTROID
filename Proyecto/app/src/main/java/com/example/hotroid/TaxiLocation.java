@@ -17,6 +17,8 @@ public class TaxiLocation extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        bottomNavigationView.setSelectedItemId(R.id.location);
+
         cardTaxista.setOnClickListener(v -> {
             Intent intent = new Intent(TaxiLocation.this, TaxiCuenta.class);
             startActivity(intent);
