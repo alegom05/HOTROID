@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/cliente1"
             android:text="Mensajes"
             android:textColor="@android:color/white"
             android:textSize="20sp"
@@ -33,7 +34,7 @@
             android:src="@drawable/ic_search"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@color/cliente1"
             android:contentDescription="Buscar" />
     </androidx.appcompat.widget.Toolbar>
 

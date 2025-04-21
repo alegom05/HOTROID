@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Mis reservas"
+            android:background="@color/cliente1"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
