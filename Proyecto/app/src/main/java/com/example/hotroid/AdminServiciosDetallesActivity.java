@@ -13,6 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 
 public class AdminServiciosDetallesActivity extends AppCompatActivity {
@@ -70,6 +72,31 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             intent.putExtra("price", precio);
             intent.putStringArrayListExtra("imagenes", uriStrings);
             startActivityForResult(intent, 200);
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // BottomNavigationView o Barra inferior de menú
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminServiciosDetallesActivity.this, AdminActivity.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.nav_taxistas) {
+                Intent intentUbicacion = new Intent(AdminServiciosDetallesActivity.this, AdminTaxistas.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.nav_checkout) {
+                Intent intentAlertas = new Intent(AdminServiciosDetallesActivity.this, AdminCheckout.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (item.getItemId() == R.id.nav_reportes) {
+                Intent intentAlertas = new Intent(AdminServiciosDetallesActivity.this, AdminReportes.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
+            }
         });
     }
     @Override

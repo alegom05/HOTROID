@@ -18,6 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +82,30 @@ public class AdminFotosActivity extends AppCompatActivity {
 
                 // Habilitar edición
                 btnAdd.setOnClickListener(view -> abrirGaleria());
+            }
+        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // BottomNavigationView o Barra inferior de menú
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminFotosActivity.this, AdminActivity.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.nav_taxistas) {
+                Intent intentUbicacion = new Intent(AdminFotosActivity.this, AdminTaxistas.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.nav_checkout) {
+                Intent intentAlertas = new Intent(AdminFotosActivity.this, AdminCheckout.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (item.getItemId() == R.id.nav_reportes) {
+                Intent intentAlertas = new Intent(AdminFotosActivity.this, AdminReportes.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
             }
         });
     }

@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 
 public class AdminCheckout extends AppCompatActivity {
@@ -53,6 +55,30 @@ public class AdminCheckout extends AppCompatActivity {
             intent.putExtra("CLIENT_NAME", seleccionado.getClientName());
             startActivity(intent);
 
+        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // BottomNavigationView o Barra inferior de menú
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminCheckout.this, AdminActivity.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.nav_taxistas) {
+                Intent intentUbicacion = new Intent(AdminCheckout.this, AdminTaxistas.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.nav_checkout) {
+                Intent intentAlertas = new Intent(AdminCheckout.this, AdminCheckout.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (item.getItemId() == R.id.nav_reportes) {
+                Intent intentAlertas = new Intent(AdminCheckout.this, AdminReportes.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
+            }
         });
     }
 }

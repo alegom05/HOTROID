@@ -9,6 +9,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class AdminTaxistas extends AppCompatActivity {
 
     @Override
@@ -27,6 +29,31 @@ public class AdminTaxistas extends AppCompatActivity {
         findViewById(R.id.cardTaxista4).setOnClickListener(v -> abrirDetalle("Arturo Delgado", "LLegó a destino"));
         findViewById(R.id.cardTaxista5).setOnClickListener(v -> abrirDetalle("Carlos Alvarez", "En camino"));
         findViewById(R.id.cardTaxista6).setOnClickListener(v -> abrirDetalle("Arturo Delgado", "Asignado"));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // BottomNavigationView o Barra inferior de menú
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminTaxistas.this, AdminActivity.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.nav_taxistas) {
+                Intent intentUbicacion = new Intent(AdminTaxistas.this, AdminTaxistas.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.nav_checkout) {
+                Intent intentAlertas = new Intent(AdminTaxistas.this, AdminCheckout.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (item.getItemId() == R.id.nav_reportes) {
+                Intent intentAlertas = new Intent(AdminTaxistas.this, AdminReportes.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
+            }
+        });
 
     }
     private void abrirDetalle(String nombre, String estado) {

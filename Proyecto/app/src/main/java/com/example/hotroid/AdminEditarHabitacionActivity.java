@@ -11,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class AdminEditarHabitacionActivity extends AppCompatActivity {
     private EditText etNumeroHabitacion, etTipoHabitacion, etAdultos, etNinos, etArea;
 
@@ -63,6 +65,31 @@ public class AdminEditarHabitacionActivity extends AppCompatActivity {
                 Intent intent = new Intent(AdminEditarHabitacionActivity.this, AdminHabitacionesActivity.class);
                 startActivity(intent);
                 finish();  // Finaliza la actividad actual para evitar que el usuario regrese a ella con el botón de atrás
+            }
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // BottomNavigationView o Barra inferior de menú
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminEditarHabitacionActivity.this, AdminActivity.class);
+                startActivity(intentInicio);
+                return true;
+            } else if (item.getItemId() == R.id.nav_taxistas) {
+                Intent intentUbicacion = new Intent(AdminEditarHabitacionActivity.this, AdminTaxistas.class);
+                startActivity(intentUbicacion);
+                return true;
+            } else if (item.getItemId() == R.id.nav_checkout) {
+                Intent intentAlertas = new Intent(AdminEditarHabitacionActivity.this, AdminCheckout.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (item.getItemId() == R.id.nav_reportes) {
+                Intent intentAlertas = new Intent(AdminEditarHabitacionActivity.this, AdminReportes.class);
+                startActivity(intentAlertas);
+                return true;
+            } else {
+                return false;
             }
         });
     }
