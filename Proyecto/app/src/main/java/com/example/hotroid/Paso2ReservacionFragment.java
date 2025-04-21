@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
  * create an instance of this fragment.
  */
 public class Paso2ReservacionFragment extends Fragment {
-    private Switch switchGimnasio, switchDesayuno, switchPiscina, switchParqueo;
+    private SwitchMaterial  switchGimnasio, switchDesayuno, switchPiscina, switchParqueo;
     private TextView tvTotal;
     private MaterialButton btnSiguiente;
 

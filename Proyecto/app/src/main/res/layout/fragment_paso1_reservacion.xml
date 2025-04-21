@@ -5,14 +5,151 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="24dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
-    <LinearLayout
+    app:cardElevation="8dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorOutline">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Título y subtítulo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proceso de reserva"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_gravity="center_horizontal" />
+            <!--android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"--><!--estilo de texto-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Datos personales"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center_horizontal"
+                android:alpha="0.7" />
+            <!-- Imagen de perfil con forma de círculo -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:background="@android:color/darker_gray"
+                android:src="@drawable/baseline_account"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:strokeWidth="2dp"
+                app:strokeColor="?attr/colorPrimary"/>
+
+            <!-- Datos personales con MaterialTextView y estilo mejorado -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:startIconDrawable="@drawable/ic_person"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="Nombre">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Juan Marquinez"
+                    android:enabled="false"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:startIconDrawable="@drawable/outline_email_24"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="Correo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="nmontes@gmail.com"
+                    android:enabled="false"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:startIconDrawable="@drawable/outline_contact_emergency_24"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="DNI">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="88888888"
+                    android:enabled="false"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:startIconDrawable="@drawable/baseline_call_24"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="Teléfono">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="999 999 999"
+                    android:enabled="false"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:startIconDrawable="@drawable/ic_calendar"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="Nacimiento">
+                <!--app:startIconTint="?attr/colorPrimary"-->
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1 de enero del 2000"
+                    android:enabled="false"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSiguientePaso1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:text="Siguiente"
+                app:cornerRadius="20dp"
+                android:backgroundTint="#009688"
+                style="@style/Widget.Material3.Button" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +167,6 @@
             android:layout_marginBottom="12dp"
             android:layout_gravity="center_horizontal" />
 
-        <!-- Imagen de perfil -->
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -38,7 +174,6 @@
             android:layout_marginBottom="12dp"
             android:src="@drawable/ic_person" />
 
-        <!-- Datos personales -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,21 +204,13 @@
             android:text="🎂 Nacimiento\n1 de enero del 2000"
             android:layout_marginBottom="16dp" />
 
-        <!-- Botón Siguiente -->
-        <!--<Button
-            android:id="@+id/btnSiguiente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Siguiente"
-            android:backgroundTint="@color/azulNoti"
-            android:textColor="@android:color/white" />-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSiguientePaso1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:text="Siguiente" />
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 </androidx.cardview.widget.CardView>
