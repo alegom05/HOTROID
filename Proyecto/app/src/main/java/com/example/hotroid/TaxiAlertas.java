@@ -14,7 +14,10 @@ public class TaxiAlertas extends AppCompatActivity {
         setContentView(R.layout.taxi_alertas);
 
 
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.notify);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {
