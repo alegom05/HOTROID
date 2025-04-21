@@ -7,7 +7,6 @@
     android:layout_marginBottom="4dp"
     android:elevation="8dp"
     app:cardElevation="6dp"
-    android:padding="8dp"
     app:background="?attr/colorSurfaceVariant"
     app:cardCornerRadius="8dp">
     <!--app:cardUseCompatPadding="true"
@@ -16,7 +15,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="5dp">
+        android:paddingHorizontal="5dp"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/imgAdjunto"
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
             android:layout_weight="1"
+            android:layout_marginEnd="5dp"
             android:src="@drawable/qr_code_2_24" />
 
         <TextView
@@ -36,6 +37,7 @@
             android:layout_gravity="start|center_vertical"
             android:maxLines="2"
             android:ellipsize="end"
+            android:layout_marginStart="5dp"
             android:lineSpacingExtra="4dp"/>
 
     </LinearLayout>

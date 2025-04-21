@@ -40,7 +40,20 @@ public class NotificacionesAdapterUser extends RecyclerView.Adapter<Notificacion
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Notificacion noti = notificaciones.get(position);
         holder.tvMensajeResumen.setText(noti.getMensajeResumen());
-        holder.imgAdjunto.setImageResource(noti.getRecursoImagen());
+        //holder.imgAdjunto.setImageResource(noti.getRecursoImagen());
+        int recurso = noti.getRecursoImagen();
+        holder.imgAdjunto.setImageResource(recurso);
+
+        // Cambiar color según el ícono
+        if (recurso == R.drawable.qr_code_2_24) {
+            holder.imgAdjunto.setColorFilter(Color.BLACK);
+        } else if (recurso == R.drawable.ic_euro) {
+            holder.imgAdjunto.setColorFilter(Color.parseColor("#4CAF50")); // verde tipo material design
+        } else {
+            holder.imgAdjunto.clearColorFilter(); // Por si hay otros íconos sin color específico
+        }
+
+        //mostrar el popup
         holder.itemView.setOnClickListener(v -> {
             View popup= LayoutInflater.from(v.getContext())
                     .inflate(R.layout.user_detalle_notificacion,null);

@@ -163,68 +163,87 @@
             android:background="#DDDDDD"
             android:layout_marginBottom="10dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Precio por 3 noches"
-                android:textStyle="normal"
-                android:textColor="@color/design_default_color_on_secondary"
-                android:textSize="12sp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp" />
-
-            <!-- Precio -->
-            <TextView
-                android:id="@+id/tvPrecio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S/. 1200"
-                android:textStyle="bold"
-                android:textColor="@color/cliente2"
-                android:textSize="18sp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="2dp" />
-
-            <!-- Selector de habitaciones y personas -->
             <LinearLayout
-                android:id="@+id/roomGuestsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/outlined_background"
-                android:clickable="true"
-                android:focusable="true"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"
+                android:weightSum="1">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/bedroom_child_24"
-                    app:tint="@color/black"/>
-
+                <!-- Selector de habitaciones a la derecha -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/textPrice"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
+                    android:layout_weight="0.4"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:gravity="center_vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="# Habitaciones"
-                        android:textSize="14sp" />
+                        android:text="Precio por 3 noches"
+                        android:textStyle="normal"
+                        android:textColor="@color/design_default_color_on_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="8dp" />
 
                     <TextView
-                        android:id="@+id/roomGuestsText"
+                        android:id="@+id/tvPrecio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1 habitación"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
+                        android:text="S/. 1200"
+                        android:textStyle="bold"
+                        android:textColor="@color/cliente2"
+                        android:textSize="18sp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="2dp" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/roomGuestsLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:background="@drawable/outlined_background"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/bedroom_child_24"
+                        app:tint="@color/black"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="# Habitaciones"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/roomGuestsText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 habitación"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
             <!-- Botón reservar -->
@@ -236,8 +255,82 @@
                 android:text="Reservar ahora"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="#009688"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="8dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Servicios -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Servicios Adicionales"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvServicioAdicional1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/single_bed_24"
+                    android:drawableTint="@android:color/black"
+                    android:fillColor="?android:attr/textColorPrimary"
+                    android:text="Cama y armario"
+                    android:lineSpacingExtra="4dp"
+                    android:drawablePadding="8dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:drawableStart="@drawable/ic_tv"
+                    android:drawablePadding="8dp"
+                    android:text="TV pantalla plana"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tvServicioAdicional2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_bathroom"
+                    android:text="Baño privado, ducha, papel higiénico, toalla, secador, jabón"
+                    android:drawablePadding="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="4dp" />
+                <TextView
+                    android:id="@+id/tvServicioAdicional3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/baseline_call_24"
+                    android:text="Teléfono"
+                    android:drawablePadding="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:id="@+id/tvServicioAdicional4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_wifi"
+                    android:text="WiFi gratuito"
+                    android:drawablePadding="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
         </LinearLayout>
+
     </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout >
