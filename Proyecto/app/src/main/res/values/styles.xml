@@ -12,4 +12,9 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="CustomSwitchStyle" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb_color</item>
+        <item name="trackTint">@color/switch_track_color</item>
+    </style>
+
 </resources>

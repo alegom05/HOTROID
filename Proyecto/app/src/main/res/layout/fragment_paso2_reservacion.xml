@@ -55,7 +55,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="12dp"
                 android:src="@drawable/ic_room_service"
-                app:startIconTint="@color/material_dynamic_primary10"
+                app:tint="@color/material_dynamic_primary10"
                 />
 
             <!-- Servicios con switches -->
@@ -74,6 +74,7 @@
                     android:padding="12dp">
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        style="@style/CustomSwitchStyle"
                         android:id="@+id/switchGimnasio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -97,6 +98,7 @@
                         android:layout_marginVertical="4dp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        style="@style/CustomSwitchStyle"
                         android:id="@+id/switchDesayuno"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -120,6 +122,7 @@
                         android:layout_marginVertical="4dp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        style="@style/CustomSwitchStyle"
                         android:id="@+id/switchPiscina"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -143,6 +146,7 @@
                         android:layout_marginVertical="4dp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        style="@style/CustomSwitchStyle"
                         android:id="@+id/switchParqueo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

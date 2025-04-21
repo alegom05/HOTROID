@@ -9,4 +9,7 @@
     <color name="bordergreen">#CDDBD5</color>
     <color name="cliente1">#FF9800</color>
     <color name="cliente2">#3F51B5</color>
+    <color name="verdejade">#009688</color>
+    <color name="color_activo_celeste">#1F66B6</color>
+    <color name="color_activo_claro_celeste">#2A75CA</color>
 </resources>

@@ -17,10 +17,18 @@ public class Paso3ReservacionFragment extends Fragment {
 
         Button btnReservar = view.findViewById(R.id.btnReservar);
         btnReservar.setOnClickListener(v -> {
+
+            Fragment reservasFragment = new ReservasFragment();
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, reservasFragment) // Usa el ID correcto
+                    .commit();
+
             // Lógica de finalización de reserva (posteriormente guardar en BD)
             Toast.makeText(requireContext(), "Reserva completada con éxito", Toast.LENGTH_SHORT).show();
-        });
 
+        });
         return view;
     }
 }

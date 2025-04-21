@@ -92,7 +92,7 @@ public class Paso2ReservacionFragment extends Fragment {
             FragmentTransaction transaction = requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction();
-            transaction.replace(R.id.fragment_container, paso3);
+            transaction.replace(R.id.fragmentContainer, paso3);
             transaction.addToBackStack(null);
             transaction.commit();
         });
