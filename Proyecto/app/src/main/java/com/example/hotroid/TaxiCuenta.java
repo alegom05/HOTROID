@@ -50,6 +50,13 @@ public class TaxiCuenta extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+
+        btnCerrarSesion.setOnClickListener(v -> {
+            Intent intent = new Intent(TaxiCuenta.this, MainActivity.class);
+            startActivity(intent);
+        });
+
 
     }
 }
