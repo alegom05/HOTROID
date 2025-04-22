@@ -12,4 +12,8 @@
     <color name="verdejade">#009688</color>
     <color name="color_activo_celeste">#1F66B6</color>
     <color name="color_activo_claro_celeste">#2A75CA</color>
+    <color name="colorPrimary">#00A86B</color> <!-- Jade -->
+    <color name="colorPrimaryVariant">#007A4D</color> <!-- Variante más oscura -->
+    <color name="colorOnPrimary">#FFFFFF</color> <!-- Texto sobre fondo jade -->
+
 </resources>

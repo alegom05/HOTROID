@@ -2,10 +2,12 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,6 +19,10 @@ public class TaxiActivity extends AppCompatActivity {
         setContentView(R.layout.taxi_main);
 
         Button btnFinViaje = findViewById(R.id.btnFinViaje);
+
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.verdejade));
+
 
         btnFinViaje.setOnClickListener(v -> {
             // Acción cuando el botón es clickeado
