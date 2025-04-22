@@ -222,7 +222,9 @@
         app:layout_constraintHorizontal_bias="0.218"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/flecha"
-        android:backgroundTint="#009688"/>
+        android:backgroundTint="@color/verdejade"
+        android:textColor="@android:color/white"
+        />
 
     <Button
         android:id="@+id/btnCerrarSesion"

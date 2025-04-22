@@ -160,7 +160,8 @@
                 android:layout_height="wrap_content"
                 android:text="Fin del viaje"
                 android:textStyle="bold"
-                android:color="@color/verdejade"
+                android:backgroundTint="@color/verdejade"
+                android:textColor="@android:color/white"
                 />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
