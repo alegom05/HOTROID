@@ -9,13 +9,44 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_detalles_admin_formulario);
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Spinner Tipo de Documento
+        Spinner spTipoDocumento = findViewById(R.id.spTipoDocumento);
+        List<String> tiposDocumento = Arrays.asList("DNI", "Pasaporte", "Carnet de Extranjería");
+        ArrayAdapter<String> adapterDocumento = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tiposDocumento);
+        adapterDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spTipoDocumento.setAdapter(adapterDocumento);
+
+        // Spinner de Hoteles
+        Spinner spHotel = findViewById(R.id.spHotel);
+        List<String> hoteles = Arrays.asList(
+                "Hotel Miraflores Park - Lima",
+                "JW Marriott - Lima",
+                "Hotel Libertador - Arequipa",
+                "Casa Andina Premium - Cusco",
+                "Hotel Paracas - Paracas",
+                "Costa del Sol Wyndham - Trujillo",
+                "Inkaterra Machu Picchu Pueblo - Cusco",
+                "Hotel Novotel - Cusco",
+                "Sonesta Hotel - El Olivar, Lima",
+                "Hotel Taypikala - Puno"
+        );
+        ArrayAdapter<String> adapterHoteles = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hoteles);
+        adapterHoteles.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spHotel.setAdapter(adapterHoteles);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

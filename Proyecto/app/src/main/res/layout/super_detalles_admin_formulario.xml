@@ -154,7 +154,8 @@
                 android:layout_height="48dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/spinner_background"
-                android:prompt="@string/seleccione_tipo_documento"/>
+                android:prompt="@string/seleccione_tipo_documento"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -236,6 +237,22 @@
                 android:inputType="textPostalAddress"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/edittext_background"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hotel Asignado"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
+
+            <Spinner
+                android:id="@+id/spHotel"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/spinner_background"
+                android:prompt="@string/seleccione_el_hotel"
+                />
 
             <!-- Botón de Registrar dentro del ScrollView -->
             <Button

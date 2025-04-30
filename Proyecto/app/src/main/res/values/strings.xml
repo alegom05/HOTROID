@@ -27,4 +27,7 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <string name="back_to_service">Volver al Servicio</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Cadenas para super_detalles_admin_formulario.xml -->
+    <string name="seleccione_el_hotel">Seleccione el hotel</string>
+
 </resources>
