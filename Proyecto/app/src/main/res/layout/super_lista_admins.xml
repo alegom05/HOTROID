@@ -127,14 +127,21 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:weightSum="10">
+                        android:weightSum="15">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
                             android:text="Usuario"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:text="Hotel"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -142,7 +149,8 @@
                             android:layout_weight="5"
                             android:text="Estado"
                             android:textStyle="bold"
-                            android:gravity="center"/>
+                            android:gravity="center" />
+
 
                     </LinearLayout>
 
@@ -153,7 +161,7 @@
                         android:layout_height="48dp"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:weightSum="10"
+                        android:weightSum="15"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
@@ -163,7 +171,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7"
+                            android:layout_weight="5"
                             android:text="Victor Díaz "
                             android:gravity="start"
                             android:textColor="@color/black" />
@@ -172,8 +180,17 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
+                            android:text="Oro Verde "
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
                             android:text="ACTIVADO"
-                            android:gravity="start"
+                            android:gravity="center"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
@@ -187,7 +204,7 @@
                         android:layout_height="48dp"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:weightSum="10"
+                        android:weightSum="15"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
@@ -196,7 +213,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7"
+                            android:layout_weight="5"
                             android:text="Moises Castro"
                             android:gravity="start"
                             android:textColor="@color/black" />
@@ -206,7 +223,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
                             android:text="DESACTIVADO"
-                            android:gravity="start"
+                            android:gravity="center"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:text="DESACTIVADO"
+                            android:gravity="center"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
@@ -221,7 +246,7 @@
                         android:layout_height="48dp"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:weightSum="10"
+                        android:weightSum="15"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
@@ -230,7 +255,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7"
+                            android:layout_weight="5"
                             android:text="Manuel Yarleque"
                             android:gravity="start"
                             android:textColor="@color/black" />
@@ -239,8 +264,16 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
+                            android:text="Sauce Resort"
+                            android:gravity="center"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
                             android:text="ACTIVADO"
-                            android:gravity="start"
+                            android:gravity="center"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />

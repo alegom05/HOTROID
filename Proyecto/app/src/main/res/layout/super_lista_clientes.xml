@@ -134,7 +134,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
                             android:text="Usuario"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:gravity="center"/>
 
                         <TextView
                             android:layout_width="0dp"
@@ -163,9 +164,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7"
-                            android:text="Victor Díaz "
-                            android:gravity="start"
+                            android:layout_weight="5"
+                            android:text="Rodrigo Carrasco"
+                            android:gravity="center"
                             android:textColor="@color/black" />
 
                         <TextView
@@ -173,7 +174,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
                             android:text="ACTIVADO"
-                            android:gravity="start"
+                            android:gravity="center"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
@@ -196,9 +197,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7"
-                            android:text="Moises Castro"
-                            android:gravity="start"
+                            android:layout_weight="5"
+                            android:text="Angelo Velarde"
+                            android:gravity="center"
                             android:textColor="@color/black" />
 
                         <TextView
@@ -206,7 +207,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
                             android:text="DESACTIVADO"
-                            android:gravity="start"
+                            android:gravity="center"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
@@ -230,9 +231,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7"
-                            android:text="Manuel Yarleque"
-                            android:gravity="start"
+                            android:layout_weight="5"
+                            android:text="Juan Huapaya"
+                            android:gravity="center"
                             android:textColor="@color/black" />
 
                         <TextView
@@ -240,7 +241,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="5"
                             android:text="ACTIVADO"
-                            android:gravity="start"
+                            android:gravity="center"
                             android:textColor="@color/black"
                             android:maxLines="2"
                             android:ellipsize="end" />
