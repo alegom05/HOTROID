@@ -63,19 +63,14 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 }
             });
 
-
-            CardView cardSuper = findViewById(R.id.cardSuper);
-            cardSuper.setOnClickListener(v -> {
-                Intent intent = new Intent(SuperListaAdminActivity.this, SuperCuentaActivity.class);
-                startActivity(intent);
-            });
-
             Button btnRegistrar = findViewById(R.id.button_regist);
-
             btnRegistrar.setOnClickListener(v -> {
                 Intent intent = new Intent(SuperListaAdminActivity.this, SuperDetallesAdminFormularioActivity.class);
                 startActivity(intent);
             });
+
+
+
         }
 
     }

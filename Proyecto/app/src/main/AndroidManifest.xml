@@ -174,10 +174,12 @@
         <activity android:name=".SuperListaAdminActivity" />
         <activity android:name=".SuperDetallesAdminActivadoActivity" />
         <activity android:name=".SuperDetallesAdminDesactivadoActivity" />
+        <activity android:name=".SuperDetallesAdminFormularioActivity" />
         <activity android:name=".SuperListaTaxisActivity" />
         <activity android:name=".SuperDetallesTaxiActivadoActivity" />
         <activity android:name=".SuperDetallesTaxiDesactivadoActivity" />
         <activity android:name=".SuperDetallesTaxiPendienteActivity" />
+
     </application>
 
 </manifest>

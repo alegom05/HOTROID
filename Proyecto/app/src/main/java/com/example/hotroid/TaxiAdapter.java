@@ -24,7 +24,7 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.TaxiViewHolder
     @NonNull
     @Override
     public TaxiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_taxi, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.taxi_item, parent, false);
         return new TaxiViewHolder(view);
     }
 
