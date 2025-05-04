@@ -7,7 +7,6 @@
     android:background="#FFFFFF"
     tools:context=".TaxiCuenta">
 
-    <!-- Titulo principal -->
     <TextView
         android:id="@+id/tvCuenta"
         android:layout_width="wrap_content"
@@ -20,7 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Card con nombre y foto pequeña -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPerfil"
         android:layout_width="0dp"
@@ -69,7 +67,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Card con los datos principales -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardDatos"
         android:layout_width="0dp"
@@ -88,100 +85,15 @@
             android:layout_height="wrap_content"
             android:padding="12dp">
 
-            <!-- Datos -->
-            <LinearLayout
-                android:id="@+id/layoutInfo"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerCuenta"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="110dp"
+                android:clipToPadding="false"
+                android:padding="4dp" />
 
-                <TextView android:text="Nombres" android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="Alejandro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView android:text="Apellidos"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="Gómez Mostacero"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView android:text="Modo de Identificación"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="DNI"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView android:text="Número de Identidad"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="12341234"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView android:text="Fecha de nacimiento"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="21 de mayo de 1998"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView android:text="Correo electrónico"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="agomez@gmail.com"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView android:text="Teléfono"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="934567213"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView android:text="Domicilio"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="Av. Benavides 123, Miraflores"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-            </LinearLayout>
-
-            <!-- Foto -->
             <ImageView
                 android:id="@+id/fotoPrincipal"
                 android:layout_width="100dp"
@@ -193,7 +105,6 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Flecha -->
     <ImageView
         android:id="@+id/flecha"
         android:layout_width="wrap_content"
@@ -202,15 +113,7 @@
         app:layout_constraintTop_toBottomOf="@id/cardDatos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"/>
-
-    <!-- Boton Vehiculo -->
-
-
-    <!-- Bottom Navigation -->
-
-    <!-- Boton Vehiculo -->
-
+        android:layout_marginTop="12dp" />
 
     <Button
         android:id="@+id/btnVehiculo"
@@ -223,8 +126,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/flecha"
         android:backgroundTint="@color/verdejade"
-        android:textColor="@android:color/white"
-        />
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/btnCerrarSesion"
@@ -247,6 +149,6 @@
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
