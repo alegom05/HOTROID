@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:background="@color/cliente1"
         android:fitsSystemWindows="true"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        app:title="Opciones de habitación">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -54,22 +55,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp" />
 
-            <!-- Indicadores de imágenes -->
+
+            <!-- Detalles del hotel -->
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/imageIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp"
-                app:tabBackground="@drawable/tab_selector"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:minHeight="0dp"
+                android:padding="0dp"
                 app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
                 app:tabIndicatorColor="@android:color/transparent"
-                app:tabRippleColor="@android:color/transparent"
-                app:tabMode="fixed" />
+                app:tabIndicatorHeight="0dp"
+                app:tabMaxWidth="10dp"
+                app:tabMode="fixed"
+                app:tabPaddingEnd="4dp"
+                app:tabPaddingStart="4dp"
+                app:tabRippleColor="@android:color/transparent" />
 
-            <!-- Detalles del hotel -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
