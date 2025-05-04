@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaxiAlertas extends AppCompatActivity {
     @Override
@@ -13,7 +17,18 @@ public class TaxiAlertas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_alertas);
 
+ /*       RecyclerView recyclerView = findViewById(R.id.recyclerNotificaciones);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));*/
 
+        List<Notificacion> lista = new ArrayList<>();
+        lista.add(new Notificacion("Mauricio Guerra", "Hotel Marriot", "hace 20 minutos"));
+        lista.add(new Notificacion("Lisa Cáceres", "Hotel Marriot", "hace 1 minuto"));
+        lista.add(new Notificacion("Sol Díaz", "Hotel Marriot", "ahora"));
+
+        NotificacionAdapter adapter = new NotificacionAdapter(lista);
+/*
+        recyclerView.setAdapter(adapter);
+*/
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
