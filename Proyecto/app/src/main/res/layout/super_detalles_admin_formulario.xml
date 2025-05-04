@@ -7,7 +7,7 @@
     android:background="#FFFFFF"
     tools:context=".SuperDetallesAdminFormularioActivity">
 
-    <!-- Titulo principal -->
+    <!-- Título principal -->
     <TextView
         android:id="@+id/tvCuenta"
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Card con nombre y foto pequeña del usuario actual -->
+    <!-- Card con nombre y foto del usuario actual -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPerfil"
         android:layout_width="0dp"
@@ -153,9 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/spinner_background"
-                android:prompt="@string/seleccione_tipo_documento"
-                />
+                android:prompt="@string/seleccione_tipo_documento" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -250,24 +248,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/spinner_background"
-                android:prompt="@string/seleccione_el_hotel"
-                />
+                android:prompt="@string/seleccione_el_hotel" />
 
-            <!-- Botón de Registrar dentro del ScrollView -->
             <Button
                 android:id="@+id/btnRegistrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Registrar"
                 android:translationX="130dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:backgroundTint="#009688"/>
+                android:backgroundTint="#009688"
+                android:text="Registrar" />
+
         </LinearLayout>
     </ScrollView>
+
 
     <!-- Barra de navegación inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -281,3 +278,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_super" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
