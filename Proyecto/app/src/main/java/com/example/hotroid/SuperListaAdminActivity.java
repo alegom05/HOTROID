@@ -63,12 +63,14 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 }
             });
 
-            Button btnRegistrar = findViewById(R.id.button_regist);
-            btnRegistrar.setOnClickListener(v -> {
-                Intent intent = new Intent(SuperListaAdminActivity.this, SuperDetallesAdminFormularioActivity.class);
-                startActivity(intent);
+            Button botonRegistrar = findViewById(R.id.button_regist);
+            botonRegistrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(SuperListaAdminActivity.this, SuperDetallesAdminFormularioActivity.class); // o el nombre de tu actividad
+                    startActivity(intent);
+                }
             });
-
 
 
         }

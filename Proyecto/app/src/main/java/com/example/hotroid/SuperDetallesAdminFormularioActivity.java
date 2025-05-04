@@ -1,22 +1,30 @@
 package com.example.hotroid;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
+    private EditText etFechaNacimiento;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,11 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         adapterHoteles.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spHotel.setAdapter(adapterHoteles);
 
+        // Manejo de la fecha de nacimiento
+        etFechaNacimiento = findViewById(R.id.etFechaNacimiento);
+        etFechaNacimiento.setOnClickListener(v -> mostrarDatePicker());
+
+
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_hoteles) {
@@ -68,7 +81,6 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         });
 
         Button btnRegistrar = findViewById(R.id.btnRegistrar);
-
         btnRegistrar.setOnClickListener(v -> {
             Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperListaAdminActivity.class);
             startActivity(intent);
@@ -79,5 +91,18 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
             Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperCuentaActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void mostrarDatePicker() {
+        final Calendar calendario = Calendar.getInstance();
+        int año = calendario.get(Calendar.YEAR);
+        int mes = calendario.get(Calendar.MONTH);
+        int día = calendario.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            String fecha = dayOfMonth + "/" + (month + 1) + "/" + year;
+            etFechaNacimiento.setText(fecha);
+        }, año, mes, día);
+        datePicker.show();
     }
 }
