@@ -96,7 +96,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
         binding.hotelRating.setRating(4.5f);
         binding.ratingText.setText("4.5");
         binding.hotelLocation.setText("Calle Gran Vía 23, Madrid, España");
-        binding.hotelPrice.setText("€145 por noche");
+        binding.hotelPrice.setText("S/.145 por noche");
         binding.hotelDescription.setText("El Grand Hotel Madrid es un impresionante hotel de 5 estrellas ubicado en el corazón de Madrid. Con vistas panorámicas a la ciudad, ofrece habitaciones espaciosas y elegantes, varios restaurantes gourmet, un spa de lujo y una piscina en la azotea. Ideal para viajeros de negocios y turistas que buscan una experiencia excepcional en la capital española.");
     }
 
@@ -226,31 +226,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    private void reservarHabitacion(String tipoHabitacion, double precio) {
-        // Simulamos el proceso de reserva
-        new AlertDialog.Builder(this)
-                .setTitle("Confirmar reserva")
-                .setMessage(String.format(
-                        "¿Deseas reservar %d habitación%s %s en %s para %d adulto%s?\n\n" +
-                                "Fechas: %s\n" +
-                                "Precio total: €%.2f",
-                        numHabitaciones,
-                        numHabitaciones > 1 ? "es" : "",
-                        tipoHabitacion,
-                        binding.hotelName.getText(),
-                        numPersonas,
-                        numPersonas > 1 ? "s" : "",
-                        binding.selectedDatesText.getText(),
-                        precio * numHabitaciones * (binding.selectedDatesText.getText().toString().contains("–") ? 2 : 1)
-                ))
-                .setPositiveButton("Confirmar", (dialog, which) -> {
-                    procesarReserva();
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
-
+    
     private void iniciarChat() {
         // En una implementación real, esto abriría una actividad de chat con el hotel
         Intent chatIntent = new Intent(this, ChatDetalladoUser.class);
