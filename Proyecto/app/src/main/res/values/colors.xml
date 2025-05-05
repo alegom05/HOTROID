@@ -15,5 +15,6 @@
     <color name="colorPrimary">#00A86B</color> <!-- Jade -->
     <color name="colorPrimaryVariant">#007A4D</color> <!-- Variante más oscura -->
     <color name="colorOnPrimary">#FFFFFF</color> <!-- Texto sobre fondo jade -->
+    <color name="color_estado_habilitado">#009688</color>
 
 </resources>

@@ -108,13 +108,31 @@
                     android:text="Servicios"
                     android:textStyle="bold"
                     android:textSize="24sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="0dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Editar servicio"
-                    android:layout_marginBottom="10dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="2dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Editar servicio"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/btnDeshabilitarServicio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Deshabilitar"
+                        android:backgroundTint="#B00020"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -189,6 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"/>
+
 
                 <Button
                     android:id="@+id/btnGuardarCambios"

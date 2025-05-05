@@ -181,11 +181,11 @@ public class HotelesFragment extends Fragment {
 
         // Agregar hoteles estáticos
         // Nota: Reemplaza R.drawable.hotel1, R.drawable.hotel2, etc. con tus propias imágenes
-        hotelList.add(new Hotel("Grand Hotel Madrid", 4.5f, "€145/noche", R.drawable.hotel_decameron));
-        hotelList.add(new Hotel("Barcelona Royal Suite", 5.0f, "€210/noche", R.drawable.hotel_aranwa));
-        hotelList.add(new Hotel("Valencia Beach Resort", 4.0f, "€125/noche", R.drawable.hotel_boca_raton));
-        hotelList.add(new Hotel("Sevilla Boutique Hotel", 3.5f, "€95/noche", R.drawable.hotel_oro_verde));
-        hotelList.add(new Hotel("Granada Historic Palace", 4.8f, "€180/noche", R.drawable.hotel_sheraton));
+        hotelList.add(new Hotel("Grand Hotel Madrid", 4.5f, "S/.145/noche", R.drawable.hotel_decameron));
+        hotelList.add(new Hotel("Barcelona Royal Suite", 5.0f, "S/.210/noche", R.drawable.hotel_aranwa));
+        hotelList.add(new Hotel("Valencia Beach Resort", 4.0f, "S/.125/noche", R.drawable.hotel_boca_raton));
+        hotelList.add(new Hotel("Sevilla Boutique Hotel", 3.5f, "S/.95/noche", R.drawable.hotel_oro_verde));
+        hotelList.add(new Hotel("Granada Historic Palace", 4.8f, "S/.180/noche", R.drawable.hotel_sheraton));
 
         // Configurar el RecyclerView
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
