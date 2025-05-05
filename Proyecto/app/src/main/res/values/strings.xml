@@ -37,5 +37,17 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
         <item>Llegó a destino</item>
     </string-array>
 
+    <string name="profile_image">Imagen de perfil</string>
+    <string name="nombre_completo">Nombre Completo</string>
+    <string name="telefono">Teléfono</string>
+    <string name="correo_electronico">Correo Electrónico</string>
+    <string name="nacimiento">Nacimiento</string>
+    <string name="dni">DNI</string>
+    <string name="guardar_cambios">Guardar Cambios</string>
 
+
+    <string name="hoteles">Hoteles</string>
+    <string name="reservas">Reservas</string>
+    <string name="chat">Chat</string>
+    <string name="cuenta">Cuenta</string>
 </resources>

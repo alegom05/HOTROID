@@ -4,17 +4,17 @@
     <item
         android:id="@+id/nav_hoteles_user"
         android:icon="@drawable/ic_hotels_menu"
-        android:title="Hoteles"/>
+        android:title="@string/hoteles"/>
     <item
         android:id="@+id/nav_reservas_user"
         android:icon="@drawable/card_travel"
-        android:title="Reservas"/>
+        android:title="@string/reservas"/>
     <item
         android:id="@+id/nav_chat_user"
         android:icon="@drawable/comentario_alt"
-        android:title="Chat"/>
+        android:title="@string/chat"/>
     <item
         android:id="@+id/nav_cuenta"
         android:icon="@drawable/baseline_account"
-        android:title="Cuenta"/>
+        android:title="@string/cuenta"/>
 </menu>
