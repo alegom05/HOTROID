@@ -9,12 +9,15 @@ public class Servicios {
     private String descripcion;
     private String precio;
     private ArrayList<Uri> imagenes;
+    private boolean habilitado = true; // Por defecto, todos los servicios están habilitados
+
 
     public Servicios(String nombre, String descripcion, String precio, ArrayList<Uri> imagenes) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagenes = imagenes;
+        this.habilitado = true;
     }
 
     public String getNombre() {
@@ -43,4 +46,11 @@ public class Servicios {
 
     public ArrayList<Uri> getImagenes() { return imagenes; }
     public void setImagenes(ArrayList<Uri> imagenes) { this.imagenes = imagenes; }
+    public boolean isHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(boolean habilitado) {
+        this.habilitado = habilitado;
+    }
 }

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -27,6 +28,8 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
     private EditText etNombreServicio, etDescripcion, etPrecio;
     private ArrayList<Uri> imagenesSeleccionadas = new ArrayList<>();
     private LinearLayout contenedorImagenes;
+    private boolean estadoHabilitado = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,10 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
         etDescripcion = findViewById(R.id.etDescripcion);
         etPrecio = findViewById(R.id.etPrecio);
         contenedorImagenes = findViewById(R.id.contenedorImagenes);
+        estadoHabilitado = getIntent().getBooleanExtra("habilitado", true);
+        Button btnDeshabilitar = findViewById(R.id.btnDeshabilitarServicio);
+        actualizarTextoEstado(btnDeshabilitar);
+
 
         // Obtener los datos de la habitación pasados a través del Intent
         String ServicioNombre = getIntent().getStringExtra("Service_name");
@@ -106,10 +113,17 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
                     imagenesString.add(uri.toString());
                 }
                 result.putStringArrayListExtra("imagenes", imagenesString);
+                result.putExtra("habilitado", estadoHabilitado);  // 👈 ESTA LÍNEA FALTABA
                 setResult(RESULT_OK, result);
                 finish();  // Finaliza la actividad actual para evitar que el usuario regrese a ella con el botón de atrás
             }
         });
+        btnDeshabilitar.setOnClickListener(v -> {
+            estadoHabilitado = !estadoHabilitado;
+            actualizarTextoEstado(btnDeshabilitar);
+        });
+
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -164,6 +178,16 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
         fila.setClipToPadding(false);
         return fila;
     }
+    private void actualizarTextoEstado(Button btn) {
+        if (estadoHabilitado) {
+            btn.setText("Habilitado");
+            btn.setBackgroundTintList(getResources().getColorStateList(R.color.color_estado_habilitado));
+        } else {
+            btn.setText("Deshabilitado");
+            btn.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_dark));
+        }
+    }
+
 
 
 

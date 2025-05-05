@@ -20,6 +20,8 @@ import java.util.ArrayList;
 public class AdminServiciosDetallesActivity extends AppCompatActivity {
     private TextView tvName, tvDescripcion, tvPrecio;
     private LinearLayout contenedorImagenes;
+    private boolean estadoHabilitado = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             intent.putExtra("Service_description", servicioDescripcion);
             intent.putExtra("price", precio);
             intent.putStringArrayListExtra("imagenes", uriStrings);
+            intent.putExtra("habilitado", estadoHabilitado);
+
             startActivityForResult(intent, 200);
         });
 
@@ -109,6 +113,8 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             String nuevaDescripcion = data.getStringExtra("descripcion");
             String nuevoPrecio = data.getStringExtra("precio");
             ArrayList<String> nuevasImagenes = data.getStringArrayListExtra("imagenes");
+            estadoHabilitado = data.getBooleanExtra("habilitado", true);
+
 
             // Actualizar los TextViews
             tvName.setText(nuevoNombre);
