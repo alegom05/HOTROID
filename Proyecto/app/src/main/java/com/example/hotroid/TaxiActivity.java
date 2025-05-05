@@ -37,7 +37,6 @@ public class TaxiActivity extends AppCompatActivity {
         });
 
         CardView cardTaxista = findViewById(R.id.cardTaxista);
-        CardView cardAlertas = findViewById(R.id.cardAlertas);
 
 
 
@@ -46,10 +45,6 @@ public class TaxiActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        cardAlertas.setOnClickListener(v -> {
-            Intent intent = new Intent(TaxiActivity.this, TaxiAlertas.class);
-            startActivity(intent);
-        });
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
