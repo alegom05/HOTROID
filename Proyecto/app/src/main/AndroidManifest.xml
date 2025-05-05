@@ -18,13 +18,14 @@
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
         <activity
+            android:name=".EditAccountUser"
+            android:exported="false" />
+        <activity
             android:name=".ProcesoReservaUser"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".DetalleHabitacionUser"
-            android:exported="false"
-           />
+            android:exported="false" />
         <activity
             android:name=".AdminTaxistaDetalles"
             android:exported="false" />
@@ -179,7 +180,6 @@
         <activity android:name=".SuperDetallesTaxiActivadoActivity" />
         <activity android:name=".SuperDetallesTaxiDesactivadoActivity" />
         <activity android:name=".SuperDetallesTaxiPendienteActivity" />
-
     </application>
 
 </manifest>
