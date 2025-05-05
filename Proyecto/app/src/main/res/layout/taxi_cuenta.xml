@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Card perfil -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPerfil"
         android:layout_width="0dp"
@@ -63,10 +64,12 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/border_circle" />
+                android:background="@drawable/border_circle"
+                android:src="@drawable/taxipic1" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Card Datos -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardDatos"
         android:layout_width="0dp"
@@ -85,14 +88,68 @@
             android:layout_height="wrap_content"
             android:padding="12dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerCuenta"
+            <LinearLayout
+                android:id="@+id/layoutInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_alignParentStart="true"
-                android:layout_marginEnd="110dp"
-                android:clipToPadding="false"
-                android:padding="4dp" />
+                android:layout_marginEnd="110dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre:"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alejandro" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apellidos:"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gómez Rodríguez" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Correo:"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="alejandro.gomez@correo.com" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Teléfono:"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="987654321" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dirección:"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Av. Los Taxis 123, Lima" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/fotoPrincipal"

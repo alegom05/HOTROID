@@ -25,8 +25,10 @@ public class TaxiCuenta extends AppCompatActivity {
 
         Button btnVehiculo = findViewById(R.id.btnVehiculo);
 
+/*
         RecyclerView recyclerView = findViewById(R.id.recyclerCuenta);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+*/
 
         List<String> datos = new ArrayList<>();
         datos.add("Nombres: Alejandro");
@@ -38,7 +40,7 @@ public class TaxiCuenta extends AppCompatActivity {
         datos.add("Domicilio: Av. Benavides 123, Miraflores");
 
         TaxiCuentaAdapter adapter = new TaxiCuentaAdapter(datos);
-        recyclerView.setAdapter(adapter);
+        /*recyclerView.setAdapter(adapter);*/
 
 
 
