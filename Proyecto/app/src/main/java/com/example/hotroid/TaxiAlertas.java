@@ -2,8 +2,10 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +19,16 @@ public class TaxiAlertas extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_alertas);
+
+        CardView cardUsuario = findViewById(R.id.cardUsuario);
+        cardUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Redirige a TaxiAlertas al hacer clic
+                Intent intent = new Intent(TaxiAlertas.this, TaxiCuenta.class);
+                startActivity(intent);
+            }
+        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerNotificaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -58,6 +58,13 @@ public class CuentaFragment extends Fragment {
         });
 
         binding.temaButton.setOnClickListener(v -> mostrarDialogoDeTema());
+
+        // Agregar OnClickListener al botón de editar (FloatingActionButton)
+        View rootView = binding.getRoot();
+        rootView.findViewById(R.id.edit_button).setOnClickListener(v -> {
+            // Inicia la actividad de edición
+            startActivity(new Intent(requireContext(), EditAccountUser.class));
+        });
     }
 
     private void mostrarDialogoDeTema() {
