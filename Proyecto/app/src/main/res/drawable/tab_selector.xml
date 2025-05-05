@@ -3,15 +3,15 @@
     <!-- Punto activo -->
     <item android:state_selected="true">
         <shape android:shape="oval">
-            <solid android:color="#FF9800" /> <!-- color más nítido -->
-            <size android:width="8dp" android:height="8dp" />
+            <solid android:color="#FF9800"/>
+            <size android:width="10dp" android:height="10dp"/>
         </shape>
     </item>
     <!-- Punto inactivo -->
     <item>
         <shape android:shape="oval">
-            <solid android:color="#CCCCCC" /> <!-- gris suave y definido -->
-            <size android:width="6dp" android:height="6dp" />
+            <solid android:color="#CCCCCC"/>
+            <size android:width="8dp" android:height="8dp"/>
         </shape>
     </item>
 </selector>

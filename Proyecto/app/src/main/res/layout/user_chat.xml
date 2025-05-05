@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChatFragment">
-
     <!-- Toolbar con título -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,7 +12,6 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#FF9800"
         app:layout_constraintTop_toTopOf="parent">
-
         <TextView
             android:id="@+id/toolbarTitle"
             android:layout_width="wrap_content"
@@ -24,7 +22,6 @@
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
-
         <ImageView
             android:id="@+id/searchIcon"
             android:layout_width="24dp"
@@ -37,7 +34,6 @@
             android:background="@color/cliente1"
             android:contentDescription="Buscar" />
     </androidx.appcompat.widget.Toolbar>
-
     <!-- Estado de conexión -->
     <TextView
         android:id="@+id/connectionStatus"
@@ -47,10 +43,9 @@
         android:padding="8dp"
         android:text="Estás conectado"
         android:textAlignment="center"
-        android:textColor="#0071c2"
+        android:textColor="#68AF4C"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
     <!-- Pestañas de filtro -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -61,23 +56,11 @@
         app:tabIndicatorColor="@color/black"
         app:tabSelectedTextColor="@color/black"
         app:tabTextColor="@android:color/darker_gray">
-
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Todos" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No leídos" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Archivados" />
     </com.google.android.material.tabs.TabLayout>
-
     <!-- Lista de chats -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
@@ -87,7 +70,6 @@
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         tools:listitem="@layout/item_chat" />
-
     <!-- Mensaje cuando no hay chats -->
     <LinearLayout
         android:id="@+id/emptyChatView"
@@ -98,13 +80,11 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@id/tabLayout">
-
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/ic_empty_chat"
             app:tint="#AAAAAA" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -113,7 +93,6 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,19 +101,4 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp" />
     </LinearLayout>
-
-     <!--Botón flotante para nuevo chat
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/newChatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_new_message"
-        app:backgroundTint="@color/blue_booking"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@android:color/white" />-->
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
