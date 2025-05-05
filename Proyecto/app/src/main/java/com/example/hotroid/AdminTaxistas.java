@@ -2,16 +2,29 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.bean.Taxista;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdminTaxistas extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    private TaxistaAdapter adapter;
+    private List<Taxista> listaTaxistas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +36,48 @@ public class AdminTaxistas extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        findViewById(R.id.cardTaxista1).setOnClickListener(v -> abrirDetalle("Carlos Alvarez", "En camino"));
-        findViewById(R.id.cardTaxista2).setOnClickListener(v -> abrirDetalle("Arturo Delgado", "Asignado"));
-        findViewById(R.id.cardTaxista3).setOnClickListener(v -> abrirDetalle("Carlos Alvarez", "No Asignado"));
-        findViewById(R.id.cardTaxista4).setOnClickListener(v -> abrirDetalle("Arturo Delgado", "LLegó a destino"));
-        findViewById(R.id.cardTaxista5).setOnClickListener(v -> abrirDetalle("Carlos Alvarez", "En camino"));
-        findViewById(R.id.cardTaxista6).setOnClickListener(v -> abrirDetalle("Arturo Delgado", "Asignado"));
+        recyclerView = findViewById(R.id.recyclerTaxistas);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columnas
+
+        listaTaxistas = new ArrayList<>();
+        listaTaxistas.add(new Taxista("Carlos Alvarez", "En camino", R.drawable.taxista1));
+        listaTaxistas.add(new Taxista("Alex Russo", "Asignado", R.drawable.taxista2));
+        listaTaxistas.add(new Taxista("Marcelo Vilca", "No asignado", R.drawable.taxista3));
+        listaTaxistas.add(new Taxista("Jaime Mora", "Llegó a destino", R.drawable.taxista4));
+        listaTaxistas.add(new Taxista("Arturo Delgado", "Asignado", R.drawable.taxista5));
+        listaTaxistas.add(new Taxista("Farith Puente", "En camino", R.drawable.taxista6));
+        Spinner spinnerEstado = findViewById(R.id.spinnerEstado);
+
+        spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String estadoSeleccionado = parent.getItemAtPosition(position).toString();
+                List<Taxista> listaFiltrada = new ArrayList<>();
+
+                if (estadoSeleccionado.equals("Todos")) {
+                    listaFiltrada.addAll(listaTaxistas);
+                } else {
+                    for (Taxista t : listaTaxistas) {
+                        if (t.getEstado().equalsIgnoreCase(estadoSeleccionado)) {
+                            listaFiltrada.add(t);
+                        }
+                    }
+                }
+
+                adapter = new TaxistaAdapter(listaFiltrada, AdminTaxistas.this);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+        ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(
+                this, R.array.estados_taxistas, R.layout.spinner_item);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEstado.setAdapter(adapterSpinner);
+
+        adapter = new TaxistaAdapter(listaTaxistas, this);
+        recyclerView.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_taxistas);
@@ -57,11 +106,20 @@ public class AdminTaxistas extends AppCompatActivity {
         });
 
     }
-    private void abrirDetalle(String nombre, String estado) {
+    private void abrirDetalle(Taxista taxista) {
         Intent intent = new Intent(AdminTaxistas.this, AdminTaxistaDetalles.class);
-        intent.putExtra("nombre", nombre);
-        intent.putExtra("estado", estado);
+        intent.putExtra("nombre", taxista.getNombre());
+        intent.putExtra("estado", taxista.getEstado());
+        intent.putExtra("imagen", taxista.getImagenResId());
+        intent.putExtra("dni", taxista.getDni());
+        intent.putExtra("nacimiento", taxista.getNacimiento());
+        intent.putExtra("correo", taxista.getCorreo());
+        intent.putExtra("telefono", taxista.getTelefono());
+        intent.putExtra("direccion", taxista.getDireccion());
+        intent.putExtra("placa", taxista.getPlaca());
+        intent.putExtra("fotoVehiculo", taxista.getVehiculoImagenResId());
         startActivity(intent);
     }
+
 
 }

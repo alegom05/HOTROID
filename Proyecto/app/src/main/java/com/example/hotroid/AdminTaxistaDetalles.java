@@ -2,6 +2,8 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,31 @@ public class AdminTaxistaDetalles extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Intent intent = getIntent();
+        String nombre = intent.getStringExtra("nombre");
+        String estado = intent.getStringExtra("estado");
+        int imagen = intent.getIntExtra("imagen", R.drawable.foto_admin);
+        String dni = intent.getStringExtra("dni");
+        String nacimiento = intent.getStringExtra("nacimiento");
+        String correo = intent.getStringExtra("correo");
+        String telefono = intent.getStringExtra("telefono");
+        String direccion = intent.getStringExtra("direccion");
+        String placa = intent.getStringExtra("placa");
+        int fotoVehiculo = intent.getIntExtra("fotoVehiculo", R.drawable.carrito);
+
+        ((TextView) findViewById(R.id.tvCuenta)).setText(nombre);
+        ((ImageView) findViewById(R.id.fotoPrincipal)).setImageResource(imagen);
+        ((ImageView) findViewById(R.id.fotoVehiculo)).setImageResource(fotoVehiculo);
+
+        // Reemplaza los textos fijos por dinámicos
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("nombres")).setText(nombre.split(" ")[0]);
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("apellidos")).setText(nombre.substring(nombre.indexOf(" ") + 1));
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("dni")).setText(dni);
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("nacimiento")).setText(nacimiento);
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("correo")).setText(correo);
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("telefono")).setText(telefono);
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("direccion")).setText(direccion);
+        ((TextView) findViewById(R.id.layoutInfo).findViewWithTag("placa")).setText(placa);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_taxistas);
 

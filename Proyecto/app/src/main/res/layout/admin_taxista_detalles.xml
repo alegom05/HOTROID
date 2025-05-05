@@ -91,107 +91,109 @@
             <!-- Datos -->
             <LinearLayout
                 android:id="@+id/layoutInfo"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView android:text="Nombres" android:textStyle="bold"
+                <TextView
+                    android:text="Nombres"
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="Carlos Enrique"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="nombres"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Apellidos"
+                <TextView
+                    android:text="Apellidos"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="Alvarez Mendoza"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="apellidos"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Modo de Identificación"
+                <TextView
+                    android:text="Modo de Identificación"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="DNI"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="DNI"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Número de Identidad"
+                <TextView
+                    android:text="Número de Identidad"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="72341235"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="dni"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Fecha de nacimiento"
+                <TextView
+                    android:text="Fecha de nacimiento"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="11 de agosto de 2000"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="nacimiento"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Correo electrónico"
+                <TextView
+                    android:text="Correo electrónico"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="c.alvarez@gmail.com"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="correo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Teléfono"
+                <TextView
+                    android:text="Teléfono"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="912356124"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="telefono"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <TextView android:text="Domicilio"
+                <TextView
+                    android:text="Domicilio"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="Av. Perú 243, San Martín de Porres "
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="direccion"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
-                <!-- Nuevo campo: Placa de vehículo -->
-                <TextView android:text="Placa de vehículo"
+                <TextView
+                    android:text="Placa de vehículo"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView android:text="ABC-1234"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:tag="placa"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
+
 
             <!-- Contenedor para las fotos con sus títulos -->
             <LinearLayout
