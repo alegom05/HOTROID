@@ -6,7 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="colorSecondary">@color/colorPrimaryVariant</item>
+        <item name="colorPrimaryVariant">@color/verdejade</item> <!-- Para compatibilidad -->
+        <item name="bottomNavigationStyle">@style/Widget.Hotroid.BottomNavigation</item>
     </style>
+
 
 
     <style name="Theme.Hotroid.User" parent="Theme.Material3.DayNight.NoActionBar">
@@ -21,7 +24,17 @@
         <!-- Agrega también estos si usas Material 3 -->
         <item name="colorPrimaryContainer">@color/verdejade</item>
         <item name="colorOnPrimary">@android:color/white</item>
+        <item name="bottomNavigationStyle">@style/Widget.Hotroid.BottomNavigation</item>
     </style>
+
+    <!-- Estilo de la barra de navegación inferior -->
+    <style name="Widget.Hotroid.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/black</item> <!-- Íconos siempre negros -->
+        <item name="itemTextColor">@color/black</item> <!-- Textos siempre negros -->
+        <item name="background">@color/verdejade</item> <!-- Fondo de la barra -->
+    </style>
+
+
 
 
     <!-- CardView estilo claro -->

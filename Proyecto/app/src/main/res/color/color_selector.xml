@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/gray_tone"/> <!-- Gris cuando el ítem está seleccionado -->
+    <item android:color="@color/black"/> <!-- Negro para los íconos no seleccionados -->
+</selector>
