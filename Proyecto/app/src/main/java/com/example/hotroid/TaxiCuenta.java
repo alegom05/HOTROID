@@ -25,22 +25,23 @@ public class TaxiCuenta extends AppCompatActivity {
 
         Button btnVehiculo = findViewById(R.id.btnVehiculo);
 
-/*
+
+
         RecyclerView recyclerView = findViewById(R.id.recyclerCuenta);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-*/
 
-        List<String> datos = new ArrayList<>();
-        datos.add("Nombres: Alejandro");
-        datos.add("Apellidos: Gómez Mostacero");
-        datos.add("DNI: 12341234");
-        datos.add("Fecha de nacimiento: 21 de mayo de 1998");
-        datos.add("Correo electrónico: agomez@gmail.com");
-        datos.add("Teléfono: 934567213");
-        datos.add("Domicilio: Av. Benavides 123, Miraflores");
+        List<String[]> datos = new ArrayList<>();
+        datos.add(new String[]{"Nombre:", "Alejandro"});
+        datos.add(new String[]{"Apellidos:", "Gómez Rodríguez"});
+        datos.add(new String[]{"Correo:", "alejandro.gomez@correo.com"});
+        datos.add(new String[]{"Teléfono:", "987654321"});
+        datos.add(new String[]{"Dirección:", "Av. Los Taxis 123, Lima"});
 
         TaxiCuentaAdapter adapter = new TaxiCuentaAdapter(datos);
-        /*recyclerView.setAdapter(adapter);*/
+        recyclerView.setAdapter(adapter);
+
+
+
 
 
 

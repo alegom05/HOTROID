@@ -119,6 +119,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Habilitado"
+                android:textColor="@color/verdejade"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 app:layout_constraintTop_toBottomOf="@id/tvRol2"
@@ -162,7 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:padding="4dp"
+                android:padding="2dp"
                 android:clipToPadding="false" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -5,44 +5,50 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class TaxiCuentaAdapter extends RecyclerView.Adapter<TaxiCuentaAdapter.CuentaViewHolder> {
+public class TaxiCuentaAdapter extends RecyclerView.Adapter<TaxiCuentaAdapter.ViewHolder> {
 
-    private final List<String> datos;
+    private final List<String[]> datos; // <-- Aquí debe ser List<String[]>
 
-    public TaxiCuentaAdapter(List<String> datos) {
+
+    public TaxiCuentaAdapter(List<String[]> datos) {
         this.datos = datos;
     }
 
-    @NonNull
-    @Override
-    public CuentaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_cuenta, parent, false);
-        return new CuentaViewHolder(view);
-    }
+
 
     @Override
-    public void onBindViewHolder(@NonNull CuentaViewHolder holder, int position) {
-        String dato = datos.get(position);
-        holder.tvDato.setText(dato);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.taxi_cuenta_item, parent, false);
+        return new ViewHolder(vista);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvClave, tvValor;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvClave = itemView.findViewById(R.id.tvClave);
+            tvValor = itemView.findViewById(R.id.tvValor);
+        }
+    }
+
+
+
+
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        String[] par = datos.get(position);
+        holder.tvClave.setText(par[0]);
+        holder.tvValor.setText(par[1]);
     }
 
     @Override
     public int getItemCount() {
         return datos.size();
-    }
-
-    public static class CuentaViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDato;
-
-        public CuentaViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvDato = itemView.findViewById(R.id.tvDato);
-        }
     }
 }
