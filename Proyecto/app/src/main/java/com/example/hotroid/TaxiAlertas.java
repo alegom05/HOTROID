@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.bean.TaxiAlertasBeans;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -33,12 +34,12 @@ public class TaxiAlertas extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerNotificaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Notificacion> lista = new ArrayList<>();
-        lista.add(new Notificacion("Mauricio Guerra", "Hotel Marriot", "hace 20 minutos"));
-        lista.add(new Notificacion("Lisa Cáceres", "Hotel Marriot", "hace 1 minuto"));
-        lista.add(new Notificacion("Sol Díaz", "Hotel Marriot", "ahora"));
+        List<TaxiAlertasBeans> lista = new ArrayList<>();
+        lista.add(new TaxiAlertasBeans("Mauricio Guerra", "Hotel Marriot","Hotel Miraflores", "ahora"));
+        lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto"));
+        lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos"));
 
-        NotificacionAdapter adapter = new NotificacionAdapter(lista);
+        TaxiAlertasAdapter adapter = new TaxiAlertasAdapter(lista);
         recyclerView.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

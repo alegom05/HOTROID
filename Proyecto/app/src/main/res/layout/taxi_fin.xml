@@ -45,76 +45,89 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:text="Alejandro Gómez"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/usuariopic1"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/border_circle"
+                    android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:text="Taxista"
-                    android:textStyle="italic"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:text="Bárbara Homeidan"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:text="5:50 pm - 7:20 pm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+
+
+                    <TextView
+                        android:text="Taxista"
+                        android:textStyle="italic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/taxipic1"
-                android:scaleType="centerCrop"
-                android:background="@drawable/border_circle" />
         </LinearLayout>
+
+
     </androidx.cardview.widget.CardView>
 
-    <!-- Información del viaje y QR -->
-    <LinearLayout
-        android:id="@+id/layoutViaje"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardCodigoQR"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_height="300dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
         app:layout_constraintTop_toBottomOf="@id/cardTaxista"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/usuariopic1"
-            android:scaleType="centerCrop"
-            android:background="@drawable/border_circle"
-            android:layout_marginEnd="8dp" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <TextView
-                android:text="Bárbara Homeidan"
+                android:id="@+id/tvTituloQR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Código QR del viaje"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="8dp" />
 
-            <TextView
-                android:text="5:50 pm - 7:20 pm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:text="Código QR de fin del viaje"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <!-- Área simulando la cámara para escanear QR -->
+            <FrameLayout
+                android:id="@+id/cameraPreview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#000000"
+                android:layout_gravity="center"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:contentDescription="Vista previa de la cámara" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -32,9 +32,11 @@ public class TaxiCuenta extends AppCompatActivity {
 
         List<String[]> datos = new ArrayList<>();
         datos.add(new String[]{"Nombre:", "Alejandro"});
-        datos.add(new String[]{"Apellidos:", "Gómez Rodríguez"});
-        datos.add(new String[]{"Correo:", "alejandro.gomez@correo.com"});
-        datos.add(new String[]{"Teléfono:", "987654321"});
+        datos.add(new String[]{"Apellidos:", "Gómez Mostacero"});
+        datos.add(new String[]{"Tipo de documento:", "DNI"});
+        datos.add(new String[]{"Número de documento:", "45464546"});
+        datos.add(new String[]{"Fecha de nacimiento:", "28 de mayo de 1998"});
+        datos.add(new String[]{"Teléfono:", "913454319"});
         datos.add(new String[]{"Dirección:", "Av. Los Taxis 123, Lima"});
 
         TaxiCuentaAdapter adapter = new TaxiCuentaAdapter(datos);

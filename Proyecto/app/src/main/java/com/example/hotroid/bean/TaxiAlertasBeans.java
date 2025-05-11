@@ -1,13 +1,15 @@
-package com.example.hotroid;
+package com.example.hotroid.bean;
 
-public class Notificacion {
+public class TaxiAlertasBeans {
     private String nombre;
     private String lugar;
+    private String destino;
     private String tiempo;
 
-    public Notificacion(String nombre, String lugar, String tiempo) {
+    public TaxiAlertasBeans(String nombre, String lugar, String destino, String tiempo) {
         this.nombre = nombre;
         this.lugar = lugar;
+        this.destino = destino;
         this.tiempo = tiempo;
     }
 
@@ -17,6 +19,10 @@ public class Notificacion {
 
     public String getLugar() {
         return lugar;
+    }
+
+    public String getDestino() {
+        return destino;
     }
 
     public String getTiempo() {

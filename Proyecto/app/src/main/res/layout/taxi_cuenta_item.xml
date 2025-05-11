@@ -2,19 +2,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_marginBottom="8dp"
+
+    >
 
     <TextView
         android:id="@+id/tvClave"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Clave"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        />
 
     <TextView
         android:id="@+id/tvValor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Valor"
-        android:layout_marginStart="8dp"/>
+    />
+
+
 </LinearLayout>

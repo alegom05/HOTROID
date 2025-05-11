@@ -27,12 +27,13 @@ public class TaxiCuentaAdapter extends RecyclerView.Adapter<TaxiCuentaAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvClave, tvValor;
+        TextView tvClave, tvValor, tvValor2;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvClave = itemView.findViewById(R.id.tvClave);
             tvValor = itemView.findViewById(R.id.tvValor);
+
         }
     }
 

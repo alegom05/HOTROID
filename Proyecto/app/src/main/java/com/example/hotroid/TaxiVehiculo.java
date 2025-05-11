@@ -2,6 +2,8 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +17,8 @@ public class TaxiVehiculo extends AppCompatActivity {
         setContentView(R.layout.taxi_vehiculo);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
@@ -34,6 +38,8 @@ public class TaxiVehiculo extends AppCompatActivity {
             }
             return false; // Devuelve false si no se seleccionó ningún ítem válido
         });
+
+
 
 
     }
