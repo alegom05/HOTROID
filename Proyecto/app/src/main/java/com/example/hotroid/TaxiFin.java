@@ -4,8 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaxiFin extends AppCompatActivity {
 
@@ -34,6 +39,16 @@ public class TaxiFin extends AppCompatActivity {
             }
             return false; // Devuelve false si no se seleccionó ningún ítem válido
         });
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerViajes);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<ViajeFinBeans> lista = new ArrayList<>();
+        lista.add(new ViajeFinBeans("Juan Pérez", "9:00 am - 9:30 am", "Taxista", R.drawable.usuariopic1));
+
+        TaxiFinAdapter adapter = new TaxiFinAdapter(lista);
+        recyclerView.setAdapter(adapter);
+
 
 
     }

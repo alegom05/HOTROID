@@ -16,6 +16,15 @@ public class TaxiVehiculo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_vehiculo);
 
+        ImageButton btnAtras = findViewById(R.id.btnAtras);
+
+        btnAtras.setOnClickListener(v -> {
+            // Acción cuando el botón es clickeado
+            Intent intent = new Intent(TaxiVehiculo.this, TaxiCuenta.class); // Redirige a TaxiCuenta
+            startActivity(intent); // Inicia la nueva actividad
+        });
+
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
 

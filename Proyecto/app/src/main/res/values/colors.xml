@@ -18,5 +18,7 @@
     <color name="color_estado_habilitado">#009688</color>
     <color name="gray_tone">#B0B0B0</color> <!-- Gris tenue -->
     <color name="verde_jade_claro">#D9EFE9</color>
+    <color name="red">#E53935</color>
+
 
 </resources>

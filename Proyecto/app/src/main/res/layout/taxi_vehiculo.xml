@@ -17,20 +17,20 @@
         android:textStyle="bold"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnAtras"
         app:layout_constraintStart_toStartOf="parent" />
 
-<!--    <ImageButton
-        android:id="@+id/btnEditar"
+    <ImageButton
+        android:id="@+id/btnAtras"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_edit"
+        android:src="@drawable/ic_back"
         android:contentDescription="Editar"
         android:background="?android:attr/selectableItemBackground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp" />-->
+        android:layout_marginEnd="16dp" />
 
     <TextView
         android:id="@+id/tvPlaca"
@@ -40,7 +40,7 @@
         android:textStyle="bold"
         android:layout_marginTop="32dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+        app:layout_constraintTop_toBottomOf="@id/btnAtras"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
