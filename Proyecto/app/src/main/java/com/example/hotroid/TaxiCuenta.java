@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,8 +26,13 @@ public class TaxiCuenta extends AppCompatActivity {
 
         Button btnVehiculo = findViewById(R.id.btnVehiculo);
 
+        ImageButton btnAtras = findViewById(R.id.btnAtras);
 
-
+        btnAtras.setOnClickListener(v -> {
+            // Acción cuando el botón es clickeado
+            Intent intent = new Intent(TaxiCuenta.this, TaxiActivity.class); // Redirige a TaxiCuenta
+            startActivity(intent); // Inicia la nueva actividad
+        });
         RecyclerView recyclerView = findViewById(R.id.recyclerCuenta);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

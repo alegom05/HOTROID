@@ -143,7 +143,7 @@
                 android:id="@+id/btnFinViaje"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Fin del viaje"
+                android:text="Terminar viaje"
                 android:textStyle="bold"
                 android:backgroundTint="@color/verdejade"
                 android:textColor="@android:color/white" />

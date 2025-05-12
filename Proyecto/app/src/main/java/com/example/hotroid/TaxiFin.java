@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +21,8 @@ public class TaxiFin extends AppCompatActivity {
         setContentView(R.layout.taxi_fin);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        ImageButton btnAtras = findViewById(R.id.btnAtras);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wifi) {
@@ -50,6 +53,11 @@ public class TaxiFin extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
+        btnAtras.setOnClickListener(v -> {
+            // Acción cuando el botón es clickeado
+            Intent intent = new Intent(TaxiFin.this, TaxiActivity.class); // Redirige a TaxiCuenta
+            startActivity(intent); // Inicia la nueva actividad
+        });
 
     }
 }
