@@ -83,9 +83,8 @@
             <androidx.camera.view.PreviewView
                 android:id="@+id/cameraPreview"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="8dp"
                 app:layout_constraintTop_toBottomOf="@id/tvTituloQR"
                 app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
                 app:layout_constraintStart_toStartOf="parent"

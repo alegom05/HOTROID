@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
+        android:gravity="center_vertical"
         >
 
         <!-- Imagen del usuario -->
@@ -26,6 +27,7 @@
             android:id="@+id/imgUsuario"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/usuariopic1"
             android:scaleType="centerCrop"
             android:background="@drawable/border_circle"
@@ -47,6 +49,24 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/tvOrigen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Origen: Av. Principal #123"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvDestino"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Destino: Plaza Central #456"
+                android:textColor="#009688"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
                 android:id="@+id/tvHorario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,14 +74,7 @@
                 android:textSize="16sp"
                 android:layout_marginTop="4dp" />
 
-            <TextView
-                android:id="@+id/tvRol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Taxista"
-                android:textStyle="italic"
-                android:textSize="16sp"
-                android:layout_marginTop="4dp" />
+   
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

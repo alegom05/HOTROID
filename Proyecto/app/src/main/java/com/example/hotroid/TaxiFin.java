@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.bean.TaxiFinBeans;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -62,8 +63,8 @@ public class TaxiFin extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerViajes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<ViajeFinBeans> lista = new ArrayList<>();
-        lista.add(new ViajeFinBeans("Juan Pérez", "9:00 am - 9:30 am", "Taxista", R.drawable.usuariopic1));
+        List<TaxiFinBeans> lista = new ArrayList<>();
+        lista.add(new TaxiFinBeans("Bárbara Homeidan", "9:00 am - 9:30 am", "Cliente", "Hotel Marriot" ,"Hotel Miraflores",R.drawable.usuariopic1));
 
         TaxiFinAdapter adapter = new TaxiFinAdapter(lista);
         recyclerView.setAdapter(adapter);

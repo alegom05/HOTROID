@@ -10,13 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.hotroid.bean.TaxiFinBeans;
+
 import java.util.List;
 
 public class TaxiFinAdapter extends RecyclerView.Adapter<TaxiFinAdapter.ViewHolder> {
 
-    private final List<ViajeFinBeans> listaViajes;
+    private final List<TaxiFinBeans> listaViajes;
 
-    public TaxiFinAdapter(List<ViajeFinBeans> listaViajes) {
+    public TaxiFinAdapter(List<TaxiFinBeans> listaViajes) {
         this.listaViajes = listaViajes;
     }
 
@@ -30,12 +32,11 @@ public class TaxiFinAdapter extends RecyclerView.Adapter<TaxiFinAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TaxiFinAdapter.ViewHolder holder, int position) {
-        ViajeFinBeans viaje = listaViajes.get(position);
+        TaxiFinBeans viaje = listaViajes.get(position);
 
         holder.tvNombre.setText(viaje.getNombre());
         holder.tvHorario.setText(viaje.getHorario());
-        holder.tvRol.setText(viaje.getRol());
-
+//Falta
         // Si manejas imágenes dinámicas, aquí podrías usar Glide o Picasso
         holder.imgUsuario.setImageResource(viaje.getImagenResId());
     }
