@@ -48,7 +48,7 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
             Intent intent = new Intent(context, TaxiViaje.class);
             // Pasamos los datos necesarios para TaxiViaje
             intent.putExtra("NOMBRE_USUARIO", noti.getNombre());
-            intent.putExtra("ORIGEN", noti.getLugar());
+            intent.putExtra("ORIGEN", noti.getOrigen());
             intent.putExtra("DESTINO", noti.getDestino());
             context.startActivity(intent);
         });

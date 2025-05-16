@@ -39,9 +39,9 @@ public class TaxiAlertas extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         List<TaxiAlertasBeans> lista = new ArrayList<>();
-        lista.add(new TaxiAlertasBeans("Mauricio Guerra", "Hotel Marriot","Hotel Miraflores", "ahora"));
-        lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto"));
-        lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos"));
+        lista.add(new TaxiAlertasBeans("Mauricio Guerra", "Hotel Marriot","Hotel Miraflores", "ahora",""));
+        lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto",""));
+        lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos",""));
 
         // Usar constructor con contexto para facilitar la navegación
         TaxiAlertasAdapter adapter = new TaxiAlertasAdapter(this, lista);
