@@ -32,7 +32,7 @@
         android:layout_marginEnd="16dp" />
 
     <!-- Card perfil -->
-    <androidx.cardview.widget.CardView
+<!--    <androidx.cardview.widget.CardView
         android:id="@+id/cardPerfil"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:background="@drawable/border_circle"
                 android:src="@drawable/taxipic1" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>-->
 
     <!-- Card Datos -->
     <androidx.cardview.widget.CardView
@@ -91,7 +91,7 @@
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/cardPerfil"
+        app:layout_constraintTop_toBottomOf="@id/btnAtras"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

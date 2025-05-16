@@ -7,10 +7,14 @@
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="colorSecondary">@color/colorPrimaryVariant</item>
         <item name="colorPrimaryVariant">@color/verdejade</item> <!-- Para compatibilidad -->
-        <item name="bottomNavigationStyle">@style/Widget.Hotroid.BottomNavigation</item>
+        <!-- Referencia al estilo del indicador activo, no directamente al color -->
+        <item name="itemActiveIndicatorStyle">@style/Widget.Hotroid.ActiveIndicator</item>
     </style>
 
-
+    <!-- Define el estilo del indicador activo -->
+    <style name="Widget.Hotroid.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/gray_tone</item>
+    </style>
 
     <style name="Theme.Hotroid.User" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/verdejade</item>
@@ -32,10 +36,9 @@
         <item name="itemIconTint">@color/black</item> <!-- Íconos siempre negros -->
         <item name="itemTextColor">@color/black</item> <!-- Textos siempre negros -->
         <item name="background">@color/verdejade</item> <!-- Fondo de la barra -->
+        <!-- También aplica el estilo del indicador activo aquí -->
+        <item name="itemActiveIndicatorStyle">@style/Widget.Hotroid.ActiveIndicator</item>
     </style>
-
-
-
 
     <!-- CardView estilo claro -->
     <style name="CardView.Light.style" parent="Widget.Material3.CardView.Outlined">
@@ -43,5 +46,7 @@
         <item name="strokeColor">@color/material_dynamic_tertiary50</item>
         <item name="strokeWidth">0.5dp</item>
     </style>
+
+
 
 </resources>

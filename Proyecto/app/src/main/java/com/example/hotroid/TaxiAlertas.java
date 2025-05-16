@@ -10,12 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.TaxiAlertasBeans;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaxiAlertas extends AppCompatActivity {
+
+    private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +43,11 @@ public class TaxiAlertas extends AppCompatActivity {
         lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto"));
         lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos"));
 
-        TaxiAlertasAdapter adapter = new TaxiAlertasAdapter(lista);
+        // Usar constructor con contexto para facilitar la navegación
+        TaxiAlertasAdapter adapter = new TaxiAlertasAdapter(this, lista);
         recyclerView.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
         bottomNavigationView.setSelectedItemId(R.id.notify);
 
         // BottomNavigationView o Barra inferior de menú
@@ -65,9 +69,5 @@ public class TaxiAlertas extends AppCompatActivity {
             }
             return false; // Devuelve false si no se seleccionó ningún ítem válido
         });
-
-
-
-
     }
 }

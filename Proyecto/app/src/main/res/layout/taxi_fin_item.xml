@@ -12,6 +12,7 @@
     app:cardPreventCornerOverlap="true"
     app:cardMaxElevation="1dp"
     app:strokeWidth="1dp"
+    android:backgroundTint="@color/verde_jade_claro"
     app:strokeColor="#DDDDDD">
 
     <LinearLayout

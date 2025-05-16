@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
     <application
@@ -167,6 +169,7 @@
         <activity android:name=".TaxiFin" />
         <activity android:name=".TaxiUsuario" />
         <activity android:name=".TaxiVehiculo" /> <!-- . -->
+        <activity android:name=".TaxiViaje" /> <!-- . -->
         <activity android:name=".HotelDetalladoUser" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />
@@ -187,5 +190,9 @@
         <activity android:name=".SuperDetallesTaxiDesactivadoActivity" />
         <activity android:name=".SuperDetallesTaxiPendienteActivity" />
     </application>
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="TU_API_KEY_AQUÍ" />
 
 </manifest>
