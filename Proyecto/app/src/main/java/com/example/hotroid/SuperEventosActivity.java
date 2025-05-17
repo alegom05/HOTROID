@@ -6,22 +6,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class SuperEventosActivity extends AppCompatActivity {
 
     private EditText etFiltroFecha;
-    private LinearLayout evento1, evento2, evento3;
-    private TextView tvFechaEvento1, tvFechaEvento2, tvFechaEvento3;
+    private RecyclerView recyclerEventos;
+    private EventoAdapter adapter;
+    private List<Evento> listaEventos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +34,20 @@ public class SuperEventosActivity extends AppCompatActivity {
         // Inicializar vistas
         etFiltroFecha = findViewById(R.id.etFiltroFecha);
         Button btnLimpiarFiltro = findViewById(R.id.btnLimpiarFiltro);
-        evento1 = findViewById(R.id.evento1);
-        evento2 = findViewById(R.id.evento2);
-        evento3 = findViewById(R.id.evento3);
-        tvFechaEvento1 = findViewById(R.id.tvFechaEvento1);
-        tvFechaEvento2 = findViewById(R.id.tvFechaEvento2);
-        tvFechaEvento3 = findViewById(R.id.tvFechaEvento3);
+        recyclerEventos = findViewById(R.id.recyclerEventos);
+        recyclerEventos.setLayoutManager(new LinearLayoutManager(this));
+
         CardView cardSuper = findViewById(R.id.cardSuper);
+
+        // Inicializar la lista de eventos (aquí irían tus datos reales)
+        listaEventos = new ArrayList<>();
+        listaEventos.add(new Evento("15/5/2025", "Corte de energía en la torre A", "El Mirador"));
+        listaEventos.add(new Evento("11/5/2025", "Caída de objeto en pasillo del restaurante", "Las Dunas"));
+        listaEventos.add(new Evento("29/4/2025", "Fuga de agua en cuarto 210", "Costa del Mar"));
+
+        // Inicializar y configurar el adaptador
+        adapter = new EventoAdapter(this, listaEventos, evento -> SuperDetalleEvento(evento.getEvento()));
+        recyclerEventos.setAdapter(adapter);
 
         // Configurar BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -60,13 +70,8 @@ public class SuperEventosActivity extends AppCompatActivity {
         // Configurar el botón limpiar filtro
         btnLimpiarFiltro.setOnClickListener(v -> {
             etFiltroFecha.setText("");
-            mostrarTodosLosEventos();
+            filtrarEventosPorFecha(""); // Mostrar todos al limpiar
         });
-
-        // Configurar clicks en los eventos
-        evento1.setOnClickListener(v -> abrirDetalleEvento("Corte de energía en la torre A"));
-        evento2.setOnClickListener(v -> abrirDetalleEvento("Caída de objeto en pasillo del restaurante"));
-        evento3.setOnClickListener(v -> abrirDetalleEvento("Fuga de agua en cuarto 210"));
 
         // Configurar click en la card del administrador
         cardSuper.setOnClickListener(v -> {
@@ -88,32 +93,20 @@ public class SuperEventosActivity extends AppCompatActivity {
         datePicker.show();
     }
 
-    private void filtrarEventosPorFecha(String fechaSeleccionada) {
-        // Obtener las fechas de cada evento
-        String fechaEvento1 = tvFechaEvento1.getText().toString();
-        String fechaEvento2 = tvFechaEvento2.getText().toString();
-        String fechaEvento3 = tvFechaEvento3.getText().toString();
-
-        // Comparar fechas y mostrar/ocultar eventos
-        evento1.setVisibility(fechaEvento1.equals(fechaSeleccionada) ? View.VISIBLE : View.GONE);
-        evento2.setVisibility(fechaEvento2.equals(fechaSeleccionada) ? View.VISIBLE : View.GONE);
-        evento3.setVisibility(fechaEvento3.equals(fechaSeleccionada) ? View.VISIBLE : View.GONE);
-
-        // Mostrar mensaje si no hay eventos para la fecha seleccionada
-        if (evento1.getVisibility() != View.VISIBLE &&
-                evento2.getVisibility() != View.VISIBLE &&
-                evento3.getVisibility() != View.VISIBLE) {
+    private void filtrarEventosPorFecha(String fechaFiltro) {
+        List<Evento> listaFiltrada = new ArrayList<>();
+        for (Evento evento : listaEventos) {
+            if (evento.getFecha().equals(fechaFiltro) || fechaFiltro.isEmpty()) {
+                listaFiltrada.add(evento);
+            }
+        }
+        adapter.actualizarLista(listaFiltrada);
+        if (listaFiltrada.isEmpty() && !fechaFiltro.isEmpty()) {
             Toast.makeText(this, "No hay eventos para esta fecha", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void mostrarTodosLosEventos() {
-        evento1.setVisibility(View.VISIBLE);
-        evento2.setVisibility(View.VISIBLE);
-        evento3.setVisibility(View.VISIBLE);
-    }
-
-    private void abrirDetalleEvento(String tituloEvento) {
+    private void SuperDetalleEvento(String tituloEvento) {
         Intent intent = new Intent(this, SuperDetallesEventosActivity.class);
         intent.putExtra("titulo_evento", tituloEvento);
         startActivity(intent);
