@@ -48,13 +48,6 @@ public class TaxiCuenta extends AppCompatActivity {
         TaxiCuentaAdapter adapter = new TaxiCuentaAdapter(datos);
         recyclerView.setAdapter(adapter);
 
-
-
-
-
-
-
-
         btnVehiculo.setOnClickListener(v -> {
             Intent intent = new Intent(TaxiCuenta.this, TaxiVehiculo.class); // Redirige a TaxiCuenta
             startActivity(intent); // Inicia la nueva actividad
