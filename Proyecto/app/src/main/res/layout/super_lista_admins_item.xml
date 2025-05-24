@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:weightSum="15"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/tvUsuario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:text="Usuario Ejemplo"
+        android:gravity="start"
+        android:textColor="@color/black"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tvHotel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:text="Hotel Ejemplo"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <ImageView
+        android:id="@+id/ivEstado"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:src="@drawable/circle_green"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="Estado del administrador"
+        android:scaleType="fitCenter" />
+
+</LinearLayout>
