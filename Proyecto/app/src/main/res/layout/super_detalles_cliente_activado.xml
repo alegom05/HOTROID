@@ -190,22 +190,22 @@
                 android:orientation="vertical"
                 android:layout_marginStart="12dp">
 
-            <!-- Foto de perfil con título -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Foto de perfil"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="4dp"/>
+                <!-- Foto de perfil con título -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Foto de perfil"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="4dp"/>
 
-            <ImageView
-                android:id="@+id/fotoPrincipal"
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:src="@drawable/foto_admin"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="16dp"/>
+                <ImageView
+                    android:id="@+id/fotoPrincipal"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/foto_admin"
+                    android:scaleType="centerCrop"
+                    android:layout_marginBottom="16dp"/>
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -245,3 +245,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_super" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -4,42 +4,59 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ImageView; // Asegúrate de que este import esté presente
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
+
     private EditText etFechaNacimiento;
+    private EditText etNombre;
+    private EditText etApellido;
+    private Spinner spTipoDocumento;
+    private EditText etNumDocumento;
+    private EditText etCorreo;
+    private EditText etTelefono;
+    private EditText etDireccion;
+    private Spinner spHotel;
+    private ImageView ivFotoPerfil; // Para manejar la imagen de perfil (si existe en tu layout)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.super_detalles_admin_formulario);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        setContentView(R.layout.super_detalles_admin_formulario); // Asegúrate de que este layout exista
+
+        // Referencias a los elementos de la UI
+        etNombre = findViewById(R.id.etNombre);
+        etApellido = findViewById(R.id.etApellido);
+        spTipoDocumento = findViewById(R.id.spTipoDocumento);
+        etNumDocumento = findViewById(R.id.etNumDocumento);
+        etFechaNacimiento = findViewById(R.id.etFechaNacimiento);
+        etCorreo = findViewById(R.id.etCorreo);
+        etTelefono = findViewById(R.id.etTelefono);
+        etDireccion = findViewById(R.id.etDireccion);
+        spHotel = findViewById(R.id.spHotel);
+        // ivFotoPerfil = findViewById(R.id.ivFotoPerfil); // Descomentar si tienes un ImageView con este ID para la foto de perfil en el formulario
 
         // Spinner Tipo de Documento
-        Spinner spTipoDocumento = findViewById(R.id.spTipoDocumento);
         List<String> tiposDocumento = Arrays.asList("DNI", "Pasaporte", "Carnet de Extranjería");
         ArrayAdapter<String> adapterDocumento = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tiposDocumento);
         adapterDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spTipoDocumento.setAdapter(adapterDocumento);
 
         // Spinner de Hoteles
-        Spinner spHotel = findViewById(R.id.spHotel);
         List<String> hoteles = Arrays.asList(
                 "Hotel Miraflores Park - Lima",
                 "JW Marriott - Lima",
@@ -56,40 +73,76 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         adapterHoteles.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spHotel.setAdapter(adapterHoteles);
 
-        // Manejo de la fecha de nacimiento
-        etFechaNacimiento = findViewById(R.id.etFechaNacimiento);
+        // Manejo de la fecha de nacimiento (DatePickerDialog)
         etFechaNacimiento.setOnClickListener(v -> mostrarDatePicker());
 
+        // Botón de Registrar
+        Button btnRegistrar = findViewById(R.id.btnRegistrar); // Asegúrate de que este ID exista en tu layout
+        btnRegistrar.setOnClickListener(v -> {
+            // Validar y recopilar datos
+            if (validarCampos()) {
+                String nombre = etNombre.getText().toString().trim();
+                String apellido = etApellido.getText().toString().trim();
+                String tipoDocumento = spTipoDocumento.getSelectedItem().toString();
+                String numDocumento = etNumDocumento.getText().toString().trim();
+                String fechaNacimiento = etFechaNacimiento.getText().toString().trim();
+                String correo = etCorreo.getText().toString().trim();
+                String telefono = etTelefono.getText().toString().trim();
+                String direccion = etDireccion.getText().toString().trim();
+                String hotelAsignado = spHotel.getSelectedItem().toString();
+                String nombreCompleto = nombre + " " + apellido; // Crear el "Usuario" como lo tienes en SuperListaAdminActivity
 
-        // BottomNavigationView o Barra inferior de menú
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_hoteles) {
-                Intent intentInicio = new Intent(SuperDetallesAdminFormularioActivity.this, SuperActivity.class);
-                startActivity(intentInicio);
-                return true;
-            } else if (item.getItemId() == R.id.nav_usuarios) {
-                Intent intentUbicacion = new Intent(SuperDetallesAdminFormularioActivity.this, SuperUsuariosActivity.class);
-                startActivity(intentUbicacion);
-                return true;
-            } else if (item.getItemId() == R.id.nav_eventos) {
-                Intent intentAlertas = new Intent(SuperDetallesAdminFormularioActivity.this, SuperEventosActivity.class);
-                startActivity(intentAlertas);
-                return true;
-            } else {
-                return false;
+                // Crear un array de String con todos los datos
+                // Asegúrate de que el orden y la cantidad de campos coincidan con lo que esperas en SuperListaAdminActivity
+                // Esto permite pasar todos los datos para una futura visualización en detalles, incluso si la lista principal
+                // solo muestra un subconjunto de ellos.
+                String[] nuevoAdminData = new String[]{
+                        nombreCompleto,   // 0: Nombre Completo (para mostrar en la lista)
+                        nombre,           // 1: Nombres
+                        apellido,         // 2: Apellidos
+                        tipoDocumento,    // 3: Tipo de Documento
+                        numDocumento,     // 4: Número de Documento
+                        fechaNacimiento,  // 5: Fecha de Nacimiento
+                        correo,           // 6: Correo Electrónico
+                        telefono,         // 7: Teléfono
+                        direccion,        // 8: Dirección
+                        hotelAsignado     // 9: Hotel Asignado
+                };
+
+                // Enviar los datos de vuelta a SuperListaAdminActivity
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("action", "registrado");
+                resultIntent.putExtra("nuevo_admin_data", nuevoAdminData); // Pasa el array completo de datos
+                setResult(RESULT_OK, resultIntent);
+                finish(); // Cierra esta actividad y regresa a la anterior
             }
         });
 
-        Button btnRegistrar = findViewById(R.id.btnRegistrar);
-        btnRegistrar.setOnClickListener(v -> {
-            Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperListaAdminActivity.class);
+        // Configuración del CardView de perfil (el de "Pedro Bustamante")
+        CardView cardPerfil = findViewById(R.id.cardPerfil); // Asegúrate de que este ID exista en tu layout
+        cardPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperCuentaActivity.class);
             startActivity(intent);
         });
 
-        CardView cardSuper2 = findViewById(R.id.cardPerfil);
-        cardSuper2.setOnClickListener(v -> {
-            Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperCuentaActivity.class);
-            startActivity(intent);
+        // BottomNavigationView
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_hoteles) {
+                startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_usuarios) {
+                // Si estamos en el formulario de registro de usuario, queremos volver a la lista de usuarios.
+                // Simplemente cerrar esta actividad y regresar a la anterior (SuperListaAdminActivity).
+                setResult(RESULT_CANCELED); // Se puede usar RESULT_CANCELED si se presiona el botón de navegación para salir
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_eventos) {
+                startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperEventosActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 
@@ -100,9 +153,45 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         int día = calendario.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            String fecha = dayOfMonth + "/" + (month + 1) + "/" + year;
+            // Formatear la fecha a un string deseado, ej. "DD/MM/YYYY"
+            String fecha = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, (month + 1), year);
             etFechaNacimiento.setText(fecha);
         }, año, mes, día);
         datePicker.show();
+    }
+
+    // Validación básica de campos del formulario
+    private boolean validarCampos() {
+        boolean isValid = true;
+        if (etNombre.getText().toString().trim().isEmpty()) {
+            etNombre.setError("Este campo es obligatorio");
+            isValid = false;
+        }
+        if (etApellido.getText().toString().trim().isEmpty()) {
+            etApellido.setError("Este campo es obligatorio");
+            isValid = false;
+        }
+        if (etNumDocumento.getText().toString().trim().isEmpty()) {
+            etNumDocumento.setError("Este campo es obligatorio");
+            isValid = false;
+        }
+        if (etFechaNacimiento.getText().toString().trim().isEmpty()) {
+            etFechaNacimiento.setError("Seleccione una fecha");
+            isValid = false;
+        }
+        if (etCorreo.getText().toString().trim().isEmpty()) {
+            etCorreo.setError("Este campo es obligatorio");
+            isValid = false;
+        }
+        if (etTelefono.getText().toString().trim().isEmpty()) {
+            etTelefono.setError("Este campo es obligatorio");
+            isValid = false;
+        }
+        if (etDireccion.getText().toString().trim().isEmpty()) {
+            etDireccion.setError("Este campo es obligatorio");
+            isValid = false;
+        }
+        // Puedes añadir más validaciones según sea necesario (formato de correo, número de teléfono, etc.)
+        return isValid;
     }
 }
