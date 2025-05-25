@@ -15,6 +15,7 @@ public class SuperReservasActivity extends AppCompatActivity{
         setContentView(R.layout.super_reservas_hotel);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_hoteles);
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

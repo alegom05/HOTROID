@@ -100,6 +100,7 @@ public class SuperDetallesTaxiActivadoActivity extends AppCompatActivity {
         }
 
         // Configuración de la barra de navegación inferior
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         if (bottomNavigationView != null) {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
@@ -108,9 +109,8 @@ public class SuperDetallesTaxiActivadoActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_usuarios) {
-                    // Si ya estamos en usuarios, no cerramos esta actividad sino que volvemos a la lista
-                    setResult(RESULT_CANCELED); // Indica que no hubo cambio de estado si solo navega
-                    finish();
+                    Intent intentUbicacion = new Intent(SuperDetallesTaxiActivadoActivity.this, SuperUsuariosActivity.class);
+                    startActivity(intentUbicacion);
                     return true;
                 } else if (itemId == R.id.nav_eventos) {
                     startActivity(new Intent(SuperDetallesTaxiActivadoActivity.this, SuperEventosActivity.class));

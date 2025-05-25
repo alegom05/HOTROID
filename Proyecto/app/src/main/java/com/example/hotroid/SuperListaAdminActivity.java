@@ -62,7 +62,7 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         renderAdminList(); // Carga y muestra la lista inicial
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
@@ -70,7 +70,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 startActivity(intentInicio);
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                // Ya estamos en usuarios, no hacemos nada o refrescamos si es necesario
+                Intent intentUbicacion = new Intent(SuperListaAdminActivity.this, SuperUsuariosActivity.class);
+                startActivity(intentUbicacion);
                 return true;
             } else if (itemId == R.id.nav_eventos) {
                 Intent intentAlertas = new Intent(SuperListaAdminActivity.this, SuperEventosActivity.class);

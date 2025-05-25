@@ -90,6 +90,7 @@ public class SuperDetallesClienteDesactivadoActivity extends AppCompatActivity {
             });
         }
 
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         if (bottomNavigationView != null) {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
@@ -98,7 +99,7 @@ public class SuperDetallesClienteDesactivadoActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_usuarios) {
-                    setResult(RESULT_CANCELED);
+                    startActivity(new Intent(SuperDetallesClienteDesactivadoActivity.this, SuperUsuariosActivity.class));
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_eventos) {

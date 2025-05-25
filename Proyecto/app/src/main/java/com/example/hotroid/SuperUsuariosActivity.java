@@ -16,7 +16,7 @@ public class SuperUsuariosActivity extends AppCompatActivity {
         setContentView(R.layout.super_usuarios);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_hoteles) {

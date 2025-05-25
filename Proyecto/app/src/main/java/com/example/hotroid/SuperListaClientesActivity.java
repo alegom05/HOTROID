@@ -56,6 +56,7 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         renderClientList();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
@@ -63,6 +64,8 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                 startActivity(intentHoteles);
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
+                Intent intentUbicacion = new Intent(SuperListaClientesActivity.this, SuperUsuariosActivity.class);
+                startActivity(intentUbicacion);
                 return true;
             } else if (itemId == R.id.nav_eventos) {
                 Intent intentEventos = new Intent(SuperListaClientesActivity.this, SuperEventosActivity.class);

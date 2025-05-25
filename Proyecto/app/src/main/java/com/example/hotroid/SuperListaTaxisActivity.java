@@ -216,13 +216,15 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
 
     private void setupBottomNavigationView() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
                 startActivity(new Intent(SuperListaTaxisActivity.this, SuperActivity.class));
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                // Ya estamos en usuarios, no hacemos nada o refrescamos
+                Intent intentUbicacion = new Intent(SuperListaTaxisActivity.this, SuperUsuariosActivity.class);
+                startActivity(intentUbicacion);
                 return true;
             } else if (itemId == R.id.nav_eventos) {
                 startActivity(new Intent(SuperListaTaxisActivity.this, SuperEventosActivity.class));

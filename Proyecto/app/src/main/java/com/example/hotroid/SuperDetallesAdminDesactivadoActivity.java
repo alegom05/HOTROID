@@ -118,14 +118,15 @@ public class SuperDetallesAdminDesactivadoActivity extends AppCompatActivity {
 
         // Configuración de la barra de navegación inferior
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
                 startActivity(new Intent(SuperDetallesAdminDesactivadoActivity.this, SuperActivity.class));
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                setResult(RESULT_CANCELED);
-                finish();
+                Intent intentUbicacion = new Intent(SuperDetallesAdminDesactivadoActivity.this, SuperUsuariosActivity.class);
+                startActivity(intentUbicacion);
                 return true;
             } else if (itemId == R.id.nav_eventos) {
                 startActivity(new Intent(SuperDetallesAdminDesactivadoActivity.this, SuperEventosActivity.class));

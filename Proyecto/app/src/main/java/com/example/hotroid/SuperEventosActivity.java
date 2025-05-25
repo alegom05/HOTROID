@@ -51,6 +51,7 @@ public class SuperEventosActivity extends AppCompatActivity {
 
         // Configurar BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_eventos);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_hoteles) {
                 startActivity(new Intent(this, SuperActivity.class));

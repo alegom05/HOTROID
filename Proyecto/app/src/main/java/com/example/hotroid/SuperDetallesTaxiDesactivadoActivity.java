@@ -96,7 +96,7 @@ public class SuperDetallesTaxiDesactivadoActivity extends AppCompatActivity {
                 finish();
             });
         }
-
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         // Configuración de la barra de navegación inferior
         if (bottomNavigationView != null) {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -106,8 +106,8 @@ public class SuperDetallesTaxiDesactivadoActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_usuarios) {
-                    setResult(RESULT_CANCELED);
-                    finish();
+                    Intent intentUbicacion = new Intent(SuperDetallesTaxiDesactivadoActivity.this, SuperUsuariosActivity.class);
+                    startActivity(intentUbicacion);
                     return true;
                 } else if (itemId == R.id.nav_eventos) {
                     startActivity(new Intent(SuperDetallesTaxiDesactivadoActivity.this, SuperEventosActivity.class));

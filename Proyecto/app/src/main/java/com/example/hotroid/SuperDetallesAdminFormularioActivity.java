@@ -127,16 +127,14 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
 
         // BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
                 startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperActivity.class));
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                // Si estamos en el formulario de registro de usuario, queremos volver a la lista de usuarios.
-                // Simplemente cerrar esta actividad y regresar a la anterior (SuperListaAdminActivity).
-                setResult(RESULT_CANCELED); // Se puede usar RESULT_CANCELED si se presiona el botón de navegación para salir
-                finish();
+                startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperUsuariosActivity.class));
                 return true;
             } else if (itemId == R.id.nav_eventos) {
                 startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperEventosActivity.class));
