@@ -54,22 +54,27 @@ public class AdminNuevaHabitacionActivity extends AppCompatActivity {
         findViewById(R.id.btnGuardarHabitacion).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Aquí puedes agregar la lógica para guardar los datos
                 String numeroHabitacion = etNumeroHabitacion.getText().toString();
                 String tipoHabitacion = tvTipoHabitacion.getText().toString();
                 String adultos = etAdultos.getText().toString();
                 String ninos = etNinos.getText().toString();
                 String area = etArea.getText().toString();
 
-                // Validación simple
                 if (numeroHabitacion.isEmpty() || adultos.isEmpty() || ninos.isEmpty() || area.isEmpty()) {
                     Toast.makeText(AdminNuevaHabitacionActivity.this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Aquí puedes guardar los datos en una base de datos o realizar la acción correspondiente
-                    Toast.makeText(AdminNuevaHabitacionActivity.this, "Habitación registrada con éxito.", Toast.LENGTH_SHORT).show();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("roomNumber", numeroHabitacion);
+                    resultIntent.putExtra("roomType", tipoHabitacion);
+                    resultIntent.putExtra("capacityAdults", adultos);
+                    resultIntent.putExtra("capacityChildren", ninos);
+                    resultIntent.putExtra("area", area);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
                 }
             }
         });
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 

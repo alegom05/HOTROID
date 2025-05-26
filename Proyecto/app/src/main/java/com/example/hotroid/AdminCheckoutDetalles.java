@@ -83,6 +83,7 @@ public class AdminCheckoutDetalles extends AppCompatActivity {
 
             Intent intent = new Intent(AdminCheckoutDetalles.this, AdminMontoCobrar.class);
             intent.putExtra("MONTO_TOTAL", montoTotal);
+            intent.putExtra("CLIENT_NAME", getIntent().getStringExtra("CLIENT_NAME"));
             startActivity(intent);
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

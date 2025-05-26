@@ -33,11 +33,16 @@ public class AdminCheckoutCompletado extends AppCompatActivity {
         tvMontoFinal.setText(String.format("S/. %.2f", monto));
 
         btnFinalizar.setOnClickListener(v -> {
+            String cliente = getIntent().getStringExtra("CLIENT_NAME");
+            String mensaje = "Se cobró S/. " + String.format("%.2f", monto) + " a " + cliente + " por su estadía.";
+            showNotification("Checkout completado", mensaje);
+
             Intent intent = new Intent(AdminCheckoutCompletado.this, AdminCheckout.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish(); // Finaliza esta actividad para que no se pueda volver con "Back"
         });
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_checkout);
 
@@ -64,4 +69,31 @@ public class AdminCheckoutCompletado extends AppCompatActivity {
             }
         });
     }
+    private void showNotification(String title, String message) {
+        String CHANNEL_ID = "checkout_channel";
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = "Notificaciones de Checkout";
+            String description = "Canal para notificaciones de pagos por checkout";
+            int importance = android.app.NotificationManager.IMPORTANCE_DEFAULT;
+            android.app.NotificationChannel channel = new android.app.NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        androidx.core.app.NotificationCompat.Builder builder = new androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)  // Asegúrate de tener este ícono
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        androidx.core.app.NotificationManagerCompat notificationManager = androidx.core.app.NotificationManagerCompat.from(this);
+        notificationManager.notify(3, builder.build());  // ID arbitrario para la notificación
+    }
+
 }

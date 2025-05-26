@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,24 +62,22 @@ public class AdminVentasServicio extends AppCompatActivity {
                 PdfWriter.getInstance(document, new FileOutputStream(file));
                 document.open();
 
-                // Estilos de fuente
+                // Estilos
                 Font titleFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
                 Font headerFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
                 Font cellFont = new Font(Font.FontFamily.HELVETICA, 12);
 
-                // Título centrado
+                // Título
                 Paragraph title = new Paragraph("Venta de Servicios", titleFont);
                 title.setAlignment(Paragraph.ALIGN_CENTER);
                 title.setSpacingAfter(20f);
                 document.add(title);
 
-                // Tabla con 3 columnas
+                // Tabla
                 PdfPTable table = new PdfPTable(3);
-                table.setWidthPercentage(100); // que ocupe todo el ancho
-                table.setWidths(new float[]{3f, 2f, 3f}); // distribución de columnas
+                table.setWidthPercentage(100);
+                table.setWidths(new float[]{3f, 2f, 3f});
                 table.setSpacingBefore(10f);
-
-
 
                 table.addCell(createCenteredCell("Servicio", headerFont));
                 table.addCell(createCenteredCell("Cantidad", headerFont));
@@ -100,18 +99,21 @@ public class AdminVentasServicio extends AppCompatActivity {
                 table.addCell(createCenteredCell("14", cellFont));
                 table.addCell(createCenteredCell("2300.00", cellFont));
 
-
                 document.add(table);
                 document.close();
 
-                // Mostrar mensaje con ubicación
-                Toast.makeText(AdminVentasServicio.this, "PDF Generado en: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                // Abrir PDF automáticamente
+                abrirPdf(file);
+
+                // Mostrar notificación
+                mostrarNotificacion(file);
 
             } catch (DocumentException | IOException e) {
                 e.printStackTrace();
-                Toast.makeText(AdminVentasServicio.this, "Error generando PDF", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error generando PDF", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_reportes);
@@ -146,4 +148,65 @@ public class AdminVentasServicio extends AppCompatActivity {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
     }
+    private void abrirPdf(File file) {
+        Uri uri = androidx.core.content.FileProvider.getUriForFile(
+                this,
+                getApplicationContext().getPackageName() + ".provider",
+                file
+        );
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "No se pudo abrir el PDF", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void mostrarNotificacion(File file) {
+        String CHANNEL_ID = "pdf_channel";
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = "Notificación PDF";
+            String description = "Canal para notificaciones de PDFs generados";
+            int importance = android.app.NotificationManager.IMPORTANCE_DEFAULT;
+            android.app.NotificationChannel channel = new android.app.NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        Uri uri = androidx.core.content.FileProvider.getUriForFile(
+                this,
+                getApplicationContext().getPackageName() + ".provider",
+                file
+        );
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        androidx.core.app.NotificationCompat.Builder builder = new androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("PDF generado")
+                .setContentText("Haz clic para abrir el PDF de ventas")
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        androidx.core.app.NotificationManagerCompat notificationManager = androidx.core.app.NotificationManagerCompat.from(this);
+        notificationManager.notify(100, builder.build());
+    }
+
 }

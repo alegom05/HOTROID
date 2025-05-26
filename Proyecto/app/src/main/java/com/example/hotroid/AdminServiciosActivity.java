@@ -1,11 +1,16 @@
 package com.example.hotroid;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -136,7 +141,38 @@ public class AdminServiciosActivity extends AppCompatActivity {
             Servicios nuevoServicio = new Servicios(nombre, descripcion, precio, imagenes);
             serviciosList.add(nuevoServicio);
             adapter.notifyItemInserted(serviciosList.size() - 1);
+            showNotification("Servicio creado", "El servicio \"" + nombre + "\" fue registrado con éxito.");
         }
     }
+    private void showNotification(String title, String message) {
+        String CHANNEL_ID = "servicios_channel";
+
+        // Crear canal de notificación si aún no existe (solo para Android O en adelante)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notificaciones de Servicios";
+            String description = "Canal para notificaciones de registro de servicios";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        // Crear notificación
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)  // Asegúrate de tener este ícono
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        // Mostrarla
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(2, builder.build()); // ID arbitrario
+    }
+
 
 }

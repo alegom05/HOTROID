@@ -28,12 +28,14 @@ public class AdminMontoCobrar extends AppCompatActivity {
         TextView tvMontoTotal = findViewById(R.id.tvMontoTotal);
 
         double montoTotal = getIntent().getDoubleExtra("MONTO_TOTAL", 0.0);
+        String cliente = getIntent().getStringExtra("CLIENT_NAME");
         tvMontoTotal.setText(String.format("S/. %.2f", montoTotal));
         Button btnConfirmar = findViewById(R.id.btnConfirmar);
 
         btnConfirmar.setOnClickListener(v -> {
             Intent intent = new Intent(AdminMontoCobrar.this, AdminCheckoutCompletado.class);
             intent.putExtra("MONTO_TOTAL", montoTotal);
+            intent.putExtra("CLIENT_NAME", cliente);
             startActivity(intent);
         });
 

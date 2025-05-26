@@ -1,10 +1,15 @@
 package com.example.hotroid;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -49,7 +54,7 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
         findViewById(R.id.btnRegistrar).setOnClickListener(v -> {
             // Open AdminNuevaHabitacionActivity when Register button is clicked
             Intent intent = new Intent(AdminHabitacionesActivity.this, AdminNuevaHabitacionActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 100);  // Código arbitrario
         });
         // Set up click listener for each room item
         adapter.setOnItemClickListener((position) -> {
@@ -90,4 +95,45 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            String roomNumber = data.getStringExtra("roomNumber");
+            String roomType = data.getStringExtra("roomType");
+            String capacityAdults = data.getStringExtra("capacityAdults");
+            String capacityChildren = data.getStringExtra("capacityChildren");
+            String area = data.getStringExtra("area");
+
+            Room nueva = new Room(roomNumber, roomType, capacityAdults, capacityChildren, area);
+            roomList.add(nueva);
+            adapter.notifyItemInserted(roomList.size() - 1);
+            showNotification("Habitación registrada", "Habitación " + roomNumber + " ha sido registrada.");
+        }
+    }
+    private void showNotification(String title, String message) {
+        String CHANNEL_ID = "habitaciones_channel";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Canal Habitaciones",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(1, builder.build());
+    }
+
+
 }
