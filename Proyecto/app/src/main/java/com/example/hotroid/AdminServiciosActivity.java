@@ -163,7 +163,7 @@ public class AdminServiciosActivity extends AppCompatActivity {
 
         // Crear notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)  // Asegúrate de tener este ícono
+                .setSmallIcon(R.drawable.ic_hotroid_icon)  // Asegúrate de tener este ícono
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

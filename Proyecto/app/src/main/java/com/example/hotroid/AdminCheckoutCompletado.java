@@ -86,7 +86,7 @@ public class AdminCheckoutCompletado extends AppCompatActivity {
         }
 
         androidx.core.app.NotificationCompat.Builder builder = new androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)  // Asegúrate de tener este ícono
+                .setSmallIcon(R.drawable.ic_hotroid_icon)  // Asegúrate de tener este ícono
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)

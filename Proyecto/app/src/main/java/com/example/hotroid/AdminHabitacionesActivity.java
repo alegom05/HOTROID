@@ -125,7 +125,7 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_hotroid_icon)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

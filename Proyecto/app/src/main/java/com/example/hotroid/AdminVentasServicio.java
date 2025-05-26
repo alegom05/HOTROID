@@ -198,7 +198,7 @@ public class AdminVentasServicio extends AppCompatActivity {
         );
 
         androidx.core.app.NotificationCompat.Builder builder = new androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_hotroid_icon)
                 .setContentTitle("PDF generado")
                 .setContentText("Haz clic para abrir el PDF de ventas")
                 .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
