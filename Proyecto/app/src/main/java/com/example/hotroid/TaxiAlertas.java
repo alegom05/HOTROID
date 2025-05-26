@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TaxiAlertas extends AppCompatActivity {
 
-    private GoogleMap mMap;
+    private GoogleMap mMap; // Esta variable no se usa en esta Activity, podrías quitarla si no la necesitas.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class TaxiAlertas extends AppCompatActivity {
         cardUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirige a TaxiAlertas al hacer clic
+                // Redirige a TaxiCuenta al hacer clic en la tarjeta de usuario
                 Intent intent = new Intent(TaxiAlertas.this, TaxiCuenta.class);
                 startActivity(intent);
             }
@@ -39,16 +39,16 @@ public class TaxiAlertas extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         List<TaxiAlertasBeans> lista = new ArrayList<>();
-        lista.add(new TaxiAlertasBeans("Mauricio Guerra", "Hotel Marriot","Hotel Miraflores", "ahora",""));
-        lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto",""));
-        lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos",""));
+        // Creamos las notificaciones con Origen y Destino claros
+        lista.add(new TaxiAlertasBeans("Mauricio Guerra", "Hotel Marriot","Hotel Miraflores", "ahora"));
+        lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto"));
+        lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos"));
 
-        // Usar constructor con contexto para facilitar la navegación
         TaxiAlertasAdapter adapter = new TaxiAlertasAdapter(this, lista);
         recyclerView.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.notify);
+        bottomNavigationView.setSelectedItemId(R.id.notify); // Selecciona el ícono de notificaciones por defecto
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -63,8 +63,7 @@ public class TaxiAlertas extends AppCompatActivity {
                 return true;
             }
             else if (item.getItemId() == R.id.notify) {
-                Intent intentAlertas = new Intent(TaxiAlertas.this, TaxiAlertas.class);
-                startActivity(intentAlertas);
+                // Ya estás en esta Activity, no necesitas iniciarla de nuevo
                 return true;
             }
             return false; // Devuelve false si no se seleccionó ningún ítem válido

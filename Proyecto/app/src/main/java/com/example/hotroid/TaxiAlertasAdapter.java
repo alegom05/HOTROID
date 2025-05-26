@@ -18,12 +18,9 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
     private List<TaxiAlertasBeans> lista;
     private Context context;
 
+    // Es mejor tener solo un constructor que siempre reciba el contexto
     public TaxiAlertasAdapter(Context context, List<TaxiAlertasBeans> lista) {
         this.context = context;
-        this.lista = lista;
-    }
-
-    public TaxiAlertasAdapter(List<TaxiAlertasBeans> lista) {
         this.lista = lista;
     }
 
@@ -31,7 +28,7 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
     @Override
     public NotificacionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.taxi_alertas_item, parent, false);
-        context = parent.getContext(); // Aseguramos tener contexto incluso si se usó el constructor sin contexto
+        // El contexto ya lo recibes en el constructor, no necesitas re-asignarlo aquí.
         return new NotificacionViewHolder(vista);
     }
 
@@ -39,9 +36,9 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
     public void onBindViewHolder(@NonNull NotificacionViewHolder holder, int position) {
         TaxiAlertasBeans noti = lista.get(position);
         holder.tvNombre.setText(noti.getNombre());
-        holder.tvLugar.setText(noti.getLugar());
+        holder.tvLugar.setText("Origen: " + noti.getOrigen()); // Ahora muestra el origen
+        holder.tvLugar2.setText("Destino: " + noti.getDestino()); // Ahora muestra el destino
         holder.tvTiempo.setText(noti.getTiempo());
-        holder.tvLugar2.setText("Destino: " + noti.getDestino());
 
         // Configurar el clic en toda la vista del item
         holder.itemView.setOnClickListener(v -> {
