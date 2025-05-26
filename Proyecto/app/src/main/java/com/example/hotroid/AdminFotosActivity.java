@@ -48,6 +48,19 @@ public class AdminFotosActivity extends AppCompatActivity {
         // Referencias
         btnAdd = findViewById(R.id.btnSeleccionarImagenes);
         btnGuardar = findViewById(R.id.btnGuardarUbicacion);
+        Button btnLimpiar = findViewById(R.id.btnLimpiar);
+
+        btnLimpiar.setOnClickListener(v -> {
+            imageUris.clear();
+
+            for (int i = 0; i < frameLayouts.size(); i++) {
+                frameLayouts.get(i).setVisibility(View.GONE);
+                imageViews.get(i).setImageDrawable(null); // Limpia imagen si alguna quedó cargada
+            }
+
+            Toast.makeText(this, "Fotos limpiadas correctamente", Toast.LENGTH_SHORT).show();
+        });
+
 
         imageViews.add(findViewById(R.id.img1));
         imageViews.add(findViewById(R.id.img2));
@@ -68,6 +81,7 @@ public class AdminFotosActivity extends AppCompatActivity {
                 // Guardar
                 editMode = false;
                 btnAdd.setVisibility(View.GONE);
+                btnLimpiar.setVisibility(View.GONE);
                 btnGuardar.setText("Actualizar");
 
                 // Desactivar clicks
@@ -78,6 +92,7 @@ public class AdminFotosActivity extends AppCompatActivity {
                 // Activar edición nuevamente
                 editMode = true;
                 btnAdd.setVisibility(View.VISIBLE);
+                btnLimpiar.setVisibility(View.VISIBLE);
                 btnGuardar.setText("Guardar");
 
                 // Habilitar edición
