@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919802389164",
+    "project_id": "clase-9-1tel05-1257e",
+    "storage_bucket": "clase-9-1tel05-1257e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919802389164:android:8b45a90592b94ca2ecb509",
+        "android_client_info": {
+          "package_name": "com.example.hotroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLm0QWPV3IMLyxjpa39HIf3kIlo91C2UY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
