@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "oncreate");
         Button btnCliente = findViewById(R.id.btnCliente);
+        Log.d(TAG, "se ingresa a cliente");
         Button btnTaxista = findViewById(R.id.btnTaxista);
         Button btnAdmin = findViewById(R.id.btnAdmin);
         Button btnSuperAdmin = findViewById(R.id.btnSuperAdmin);

@@ -10,6 +10,6 @@ public class FragmentReservaCancelados extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.user_fragment_reserva_cancelados, container, false);
+        return inflater.inflate(R.layout.user_item_reserva_cancelados, container, false);
     }
 }

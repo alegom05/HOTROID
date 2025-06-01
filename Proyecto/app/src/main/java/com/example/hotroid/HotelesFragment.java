@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -15,9 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.hotroid.HotelAdapter;
 import com.example.hotroid.databinding.UserHotelesBinding;
-import com.example.hotroid.Hotel;
+import com.example.hotroid.bean.Hotel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.util.ArrayList;
@@ -181,11 +179,11 @@ public class HotelesFragment extends Fragment {
 
         // Agregar hoteles estáticos
         // Nota: Reemplaza R.drawable.hotel1, R.drawable.hotel2, etc. con tus propias imágenes
-        hotelList.add(new Hotel("Grand Hotel Madrid", 4.5f, "S/.145/noche", R.drawable.hotel_decameron));
-        hotelList.add(new Hotel("Barcelona Royal Suite", 5.0f, "S/.210/noche", R.drawable.hotel_aranwa));
-        hotelList.add(new Hotel("Valencia Beach Resort", 4.0f, "S/.125/noche", R.drawable.hotel_boca_raton));
-        hotelList.add(new Hotel("Sevilla Boutique Hotel", 3.5f, "S/.95/noche", R.drawable.hotel_oro_verde));
-        hotelList.add(new Hotel("Granada Historic Palace", 4.8f, "S/.180/noche", R.drawable.hotel_sheraton));
+        hotelList.add(new Hotel("R001","Grand Hotel Madrid", 4.5f, "S/.145/noche","Madrid", R.drawable.hotel_decameron));
+        hotelList.add(new Hotel("R002","Barcelona Royal Suite", 5.0f, "S/.210/noche","Barcelona", R.drawable.hotel_aranwa));
+        hotelList.add(new Hotel("R003","Valencia Beach Resort", 4.0f, "S/.125/noche","Valencia", R.drawable.hotel_boca_raton));
+        hotelList.add(new Hotel("R004","Sevilla Boutique Hotel", 3.5f, "S/.95/noche", "Sevilla",R.drawable.hotel_oro_verde));
+        hotelList.add(new Hotel("R005","Granada Historic Palace", 4.8f, "S/.180/noche", "Inglaterra", R.drawable.hotel_sheraton));
 
         // Configurar el RecyclerView
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

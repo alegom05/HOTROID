@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,23 +22,29 @@ public class ClienteActivity extends AppCompatActivity {
         loadFragment(new HotelesFragment());
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-
+            //Fragment selectedFragment = null;
             int itemId = item.getItemId();
-            if (itemId == R.id.nav_hoteles_user) {
-                selectedFragment = new HotelesFragment();
-            } else if (itemId == R.id.nav_reservas_user) {
-                selectedFragment = new ReservasFragment();
-            } else if (itemId == R.id.nav_chat_user) {
-                selectedFragment = new ChatFragment();
-            } else if (itemId == R.id.nav_cuenta) {
-                selectedFragment = new CuentaFragment();
-            }
 
-            if (selectedFragment != null) {
-                loadFragment(selectedFragment);
+            if (itemId == R.id.nav_hoteles_user) {
+                loadFragment(new HotelesFragment());
+                return true;
+            } else if (itemId == R.id.nav_reservas_user) {
+                // Redirigir a otra actividad en lugar de un fragment
+                Intent intent = new Intent(this, MisReservasUser.class);
+                startActivity(intent);
+                return false; // O true, depende si quieres que el botón quede resaltado o no
+            } else if (itemId == R.id.nav_chat_user) {
+                loadFragment(new ChatFragment());
+                return true;
+            } else if (itemId == R.id.nav_cuenta) {
+                loadFragment(new CuentaFragment());
                 return true;
             }
+
+//            if (selectedFragment != null) {
+//                loadFragment(selectedFragment);
+//                return true;
+//            }
             return false;
         });
     }

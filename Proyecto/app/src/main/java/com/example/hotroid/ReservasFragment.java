@@ -16,7 +16,7 @@ public class ReservasFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
-    private ReservaPagerAdapter pagerAdapter;
+    private ReservasPagerAdapterUser pagerAdapter;
 
     public ReservasFragment() {}
 
@@ -28,7 +28,7 @@ public class ReservasFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
 
-        pagerAdapter = new ReservaPagerAdapter(requireActivity()); // Usa el FragmentActivity
+        //pagerAdapter = new ReservasPagerAdapterUser(requireActivity()); // Usa el FragmentActivity
         viewPager.setAdapter(pagerAdapter);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

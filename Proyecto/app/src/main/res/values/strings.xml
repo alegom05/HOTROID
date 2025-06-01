@@ -45,7 +45,7 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <string name="dni">DNI</string>
     <string name="guardar_cambios">Guardar Cambios</string>
 
-
+    <!--opciones de menu de usuario-->
     <string name="hoteles">Hoteles</string>
     <string name="reservas">Reservas</string>
     <string name="chat">Chat</string>
