@@ -147,6 +147,8 @@
                                 android:orientation="vertical"
                                 android:padding="16dp"
                                 android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp"
                                 >
 
                                 <TextView
@@ -199,7 +201,9 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -248,7 +252,9 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -299,7 +305,9 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -348,7 +356,9 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -397,7 +407,9 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -445,7 +457,9 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:padding="16dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:background="#D4EDDA"
+                                android:layout_marginBottom="4dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"

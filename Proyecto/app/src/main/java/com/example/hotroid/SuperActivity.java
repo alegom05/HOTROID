@@ -66,7 +66,8 @@ public class SuperActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
-                // Already on this activity, no need to restart
+                Intent intentInicio = new Intent(SuperActivity.this, SuperActivity.class);
+                startActivity(intentInicio);
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
                 Intent intentUsuarios = new Intent(SuperActivity.this, SuperUsuariosActivity.class);

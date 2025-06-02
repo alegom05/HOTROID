@@ -62,7 +62,8 @@ public class SuperDetallesEventosActivity extends AppCompatActivity {
                 startActivity(intentUbicacion);
                 return true;
             } else if (item.getItemId() == R.id.nav_eventos) {
-                // If already on events, just return true, no need to start new activity
+                Intent intentEventos = new Intent(SuperDetallesEventosActivity.this, SuperEventosActivity.class);
+                startActivity(intentEventos);
                 return true;
             } else {
                 return false;

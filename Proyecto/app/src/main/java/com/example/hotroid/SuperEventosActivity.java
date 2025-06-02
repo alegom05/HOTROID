@@ -77,7 +77,10 @@ public class SuperEventosActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SuperUsuariosActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_eventos) {
+                Intent intentEventos = new Intent(SuperEventosActivity.this, SuperEventosActivity.class);
+                startActivity(intentEventos);
                 return true;
+
             }
             return false;
         });
