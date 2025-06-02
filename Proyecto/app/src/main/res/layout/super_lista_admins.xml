@@ -78,6 +78,7 @@
                 android:layout_marginEnd="8dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
     <ScrollView
         android:id="@+id/scrollContenido"
         android:layout_width="0dp"
@@ -88,6 +89,7 @@
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,6 +119,37 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
 
+                    <!-- BUSCADOR AGREGADO AQUÍ -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical">
+
+                        <EditText
+                            android:id="@+id/etBuscador"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Buscar administrador..."
+                            android:padding="12dp"
+                            android:background="@drawable/edittext_background"
+                            android:drawableStart="@drawable/ic_search"
+                            android:drawablePadding="8dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <Button
+                            android:id="@+id/btnLimpiar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Limpiar"
+                            android:backgroundTint="#009688"
+                            android:textColor="@android:color/white"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"/>
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -145,6 +178,7 @@
                             android:textStyle="bold"
                             android:gravity="center" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/linearLayoutAdminsContainer"
                         android:layout_width="match_parent"

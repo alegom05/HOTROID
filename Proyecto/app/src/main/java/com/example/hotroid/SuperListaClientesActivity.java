@@ -2,11 +2,16 @@ package com.example.hotroid;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context; // Added for context in TextWatcher
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable; // Added for TextWatcher
+import android.text.TextWatcher; // Added for search functionality
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button; // Added for the clear button
+import android.widget.EditText; // Added for the search input
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -26,6 +31,9 @@ import java.util.List;
 public class SuperListaClientesActivity extends AppCompatActivity {
 
     private LinearLayout linearLayoutClientesContainer;
+    private EditText etBuscador; // Declared EditText for search
+    private Button btnLimpiar; // Declared Button for clear
+
     private static final String CHANNEL_ID = "client_notifications_channel";
     private static final int NOTIFICATION_ID = 2;
 
@@ -34,6 +42,9 @@ public class SuperListaClientesActivity extends AppCompatActivity {
     // Lista estática para simular la base de datos de clientes
     // Formato de cada String[]: {Nombre Completo(usuario), Nombres, Apellidos, TipoDoc, NumDoc, FechaNac, Correo, Telefono, Domicilio, Estado (true/false)}
     public static List<String[]> clientDataList = new ArrayList<>();
+    // Lista filtrada que se muestra en la UI
+    private List<String[]> filteredClientList = new ArrayList<>();
+
 
     static {
         // Inicializa la lista con datos de ejemplo si está vacía
@@ -52,8 +63,15 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         createNotificationChannel();
 
         linearLayoutClientesContainer = findViewById(R.id.linearLayoutClientesContainer);
+        etBuscador = findViewById(R.id.etBuscador); // Initialize EditText
+        btnLimpiar = findViewById(R.id.btnLimpiar); // Initialize Button
 
+        // Initialize filtered list with all elements
+        filteredClientList.addAll(clientDataList);
         renderClientList();
+
+        // Setup search functionality
+        setupSearchFunctionality();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
@@ -84,6 +102,58 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         }
     }
 
+    private void setupSearchFunctionality() {
+        // TextWatcher for real-time search
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterClientList(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
+
+        // Clear button
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText("");
+            etBuscador.clearFocus();
+            resetClientList();
+        });
+    }
+
+    private void filterClientList(String searchText) {
+        filteredClientList.clear();
+
+        if (searchText.isEmpty()) {
+            // If no search text, show all clients
+            filteredClientList.addAll(clientDataList);
+        } else {
+            // Filter by full name (case-insensitive)
+            String searchLower = searchText.toLowerCase().trim();
+            for (String[] client : clientDataList) {
+                if (client[0].toLowerCase().contains(searchLower)) { // client[0] is "Nombre Completo"
+                    filteredClientList.add(client);
+                }
+            }
+        }
+        renderClientList();
+    }
+
+    private void resetClientList() {
+        filteredClientList.clear();
+        filteredClientList.addAll(clientDataList);
+        renderClientList();
+    }
+
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Notificaciones de Clientes";
@@ -108,11 +178,23 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
+    // Method updated to render the filtered list
     private void renderClientList() {
         linearLayoutClientesContainer.removeAllViews();
 
-        for (int i = 0; i < clientDataList.size(); i++) {
-            String[] clientData = clientDataList.get(i);
+        if (filteredClientList.isEmpty()) {
+            // Show message when no results are found
+            TextView noResultsText = new TextView(this);
+            noResultsText.setText("No se encontraron clientes");
+            noResultsText.setTextSize(16);
+            noResultsText.setPadding(16, 32, 16, 32);
+            noResultsText.setGravity(android.view.Gravity.CENTER);
+            linearLayoutClientesContainer.addView(noResultsText);
+            return;
+        }
+
+        for (int i = 0; i < filteredClientList.size(); i++) {
+            String[] clientData = filteredClientList.get(i);
             LayoutInflater inflater = LayoutInflater.from(this);
             View clientItemView = inflater.inflate(R.layout.super_lista_clientes_item, linearLayoutClientesContainer, false);
 
@@ -129,7 +211,9 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                 ivEstado.setImageResource(R.drawable.circle_red);
             }
 
-            final int clickedPosition = i;
+            // Find the original position in clientDataList for the click
+            final int originalPosition = findOriginalPosition(clientData);
+
 
             clientItemView.setOnClickListener(v -> {
                 Intent intent;
@@ -139,14 +223,27 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                     intent = new Intent(SuperListaClientesActivity.this, SuperDetallesClienteDesactivadoActivity.class);
                 }
                 // Pasa la posición del cliente y todos sus datos completos
-                intent.putExtra("client_position", clickedPosition);
-                intent.putExtra("client_data_full", clientData); // Pasa el array completo de datos
+                intent.putExtra("client_position", originalPosition);
+                intent.putExtra("client_data_full", clientDataList.get(originalPosition)); // Pass the full original data array
                 startActivityForResult(intent, REQUEST_CODE_DETALLES_CLIENTE);
             });
 
             linearLayoutClientesContainer.addView(clientItemView);
         }
     }
+
+    // Helper method to find the original position in clientDataList
+    private int findOriginalPosition(String[] targetClient) {
+        for (int i = 0; i < clientDataList.size(); i++) {
+            String[] client = clientDataList.get(i);
+            // Assuming client[0] (full name) is unique enough for identification
+            if (client[0].equals(targetClient[0])) {
+                return i;
+            }
+        }
+        return -1; // Should not happen if targetClient is from clientDataList
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -175,7 +272,13 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                 showNotification("Actualización de Cliente", statusMessage);
             }
 
-            renderClientList();
+            // Update both lists and apply the current filter
+            String currentSearch = etBuscador.getText().toString();
+            if (currentSearch.isEmpty()) {
+                resetClientList();
+            } else {
+                filterClientList(currentSearch);
+            }
         }
     }
 }

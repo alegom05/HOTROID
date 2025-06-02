@@ -1,4 +1,4 @@
-package com.example.hotroid;
+package com.example.hotroid; // Make sure this matches your package name
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,61 +14,65 @@ import java.util.List;
 public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoViewHolder> {
 
     private Context context;
-    private List<Evento> listaEventos; // Cambiado a List<Evento>
-    private OnItemClickListener listener;
+    private List<Evento> eventosList;
+    private OnEventoClickListener listener;
 
-    public interface OnItemClickListener {
-        void onItemClick(Evento evento); // Cambiado a Evento evento
+    public interface OnEventoClickListener {
+        void onEventoClick(Evento evento);
     }
 
-    public EventoAdapter(Context context, List<Evento> listaEventos, OnItemClickListener listener) { // Cambiado a List<Evento>
+    public EventoAdapter(Context context, List<Evento> eventosList, OnEventoClickListener listener) {
         this.context = context;
-        this.listaEventos = listaEventos;
+        this.eventosList = eventosList;
         this.listener = listener;
     }
 
     @NonNull
     @Override
     public EventoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.super_eventos_item, parent, false);
-        return new EventoViewHolder(itemView);
+        // Inflate the item layout which now only has two TextViews
+        View view = LayoutInflater.from(context).inflate(R.layout.super_eventos_item, parent, false);
+        return new EventoViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventoViewHolder holder, int position) {
-        Evento evento = listaEventos.get(position); // Cambiado a Evento evento
-        holder.tvFechaEvento.setText(evento.getFecha());
-        holder.tvEvento.setText(evento.getEvento());
-        holder.tvHotelEvento.setText(evento.getHotel());
+        Evento currentEvento = eventosList.get(position);
+
+        holder.tvFechaItem.setText(currentEvento.getFecha());
+
+        // *************** CRITICAL CHANGE HERE ***************
+        // Concatenate the event description and the hotel name
+        String combinedEventoText = currentEvento.getEvento() + " en el hotel " + currentEvento.getHotel();
+        holder.tvEventoItem.setText(combinedEventoText);
+        // ****************************************************
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onItemClick(evento);
+                listener.onEventoClick(currentEvento);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return listaEventos.size();
+        return eventosList.size();
     }
 
-    public void actualizarLista(List<Evento> nuevaLista) { // Cambiado a List<Evento>
-        this.listaEventos = nuevaLista;
+    public void actualizarLista(List<Evento> nuevaLista) {
+        this.eventosList = nuevaLista;
         notifyDataSetChanged();
     }
 
-    static class EventoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvFechaEvento;
-        TextView tvEvento;
-        TextView tvHotelEvento;
+    public static class EventoViewHolder extends RecyclerView.ViewHolder {
+        TextView tvFechaItem;
+        TextView tvEventoItem; // Only one TextView for the combined event description
 
-        EventoViewHolder(@NonNull View itemView) {
+        public EventoViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvFechaEvento = itemView.findViewById(R.id.tvFechaEvento);
-            tvEvento = itemView.findViewById(R.id.tvEvento);
-            tvHotelEvento = itemView.findViewById(R.id.tvHotelEvento);
+            tvFechaItem = itemView.findViewById(R.id.tvFechaItem);
+            tvEventoItem = itemView.findViewById(R.id.tvEventoItem);
+            // Ensure these IDs match your super_lista_eventos_item.xml
         }
     }
 }

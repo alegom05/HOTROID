@@ -81,50 +81,123 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
-        android:id="@+id/filtroLayout"
+        android:id="@+id/filterAndSearchLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardSuper"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardSuper">
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
+            <EditText
+                android:id="@+id/etFiltroFecha"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Seleccione una fecha"
+                android:inputType="none"
+                android:padding="12dp"
+                android:background="@drawable/edittext_background"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
+                android:layout_marginEnd="8dp"/>
 
-        <EditText
-            android:id="@+id/etFiltroFecha"
+            <Button
+                android:id="@+id/btnLimpiarFiltroFecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Limpiar"
+                android:backgroundTint="#FF5722"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/etBuscador"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Buscar evento..."
+                android:padding="12dp"
+                android:background="@drawable/edittext_background"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="8dp"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnLimpiar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Limpiar"
+                android:backgroundTint="#009688"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tableHeaders"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:weightSum="10"
+        app:layout_constraintTop_toBottomOf="@id/filterAndSearchLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="false"
-            android:hint="Seleccione una fecha"
-            android:inputType="none" />
+            android:layout_weight="3"
+            android:text="Fecha"
+            android:textStyle="bold"
+            android:gravity="start"/>
 
-        <Button
-            android:id="@+id/btnLimpiarFiltro"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Limpiar" />
+            android:layout_weight="7"
+            android:text="Evento"
+            android:textStyle="bold"
+            android:gravity="start"/>
     </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerEventos"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/filtroLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tableHeaders"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

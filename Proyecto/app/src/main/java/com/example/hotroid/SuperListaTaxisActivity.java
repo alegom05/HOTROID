@@ -7,8 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable; // Import for TextWatcher
+import android.text.TextWatcher; // Import for TextWatcher
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button; // Import for Button
+import android.widget.EditText; // Import for EditText
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,21 +21,18 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat; // Para construir la notificación
-import androidx.core.app.NotificationManagerCompat; // Para usar NotificationManagerCompat
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import java.util.Arrays; // No estrictamente necesario si solo manejas ArrayLists directamente
+import java.util.List; // Use List interface for filteredList
 
 public class SuperListaTaxisActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_TAXI_DETAIL = 1;
     private static final String CHANNEL_ID = "taxi_management_channel";
-    // Usaremos un ID único para cada notificación para que no se sobrescriban.
-    // Aunque el ejemplo de Admin usa un ID fijo, para taxistas donde puede haber
-    // múltiples actualizaciones, es mejor que cada notificación sea nueva.
     private static int notificationId = 0;
 
     // Lista estática para simular la base de datos y persistir cambios entre actividades
@@ -49,6 +50,11 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
     // 10: Estado ("activado", "desactivado", "pendiente")
     public static ArrayList<String[]> taxiDataList = new ArrayList<>();
     private LinearLayout linearLayoutTaxisContainer;
+    private EditText etBuscador; // Declared EditText for search
+    private Button btnLimpiar; // Declared Button for clear
+
+    // Lista filtrada que se muestra en la UI
+    private List<String[]> filteredTaxiList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,78 +70,143 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
         }
 
         linearLayoutTaxisContainer = findViewById(R.id.linearLayoutTaxisContainer);
+        etBuscador = findViewById(R.id.etBuscador); // Initialize EditText
+        btnLimpiar = findViewById(R.id.btnLimpiar); // Initialize Button
 
-        createNotificationChannel(); // Crear el canal de notificación
+        // Initialize filtered list with all elements
+        filteredTaxiList.addAll(taxiDataList);
+
+        createNotificationChannel();
         setupBottomNavigationView();
         setupCardSuperClickListener();
-        displayTaxis(); // Muestra los taxistas en la lista
+        setupSearchFunctionality(); // Setup search functionality
+        displayTaxis(); // Muestra los taxistas en la lista (ahora usará filteredTaxiList)
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         // Asegúrate de refrescar la lista cada vez que la actividad vuelve a estar en primer plano
-        displayTaxis();
+        // Esto también aplicará el filtro actual si hay texto en el buscador.
+        String currentSearch = etBuscador.getText().toString();
+        if (currentSearch.isEmpty()) {
+            resetTaxiList();
+        } else {
+            filterTaxiList(currentSearch);
+        }
+    }
+
+    private void setupSearchFunctionality() {
+        // TextWatcher para el buscador en tiempo real
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No necesario
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterTaxiList(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No necesario
+            }
+        });
+
+        // Botón limpiar
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText("");
+            etBuscador.clearFocus();
+            resetTaxiList();
+        });
+    }
+
+    private void filterTaxiList(String searchText) {
+        filteredTaxiList.clear();
+
+        if (searchText.isEmpty()) {
+            // Si no hay texto de búsqueda, mostrar todos
+            filteredTaxiList.addAll(taxiDataList);
+        } else {
+            // Filtrar por nombre completo (sin distinguir mayúsculas/minúsculas)
+            String searchLower = searchText.toLowerCase().trim();
+            for (String[] taxi : taxiDataList) {
+                // taxi[0] es el "Nombre Completo"
+                if (taxi[0].toLowerCase().contains(searchLower)) {
+                    filteredTaxiList.add(taxi);
+                }
+            }
+        }
+        displayTaxis(); // Refrescar la UI con la lista filtrada
+    }
+
+    private void resetTaxiList() {
+        filteredTaxiList.clear();
+        filteredTaxiList.addAll(taxiDataList);
+        displayTaxis(); // Refrescar la UI con la lista completa
     }
 
     private void createNotificationChannel() {
-        // Solo para Android 8.0 (API nivel 26) y superior
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Se usa el R.string para que sea consistente con la buena práctica.
-            // Asegúrate de que estas cadenas existan en res/values/strings.xml
             CharSequence name = "Notificaciones de Taxistas";
             String description = "Canal para notificaciones de registro y estado de taxistas";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Registrar el canal con el sistema
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
 
     private void showNotification(String title, String message) {
-        // Crear un Intent que se abrirá al hacer clic en la notificación
         Intent intent = new Intent(this, SuperListaTaxisActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        // FLAG_IMMUTABLE es requerido en API 31+ para PendingIntent
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                // Usando el icono de ejemplo que tenías en SuperListaAdminActivity
-                .setSmallIcon(R.drawable.ic_notification) // Asegúrate de tener este icono en res/drawable
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Prioridad para heads-up notification (pop-up)
-                .setContentIntent(pendingIntent) // Establece el Intent que se lanza al hacer clic
-                .setAutoCancel(true); // La notificación se borra automáticamente al hacer clic
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId++ asegura que cada notificación tenga un ID único y no sobrescriba la anterior
-        // El ejemplo de Admin usa un ID fijo (NOTIFICATION_ID = 1), pero para múltiples notificaciones
-        // de estado, es mejor usar un ID incremental para que aparezcan todas.
         notificationManager.notify(notificationId++, builder.build());
     }
 
+    // Método displayTaxis ahora usa filteredTaxiList
     private void displayTaxis() {
         linearLayoutTaxisContainer.removeAllViews(); // Limpia vistas anteriores
 
+        if (filteredTaxiList.isEmpty()) {
+            // Mostrar mensaje cuando no hay resultados
+            TextView noResultsText = new TextView(this);
+            noResultsText.setText("No se encontraron taxistas");
+            noResultsText.setTextSize(16);
+            noResultsText.setPadding(16, 32, 16, 32);
+            noResultsText.setGravity(android.view.Gravity.CENTER);
+            linearLayoutTaxisContainer.addView(noResultsText);
+            return;
+        }
+
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (int i = 0; i < taxiDataList.size(); i++) {
-            final int position = i;
-            final String[] taxiData = taxiDataList.get(i);
+        for (int i = 0; i < filteredTaxiList.size(); i++) {
+            final String[] taxiData = filteredTaxiList.get(i);
+            // Encontrar la posición original en taxiDataList
+            final int originalPosition = findOriginalPosition(taxiData);
 
             View taxiItemView = inflater.inflate(R.layout.super_lista_taxis_item, linearLayoutTaxisContainer, false);
 
             TextView tvNombreTaxistaItem = taxiItemView.findViewById(R.id.tvNombreTaxistaItem);
             ImageView ivEstadoTaxistaItem = taxiItemView.findViewById(R.id.ivEstadoTaxistaItem);
 
-            // Nombre completo del taxista
-            tvNombreTaxistaItem.setText(taxiData[1] + " " + taxiData[2]); // Nombres + Apellidos
+            tvNombreTaxistaItem.setText(taxiData[0]); // Usar Nombre Completo (índice 0)
 
-            // Establecer el drawable del estado
-            String estado = taxiData[10]; // El estado está en la posición 10
+            String estado = taxiData[10];
             switch (estado) {
                 case "activado":
                     ivEstadoTaxistaItem.setImageResource(R.drawable.circle_green);
@@ -147,11 +218,10 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                     ivEstadoTaxistaItem.setImageResource(R.drawable.circle_amber);
                     break;
                 default:
-                    ivEstadoTaxistaItem.setImageResource(R.drawable.circle_red); // Default a rojo
+                    ivEstadoTaxistaItem.setImageResource(R.drawable.circle_red);
                     break;
             }
 
-            // Configurar el click listener para cada item
             taxiItemView.setOnClickListener(v -> {
                 Intent intent;
                 if ("activado".equals(estado)) {
@@ -162,13 +232,25 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                     intent = new Intent(SuperListaTaxisActivity.this, SuperDetallesTaxiPendienteActivity.class);
                 }
 
-                intent.putExtra("taxi_position", position);
-                intent.putExtra("taxi_data_full", taxiData); // Pasa todo el array de datos
+                intent.putExtra("taxi_position", originalPosition); // Pasa la posición original
+                intent.putExtra("taxi_data_full", taxiDataList.get(originalPosition)); // Pasa todo el array de datos original
                 startActivityForResult(intent, REQUEST_CODE_TAXI_DETAIL);
             });
 
             linearLayoutTaxisContainer.addView(taxiItemView);
         }
+    }
+
+    // Método auxiliar para encontrar la posición original en taxiDataList
+    private int findOriginalPosition(String[] targetTaxi) {
+        for (int i = 0; i < taxiDataList.size(); i++) {
+            String[] taxi = taxiDataList.get(i);
+            // Compara por el nombre completo y la placa para una identificación más robusta
+            if (taxi[0].equals(targetTaxi[0]) && taxi[9].equals(targetTaxi[9])) {
+                return i;
+            }
+        }
+        return -1; // Debería encontrarlo si el targetTaxi proviene de taxiDataList
     }
 
     @Override
@@ -178,38 +260,39 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_TAXI_DETAIL && resultCode == RESULT_OK && data != null) {
             String action = data.getStringExtra("action");
             int position = data.getIntExtra("taxi_position", -1);
-            String taxiName = data.getStringExtra("taxi_name"); // El nombre del taxista para la notificación
+            String taxiName = data.getStringExtra("taxi_name");
 
             if (position != -1 && position < taxiDataList.size()) {
                 String[] currentTaxiData = taxiDataList.get(position);
                 String notificationMessage = "";
-                String notificationTitle = "Gestión de Taxistas"; // Título genérico para la notificación
+                String notificationTitle = "Gestión de Taxistas";
 
                 switch (action) {
                     case "activado":
-                        currentTaxiData[10] = "activado"; // Actualiza el estado a activado
+                        currentTaxiData[10] = "activado";
                         notificationMessage = "El taxista " + taxiName + " se ha activado correctamente.";
                         break;
                     case "desactivado":
-                        currentTaxiData[10] = "desactivado"; // Actualiza el estado a desactivado
+                        currentTaxiData[10] = "desactivado";
                         notificationMessage = "El taxista " + taxiName + " se ha desactivado correctamente.";
                         break;
                     case "aprobado":
-                        currentTaxiData[10] = "activado"; // Si se aprueba, cambia a activado
+                        currentTaxiData[10] = "activado";
                         notificationMessage = "El taxista " + taxiName + " ha sido aprobado correctamente.";
                         break;
                     case "rechazado":
-                        taxiDataList.remove(position); // Elimina al taxista de la lista
+                        taxiDataList.remove(position);
                         notificationMessage = "El taxista " + taxiName + " ha sido rechazado correctamente.";
                         break;
                 }
-                // Mostrar la notificación en la barra de estado SIN SONIDO (como en tu ejemplo de Admin)
                 showNotification(notificationTitle, notificationMessage);
-
-                // Opcional: Si aún quieres el Toast además de la notificación en barra de estado
-                // Toast.makeText(this, notificationMessage, Toast.LENGTH_SHORT).show();
-
-                displayTaxis(); // Refresca la lista para mostrar los cambios
+            }
+            // Actualizar ambas listas y aplicar el filtro actual
+            String currentSearch = etBuscador.getText().toString();
+            if (currentSearch.isEmpty()) {
+                resetTaxiList();
+            } else {
+                filterTaxiList(currentSearch);
             }
         }
     }

@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,38 +31,46 @@ import java.util.List;
 public class SuperListaAdminActivity extends AppCompatActivity {
 
     private LinearLayout linearLayoutAdminsContainer;
+    private EditText etBuscador;
+    private Button btnLimpiar;
+
     private static final String CHANNEL_ID = "admin_notifications_channel";
     private static final int NOTIFICATION_ID = 1;
 
     private static final int REQUEST_CODE_FORMULARIO = 100;
-    private static final int REQUEST_CODE_DETALLES_ADMIN = 101; // Un solo request code para ambos detalles (activado/desactivado)
+    private static final int REQUEST_CODE_DETALLES_ADMIN = 101;
 
-    // Lista estática para simular la base de datos de administradores
-    // Formato de cada String[]: {Nombre Completo, Hotel Asignado, Estado (true/false)}
-    // NOTA: En una aplicación real, considera un enfoque más robusto para la gestión de datos.
+    // Lista original completa de administradores
     public static List<String[]> adminDataList = new ArrayList<>();
+    // Lista filtrada que se muestra en la UI
+    private List<String[]> filteredAdminList = new ArrayList<>();
 
     static {
-        // Inicializa la lista si está vacía
         if (adminDataList.isEmpty()) {
             adminDataList.add(new String[]{"Victor Díaz", "Oro Verde", "true"});
-            adminDataList.add(new String[]{"Moises Castro", "-", "false"}); // Desactivado sin hotel asignado
+            adminDataList.add(new String[]{"Moises Castro", "-", "false"});
             adminDataList.add(new String[]{"Manuel Yarleque", "Sauce Resort", "true"});
-            // Puedes añadir más admins desactivados que ya tenían un hotel para probar el otro caso
-            // adminDataList.add(new String[]{"Ana Torres", "Hotel Fantasia", "false"});
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.super_lista_admins); // Asegúrate de que este layout exista
+        setContentView(R.layout.super_lista_admins);
 
         createNotificationChannel();
 
+        // Inicializar vistas
         linearLayoutAdminsContainer = findViewById(R.id.linearLayoutAdminsContainer);
+        etBuscador = findViewById(R.id.etBuscador);
+        btnLimpiar = findViewById(R.id.btnLimpiar);
 
-        renderAdminList(); // Carga y muestra la lista inicial
+        // Inicializar lista filtrada con todos los elementos
+        filteredAdminList.addAll(adminDataList);
+        renderAdminList();
+
+        // Configurar buscador
+        setupSearchFunctionality();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
@@ -81,17 +92,69 @@ public class SuperListaAdminActivity extends AppCompatActivity {
             return false;
         });
 
-        CardView cardSuper = findViewById(R.id.cardSuper); // Asegúrate de que este ID exista en tu layout
+        CardView cardSuper = findViewById(R.id.cardSuper);
         cardSuper.setOnClickListener(v -> {
             Intent intent = new Intent(SuperListaAdminActivity.this, SuperCuentaActivity.class);
             startActivity(intent);
         });
 
-        Button botonRegistrar = findViewById(R.id.button_regist); // Asegúrate de que este ID exista en tu layout
+        Button botonRegistrar = findViewById(R.id.button_regist);
         botonRegistrar.setOnClickListener(v -> {
             Intent intent = new Intent(SuperListaAdminActivity.this, SuperDetallesAdminFormularioActivity.class);
             startActivityForResult(intent, REQUEST_CODE_FORMULARIO);
         });
+    }
+
+    private void setupSearchFunctionality() {
+        // TextWatcher para el buscador en tiempo real
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No necesario
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterAdminList(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No necesario
+            }
+        });
+
+        // Botón limpiar
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText("");
+            etBuscador.clearFocus();
+            resetAdminList();
+        });
+    }
+
+    private void filterAdminList(String searchText) {
+        filteredAdminList.clear();
+
+        if (searchText.isEmpty()) {
+            // Si no hay texto de búsqueda, mostrar todos
+            filteredAdminList.addAll(adminDataList);
+        } else {
+            // Filtrar por nombre (sin distinguir mayúsculas/minúsculas)
+            String searchLower = searchText.toLowerCase().trim();
+            for (String[] admin : adminDataList) {
+                if (admin[0].toLowerCase().contains(searchLower)) {
+                    filteredAdminList.add(admin);
+                }
+            }
+        }
+
+        renderAdminList();
+    }
+
+    private void resetAdminList() {
+        filteredAdminList.clear();
+        filteredAdminList.addAll(adminDataList);
+        renderAdminList();
     }
 
     private void createNotificationChannel() {
@@ -108,46 +171,53 @@ public class SuperListaAdminActivity extends AppCompatActivity {
 
     private void showNotification(String title, String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification) // Asegúrate de tener este icono en res/drawable
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true); // La notificación se cierra al tocarla
+                .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    // Método para renderizar/actualizar la lista de administradores
+    // Método actualizado para renderizar la lista filtrada
     private void renderAdminList() {
-        linearLayoutAdminsContainer.removeAllViews(); // Limpia la vista antes de renderizar
+        linearLayoutAdminsContainer.removeAllViews();
 
-        for (int i = 0; i < adminDataList.size(); i++) {
-            String[] adminData = adminDataList.get(i);
+        if (filteredAdminList.isEmpty()) {
+            // Mostrar mensaje cuando no hay resultados
+            TextView noResultsText = new TextView(this);
+            noResultsText.setText("No se encontraron administradores");
+            noResultsText.setTextSize(16);
+            noResultsText.setPadding(16, 32, 16, 32);
+            noResultsText.setGravity(android.view.Gravity.CENTER);
+            linearLayoutAdminsContainer.addView(noResultsText);
+            return;
+        }
+
+        for (int i = 0; i < filteredAdminList.size(); i++) {
+            String[] adminData = filteredAdminList.get(i);
             LayoutInflater inflater = LayoutInflater.from(this);
-            View adminItemView = inflater.inflate(R.layout.super_lista_admins_item, linearLayoutAdminsContainer, false); // Asegúrate de que este layout exista
+            View adminItemView = inflater.inflate(R.layout.super_lista_admins_item, linearLayoutAdminsContainer, false);
 
             TextView tvUsuario = adminItemView.findViewById(R.id.tvUsuario);
             TextView tvHotel = adminItemView.findViewById(R.id.tvHotel);
             ImageView ivEstado = adminItemView.findViewById(R.id.ivEstado);
 
-            tvUsuario.setText(adminData[0]); // Nombre del administrador
+            tvUsuario.setText(adminData[0]);
 
-            // Lógica para mostrar el hotel o "-"
             boolean isActivado = Boolean.parseBoolean(adminData[2]);
             if (isActivado) {
-                tvHotel.setText(adminData[1]); // Muestra el hotel si está activado
+                tvHotel.setText(adminData[1]);
+                ivEstado.setImageResource(R.drawable.circle_green);
             } else {
-                tvHotel.setText("-"); // Siempre muestra "-" si está desactivado
+                tvHotel.setText("-");
+                ivEstado.setImageResource(R.drawable.circle_red);
             }
 
-            if (isActivado) {
-                ivEstado.setImageResource(R.drawable.circle_green); // Icono verde para activado
-            } else {
-                ivEstado.setImageResource(R.drawable.circle_red);   // Icono rojo para desactivado
-            }
-
-            final int clickedPosition = i; // Guardar la posición para el clic
+            // Encontrar la posición original en adminDataList para el clic
+            final int originalPosition = findOriginalPosition(adminData);
 
             adminItemView.setOnClickListener(v -> {
                 Intent intent;
@@ -156,26 +226,25 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 } else {
                     intent = new Intent(SuperListaAdminActivity.this, SuperDetallesAdminDesactivadoActivity.class);
                 }
-                // Pasar la posición y el nombre de usuario a la actividad de detalle
-                intent.putExtra("admin_position", clickedPosition);
-                intent.putExtra("admin_usuario", adminData[0]); // Pasar el nombre de usuario
 
-                // Opcional: Pasar todos los detalles si tu adminDataList es más compleja
-                // Esto es crucial si adminDataList no almacena todos los campos o si no quieres hacer la lista estática.
-                // Ejemplo (descomenta y ajusta si tu adminDataList tiene más campos):
-                /*
-                if (adminData.length > 3) { // Asumiendo que los campos adicionales están después del estado
-                    intent.putExtra("admin_nombres", adminData[3]);
-                    intent.putExtra("admin_apellidos", adminData[4]);
-                    intent.putExtra("admin_tipo_doc", adminData[5]);
-                    // ... y así sucesivamente para todos los campos
-                }
-                */
-                startActivityForResult(intent, REQUEST_CODE_DETALLES_ADMIN); // Usar un único REQUEST_CODE
+                intent.putExtra("admin_position", originalPosition);
+                intent.putExtra("admin_usuario", adminData[0]);
+                startActivityForResult(intent, REQUEST_CODE_DETALLES_ADMIN);
             });
 
             linearLayoutAdminsContainer.addView(adminItemView);
         }
+    }
+
+    // Método auxiliar para encontrar la posición original en adminDataList
+    private int findOriginalPosition(String[] targetAdmin) {
+        for (int i = 0; i < adminDataList.size(); i++) {
+            String[] admin = adminDataList.get(i);
+            if (admin[0].equals(targetAdmin[0]) && admin[1].equals(targetAdmin[1]) && admin[2].equals(targetAdmin[2])) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -184,22 +253,20 @@ public class SuperListaAdminActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && data != null) {
             String action = data.getStringExtra("action");
-            String adminUsuario = data.getStringExtra("admin_usuario"); // Nombre del admin para el mensaje
-            int position = data.getIntExtra("admin_position", -1); // Posición si viene de detalles
+            String adminUsuario = data.getStringExtra("admin_usuario");
+            int position = data.getIntExtra("admin_position", -1);
 
-            String statusMessage = ""; // Mensaje para Toast y Notificación
+            String statusMessage = "";
 
             if (action != null) {
                 switch (action) {
                     case "registrado":
                         String[] nuevoAdminCompleteData = data.getStringArrayExtra("nuevo_admin_data");
                         if (nuevoAdminCompleteData != null && nuevoAdminCompleteData.length >= 10) {
-                            // Asume que nuevoAdminCompleteData[0] es el nombre completo
-                            // y nuevoAdminCompleteData[9] es el hotel asignado
                             adminDataList.add(new String[]{
-                                    nuevoAdminCompleteData[0],  // Nombre Completo
-                                    nuevoAdminCompleteData[9],  // Hotel Asignado (índice 9 del array completo)
-                                    "true"                      // Estado inicial: activado
+                                    nuevoAdminCompleteData[0],
+                                    nuevoAdminCompleteData[9],
+                                    "true"
                             });
                             statusMessage = "El administrador " + nuevoAdminCompleteData[0] + " ha sido registrado correctamente.";
                         } else {
@@ -209,29 +276,33 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                     case "activado":
                         if (position != -1 && position < adminDataList.size()) {
                             String nuevoHotelAsignado = data.getStringExtra("nuevo_hotel_asignado");
-                            adminDataList.get(position)[1] = nuevoHotelAsignado; // Actualiza el hotel
-                            adminDataList.get(position)[2] = "true";             // Activa al administrador
+                            adminDataList.get(position)[1] = nuevoHotelAsignado;
+                            adminDataList.get(position)[2] = "true";
                             statusMessage = "El administrador " + adminUsuario + " ha sido activado y asignado a " + nuevoHotelAsignado + ".";
                         }
                         break;
                     case "desactivado":
                         if (position != -1 && position < adminDataList.size()) {
-                            adminDataList.get(position)[1] = "-";   // Asigna "-" al hotel cuando se desactiva
-                            adminDataList.get(position)[2] = "false"; // Desactiva al administrador
+                            adminDataList.get(position)[1] = "-";
+                            adminDataList.get(position)[2] = "false";
                             statusMessage = "El administrador " + adminUsuario + " ha sido desactivado y su hotel desasignado.";
                         }
                         break;
                 }
             }
 
-            // Mostrar Toast y Notificación solo si hay un mensaje de estado
             if (!statusMessage.isEmpty()) {
                 Toast.makeText(this, statusMessage, Toast.LENGTH_SHORT).show();
                 showNotification("Actualización de Administrador", statusMessage);
             }
 
-            // Volver a renderizar la lista para reflejar los cambios en la UI
-            renderAdminList();
+            // Actualizar ambas listas y aplicar el filtro actual
+            String currentSearch = etBuscador.getText().toString();
+            if (currentSearch.isEmpty()) {
+                resetAdminList();
+            } else {
+                filterAdminList(currentSearch);
+            }
         }
     }
 }

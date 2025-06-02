@@ -122,13 +122,44 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="12dp"
-                        android:weightSum="10"> <TextView
-                        android:layout_width="0dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical">
+
+                        <EditText
+                            android:id="@+id/etBuscador"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Buscar cliente..."
+                            android:padding="12dp"
+                            android:background="@drawable/edittext_background"
+                            android:drawableStart="@drawable/ic_search"
+                            android:drawablePadding="8dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <Button
+                            android:id="@+id/btnLimpiar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Limpiar"
+                            android:backgroundTint="#009688"
+                            android:textColor="@android:color/white"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:text="Usuario"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="7"
+                            android:text="Usuario"
+                            android:textStyle="bold" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -156,4 +187,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_super" /> </androidx.constraintlayout.widget.ConstraintLayout>
+        app:menu="@menu/menu_super" />
+</androidx.constraintlayout.widget.ConstraintLayout>
