@@ -4,11 +4,13 @@ public class Evento {
     private String fecha;
     private String evento;
     private String hotel;
+    private String descripcion;
 
-    public Evento(String fecha, String evento, String hotel) {
+    public Evento(String fecha, String evento, String hotel, String descripcion) {
         this.fecha = fecha;
         this.evento = evento;
         this.hotel = hotel;
+        this.descripcion = descripcion;
     }
 
     public String getFecha() {
@@ -34,4 +36,13 @@ public class Evento {
     public void setHotel(String hotel) {
         this.hotel = hotel;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion() {
+        this.descripcion = descripcion;
+    }
+
 }
