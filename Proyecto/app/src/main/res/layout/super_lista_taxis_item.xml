@@ -7,8 +7,9 @@
     android:weightSum="10"
     android:clickable="true"
     android:focusable="true"
-    android:background="?attr/selectableItemBackground"
-    android:gravity="center_vertical">
+    android:background="#D4EDDA"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="4dp">
 
     <TextView
         android:id="@+id/tvNombreTaxistaItem"
