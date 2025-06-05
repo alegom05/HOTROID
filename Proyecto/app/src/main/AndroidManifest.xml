@@ -119,6 +119,9 @@
             android:name=".HotelesUser"
             android:exported="false" />
         <activity
+            android:name=".ChatDetalladoUser"
+            android:exported="false" />
+        <activity
             android:name=".AdminFotosActivity"
             android:exported="false" />
         <activity

@@ -22,17 +22,6 @@
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
-        <ImageView
-            android:id="@+id/searchIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_search"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@color/cliente1"
-            android:contentDescription="Buscar" />
     </androidx.appcompat.widget.Toolbar>
     <!-- Estado de conexión -->
     <TextView
