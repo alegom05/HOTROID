@@ -3,6 +3,7 @@ package com.example.hotroid;
 import com.example.hotroid.bean.Reserva;
 import com.example.hotroid.bean.ReservaConHotel;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,9 +45,9 @@ public class ReservasPagerAdapterUser extends RecyclerView.Adapter<ReservasPager
     private final Context context;
     private final List<List<ReservaConHotel>> listasPorEstado; // Lista de listas: [activos, pasados, cancelados]
 
-    private static final int VIEW_TYPE_ACTIVO = 0;
-    private static final int VIEW_TYPE_PASADO = 1;
-    private static final int VIEW_TYPE_CANCELADO = 2;
+    //private static final int VIEW_TYPE_ACTIVO = 0;
+//    private static final int VIEW_TYPE_PASADO = 1;
+//    private static final int VIEW_TYPE_CANCELADO = 2;
 
     //constructor
     public ReservasPagerAdapterUser(Context context,  List<List<ReservaConHotel>> listasPorEstado) {
@@ -75,9 +76,10 @@ public class ReservasPagerAdapterUser extends RecyclerView.Adapter<ReservasPager
 
     @Override
     public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
+        holder.recyclerView.setAdapter(null);
         // Cada posición del ViewPager corresponde a una lista específica (activos, pasados, cancelados)
         List<ReservaConHotel> reservasPorEstado = listasPorEstado.get(position);
-        ReservaAdapterUser adapter = new ReservaAdapterUser(reservasPorEstado);
+        ReservaAdapterUser adapter = new ReservaAdapterUser(reservasPorEstado, context, position);
         holder.recyclerView.setAdapter(adapter);
     }
 

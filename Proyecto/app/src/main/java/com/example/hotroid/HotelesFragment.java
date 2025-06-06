@@ -179,11 +179,11 @@ public class HotelesFragment extends Fragment {
 
         // Agregar hoteles estáticos
         // Nota: Reemplaza R.drawable.hotel1, R.drawable.hotel2, etc. con tus propias imágenes
-        hotelList.add(new Hotel("R001","Grand Hotel Madrid", 4.5f, "S/.145/noche","Madrid", R.drawable.hotel_decameron));
-        hotelList.add(new Hotel("R002","Barcelona Royal Suite", 5.0f, "S/.210/noche","Barcelona", R.drawable.hotel_aranwa));
-        hotelList.add(new Hotel("R003","Valencia Beach Resort", 4.0f, "S/.125/noche","Valencia", R.drawable.hotel_boca_raton));
-        hotelList.add(new Hotel("R004","Sevilla Boutique Hotel", 3.5f, "S/.95/noche", "Sevilla",R.drawable.hotel_oro_verde));
-        hotelList.add(new Hotel("R005","Granada Historic Palace", 4.8f, "S/.180/noche", "Inglaterra", R.drawable.hotel_sheraton));
+        hotelList.add(new Hotel("R001","Grand Hotel Madrid", 4.5f, "S/.145/noche","Madrid","Av. del Prado 123, Centro Histórico", R.drawable.hotel_decameron));
+        hotelList.add(new Hotel("R002","Barcelona Royal Suite", 5.0f, "S/.210/noche","Barcelona", "Calle Mallorca 456, Eixample", R.drawable.hotel_aranwa));
+        hotelList.add(new Hotel("R003","Valencia Beach Resort", 4.0f, "S/.125/noche","Valencia","Paseo Marítimo 78, Playa Norte", R.drawable.hotel_boca_raton));
+        hotelList.add(new Hotel("R004","Sevilla Boutique Hotel", 3.5f, "S/.95/noche", "Sevilla","Calle Sierpes 22, Casco Antiguo", R.drawable.hotel_oro_verde));
+        hotelList.add(new Hotel("R005","Granada Historic Palace", 4.8f, "S/.180/noche", "Inglaterra", "High St 10, Old Town",R.drawable.hotel_sheraton));
 
         // Configurar el RecyclerView
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

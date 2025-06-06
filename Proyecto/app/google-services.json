@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "919802389164",
-    "project_id": "clase-9-1tel05-1257e",
-    "storage_bucket": "clase-9-1tel05-1257e.firebasestorage.app"
+    "project_number": "922428865215",
+    "project_id": "hotroid-253f1",
+    "storage_bucket": "hotroid-253f1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919802389164:android:8b45a90592b94ca2ecb509",
+        "mobilesdk_app_id": "1:922428865215:android:e7364b707ca8e87a8fe40a",
         "android_client_info": {
           "package_name": "com.example.hotroid"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBLm0QWPV3IMLyxjpa39HIf3kIlo91C2UY"
+          "current_key": "AIzaSyAX6TUbq6l3Khvkmkeqe8f5gyXhGryhOx4"
         }
       ],
       "services": {

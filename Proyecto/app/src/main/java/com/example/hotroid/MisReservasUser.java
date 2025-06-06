@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class MisReservasUser extends AppCompatActivity {
 
         // Preparas los datos separados por estado
         List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel,"activo");
+        Log.d("DebugReservas", "Cantidad activos: " + activos.size());
         List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel,"pasado");
         List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel,"cancelado");
 
@@ -84,9 +86,9 @@ public class MisReservasUser extends AppCompatActivity {
 */
     public static List<Hotel> obtenerHoteles() {
         List<Hotel> hoteles = new ArrayList<>();
-        hoteles.add(new Hotel("H1", "Hotel Central", 4.5f, "$80", "Argentina", R.drawable.hotel_decameron));
-        hoteles.add(new Hotel("H2", "Hotel D'Cameron", 4.0f, "$120", "USA", R.drawable.hotel_aranwa));
-        hoteles.add(new Hotel("H3", "Hotel Mar Azul", 3.8f, "$70", "Perú", R.drawable.hotel_boca_raton));
+        hoteles.add(new Hotel("H1", "Hotel Central", 4.5f, "$80", "Argentina", "High St 10, Old Town", R.drawable.hotel_decameron));
+        hoteles.add(new Hotel("H2", "Hotel D'Cameron", 4.0f, "$120", "USA","Av. del Prado 123, Centro Histórico", R.drawable.hotel_aranwa));
+        hoteles.add(new Hotel("H3", "Hotel Mar Azul", 3.8f, "$70", "Perú", "Paseo Marítimo 78, Playa Norte", R.drawable.hotel_boca_raton));
         return hoteles;
     }
 

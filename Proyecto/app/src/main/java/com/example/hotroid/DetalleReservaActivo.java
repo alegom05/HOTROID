@@ -40,6 +40,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
     private TextView tvCheckIn, tvCheckOut, tvReservationCode;
     private Button btnCheckIn, btnCancelReservation,btnCheckOut, btnSolicitarTaxi;
     private Bitmap qrCodeBitmap;
+    private boolean checkInRealizado = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,25 +77,38 @@ public class DetalleReservaActivo extends AppCompatActivity {
         Intent intent = getIntent();
         String hotelName = intent.getStringExtra("hotel_name");
         String roomDetails = intent.getStringExtra("room_details");
+        String hotelciudad = intent.getStringExtra("city");
+        String hotelLocation = intent.getStringExtra("hotel_location");
         String status = intent.getStringExtra("status");
+        String checkInDate = intent.getStringExtra("checkInDate");
+        String checkOutDate = intent.getStringExtra("checkOutDate");
+        String reservationCode = intent.getStringExtra("reservationCode");
 
         // Configurar datos de ejemplo (estos vendrían de la BD en una app real)
-        tvHotelName.setText(hotelName != null ? hotelName : "Hotel Los Andes - Cusco, Perú");
-        tvHotelLocation.setText("Av. El Sol 594, Centro Histórico");
-        tvRoomDetails.setText(roomDetails != null ? roomDetails : "Habitación Deluxe - 1 cama king size");
-        tvGuestsInfo.setText("2 adultos, 1 niño");
+        tvHotelName.setText((hotelName != null ? hotelName : "Hotel Desconocido, Perú") + hotelciudad);
+        //tvHotelLocation.setText("Av. El Sol 594, Centro Histórico");
+        tvHotelLocation.setText(hotelLocation != null ? " " + hotelLocation : "");
+        tvRoomDetails.setText(roomDetails != null ? roomDetails : "Detalles no disponibles");
+        //tvRoomDetails.setText(roomDetails != null ? roomDetails : "Habitación Deluxe - 1 cama king size");
+        tvGuestsInfo.setText(roomDetails != null ? roomDetails.split(", ")[1] + ", " + roomDetails.split(", ")[2] : "Desconocido");
+        //tvGuestsInfo.setText("2 adultos, 1 niño");
+        tvCheckIn.setText("Check-in: " + (checkInDate != null ? checkInDate : "-"));
+        tvCheckOut.setText("Check-out: " + (checkOutDate != null ? checkOutDate : "-"));
+        tvArrivalDay.setText("Día de llegada: " + getDayOfWeek(checkInDate));
+        tvReservationCode.setText("Código de reserva: " + (reservationCode != null ? reservationCode : "-"));
         tvStatus.setText("Estado: " + (status != null ? status : "Confirmado"));
 
         // Fechas de check-in y check-out
-        String checkInDate = "22/04/2025";
-        String checkOutDate = "27/04/2025";
+        //String checkInDate = "22/04/2025";
+        //String checkOutDate = "27/04/2025";
         tvCheckIn.setText("Check-in: " + checkInDate);
         tvCheckOut.setText("Check-out: " + checkOutDate);
 
         // Calcular día de llegada
         tvArrivalDay.setText("Día de llegada: " + getDayOfWeek(checkInDate));
 
-        tvReservationCode.setText("Código de reserva: RES123456");
+        /*se debe originar luego de realizar el checkin? o ya debe existir?*/
+        //tvReservationCode.setText("Código de reserva: RES123456");
 
         // Configurar botones
         setupButtons();
@@ -155,8 +169,6 @@ public class DetalleReservaActivo extends AppCompatActivity {
         TextView tvGuestNameQR = dialogView.findViewById(R.id.tvGuestNameQR);
         Button btnCancelCheckIn = dialogView.findViewById(R.id.btnCancelCheckIn);
         Button btnDownloadQR = dialogView.findViewById(R.id.btnDownloadQR);
-
-
 
         // Establecer datos en las vistas
         tvReservationCodeQR.setText("RES123456");

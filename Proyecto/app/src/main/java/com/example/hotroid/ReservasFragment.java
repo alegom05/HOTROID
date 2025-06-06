@@ -28,16 +28,16 @@ public class ReservasFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
 
-        //pagerAdapter = new ReservasPagerAdapterUser(requireActivity()); // Usa el FragmentActivity
+        //pagerAdapter = new ReservasPagerAdapterUser(requireActivity()); // Usa el FragmentActivity en vez de un activity.java
         viewPager.setAdapter(pagerAdapter);
 
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case 0: tab.setText("Activos"); break;
-                case 1: tab.setText("Pasados"); break;
-                case 2: tab.setText("Cancelados"); break;
-            }
-        }).attach();
+//        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+//            switch (position) {
+//                case 0: tab.setText("Actiiiivos"); break;
+//                case 1: tab.setText("Pasaaados"); break;
+//                case 2: tab.setText("Cancelaaaados"); break;
+//            }
+//        }).attach();
 
         return view;
     }
