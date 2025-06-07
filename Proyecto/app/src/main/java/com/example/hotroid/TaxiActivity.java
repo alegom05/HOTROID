@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hotroid.bean.TaxiItem;
 import com.example.hotroid.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -34,17 +35,34 @@ public class TaxiActivity extends AppCompatActivity {
             setContentView(binding.getRoot());
             db = FirebaseFirestore.getInstance();
 
+
+
         UsuarioDto usuario = new UsuarioDto();
-        usuario.setNombre( "Juan");
-        usuario.setCorreo( "juan.perez@pucp.edu.pe" );
-        usuario.setDni( "12345678");
+        usuario.setNombre("Juan");
+        usuario.setCorreo("juan.perez@pucp.edu.pe");
+        usuario.setDni("12345678");
         db.collection("usuarios")
-                .document( "12345678")
-                .set(usuario)
+                .add(usuario)
                 .addOnSuccessListener(unused -> {
-                    Log. d("msg-test","Data guardada exitosamente");
+                    Log.d("msg-test","Data guardada exitosamente");
                 })
-                .addOnFailureListener(e -> e.printStackTrace()) ;
+                .addOnFailureListener(e -> e.printStackTrace());
+
+        db.collection("usuarios")
+                .document("4eBr0Rr1SuUFavkn1Udn")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("msg-test", "DocumentSnapshot data: " + document.getData());
+                        } else {
+                            Log.d("nsg-test", "No such document");
+                        }
+                    } else {
+                        Log.d("msg-test", "get failed with ", task.getException());
+                    }
+                });
 
         Button btnFinViaje = findViewById(R.id.btnFinViaje);
 

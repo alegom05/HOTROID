@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "159261457978",
+    "firebase_url": "https://hotroidale-default-rtdb.firebaseio.com",
+    "project_id": "hotroidale",
+    "storage_bucket": "hotroidale.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159261457978:android:d6411a9ddc46fbeb55ff03",
+        "android_client_info": {
+          "package_name": "com.example.hotroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOjn4nbKNc69ttbUi_nBhNfNtTED90vpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
