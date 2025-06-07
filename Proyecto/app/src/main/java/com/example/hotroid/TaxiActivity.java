@@ -2,9 +2,11 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -12,22 +14,43 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.TaxiItem;
+import com.example.hotroid.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaxiActivity extends AppCompatActivity {
 
+    FirebaseFirestore db;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_main);
+            @NonNull ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+            db = FirebaseFirestore.getInstance();
+
+        UsuarioDto usuario = new UsuarioDto();
+        usuario.setNombre( "Juan");
+        usuario.setCorreo( "juan.perez@pucp.edu.pe" );
+        usuario.setDni( "12345678");
+        db.collection("usuarios")
+                .document( "12345678")
+                .set(usuario)
+                .addOnSuccessListener(unused -> {
+                    Log. d("msg-test","Data guardada exitosamente");
+                })
+                .addOnFailureListener(e -> e.printStackTrace()) ;
 
         Button btnFinViaje = findViewById(R.id.btnFinViaje);
 
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.verdejade));
+
 
 
         btnFinViaje.setOnClickListener(v -> {
