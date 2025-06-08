@@ -1,4 +1,4 @@
-package com.example.hotroid;
+package com.example.hotroid.bean;
 
 public class Evento {
     private String fecha;

@@ -146,44 +146,44 @@ public class SuperReservasActivity extends AppCompatActivity {
         allReservas.add(new Reserva("R042", "Aranwa", "Eliezer Cruz", 1, 2, 1, "25/06/2025", "30/06/2025", "activo", 1100));
 
         // Decameron Reservations
-        allReservas.add(new Reserva("R006", "Decameron", "P006", 1, 2, 1, "01/05/2025", "07/05/2025", "activo", 1100));
-        allReservas.add(new Reserva("R007", "Decameron", "P007", 1, 1, 0, "10/05/2025", "13/05/2025", "activo", 600));
-        allReservas.add(new Reserva("R027", "Decameron", "P027", 1, 2, 0, "15/06/2025", "20/06/2025", "activo", 1000));
-        allReservas.add(new Reserva("R028", "Decameron", "P028", 2, 3, 1, "22/06/2025", "28/06/2025", "activo", 1800));
-        allReservas.add(new Reserva("R029", "Decameron", "P029", 1, 1, 0, "01/07/2025", "03/07/2025", "activo", 700));
-        allReservas.add(new Reserva("R043", "Decameron", "P043", 1, 2, 0, "05/07/2025", "10/07/2025", "activo", 1200));
-        allReservas.add(new Reserva("R044", "Decameron", "P044", 1, 1, 0, "12/07/2025", "14/07/2025", "activo", 650));
+        allReservas.add(new Reserva("R006", "Decameron", "Joaquín Pozo", 1, 2, 1, "01/05/2025", "07/05/2025", "activo", 1100));
+        allReservas.add(new Reserva("R007", "Decameron", "Roger Albino", 1, 1, 0, "10/05/2025", "13/05/2025", "activo", 600));
+        allReservas.add(new Reserva("R027", "Decameron", "Julio Uribe", 1, 2, 0, "15/06/2025", "20/06/2025", "activo", 1000));
+        allReservas.add(new Reserva("R028", "Decameron", "Brian Ali", 2, 3, 1, "22/06/2025", "28/06/2025", "activo", 1800));
+        allReservas.add(new Reserva("R029", "Decameron", "Miguel Jara", 1, 1, 0, "01/07/2025", "03/07/2025", "activo", 700));
+        allReservas.add(new Reserva("R043", "Decameron", "Flavio Farro", 1, 2, 0, "05/07/2025", "10/07/2025", "activo", 1200));
+        allReservas.add(new Reserva("R044", "Decameron", "Jose Phan", 1, 1, 0, "12/07/2025", "14/07/2025", "activo", 650));
 
         // Oro Verde Reservations
-        allReservas.add(new Reserva("R008", "Oro Verde", "P008", 1, 2, 0, "05/06/2025", "08/06/2025", "activo", 950));
-        allReservas.add(new Reserva("R030", "Oro Verde", "P030", 1, 2, 2, "10/07/2025", "15/07/2025", "activo", 1300));
-        allReservas.add(new Reserva("R031", "Oro Verde", "P031", 1, 1, 0, "20/07/2025", "23/07/2025", "activo", 800));
-        allReservas.add(new Reserva("R045", "Oro Verde", "P045", 2, 3, 1, "01/08/2025", "06/08/2025", "activo", 1500));
-        allReservas.add(new Reserva("R046", "Oro Verde", "P046", 1, 2, 0, "10/08/2025", "13/08/2025", "activo", 900));
+        allReservas.add(new Reserva("R008", "Oro Verde", "Eduardo Campos", 1, 2, 0, "05/06/2025", "08/06/2025", "activo", 950));
+        allReservas.add(new Reserva("R030", "Oro Verde", "Rubén Cancho", 1, 2, 2, "10/07/2025", "15/07/2025", "activo", 1300));
+        allReservas.add(new Reserva("R031", "Oro Verde", "Aaron Villa", 1, 1, 0, "20/07/2025", "23/07/2025", "activo", 800));
+        allReservas.add(new Reserva("R045", "Oro Verde", "Ollanta Humala", 2, 3, 1, "01/08/2025", "06/08/2025", "activo", 1500));
+        allReservas.add(new Reserva("R046", "Oro Verde", "Nadine Heredia", 1, 2, 0, "10/08/2025", "13/08/2025", "activo", 900));
 
         // Boca Ratón Reservations
-        allReservas.add(new Reserva("R009", "Boca Ratón", "P009", 1, 1, 0, "01/07/2025", "04/07/2025", "activo", 550));
-        allReservas.add(new Reserva("R032", "Boca Ratón", "P032", 2, 3, 0, "08/08/2025", "12/08/2025", "activo", 1000));
-        allReservas.add(new Reserva("R033", "Boca Ratón", "P033", 1, 2, 0, "15/08/2025", "18/08/2025", "activo", 650));
-        allReservas.add(new Reserva("R047", "Boca Ratón", "P047", 1, 1, 0, "20/08/2025", "22/08/2025", "activo", 580));
+        allReservas.add(new Reserva("R009", "Boca Ratón", "Sigrid Bazán", 1, 1, 0, "01/07/2025", "04/07/2025", "activo", 550));
+        allReservas.add(new Reserva("R032", "Boca Ratón", "Daniel Abugattás", 2, 3, 0, "08/08/2025", "12/08/2025", "activo", 1000));
+        allReservas.add(new Reserva("R033", "Boca Ratón", "Mauricio Mulder", 1, 2, 0, "15/08/2025", "18/08/2025", "activo", 650));
+        allReservas.add(new Reserva("R047", "Boca Ratón", "Manuel Merino", 1, 1, 0, "20/08/2025", "22/08/2025", "activo", 580));
 
         // Libertador Reservations
-        allReservas.add(new Reserva("R010", "Libertador", "P010", 1, 2, 0, "25/07/2025", "28/07/2025", "activo", 1300));
-        allReservas.add(new Reserva("R034", "Libertador", "P034", 1, 1, 0, "05/09/2025", "07/09/2025", "activo", 900));
-        allReservas.add(new Reserva("R035", "Libertador", "P035", 2, 4, 1, "10/09/2025", "15/09/2025", "activo", 2000));
-        allReservas.add(new Reserva("R048", "Libertador", "P048", 1, 2, 0, "18/09/2025", "22/09/2025", "activo", 1400));
+        allReservas.add(new Reserva("R010", "Libertador", "Pamela López", 1, 2, 0, "25/07/2025", "28/07/2025", "activo", 1300));
+        allReservas.add(new Reserva("R034", "Libertador", "Carlos Álvarez", 1, 1, 0, "05/09/2025", "07/09/2025", "activo", 900));
+        allReservas.add(new Reserva("R035", "Libertador", "Robert Prevost", 2, 4, 1, "10/09/2025", "15/09/2025", "activo", 2000));
+        allReservas.add(new Reserva("R048", "Libertador", "Alan García", 1, 2, 0, "18/09/2025", "22/09/2025", "activo", 1400));
 
         // Costa del Sol Reservations
-        allReservas.add(new Reserva("R011", "Costa del Sol", "P011", 1, 2, 0, "12/08/2025", "15/08/2025", "activo", 700));
-        allReservas.add(new Reserva("R036", "Costa del Sol", "P036", 1, 1, 0, "20/09/2025", "23/09/2025", "activo", 500));
-        allReservas.add(new Reserva("R037", "Costa del Sol", "P037", 2, 3, 2, "01/10/2025", "07/10/2025", "activo", 1400));
-        allReservas.add(new Reserva("R049", "Costa del Sol", "P049", 1, 2, 1, "10/10/2025", "13/10/2025", "activo", 800));
+        allReservas.add(new Reserva("R011", "Costa del Sol", "Alejandro Toledo", 1, 2, 0, "12/08/2025", "15/08/2025", "activo", 700));
+        allReservas.add(new Reserva("R036", "Costa del Sol", "Keiko Fujimori", 1, 1, 0, "20/09/2025", "23/09/2025", "activo", 500));
+        allReservas.add(new Reserva("R037", "Costa del Sol", "Pedro Castillo", 2, 3, 2, "01/10/2025", "07/10/2025", "activo", 1400));
+        allReservas.add(new Reserva("R049", "Costa del Sol", "Agustín Lozano", 1, 2, 1, "10/10/2025", "13/10/2025", "activo", 800));
 
         // Sonesta Reservations
-        allReservas.add(new Reserva("R012", "Sonesta", "P012", 1, 2, 0, "01/09/2025", "04/09/2025", "activo", 850));
-        allReservas.add(new Reserva("R038", "Sonesta", "P038", 1, 1, 0, "10/10/2025", "12/10/2025", "activo", 600));
-        allReservas.add(new Reserva("R039", "Sonesta", "P039", 2, 3, 1, "15/10/2025", "20/10/2025", "activo", 1200));
-        allReservas.add(new Reserva("R050", "Sonesta", "P050", 1, 2, 0, "22/10/2025", "25/10/2025", "activo", 950));
+        allReservas.add(new Reserva("R012", "Sonesta", "Oscar Ibáñez", 1, 2, 0, "01/09/2025", "04/09/2025", "activo", 850));
+        allReservas.add(new Reserva("R038", "Sonesta", "Verónica Mendoza", 1, 1, 0, "10/10/2025", "12/10/2025", "activo", 600));
+        allReservas.add(new Reserva("R039", "Sonesta", "Ismael Retes", 2, 3, 1, "15/10/2025", "20/10/2025", "activo", 1200));
+        allReservas.add(new Reserva("R050", "Sonesta", "Patricia Benavides", 1, 2, 0, "22/10/2025", "25/10/2025", "activo", 950));
     }
 
     private List<Reserva> getReservationsForHotel(String hotelIdentifier) {
