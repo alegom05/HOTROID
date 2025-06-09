@@ -65,6 +65,9 @@ public class CuentaFragment extends Fragment {
             // Inicia la actividad de edición
             startActivity(new Intent(requireContext(), EditAccountUser.class));
         });
+
+        // Agregar OnClickListener al botón de cerrar sesión
+        binding.cerrarSesionButton.setOnClickListener(v -> mostrarDialogoCerrarSesion());
     }
 
     private void mostrarDialogoDeTema() {
@@ -99,6 +102,28 @@ public class CuentaFragment extends Fragment {
         });
 
         dialog.show();
+    }
+
+    private void mostrarDialogoCerrarSesion() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Cerrar Sesión")
+                .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    // Limpiar datos de sesión si es necesario
+                    SharedPreferences prefs = requireContext().getSharedPreferences("sesion_usuario", 0);
+                    prefs.edit().clear().apply();
+
+                    // Crear Intent para ir a MainActivity
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
+                    // Finalizar la actividad actual
+                    requireActivity().finish();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                .setCancelable(true)
+                .show();
     }
 
     @Override
