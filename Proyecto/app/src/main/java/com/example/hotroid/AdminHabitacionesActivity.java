@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.Room;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import com.example.hotroid.RoomFirebase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -40,14 +45,9 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvHabitaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize room data
-        roomList = new ArrayList<>();
-        roomList.add(new Room("101", "Standard", "2", "2", "25"));
-        roomList.add(new Room("102", "Económica", "2", "1", "20"));
-        roomList.add(new Room("103", "Standard", "2", "3", "30"));
-        roomList.add(new Room("104", "Lux", "2", "2", "35"));
 
         // Set the adapter
+        roomList = new ArrayList<>();
         adapter = new HabitacionesAdapter(roomList);
         recyclerView.setAdapter(adapter);
 
@@ -97,21 +97,33 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
 
     }
     @Override
+    protected void onResume() {
+        super.onResume();
+        recargarHabitacionesDesdeFirestore();
+    }
+
+    private void recargarHabitacionesDesdeFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        roomList.clear();
+
+        db.collection("habitaciones").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        RoomFirebase rf = doc.toObject(RoomFirebase.class);
+                        Room r = new Room(rf.getRoomNumber(), rf.getRoomType(), rf.getCapacityAdults(), rf.getCapacityChildren(), rf.getArea());
+                        roomList.add(r);
+                    }
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar habitaciones", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            String roomNumber = data.getStringExtra("roomNumber");
-            String roomType = data.getStringExtra("roomType");
-            String capacityAdults = data.getStringExtra("capacityAdults");
-            String capacityChildren = data.getStringExtra("capacityChildren");
-            String area = data.getStringExtra("area");
-
-            Room nueva = new Room(roomNumber, roomType, capacityAdults, capacityChildren, area);
-            roomList.add(nueva);
-            adapter.notifyItemInserted(roomList.size() - 1);
-            showNotification("Habitación registrada", "Habitación " + roomNumber + " ha sido registrada.");
-        }
     }
     private void showNotification(String title, String message) {
         String CHANNEL_ID = "habitaciones_channel";

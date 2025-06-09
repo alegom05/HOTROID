@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +64,28 @@ public class AdminNuevaHabitacionActivity extends AppCompatActivity {
                 if (numeroHabitacion.isEmpty() || adultos.isEmpty() || ninos.isEmpty() || area.isEmpty()) {
                     Toast.makeText(AdminNuevaHabitacionActivity.this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("roomNumber", numeroHabitacion);
-                    resultIntent.putExtra("roomType", tipoHabitacion);
-                    resultIntent.putExtra("capacityAdults", adultos);
-                    resultIntent.putExtra("capacityChildren", ninos);
-                    resultIntent.putExtra("area", area);
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
+                    RoomFirebase nuevaHabitacion = new RoomFirebase(numeroHabitacion, tipoHabitacion, adultos, ninos, area);
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    db.collection("habitaciones")
+                            .add(nuevaHabitacion)
+                            .addOnSuccessListener(documentReference -> {
+                                Toast.makeText(AdminNuevaHabitacionActivity.this, "Habitación registrada correctamente", Toast.LENGTH_SHORT).show();
+
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra("roomNumber", numeroHabitacion);
+                                resultIntent.putExtra("roomType", tipoHabitacion);
+                                resultIntent.putExtra("capacityAdults", adultos);
+                                resultIntent.putExtra("capacityChildren", ninos);
+                                resultIntent.putExtra("area", area);
+                                setResult(RESULT_OK, resultIntent);
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(AdminNuevaHabitacionActivity.this, "Error al registrar habitación", Toast.LENGTH_SHORT).show();
+                            });
+
+
                 }
             }
         });
