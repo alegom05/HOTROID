@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -59,11 +62,12 @@ public class AdminServiciosActivity extends AppCompatActivity {
         ArrayList<Uri> imagenesPiscina = new ArrayList<>();
         imagenesPiscina.add(getUriFromDrawable(R.drawable.piscina));
 
-        // Ahora agrega los servicios con sus respectivas imágenes
-        serviciosList.add(new Servicios("WIFI", "descripcion", "2", imagenesWifi));
-        serviciosList.add(new Servicios("Desayuno Buffet", "descripcion", "2", imagenesBuffet));
-        serviciosList.add(new Servicios("Gimnasio", "descripcion", "2", imagenesGimnasio));
-        serviciosList.add(new Servicios("Piscina", "descripcion", "2", imagenesPiscina));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        serviciosList = new ArrayList<>();
+        adapter = new ServiciosAdapter(serviciosList);
+        recyclerView.setAdapter(adapter);
+
+
 
 
         // Set the adapter
@@ -86,6 +90,7 @@ public class AdminServiciosActivity extends AppCompatActivity {
             intent.putExtra("Service_name", selectedServicio.getNombre());
             intent.putExtra("Service_description", selectedServicio.getDescripcion());
             intent.putExtra("price", selectedServicio.getPrecio());
+            intent.putExtra("documentId", selectedServicio.getDocumentId()); // 👈 esto es lo que necesitas
 
             ArrayList<String> uriStrings = new ArrayList<>();
             for (Uri uri : selectedServicio.getImagenes()) {
@@ -120,6 +125,45 @@ public class AdminServiciosActivity extends AppCompatActivity {
             }
         });
     }
+    private Servicios convertirAFirebase(ServicioFirebase servicio) {
+        ArrayList<Uri> imagenesUri = new ArrayList<>();
+        for (String uriString : servicio.getImagenes()) {
+            imagenesUri.add(Uri.parse(uriString));
+        }
+
+        Servicios servicioApp = new Servicios(
+                servicio.getNombre(),
+                servicio.getDescripcion(),
+                servicio.getPrecio(),
+                imagenesUri
+        );
+        servicioApp.setHabilitado(servicio.isHabilitado());
+        return servicioApp;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recargarServicios();
+    }
+    private void recargarServicios() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        serviciosList.clear();
+        db.collection("servicios").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        ServicioFirebase servicio = doc.toObject(ServicioFirebase.class);
+                        Servicios servicioApp = convertirAFirebase(servicio);
+                        servicioApp.setDocumentId(doc.getId());  // 💡 Aquí guardas el documentId real
+                        serviciosList.add(servicioApp);
+                    }
+
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al recargar servicios", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private Uri getUriFromDrawable(int drawableId) {
         return Uri.parse("android.resource://" + getPackageName() + "/" + drawableId);
     }

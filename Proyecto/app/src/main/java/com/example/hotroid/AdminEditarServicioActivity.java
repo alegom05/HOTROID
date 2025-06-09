@@ -20,6 +20,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -95,12 +96,51 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
             String NombreServicio = etNombreServicio.getText().toString();
             String DescripcionServicio = etDescripcion.getText().toString();
             String precio = etPrecio.getText().toString();
+            String documentId = getIntent().getStringExtra("documentId");
+            if (documentId == null || documentId.isEmpty()) {
+                Toast.makeText(this, "No se pudo identificar el servicio a editar.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // ID para actualizar en Firestore
 
             // Validación simple
             if (NombreServicio.isEmpty() || DescripcionServicio.isEmpty() || precio.isEmpty() || imagenesSeleccionadas.isEmpty()) {
                 Toast.makeText(AdminEditarServicioActivity.this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
             } else {
-                // Aquí puedes guardar los datos actualizados en una base de datos o realizar la acción correspondiente
+                // Guardar en Firebase
+                ArrayList<String> imagenesString = new ArrayList<>();
+                for (Uri uri : imagenesSeleccionadas) {
+                    imagenesString.add(uri.toString());
+                }
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                ServicioFirebase servicioActualizado = new ServicioFirebase(
+                        NombreServicio,
+                        DescripcionServicio,
+                        precio,
+                        imagenesString,
+                        estadoHabilitado
+                );
+
+                db.collection("servicios").document(documentId)
+                        .set(servicioActualizado)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Servicio actualizado correctamente.", Toast.LENGTH_SHORT).show();
+
+                            // Retornar resultado
+                            Intent result = new Intent();
+                            result.putExtra("nombre", NombreServicio);
+                            result.putExtra("descripcion", DescripcionServicio);
+                            result.putExtra("precio", precio);
+                            result.putStringArrayListExtra("imagenes", imagenesString);
+                            result.putExtra("habilitado", estadoHabilitado);
+                            setResult(RESULT_OK, result);
+                            finish();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Error al actualizar el servicio.", Toast.LENGTH_SHORT).show();
+                        });
+
                 Toast.makeText(AdminEditarServicioActivity.this, "Servicio actualizado con éxito.", Toast.LENGTH_SHORT).show();
                 // Redirigir a la actividad AdminHabitacionesActivity después de guardar
                 Intent result = new Intent();
@@ -108,10 +148,6 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
                 result.putExtra("descripcion", DescripcionServicio);
                 result.putExtra("precio", precio);
 
-                ArrayList<String> imagenesString = new ArrayList<>();
-                for (Uri uri : imagenesSeleccionadas) {
-                    imagenesString.add(uri.toString());
-                }
                 result.putStringArrayListExtra("imagenes", imagenesString);
                 result.putExtra("habilitado", estadoHabilitado);  // 👈 ESTA LÍNEA FALTABA
                 setResult(RESULT_OK, result);

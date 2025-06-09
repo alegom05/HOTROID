@@ -44,6 +44,8 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
         String servicioDescripcion = getIntent().getStringExtra("Service_description");
         String precio = getIntent().getStringExtra("price");
         ArrayList<String> uriStrings = getIntent().getStringArrayListExtra("imagenes");
+        String documentId = getIntent().getStringExtra("documentId"); // ✅
+
 
         // Establecer los datos en los TextViews
         tvName.setText(servicioNombre);
@@ -69,6 +71,7 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
         // Acción para editar la habitación
         findViewById(R.id.btnEditarHabitacion).setOnClickListener(v -> {
             Intent intent = new Intent(AdminServiciosDetallesActivity.this, AdminEditarServicioActivity.class);
+            intent.putExtra("documentId", documentId);
             intent.putExtra("Service_name", servicioNombre);
             intent.putExtra("Service_description", servicioDescripcion);
             intent.putExtra("price", precio);

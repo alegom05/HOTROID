@@ -1,33 +1,24 @@
 package com.example.hotroid;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
-public class Servicios {
+public class ServicioFirebase {
     private String nombre;
     private String descripcion;
     private String precio;
-    private ArrayList<Uri> imagenes;
-    private boolean habilitado = true; // Por defecto, todos los servicios están habilitados
-    private String documentId;
+    private ArrayList<String> imagenes;
+    private boolean habilitado;
 
-    public String getDocumentId() {
-        return documentId;
+    public ServicioFirebase() {
+        // Constructor vacío necesario para Firestore
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
-    }
-
-
-
-    public Servicios(String nombre, String descripcion, String precio, ArrayList<Uri> imagenes) {
+    public ServicioFirebase(String nombre, String descripcion, String precio, ArrayList<String> imagenes, boolean habilitado) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagenes = imagenes;
-        this.habilitado = true;
+        this.habilitado = habilitado;
     }
 
     public String getNombre() {
@@ -54,8 +45,14 @@ public class Servicios {
         this.precio = precio;
     }
 
-    public ArrayList<Uri> getImagenes() { return imagenes; }
-    public void setImagenes(ArrayList<Uri> imagenes) { this.imagenes = imagenes; }
+    public ArrayList<String> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(ArrayList<String> imagenes) {
+        this.imagenes = imagenes;
+    }
+
     public boolean isHabilitado() {
         return habilitado;
     }

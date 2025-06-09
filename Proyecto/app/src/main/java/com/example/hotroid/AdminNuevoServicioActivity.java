@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -58,34 +59,46 @@ public class AdminNuevoServicioActivity extends AppCompatActivity {
             intent.addCategory(Intent.CATEGORY_OPENABLE); // Recomendado
             startActivityForResult(Intent.createChooser(intent, "Selecciona hasta 4 imágenes"), PICK_IMAGES_REQUEST);
         });
-
-
-
         // Acción del botón Guardar
         findViewById(R.id.btnGuardarHabitacion).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Aquí puedes agregar la lógica para guardar los datos
                 String nombreServicio = etNombreServicio.getText().toString();
                 String descripcion = etDescripcion.getText().toString();
                 String precio = etPrecio.getText().toString();
 
-                // Validación simple
-                if (nombreServicio.isEmpty() || descripcion.isEmpty() || precio.isEmpty() || imagenesSeleccionadas.isEmpty()) {
+                ArrayList<String> uriStrings = new ArrayList<>();
+                for (Uri uri : imagenesSeleccionadas) {
+                    uriStrings.add(uri.toString());
+                }
+
+                if (nombreServicio.isEmpty() || descripcion.isEmpty() || precio.isEmpty() || uriStrings.isEmpty()) {
                     Toast.makeText(AdminNuevoServicioActivity.this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Aquí puedes guardar los datos en una base de datos o realizar la acción correspondiente
-                    Toast.makeText(AdminNuevoServicioActivity.this, "Servicio registrado con éxito.", Toast.LENGTH_SHORT).show();
+                    // 🔽 AQUÍ VA LA LÓGICA DE FIRESTORE
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    ServicioFirebase servicio = new ServicioFirebase(
+                            nombreServicio,
+                            descripcion,
+                            precio,
+                            uriStrings,
+                            true
+                    );
+
+                    db.collection("servicios")
+                            .add(servicio)
+                            .addOnSuccessListener(documentReference -> {
+                                Toast.makeText(AdminNuevoServicioActivity.this, "Servicio guardado en Firebase", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(AdminNuevoServicioActivity.this, "Error al guardar en Firebase", Toast.LENGTH_SHORT).show();
+                            });
+
+                    // También devolver resultado
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("nombre", nombreServicio);
                     resultIntent.putExtra("descripcion", descripcion);
                     resultIntent.putExtra("precio", precio);
-
-                    // Convertir URIs a Strings porque Intent no admite ArrayList<Uri> directamente
-                    ArrayList<String> uriStrings = new ArrayList<>();
-                    for (Uri uri : imagenesSeleccionadas) {
-                        uriStrings.add(uri.toString());
-                    }
                     resultIntent.putStringArrayListExtra("imagenes", uriStrings);
 
                     setResult(RESULT_OK, resultIntent);
@@ -93,6 +106,7 @@ public class AdminNuevoServicioActivity extends AppCompatActivity {
                 }
             }
         });
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // BottomNavigationView o Barra inferior de menú
