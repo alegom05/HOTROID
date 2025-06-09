@@ -31,8 +31,7 @@ public class TaxiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_main);
-            @NonNull ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
-            setContentView(binding.getRoot());
+
             db = FirebaseFirestore.getInstance();
 
 
