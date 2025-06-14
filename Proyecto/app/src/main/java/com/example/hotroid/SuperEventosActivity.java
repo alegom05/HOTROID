@@ -5,30 +5,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log; // Importar Log para depuración
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull; // Para anotaciones de no-nulo
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.Evento;
-import com.google.android.gms.tasks.OnCompleteListener; // Importar para OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener; // Importar para OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener; // Importar para OnSuccessListener
-import com.google.android.gms.tasks.Task; // Importar para Task
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.FirebaseFirestore; // Importar FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot; // Importar QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot; // Importar QuerySnapshot
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class SuperEventosActivity extends AppCompatActivity {
 
@@ -38,10 +37,9 @@ public class SuperEventosActivity extends AppCompatActivity {
     private Button btnLimpiarFiltroFecha;
     private RecyclerView recyclerEventos;
     private EventoAdapter adapter;
-    private List<Evento> listaEventos; // Esta lista ahora se llenará desde Firestore
+    private List<Evento> listaEventos;
     private List<Evento> filteredEventList;
 
-    // Declarar instancia de FirebaseFirestore
     private FirebaseFirestore db;
 
     @Override
@@ -49,14 +47,13 @@ public class SuperEventosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_eventos);
 
-        // Inicializar Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
         etFiltroFecha = findViewById(R.id.etFiltroFecha);
         btnLimpiarFiltroFecha = findViewById(R.id.btnLimpiarFiltroFecha);
 
         etBuscador = findViewById(R.id.etBuscador);
-        btnLimpiarGeneralSearch = findViewById(R.id.btnLimpiar); // Asumiendo que este es el ID del botón limpiar general
+        btnLimpiarGeneralSearch = findViewById(R.id.btnLimpiar);
 
         recyclerEventos = findViewById(R.id.recyclerEventos);
         recyclerEventos.setLayoutManager(new LinearLayoutManager(this));
@@ -66,32 +63,34 @@ public class SuperEventosActivity extends AppCompatActivity {
         listaEventos = new ArrayList<>();
         filteredEventList = new ArrayList<>();
 
-        // 1. Guardar eventos iniciales a Firestore (Ejecutar solo una vez para poblar la BD)
-        // Puedes comentar o eliminar esta llamada después de la primera ejecución exitosa
-        saveInitialEventsToFirestore();
-
-        // 2. Leer eventos desde Firestore al iniciar la actividad
-        loadEventsFromFirestore();
-
-        // Inicializar el adaptador con la lista vacía o con los datos cargados (que se actualizarán después de la carga de Firestore)
-        adapter = new EventoAdapter(this, filteredEventList, this::SuperDetalleEvento); // Usando referencia a método
+        // Inicializar el adaptador con la lista vacía al principio
+        // Los datos se cargarán desde Firestore y luego se actualizará el adaptador
+        adapter = new EventoAdapter(this, filteredEventList, this::SuperDetalleEvento);
         recyclerEventos.setAdapter(adapter);
+
+        // Puedes descomentar la siguiente línea si necesitas guardar eventos iniciales por primera vez.
+        // Después de la primera ejecución exitosa, vuelve a comentarla para evitar duplicados.
+        // saveInitialEventsToFirestore();
+
+        // Cargar eventos desde Firestore al iniciar la actividad
+        loadEventsFromFirestore();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_eventos);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int itemId = item.getItemId(); // Obtener el ID del elemento seleccionado
+            int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
                 startActivity(new Intent(this, SuperActivity.class));
+                overridePendingTransition(0, 0); // Evitar animacion
+                finish();
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
                 startActivity(new Intent(this, SuperUsuariosActivity.class));
+                overridePendingTransition(0, 0); // Evitar animacion
+                finish();
                 return true;
             } else if (itemId == R.id.nav_eventos) {
-                // Ya estamos en SuperEventosActivity, no es necesario iniciarla de nuevo.
-                // Si la idea es "refrescar", podrías recargar los eventos de Firestore.
-                // startActivity(new Intent(SuperEventosActivity.this, SuperEventosActivity.class));
-                return true;
+                return true; // Ya estás en esta actividad
             }
             return false;
         });
@@ -110,29 +109,72 @@ public class SuperEventosActivity extends AppCompatActivity {
         });
     }
 
-    // Método para guardar la lista inicial de eventos en Firestore
+    // --- COMENTADO: Este método es solo para la primera carga de datos a Firestore.
+    // Una vez que tus datos estén en Firestore, puedes mantener este método comentado. ---
     private void saveInitialEventsToFirestore() {
         List<Evento> initialEvents = new ArrayList<>();
-        initialEvents.add(new Evento("15/5/2025", "Corte de energía en la torre A", "Oro Verde",
-                "**Detalle:** A las 23:00, la torre A del Hotel Oro Verde experimentó un corte total de energía, afectando todas las habitaciones del piso 5 al 10, así como los ascensores y el sistema de climatización. La causa preliminar apunta a una sobrecarga en el transformador principal de la torre. El generador de emergencia se activó parcialmente, pero no logró suplir toda la demanda. \n\n**Impacto:** Huéspedes en los pisos afectados expresaron incomodidad y algunos tuvieron que ser reubicados. La recepción se vio colapsada por llamadas. \n\n**Acciones:** El equipo técnico ya está en el lugar evaluando la magnitud del daño y se ha solicitado apoyo de una empresa externa especializada para agilizar la reparación. Se estima un tiempo de resolución de 4-6 horas. Se ofreció compensación (desayuno gratuito/descuento) a los afectados."));
-        initialEvents.add(new Evento("11/5/2025", "Caída de objeto en pasillo del restaurante", "Las Dunas",
-                "**Detalle:** Aproximadamente a las 14:30, un gran jarrón decorativo de cerámica, que adornaba el pasillo principal que conduce al restaurante 'El Oasis' del Hotel Las Dunas, se desprendió de su base y cayó al suelo. El impacto provocó la fragmentación del jarrón en múltiples piezas y daños menores en el revestimiento del piso. \n\n**Impacto:** Aunque no hubo heridos, el incidente causó un gran estruendo y asustó a varios huéspedes y personal que se encontraban cerca. El área fue acordonada inmediatamente por seguridad. \n\n**Acciones:** El equipo de limpieza procedió a retirar los escombros y se inició una investigación para determinar la causa del desprendimiento. Se revisarán todos los elementos decorativos colgantes o inestables en el hotel. La gerencia ha dispuesto la instalación de nuevas medidas de sujeción para futuros adornos."));
-        initialEvents.add(new Evento("29/4/2025", "Fuga de agua en cuarto 210", "Costa del Mar",
-                "**Detalle:** A las 08:15, el personal de limpieza del Hotel Costa del Mar descubrió una considerable fuga de agua en el baño del cuarto 210. La fuente de la fuga se identificó como una tubería corroída detrás del lavamanos, lo que ha provocado una acumulación de agua debajo del mueble y una filtración visible en la alfombra de la habitación. \n\n**Impacto:** La habitación fue declarada inoperable y el huésped fue trasladado a una habitación superior de cortesía. Existe un riesgo potencial de daño estructural a la pared y al piso si no se repara pronto. \n\n**Acciones:** El equipo de mantenimiento cerró la llave de paso de agua de la habitación y procedió a demoler parcialmente la pared para acceder a la tubería. Se espera que la reparación tome al menos 24 horas. Se ha programado la limpieza profunda y secado de la alfombra."));
-        initialEvents.add(new Evento("10/5/2025", "Incendio menor en cocina", "Sauce Resort",
-                "**Detalle:** A las 05:45 de la mañana, un conato de incendio se registró en el área de la freidora de la cocina principal del Hotel Sauce Resort. La causa se atribuye a un sobrecalentamiento del aceite que provocó llamas. El sistema de rociadores automáticos se activó de inmediato, conteniendo el fuego y evitando su propagación. \n\n**Impacto:** Aunque el incendio fue menor, generó una gran cantidad de humo, lo que activó las alarmas de incendios en todo el hotel por precaución. No hubo heridos. El personal de cocina fue evacuado momentáneamente. \n\n**Acciones:** Los bomberos llegaron rápidamente para verificar la situación y ventilar el área. Se realizó una inspección de seguridad en todo el sistema de cocina y se reforzaron los protocolos de uso de freidoras con el personal. La cocina reabrió a las 08:00 tras una limpieza exhaustiva."));
-        initialEvents.add(new Evento("15/5/2025", "Problemas de internet en el lobby", "Oro Verde",
-                "**Detalle:** Desde las 10:00 AM, el Hotel Oro Verde ha estado experimentando interrupciones intermitentes y una baja velocidad en el servicio de internet Wi-Fi en el área del lobby y salones de conferencias adyacentes. Se observa que la señal se pierde y recupera constantemente. \n\n**Impacto:** Esto está afectando a los huéspedes que intentan trabajar o comunicarse, causando quejas en recepción, especialmente de viajeros de negocios. Las tablets de check-in/out también se vieron ralentizadas. \n\n**Acciones:** El departamento de TI ha reiniciado los routers principales varias veces sin éxito. Se ha contactado al proveedor de servicios de internet, que ha confirmado una incidencia regional. Se espera que un técnico de la operadora visite el hotel en las próximas 3 horas para diagnosticar y resolver el problema. Se han habilitado puntos de acceso alternativos con menor capacidad para necesidades urgentes."));
+
+        // --- EVENTOS INICIALES (DESCOMENTAR SOLO PARA LA PRIMERA VEZ QUE QUIERAS POBLAR FIRESTORE) ---
+        // Descomentar y ejecutar la app una vez, luego volver a comentar.
+        /*
+        initialEvents.add(new Evento("14/06/2025", "Conferencia Tech Annual", "Hotel Aranwa Paracas", "Una conferencia anual de tecnología con ponentes internacionales."));
+        initialEvents.add(new Evento("20/06/2025", "Festival Gastronómico", "Hotel Decameron", "Un festival para degustar la gastronomía local e internacional."));
+        initialEvents.add(new Evento("01/07/2025", "Seminario de Marketing Digital", "Boca Ratón", "Aprende las últimas estrategias de marketing digital."));
+        initialEvents.add(new Evento("10/07/2025", "Concierto de Jazz", "Libertador", "Una noche inolvidable con los mejores artistas de jazz."));
+        initialEvents.add(new Evento("15/07/2025", "Exposición de Arte Moderno", "Costa del Sol", "Descubre las obras de artistas contemporáneos."));
+        initialEvents.add(new Evento("25/07/2025", "Competencia de Natación", "Sonesta", "Evento deportivo con participación de clubes locales."));
+        initialEvents.add(new Evento("05/08/2025", "Taller de Fotografía", "Hotel Aranwa Paracas", "Aprende técnicas avanzadas de fotografía con profesionales."));
+        initialEvents.add(new Evento("12/08/2025", "Noche de Talentos", "Hotel Decameron", "Presentaciones de canto, baile y comedia por talentos emergentes."));
+        initialEvents.add(new Evento("20/08/2025", "Degustación de Vinos", "Boca Ratón", "Experimenta los sabores de los mejores viñedos de la región."));
+        initialEvents.add(new Evento("01/09/2025", "Clase Maestra de Cocina Peruana", "Libertador", "Aprende a preparar platos tradicionales peruanos con chefs expertos."));
+        initialEvents.add(new Evento("10/09/2025", "Feria de Libros y Autores", "Costa del Sol", "Encuentra tus próximos libros favoritos y conoce a sus creadores."));
+        initialEvents.add(new Evento("18/09/2025", "Maratón de Videojuegos", "Sonesta", "Compite en tus videojuegos favoritos y gana premios."));
+        initialEvents.add(new Evento("25/09/2025", "Show de Magia e Ilusionismo", "Hotel Aranwa Paracas", "Una noche llena de asombro y misterio."));
+        initialEvents.add(new Evento("03/10/2025", "Festival de Cerveza Artesanal", "Hotel Decameron", "Descubre una variedad de cervezas artesanales locales e internacionales."));
+        initialEvents.add(new Evento("12/10/2025", "Día de la Familia con Juegos", "Boca Ratón", "Actividades y juegos para todas las edades."));
+        initialEvents.add(new Evento("20/10/2025", "Torneo de Ajedrez", "Libertador", "Pon a prueba tu estrategia en un torneo de ajedrez competitivo."));
+        initialEvents.add(new Evento("28/10/2025", "Noche de Disfraces (Halloween)", "Costa del Sol", "Celebra Halloween con música, concursos de disfraces y diversión."));
+        initialEvents.add(new Evento("05/11/2025", "Conferencia de Desarrollo Personal", "Sonesta", "Motívate y aprende herramientas para tu crecimiento personal."));
+        initialEvents.add(new Evento("15/11/2025", "Mercado Navideño Anticipado", "Hotel Aranwa Paracas", "Encuentra regalos únicos y disfruta del ambiente festivo."));
+        initialEvents.add(new Evento("22/11/2025", "Competencia de Baile Urbano", "Hotel Decameron", "Demuestra tus mejores pasos y compite por el primer lugar."));
+        initialEvents.add(new Evento("01/12/2025", "Cena de Gala de Fin de Año", "Boca Ratón", "Despide el año con una cena elegante y música en vivo."));
+        initialEvents.add(new Evento("10/12/2025", "Lectura de Cuentos Infantiles", "Libertador", "Un evento mágico para los más pequeños con cuentacuentos."));
+        initialEvents.add(new Evento("18/12/2025", "Concierto de Villancicos", "Costa del Sol", "Disfruta de la música navideña con coros locales."));
+        initialEvents.add(new Evento("24/12/2025", "Cena de Nochebuena Especial", "Sonesta", "Una cena festiva para celebrar la Nochebuena en un ambiente acogedor."));
+        initialEvents.add(new Evento("31/12/2025", "Fiesta de Año Nuevo", "Hotel Aranwa Paracas", "Celebra la llegada del nuevo año con una gran fiesta y fuegos artificiales."));
+        initialEvents.add(new Evento("05/01/2026", "Torneo de Tenis de Mesa", "Hotel Decameron", "Demuestra tus habilidades en este divertido torneo."));
+        initialEvents.add(new Evento("12/01/2026", "Clase de Yoga al Aire Libre", "Boca Ratón", "Relájate y recarga energías con una sesión de yoga."));
+        initialEvents.add(new Evento("20/01/2026", "Noche de Karaoke", "Libertador", "Libera tu estrella interior y canta tus canciones favoritas."));
+        initialEvents.add(new Evento("28/01/2026", "Taller de Coctelería", "Costa del Sol", "Aprende a preparar deliciosos cócteles con bartenders expertos."));
+        initialEvents.add(new Evento("05/02/2026", "Desfile de Moda Sostenible", "Sonesta", "Descubre las últimas tendencias en moda ética y sostenible."));
+        initialEvents.add(new Evento("14/02/2026", "Cena Romántica de San Valentín", "Hotel Aranwa Paracas", "Celebra el amor con una cena especial y ambiente romántico."));
+        initialEvents.add(new Evento("22/02/2026", "Carnaval de Verano", "Hotel Decameron", "Disfruta de un colorido carnaval con música y bailes."));
+        initialEvents.add(new Evento("01/03/2026", "Conferencia sobre Historia Local", "Boca Ratón", "Explora la rica historia y cultura de la región."));
+        initialEvents.add(new Evento("10/03/2026", "Festival de Cortometrajes", "Libertador", "Disfruta de una selección de cortometrajes independientes."));
+        initialEvents.add(new Evento("18/03/2026", "Taller de Jardinería Urbana", "Costa del Sol", "Aprende a crear tu propio oasis verde en la ciudad."));
+        initialEvents.add(new Evento("25/03/2026", "Noche de Observación de Estrellas", "Sonesta", "Admira el cielo nocturno y aprende sobre astronomía."));
+        initialEvents.add(new Evento("01/04/2026", "Día de Bromas y Risas (April Fools)", "Hotel Aranwa Paracas", "Un día para la diversión y las sorpresas."));
+        initialEvents.add(new Evento("10/04/2026", "Retiro de Bienestar y Mindfulness", "Hotel Decameron", "Encuentra la paz interior y relájate en este retiro."));
+        initialEvents.add(new Evento("18/04/2026", "Feria de Artesanías Locales", "Boca Ratón", "Apoya a los artesanos locales y encuentra piezas únicas."));
+        initialEvents.add(new Evento("25/04/2026", "Concurso de Talentos para Niños", "Libertador", "Los más pequeños demuestran sus habilidades en un show divertido."));
+        initialEvents.add(new Evento("01/05/2026", "Celebración del Día del Trabajo", "Costa del Sol", "Eventos especiales para conmemorar el Día del Trabajo."));
+        initialEvents.add(new Evento("10/05/2026", "Brunch Especial Día de la Madre", "Sonesta", "Un brunch delicioso para celebrar a mamá."));
+        */
+        // --- FIN DE EVENTOS INICIALES ---
+
+        // Puedes añadir aquí algunos eventos de prueba sin comentar si quieres ver algo al inicio
+        // y aún no has configurado tu base de datos de Firestore.
+        // Después de implementar Firestore, asegúrate de que estos también provengan de allí.
+        initialEvents.add(new Evento("14/06/2025", "Conferencia de Verano", "Hotel Aranwa", "Un evento para desarrolladores y profesionales de TI."));
+        initialEvents.add(new Evento("20/06/2025", "Concierto Acústico Noche de Luna", "Hotel Decameron", "Disfruta de la música en vivo bajo las estrellas."));
+        initialEvents.add(new Evento("05/07/2025", "Taller de Cocina Peruana Fusión", "Boca Ratón", "Aprende a preparar platos innovadores con un toque peruano."));
+
 
         for (Evento evento : initialEvents) {
-            db.collection("eventos") // Nombre de tu colección en Firestore
-                    .add(evento) // Usar .add() para que Firestore genere un ID de documento automáticamente
+            db.collection("eventos")
+                    .add(evento)
                     .addOnSuccessListener(documentReference -> {
                         Log.d("Firestore", "Evento guardado con ID: " + documentReference.getId());
-                        // Opcional: puedes cargar los eventos inmediatamente después de guardar el último
-                        // if (initialEvents.indexOf(evento) == initialEvents.size() - 1) {
-                        //     loadEventsFromFirestore();
-                        // }
                     })
                     .addOnFailureListener(e -> {
                         Log.w("Firestore", "Error al guardar evento", e);
@@ -141,19 +183,18 @@ public class SuperEventosActivity extends AppCompatActivity {
         }
     }
 
-    // Método para cargar eventos desde Firestore
     private void loadEventsFromFirestore() {
-        db.collection("eventos") // Nombre de tu colección en Firestore
+        db.collection("eventos")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            listaEventos.clear(); // Limpiar la lista existente
+                            listaEventos.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Evento evento = document.toObject(Evento.class); // Mapear el documento a un objeto Evento
-                                // Si usas @DocumentId en tu clase Evento y quieres el ID del documento
-                                // evento.setId(document.getId());
+                                Evento evento = document.toObject(Evento.class);
+                                // Si tu clase Evento tiene un campo 'id' y lo mapeas desde el DocumentId
+                                // evento.setId(document.getId()); // Descomentar si aplicable
                                 listaEventos.add(evento);
                             }
                             Log.d("Firestore", "Eventos cargados exitosamente: " + listaEventos.size());
@@ -194,7 +235,7 @@ public class SuperEventosActivity extends AppCompatActivity {
         int día = calendario.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            String fechaSeleccionada = dayOfMonth + "/" + (month + 1) + "/" + year;
+            String fechaSeleccionada = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month + 1, year);
             etFiltroFecha.setText(fechaSeleccionada);
             applyFilters();
         }, año, mes, día);
@@ -204,17 +245,14 @@ public class SuperEventosActivity extends AppCompatActivity {
     private void applyFilters() {
         filteredEventList.clear();
         String fechaFiltro = etFiltroFecha.getText().toString().trim();
-        String searchText = etBuscador.getText().toString().toLowerCase().trim();
+        String searchText = etBuscador.getText().toString().toLowerCase(Locale.getDefault()).trim();
 
-        for (Evento evento : listaEventos) { // Ahora listaEventos contiene datos de Firestore
+        for (Evento evento : listaEventos) {
             boolean matchesDate = fechaFiltro.isEmpty() || evento.getFecha().equals(fechaFiltro);
 
-            // Search in event description, hotel name, AND detailed description
-            String combinedTextForSearch = (evento.getEvento() + " " + evento.getHotel() + " " + evento.getDescripcion()).toLowerCase();
+            String combinedTextForSearch = (evento.getEvento() + " " + evento.getHotel() + " " + evento.getDescripcion()).toLowerCase(Locale.getDefault());
 
-            boolean matchesSearch = searchText.isEmpty() ||
-                    combinedTextForSearch.contains(searchText);
-
+            boolean matchesSearch = searchText.isEmpty() || combinedTextForSearch.contains(searchText);
 
             if (matchesDate && matchesSearch) {
                 filteredEventList.add(evento);
