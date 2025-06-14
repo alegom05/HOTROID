@@ -29,6 +29,19 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Cadenas para super_detalles_admin_formulario.xml -->
     <string name="seleccione_el_hotel">Seleccione el hotel</string>
+
+    <string-array name="hotel_options">
+        <item>Seleccionar Hotel</item>
+        <item>Hotel Oro Verde</item>
+        <item>Hotel Decameron</item>
+        <item>Hotel Libertador</item>
+        <item>Hotel Costa del Sol</item>
+        <item>Hotel Sonesta</item>
+        <item>Sauce Resort</item>
+        <item>Boca Ratón</item>
+        <item>Aranwa Paracas</item>
+    </string-array>
+
     <string-array name="estados_taxistas">
         <item>Todos</item>
         <item>En camino</item>

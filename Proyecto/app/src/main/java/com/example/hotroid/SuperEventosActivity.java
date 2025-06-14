@@ -68,8 +68,8 @@ public class SuperEventosActivity extends AppCompatActivity {
         adapter = new EventoAdapter(this, filteredEventList, this::SuperDetalleEvento);
         recyclerEventos.setAdapter(adapter);
 
-        // Puedes descomentar la siguiente línea si necesitas guardar eventos iniciales por primera vez.
-        // Después de la primera ejecución exitosa, vuelve a comentarla para evitar duplicados.
+        // --- COMENTADO: Descomenta la siguiente línea solo si necesitas guardar eventos iniciales por primera vez.
+        // Después de la primera ejecución exitosa, vuelve a comentarla para evitar duplicados en Firestore. ---
         // saveInitialEventsToFirestore();
 
         // Cargar eventos desde Firestore al iniciar la actividad
@@ -109,13 +109,13 @@ public class SuperEventosActivity extends AppCompatActivity {
         });
     }
 
-    // --- COMENTADO: Este método es solo para la primera carga de datos a Firestore.
-    // Una vez que tus datos estén en Firestore, puedes mantener este método comentado. ---
+    // --- Este método es solo para la primera carga de datos a Firestore.
+    // Una vez que tus datos estén en Firestore, debes mantener este método comentado. ---
     private void saveInitialEventsToFirestore() {
         List<Evento> initialEvents = new ArrayList<>();
 
-        // --- EVENTOS INICIALES (DESCOMENTAR SOLO PARA LA PRIMERA VEZ QUE QUIERAS POBLAR FIRESTORE) ---
-        // Descomentar y ejecutar la app una vez, luego volver a comentar.
+        // --- EVENTOS DE PRUEBA (DESCOMENTAR ESTE BLOQUE SOLO PARA LA PRIMERA VEZ QUE QUIERAS POBLAR FIRESTORE) ---
+        // Después de ejecutar la app una vez y verificar que los datos se guardaron, vuelve a comentar todo este bloque.
         /*
         initialEvents.add(new Evento("14/06/2025", "Conferencia Tech Annual", "Hotel Aranwa Paracas", "Una conferencia anual de tecnología con ponentes internacionales."));
         initialEvents.add(new Evento("20/06/2025", "Festival Gastronómico", "Hotel Decameron", "Un festival para degustar la gastronomía local e internacional."));
@@ -160,14 +160,16 @@ public class SuperEventosActivity extends AppCompatActivity {
         initialEvents.add(new Evento("01/05/2026", "Celebración del Día del Trabajo", "Costa del Sol", "Eventos especiales para conmemorar el Día del Trabajo."));
         initialEvents.add(new Evento("10/05/2026", "Brunch Especial Día de la Madre", "Sonesta", "Un brunch delicioso para celebrar a mamá."));
         */
-        // --- FIN DE EVENTOS INICIALES ---
+        // --- FIN DE EVENTOS DE PRUEBA ---
 
-        // Puedes añadir aquí algunos eventos de prueba sin comentar si quieres ver algo al inicio
-        // y aún no has configurado tu base de datos de Firestore.
-        // Después de implementar Firestore, asegúrate de que estos también provengan de allí.
-        initialEvents.add(new Evento("14/06/2025", "Conferencia de Verano", "Hotel Aranwa", "Un evento para desarrolladores y profesionales de TI."));
-        initialEvents.add(new Evento("20/06/2025", "Concierto Acústico Noche de Luna", "Hotel Decameron", "Disfruta de la música en vivo bajo las estrellas."));
-        initialEvents.add(new Evento("05/07/2025", "Taller de Cocina Peruana Fusión", "Boca Ratón", "Aprende a preparar platos innovadores con un toque peruano."));
+
+        // --- EVENTOS PARA VER AL INICIO SI NO TIENES FIRESTORE CONFIGURADO (PUEDES ELIMINAR ESTOS) ---
+        // Estos eventos se añadirán cada vez que la actividad inicie, útil para pruebas sin una BD.
+        // Después de implementar Firestore, asegúrate de que estos también provengan de allí
+        // o coméntalos para evitar duplicados si usas saveInitialEventsToFirestore() arriba.
+        initialEvents.add(new Evento("14/06/2025", "Conferencia de Verano", "Hotel Aranwa", "Un evento para desarrolladores y profesionales de TI, con charlas magistrales y talleres interactivos."));
+        initialEvents.add(new Evento("20/06/2025", "Concierto Acústico Noche de Luna", "Hotel Decameron", "Disfruta de la música en vivo bajo las estrellas con artistas locales e invitados especiales, una experiencia inolvidable."));
+        initialEvents.add(new Evento("05/07/2025", "Taller de Cocina Peruana Fusión", "Boca Ratón", "Aprende a preparar platos innovadores con un toque peruano, combinando técnicas tradicionales y modernas."));
 
 
         for (Evento evento : initialEvents) {

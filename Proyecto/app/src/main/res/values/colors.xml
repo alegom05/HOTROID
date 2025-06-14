@@ -25,8 +25,8 @@
     <color name="green_500">#4CAF50</color>
     <color name="red_500">#F44336</color>
     <color name="background_gradient">#F8F9FA</color>
-
-
+    <color name="red_status">#F44336</color>
+    <color name="green_status">#4CAF50</color>
 
 
 </resources>

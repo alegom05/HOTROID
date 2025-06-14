@@ -197,8 +197,7 @@
         <activity android:name=".SuperDetallesClienteActivadoActivity" />
         <activity android:name=".SuperDetallesClienteDesactivadoActivity" />
         <activity android:name=".SuperListaAdminActivity" />
-        <activity android:name=".SuperDetallesAdminActivadoActivity" />
-        <activity android:name=".SuperDetallesAdminDesactivadoActivity" />
+        <activity android:name=".SuperDetallesAdminActivity" />
         <activity android:name=".SuperDetallesAdminFormularioActivity" />
         <activity android:name=".SuperListaTaxisActivity" />
         <activity android:name=".SuperDetallesTaxiActivadoActivity" />
