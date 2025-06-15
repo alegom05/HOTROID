@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".SuperDetallesClienteActivadoActivity">
+    tools:context=".SuperDetallesClienteActivity">
 
     <TextView
         android:id="@+id/tvTituloDetalleCliente"
@@ -65,7 +66,8 @@
                 android:layout_height="48dp"
                 android:src="@drawable/foto_admin"
                 android:scaleType="centerCrop"
-                android:background="@drawable/border_circle" />
+                android:background="@drawable/border_circle"
+                android:contentDescription="Foto de perfil del administrador"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -79,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@id/cardPerfil"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnDesactivar">
+        app:layout_constraintBottom_toTopOf="@id/layout_action_buttons">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardDatos"
@@ -102,26 +104,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Usuario"
+                        android:text="Nombres"
                         android:textStyle="bold" />
                     <TextView
-                        android:id="@+id/tvUsuarioDetalle"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvNombresDetalle" android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Usuario Ejemplo"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nombres"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
-                    <TextView
-                        android:id="@+id/tvNombresDetalle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nombres del Cliente" />
+                        android:text="-" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -133,55 +121,43 @@
                         android:id="@+id/tvApellidosDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Apellidos del Cliente" />
+                        android:text="-" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Modo de Identificación"
+                        android:text="DNI"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp" />
                     <TextView
-                        android:id="@+id/tvTipoDocumentoDetalle"
+                        android:id="@+id/tvDniDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DNI" />
+                        android:text="-" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Número de Identidad"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
-                    <TextView
-                        android:id="@+id/tvNumDocumentoDetalle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="72341235" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fecha de nacimiento"
+                        android:text="Fecha de Nacimiento"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp" />
                     <TextView
                         android:id="@+id/tvFechaNacimientoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="11 de agosto de 2000" />
+                        android:text="-" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Correo electrónico"
+                        android:text="Correo Electrónico"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp" />
                     <TextView
                         android:id="@+id/tvCorreoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="correo@ejemplo.com" />
+                        android:text="-" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -193,21 +169,32 @@
                         android:id="@+id/tvTelefonoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="912345678" />
+                        android:text="-" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Domicilio"
+                        android:text="Dirección"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp" />
                     <TextView
                         android:id="@+id/tvDomicilioDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dirección del Cliente" />
+                        android:text="-" />
 
-                </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estado"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+                    <TextView
+                        android:id="@+id/tvEstadoDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/green_status"/> </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -228,30 +215,55 @@
                         android:id="@+id/fotoPrincipal"
                         android:layout_width="100dp"
                         android:layout_height="120dp"
-                        android:src="@drawable/foto_admin"
-                        android:scaleType="centerCrop"
-                        android:layout_marginBottom="16dp"/>
+                        android:src="@drawable/ic_user_placeholder" android:scaleType="centerCrop"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="Foto de perfil del cliente"/>
                 </LinearLayout>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
     </ScrollView>
 
-    <Button
-        android:id="@+id/btnDesactivar"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_action_buttons"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Desactivar"
+        android:orientation="horizontal" android:gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnDesactivar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Desactivar"
+            android:backgroundTint="#FF5722"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone" /> <Button
+        android:id="@+id/btnActivar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Activar"
+        android:backgroundTint="#009688"
+        android:textColor="@android:color/white"
+        android:layout_marginStart="8dp"
+        android:visibility="gone" /> </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="12dp"
-        android:backgroundTint="#F44336" /> <com.google.android.material.bottomnavigation.BottomNavigationView
-    android:id="@+id/bottom_navigation"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/windowBackground"
-    app:labelVisibilityMode="labeled"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:menu="@menu/menu_super" /> </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_super" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

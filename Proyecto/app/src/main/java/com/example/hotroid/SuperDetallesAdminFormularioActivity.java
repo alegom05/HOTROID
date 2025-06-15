@@ -15,18 +15,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.cardview.widget.CardView; // Make sure this is used if cardPerfil is present
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList; // Changed from Arrays.asList to allow modification if needed
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -45,9 +47,6 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
     private EditText etDireccion;
     private Spinner spHotel;
     private ImageView ivFotoPerfil;
-    // No necesitamos imageUri si siempre convertimos a byte[] antes de enviar.
-    // Solo si quisieras persistir la URI temporalmente por alguna razón.
-    // private Uri imageUri;
 
     // Launchers para tomar foto o seleccionar de galería
     private final ActivityResultLauncher<Intent> cameraLauncher =
@@ -102,13 +101,15 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         ivFotoPerfil = findViewById(R.id.ivFotoPerfil);
 
         // Spinner Tipo de Documento
-        List<String> tiposDocumento = Arrays.asList("DNI", "Pasaporte", "Carnet de Extranjería");
+        List<String> tiposDocumento = new ArrayList<>(Arrays.asList("Seleccione tipo", "DNI", "Pasaporte", "Carnet de Extranjería"));
         ArrayAdapter<String> adapterDocumento = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tiposDocumento);
         adapterDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spTipoDocumento.setAdapter(adapterDocumento);
+        spTipoDocumento.setSelection(0); // Select "Seleccione tipo" by default
 
-        // *** CORRECCIÓN: Lista de Hoteles
-        List<String> hoteles = Arrays.asList(
+        // Lista de Hoteles
+        List<String> hoteles = new ArrayList<>(Arrays.asList(
+                "Seleccione hotel", // Added a default prompt
                 "Hotel Oro Verde",
                 "Sauce Resort",
                 "Hotel Decameron",
@@ -119,46 +120,56 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
                 "Tambomachay Hotel",
                 "Belmond Hotel Monasterio",
                 "Sol y Luna Hotel"
-        );
+        ));
         ArrayAdapter<String> adapterHoteles = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hoteles);
         adapterHoteles.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spHotel.setAdapter(adapterHoteles);
+        spHotel.setSelection(0); // Select "Seleccione hotel" by default
 
         // Manejo de la fecha de nacimiento (DatePickerDialog)
         etFechaNacimiento.setOnClickListener(v -> mostrarDatePicker());
+        etFechaNacimiento.setFocusable(false); // Make it non-editable to force DatePickerDialog
+        etFechaNacimiento.setCursorVisible(false);
 
         // Manejo del clic en la ImageView para la foto de perfil
         ivFotoPerfil.setOnClickListener(v -> mostrarOpcionesImagen());
 
         // Botón de Registrar
         Button btnRegistrar = findViewById(R.id.btnRegistrar);
-        btnRegistrar.setOnClickListener(v -> mostrarDialogoConfirmacion());
+        if (btnRegistrar != null) {
+            btnRegistrar.setOnClickListener(v -> mostrarDialogoConfirmacion());
+        }
 
-        // Configuración del CardView de perfil (el de "Pedro Bustamante")
+
+        // Configuración del CardView de perfil (Revisar si es necesario en un formulario de REGISTRO)
         CardView cardPerfil = findViewById(R.id.cardPerfil);
-        cardPerfil.setOnClickListener(v -> {
-            Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperCuentaActivity.class);
-            startActivity(intent);
-        });
+        if (cardPerfil != null) {
+            cardPerfil.setOnClickListener(v -> {
+                Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperCuentaActivity.class);
+                startActivity(intent);
+            });
+        }
 
         // BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_hoteles) {
-                startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperActivity.class));
-                finish(); // Para que no se apilen las actividades
-                return true;
-            } else if (itemId == R.id.nav_usuarios) {
-                return true; // Ya estás en esta actividad o una relacionada
-            } else if (itemId == R.id.nav_eventos) {
-                startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperEventosActivity.class));
-                finish(); // Para que no se apilen las actividades
-                return true;
-            }
-            return false;
-        });
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_usuarios);
+            bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_hoteles) {
+                    startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperActivity.class));
+                    finish(); // To prevent stacking activities
+                    return true;
+                } else if (itemId == R.id.nav_usuarios) {
+                    return true; // Already on this activity or a related one (list of admins)
+                } else if (itemId == R.id.nav_eventos) {
+                    startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperEventosActivity.class));
+                    finish(); // To prevent stacking activities
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
     private void mostrarDatePicker() {
@@ -198,8 +209,8 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
 
     private void mostrarDialogoConfirmacion() {
         if (!validarCampos()) {
-            Toast.makeText(this, "Por favor, complete todos los campos obligatorios.", Toast.LENGTH_SHORT).show();
-            return; // No mostrar el diálogo si los campos no son válidos
+            // Toast message already shown by validarCampos for specific errors
+            return; // Do not show the dialog if fields are not valid
         }
 
         new AlertDialog.Builder(this)
@@ -212,10 +223,10 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
     }
 
     private void registrarAdministrador() {
-        // En este punto, los campos ya han sido validados por mostrarDialogoConfirmacion()
+        // At this point, fields have been validated by mostrarDialogoConfirmacion()
         String nombre = etNombre.getText().toString().trim();
         String apellido = etApellido.getText().toString().trim();
-        // String tipoDocumento = spTipoDocumento.getSelectedItem().toString(); // No se usa en Admin, pero puedes pasarlo si lo necesitas
+        // String tipoDocumento = spTipoDocumento.getSelectedItem().toString(); // Not directly used in Admin bean, but available if needed
         String numDocumento = etNumDocumento.getText().toString().trim();
         String fechaNacimiento = etFechaNacimiento.getText().toString().trim();
         String correo = etCorreo.getText().toString().trim();
@@ -227,70 +238,122 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         resultIntent.putExtra("action", "registrado");
         resultIntent.putExtra("admin_nombres", nombre);
         resultIntent.putExtra("admin_apellidos", apellido);
-        resultIntent.putExtra("admin_dni", numDocumento); // Asumiendo DNI es el número de documento
+        resultIntent.putExtra("admin_dni", numDocumento); // Assuming DNI is the document number
         resultIntent.putExtra("admin_nacimiento", fechaNacimiento);
         resultIntent.putExtra("admin_correo", correo);
         resultIntent.putExtra("admin_telefono", telefono);
         resultIntent.putExtra("admin_direccion", direccion);
         resultIntent.putExtra("admin_hotelAsignado", hotelAsignado);
-        resultIntent.putExtra("admin_estado", "true"); // Por defecto, al registrar es activo
+        resultIntent.putExtra("admin_estado", "true"); // Default to active upon registration
 
-        // Obtener la imagen de la ImageView y convertirla a byte[]
-        // Verificar que hay una imagen válida antes de enviarla
+        // Get the image from ImageView and convert to byte[]
         if (ivFotoPerfil.getDrawable() != null && ivFotoPerfil.getDrawable() instanceof BitmapDrawable) {
             Bitmap bitmap = ((BitmapDrawable) ivFotoPerfil.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // Comprimir a 80% de calidad
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // Compress to 80% quality
             byte[] imageData = baos.toByteArray();
             resultIntent.putExtra("admin_fotoPerfilBytes", imageData);
         } else {
-            // Si no hay foto seleccionada, puedes enviar un valor nulo o un indicador
+            // If no photo selected, send null or an indicator. SuperListaAdminActivity handles null.
             resultIntent.putExtra("admin_fotoPerfilBytes", (byte[]) null);
-            Log.d(TAG, "No se seleccionó ninguna foto de perfil.");
+            Log.d(TAG, "No profile photo selected.");
         }
 
         setResult(RESULT_OK, resultIntent);
-        finish();
+        finish(); // Close this activity and return to SuperListaAdminActivity
     }
 
     private boolean validarCampos() {
         boolean isValid = true;
+
         if (etNombre.getText().toString().trim().isEmpty()) {
             etNombre.setError("Este campo es obligatorio");
             isValid = false;
+        } else {
+            etNombre.setError(null); // Clear error if valid
         }
+
         if (etApellido.getText().toString().trim().isEmpty()) {
             etApellido.setError("Este campo es obligatorio");
             isValid = false;
+        } else {
+            etApellido.setError(null);
         }
+
+        if (spTipoDocumento.getSelectedItemPosition() == 0) { // Check if default "Seleccione tipo" is selected
+            TextView errorText = (TextView) spTipoDocumento.getSelectedView();
+            if (errorText != null) {
+                errorText.setError("Seleccione un tipo de documento");
+            }
+            isValid = false;
+        } else {
+            TextView errorText = (TextView) spTipoDocumento.getSelectedView();
+            if (errorText != null) {
+                errorText.setError(null);
+            }
+        }
+
+
         if (etNumDocumento.getText().toString().trim().isEmpty()) {
             etNumDocumento.setError("Este campo es obligatorio");
             isValid = false;
+        } else {
+            etNumDocumento.setError(null);
         }
+
         if (etFechaNacimiento.getText().toString().trim().isEmpty()) {
             etFechaNacimiento.setError("Seleccione una fecha");
             isValid = false;
+        } else {
+            etFechaNacimiento.setError(null);
         }
+
         if (etCorreo.getText().toString().trim().isEmpty()) {
             etCorreo.setError("Este campo es obligatorio");
             isValid = false;
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(etCorreo.getText().toString().trim()).matches()) {
             etCorreo.setError("Ingrese un correo válido");
             isValid = false;
+        } else {
+            etCorreo.setError(null);
         }
+
         if (etTelefono.getText().toString().trim().isEmpty()) {
             etTelefono.setError("Este campo es obligatorio");
             isValid = false;
+        } else {
+            etTelefono.setError(null);
         }
+
         if (etDireccion.getText().toString().trim().isEmpty()) {
             etDireccion.setError("Este campo es obligatorio");
             isValid = false;
+        } else {
+            etDireccion.setError(null);
         }
-        // Puedes añadir validación para la foto si es obligatoria
+
+        if (spHotel.getSelectedItemPosition() == 0) { // Check if default "Seleccione hotel" is selected
+            TextView errorText = (TextView) spHotel.getSelectedView();
+            if (errorText != null) {
+                errorText.setError("Seleccione un hotel");
+            }
+            isValid = false;
+        } else {
+            TextView errorText = (TextView) spHotel.getSelectedView();
+            if (errorText != null) {
+                errorText.setError(null);
+            }
+        }
+
+        // Optional: Make photo selection mandatory
         // if (ivFotoPerfil.getDrawable() == null || !(ivFotoPerfil.getDrawable() instanceof BitmapDrawable)) {
         //     Toast.makeText(this, "Debe seleccionar una foto de perfil.", Toast.LENGTH_SHORT).show();
         //     isValid = false;
         // }
+
+        if (!isValid) {
+            Toast.makeText(this, "Por favor, complete todos los campos obligatorios y válidos.", Toast.LENGTH_LONG).show();
+        }
         return isValid;
     }
 }

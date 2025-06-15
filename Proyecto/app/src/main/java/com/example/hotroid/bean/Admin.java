@@ -3,24 +3,25 @@ package com.example.hotroid.bean;
 import com.google.firebase.firestore.Exclude;
 
 public class Admin {
-    private String firestoreId; // Nuevo campo para el ID del documento en Firestore
+    private String firestoreId; // New field for the Firestore document ID
     private String nombres;
     private String apellidos;
-    private String estado; // "true" o "false"
-    private String dni; // Este campo seguirá siendo el número de documento real
+    private String estado; // "true" or "false"
+    private String dni;
     private String nacimiento;
     private String correo;
     private String telefono;
     private String direccion;
     private String hotelAsignado;
-    private String fotoPerfilUrl; // Para la URL de la imagen en Firebase Storage
+    private String fotoPerfilUrl; // For the image URL in Firebase Storage
 
-    // Constructor sin argumentos requerido por Firestore
+    // Default constructor required by Firestore
     public Admin() {
         // Default constructor required for calls to DataSnapshot.toObject(Admin.class)
     }
 
-    // Constructor completo actualizado (9 argumentos de tipo String)
+    // Constructor with 9 arguments (for initial creation without a photo URL,
+    // where the URL will be set after image upload)
     public Admin(String nombres, String apellidos, String estado, String dni, String nacimiento,
                  String correo, String telefono, String direccion, String hotelAsignado) {
         this.nombres = nombres;
@@ -32,12 +33,29 @@ public class Admin {
         this.telefono = telefono;
         this.direccion = direccion;
         this.hotelAsignado = hotelAsignado;
-        this.fotoPerfilUrl = ""; // Inicializar vacío, se llenará al subir a Storage
+        this.fotoPerfilUrl = ""; // Initialize empty, will be populated after Storage upload
     }
 
-    // Getters y Setters
-    // Nuevo: Getter y Setter para firestoreId
-    @Exclude // Esto es importante para que Firestore no intente guardar este campo dos veces si el ID del documento ya es firestoreId
+    // Constructor with 10 arguments (including fotoPerfilUrl, useful if you're
+    // populating with existing URLs or generating them directly)
+    public Admin(String nombres, String apellidos, String estado, String dni, String nacimiento,
+                 String correo, String telefono, String direccion, String hotelAsignado, String fotoPerfilUrl) {
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.estado = estado;
+        this.dni = dni;
+        this.nacimiento = nacimiento;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.hotelAsignado = hotelAsignado;
+        this.fotoPerfilUrl = fotoPerfilUrl;
+    }
+
+    // Getters and Setters
+
+    @Exclude // Important: This prevents Firestore from trying to save 'firestoreId' as a field within the document,
+    // as it's already the document's ID.
     public String getFirestoreId() {
         return firestoreId;
     }
@@ -106,7 +124,7 @@ public class Admin {
         return direccion;
     }
 
-    public void setDireccion(String direccion) { // Corrección: 'void setDireccion'
+    public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
