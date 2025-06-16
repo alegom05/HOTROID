@@ -78,8 +78,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardPerfil"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardPerfil" app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layout_action_buttons">
 
@@ -107,7 +106,8 @@
                         android:text="Nombres"
                         android:textStyle="bold" />
                     <TextView
-                        android:id="@+id/tvNombresDetalle" android:layout_width="wrap_content"
+                        android:id="@+id/tvNombresDetalle"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-" />
 
@@ -126,11 +126,23 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DNI"
+                        android:text="Tipo de Documento"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp" />
                     <TextView
-                        android:id="@+id/tvDniDetalle"
+                        android:id="@+id/tvTipoDocumentoDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Número de Documento"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+                    <TextView
+                        android:id="@+id/tvNumeroDocumentoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-" />
@@ -183,18 +195,7 @@
                         android:layout_height="wrap_content"
                         android:text="-" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Estado"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
-                    <TextView
-                        android:id="@+id/tvEstadoDetalle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textColor="@color/green_status"/> </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -215,7 +216,8 @@
                         android:id="@+id/fotoPrincipal"
                         android:layout_width="100dp"
                         android:layout_height="120dp"
-                        android:src="@drawable/ic_user_placeholder" android:scaleType="centerCrop"
+                        android:src="@drawable/ic_user_placeholder"
+                        android:scaleType="centerCrop"
                         android:layout_marginBottom="16dp"
                         android:contentDescription="Foto de perfil del cliente"/>
                 </LinearLayout>
@@ -227,7 +229,8 @@
         android:id="@+id/layout_action_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
@@ -237,23 +240,22 @@
 
         <Button
             android:id="@+id/btnDesactivar"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Desactivar"
             android:backgroundTint="#FF5722"
             android:textColor="@android:color/white"
-            android:layout_marginEnd="8dp"
-            android:visibility="gone" /> <Button
-        android:id="@+id/btnActivar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Activar"
-        android:backgroundTint="#009688"
-        android:textColor="@android:color/white"
-        android:layout_marginStart="8dp"
-        android:visibility="gone" /> </LinearLayout>
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnActivar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activar"
+            android:backgroundTint="#009688"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

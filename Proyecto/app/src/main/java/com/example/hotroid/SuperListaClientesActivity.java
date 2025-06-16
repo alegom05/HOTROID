@@ -30,8 +30,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide; // Assuming you use Glide for image loading
-import com.example.hotroid.bean.Cliente; // Make sure this bean class exists and is correct
+import com.bumptech.glide.Glide;
+import com.example.hotroid.bean.Cliente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,10 +42,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch; // Import for batch writes
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.Arrays; // Added for Arrays.asList
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -60,20 +60,20 @@ public class SuperListaClientesActivity extends AppCompatActivity {
     private Button btnLimpiar;
 
     private static final String CHANNEL_ID = "client_notifications_channel";
-    private static final int NOTIFICATION_ID = 2; // Different ID for clients
+    private static final int NOTIFICATION_ID = 2;
 
     public List<Cliente> clientDataList = new ArrayList<>();
     public List<Cliente> filteredClientList = new ArrayList<>();
 
     private ActivityResultLauncher<String> requestPermissionLauncher;
-    private ActivityResultLauncher<Intent> detailsResultLauncher; // Only for details, no form launcher here
+    private ActivityResultLauncher<Intent> detailsResultLauncher;
 
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.super_lista_clientes); // Your main layout for client list
+        setContentView(R.layout.super_lista_clientes);
 
         db = FirebaseFirestore.getInstance();
 
@@ -115,12 +115,12 @@ public class SuperListaClientesActivity extends AppCompatActivity {
 
         // Top bar elements from your super_lista_clientes.xml
         TextView tvTitulo = findViewById(R.id.tvTitulo);
-        TextView tvNombre = findViewById(R.id.tvNombre); // Corresponds to tvNombreAdminActual in SuperListaAdminActivity
+        TextView tvNombre = findViewById(R.id.tvNombre);
         TextView tvRol = findViewById(R.id.tvRol);
         ImageView imagenPerfil = findViewById(R.id.imagenPerfil);
 
         if (tvTitulo != null) {
-            tvTitulo.setText("Gestión de Clientes"); // Matching your XML title
+            tvTitulo.setText("Gestión de Clientes");
         }
         if (tvNombre != null) {
             tvNombre.setText("Pedro Bustamante"); // Hardcoded admin name
@@ -153,7 +153,8 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_usuarios) {
-                    return true; // Already on the users (clients) list
+                    // This activity shows client list, which falls under 'usuarios'
+                    return true;
                 } else if (itemId == R.id.nav_eventos) {
                     Intent intentAlertas = new Intent(SuperListaClientesActivity.this, SuperEventosActivity.class);
                     startActivity(intentAlertas);
@@ -163,10 +164,6 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                 return false;
             });
         }
-
-        // No "Registrar" button for clients as per previous request to exclude registration functionality
-        // Button botonRegistrar = findViewById(R.id.button_regist); // Removed
-        // if (botonRegistrar != null) { ... } // Removed
     }
 
     private void loadClientsFromFirestore() {
@@ -191,12 +188,12 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                             renderClientList(); // Display the list
                             Log.d(TAG, "Clientes cargados desde Firestore: " + clientDataList.size());
 
-                            // *** ESTE ES EL BLOQUE QUE DEBES EJECUTAR UNA SOLA VEZ ***
-                            // *** DESPUÉS DE LA PRIMERA EJECUCIÓN, COMENTA LAS SIGUIENTES 3 LÍNEAS. ***
-                            if (clientDataList.isEmpty()) {
+                            // --- DESCOMENTAR ESTE BLOQUE LA PRIMERA VEZ PARA AÑADIR CLIENTES DE EJEMPLO ---
+                            // --- LUEGO DE LA PRIMERA EJECUCIÓN EXITOSA, VUELVE A COMENTARLO PARA EVITAR DUPLICADOS ---
+                            if (clientDataList.isEmpty()) { // Only add if the collection is empty
                                 addInitialClientsToFirestore();
                             }
-                            // *******************************************************************
+                            // ----------------------------------------------------------------------------------
 
                         } else {
                             Log.w(TAG, "Error al obtener documentos de clientes: ", task.getException());
@@ -213,23 +210,23 @@ public class SuperListaClientesActivity extends AppCompatActivity {
      * in loadClientsFromFirestore() to prevent duplicate entries.
      */
     private void addInitialClientsToFirestore() {
-        /*List<Cliente> initialClients = Arrays.asList(
-                new Cliente("Juan", "Pérez", "true", "12345678X", "1990-01-01", "juan.perez@example.com", "911223344", "Calle Falsa 123", ""),
-                new Cliente("María", "González", "true", "87654321Y", "1985-03-15", "maria.gonzalez@example.com", "922334455", "Av. Siempre Viva 45", ""),
-                new Cliente("Carlos", "Rodríguez", "false", "11223344Z", "1992-07-20", "carlos.rodriguez@example.com", "933445566", "Plaza Central 7", ""),
-                new Cliente("Laura", "Fernández", "true", "98765432A", "1998-11-25", "laura.fernandez@example.com", "944556677", "Paseo de las Flores 8", ""),
-                new Cliente("Pedro", "Sánchez", "false", "45678901B", "1980-04-10", "pedro.sanchez@example.com", "955667788", "Avenida del Sol 21", ""),
-                new Cliente("Ana", "López", "true", "23456789C", "1993-09-05", "ana.lopez@example.com", "966778899", "Calle de la Luna 10", ""),
-                new Cliente("David", "Gómez", "true", "78901234D", "1987-02-28", "david.gomez@example.com", "977889900", "Bulevar del Río 5", "")
+        List<Cliente> initialClients = Arrays.asList(
+                // Ajusta los constructores para usar tipoDocumento y numeroDocumento
+                new Cliente("Juan", "Pérez", "true", "DNI", "12345678", "1990-01-01", "juan.perez@example.com", "911223344", "Calle Falsa 123", ""),
+                new Cliente("María", "González", "true", "Pasaporte", "PA987654321", "1985-03-15", "maria.gonzalez@example.com", "922334455", "Av. Siempre Viva 45", ""),
+                new Cliente("Carlos", "Rodríguez", "false", "CE", "CE11223344", "1992-07-20", "carlos.rodriguez@example.com", "933445566", "Plaza Central 7", ""),
+                new Cliente("Laura", "Fernández", "true", "DNI", "98765432", "1998-11-25", "laura.fernandez@example.com", "944556677", "Paseo de las Flores 8", ""),
+                new Cliente("Pedro", "Sánchez", "false", "Pasaporte", "PA456789012", "1980-04-10", "pedro.sanchez@example.com", "955667788", "Avenida del Sol 21", ""),
+                new Cliente("Ana", "López", "true", "DNI", "23456789", "1993-09-05", "ana.lopez@example.com", "966778899", "Calle de la Luna 10", ""),
+                new Cliente("David", "Gómez", "true", "CE", "CE78901234", "1987-02-28", "david.gomez@example.com", "977889900", "Bulevar del Río 5", "")
         );
 
         // Use a Firestore batch to write all documents efficiently
         WriteBatch batch = db.batch();
 
         for (Cliente cliente : initialClients) {
-            // Firestore will auto-generate an ID for each new document
             DocumentReference docRef = db.collection("clientes").document();
-            batch.set(docRef, cliente); // Use set to create the document
+            batch.set(docRef, cliente);
         }
 
         batch.commit()
@@ -242,7 +239,7 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error al añadir clientes iniciales: ", e);
                     Toast.makeText(SuperListaClientesActivity.this, "Error al añadir clientes de ejemplo: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }); */
+                });
     }
 
 
@@ -279,9 +276,9 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         } else {
             String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
             for (Cliente cliente : clientDataList) {
-                // Search by name, surname, DNI, or email, similar to Admin search
+                // Search by name, surname, numeroDocumento, or email
                 if ((cliente.getNombres() + " " + cliente.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        cliente.getDni().toLowerCase(Locale.getDefault()).contains(searchLower) ||
+                        cliente.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) || // CAMBIO A getNumeroDocumento()
                         cliente.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower)) {
                     filteredClientList.add(cliente);
                 }
@@ -345,34 +342,33 @@ public class SuperListaClientesActivity extends AppCompatActivity {
             View clientItemView = inflater.inflate(R.layout.item_client_card, linearLayoutClientesContainer, false);
 
             TextView tvNombreCliente = clientItemView.findViewById(R.id.tvNombreCliente);
-            TextView tvEstado = clientItemView.findViewById(R.id.tvEstado); // Matches your item_client_card.xml
+            TextView tvEstado = clientItemView.findViewById(R.id.tvEstado);
+
             tvNombreCliente.setText(cliente.getNombres() + " " + cliente.getApellidos());
+
 
             boolean isActivado = Boolean.parseBoolean(cliente.getEstado());
             if (isActivado) {
                 tvEstado.setText("Estado: Activo");
                 tvEstado.setTextColor(ContextCompat.getColor(this, R.color.green_status));
-                // ivEstadoColor.setImageResource(R.drawable.circle_green); // Only if you kept ivEstadoColor in item_client_card.xml
             } else {
                 tvEstado.setText("Estado: Inactivo");
                 tvEstado.setTextColor(ContextCompat.getColor(this, R.color.red_status));
-                // ivEstadoColor.setImageResource(R.drawable.circle_red); // Only if you kept ivEstadoColor in item_client_card.xml
             }
-
 
             clientItemView.setOnClickListener(v -> {
                 Intent intent = new Intent(SuperListaClientesActivity.this, SuperDetallesClienteActivity.class);
                 intent.putExtra("client_firestore_id", cliente.getFirestoreId());
-                // Pass all relevant client data, similar to how Admin data is passed
                 intent.putExtra("client_nombres", cliente.getNombres());
                 intent.putExtra("client_apellidos", cliente.getApellidos());
                 intent.putExtra("client_estado", cliente.getEstado());
-                intent.putExtra("client_dni", cliente.getDni());
+                intent.putExtra("client_tipo_documento", cliente.getTipoDocumento()); // CAMBIO CLAVE: Pasar tipo de documento
+                intent.putExtra("client_numero_documento", cliente.getNumeroDocumento()); // CAMBIO CLAVE: Pasar número de documento
                 intent.putExtra("client_nacimiento", cliente.getNacimiento());
                 intent.putExtra("client_correo", cliente.getCorreo());
                 intent.putExtra("client_telefono", cliente.getTelefono());
                 intent.putExtra("client_direccion", cliente.getDireccion());
-                intent.putExtra("client_fotoPerfilUrl", cliente.getFotoPerfilUrl()); // Include photo URL
+                intent.putExtra("client_fotoPerfilUrl", cliente.getFotoPerfilUrl());
 
                 detailsResultLauncher.launch(intent);
             });
@@ -384,11 +380,9 @@ public class SuperListaClientesActivity extends AppCompatActivity {
     private void handleDetailsResult(Intent data) {
         String action = data.getStringExtra("action");
         String clientFirestoreId = data.getStringExtra("client_firestore_id");
-        // Also retrieve names if you want to use them in Toast/Log for clarity, like in Admin.
         String clientNombres = data.getStringExtra("client_nombres");
         String clientApellidos = data.getStringExtra("client_apellidos");
 
-        // Use an array to make statusMessage effectively final for the lambda expressions
         final String[] statusMessage = {""};
 
         Cliente clientToUpdate = null;
@@ -410,38 +404,37 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                     updates.put("estado", "false");
                     statusMessage[0] = "El cliente " + clientNombres + " " + clientApellidos + " ha sido desactivado.";
                     break;
-                case "actualizado": // Similar to Admin's "actualizado" case for general updates
+                case "actualizado": // Si viene de una actualización general en SuperDetallesClienteActivity
                     Log.d(TAG, "Client updated from details screen. Reloading data.");
                     statusMessage[0] = "El cliente " + clientNombres + " " + clientApellidos + " ha sido actualizado.";
-                    // No direct 'updates.put' for "actualizado" action here, as loadClientsFromFirestore() will refresh all.
+                    // No direct 'updates.put' here, loadClientsFromFirestore() will refresh all.
                     break;
             }
 
-            // Only attempt Firestore update if an actual status change or general update action occurred
-            if (!updates.isEmpty()) { // Only update if there's something to update
+            if (!updates.isEmpty()) {
                 db.collection("clientes").document(clientFirestoreId)
-                        .update(updates) // Use update instead of set to only modify specified fields
+                        .update(updates)
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Estado del cliente actualizado en Firestore: " + clientFirestoreId);
                             Toast.makeText(SuperListaClientesActivity.this, statusMessage[0], Toast.LENGTH_SHORT).show();
-                            showNotification("Actualización de Cliente", statusMessage[0]); // Re-added notification
-                            loadClientsFromFirestore(); // Reload to reflect changes
+                            showNotification("Actualización de Cliente", statusMessage[0]);
+                            loadClientsFromFirestore();
                         })
                         .addOnFailureListener(e -> {
                             Log.w(TAG, "Error al actualizar estado del cliente en Firestore", e);
                             Toast.makeText(SuperListaClientesActivity.this, "Error al actualizar estado del cliente.", Toast.LENGTH_SHORT).show();
-                            showNotification("Error de Actualización", "Falló la actualización del cliente " + clientNombres + " " + clientApellidos + "."); // Notification on failure
+                            showNotification("Error de Actualización", "Falló la actualización del cliente " + clientNombres + " " + clientApellidos + ".");
                         });
-            } else if ("actualizado".equals(action)) { // Handle "actualizado" if no direct updates were made
+            } else if ("actualizado".equals(action)) {
                 Toast.makeText(this, statusMessage[0], Toast.LENGTH_SHORT).show();
                 showNotification("Actualización de Cliente", statusMessage[0]);
-                loadClientsFromFirestore(); // Ensure list refreshes even if no explicit Firestore update for general "actualizado"
+                loadClientsFromFirestore(); // Ensure list refreshes even if no explicit Firestore update
             }
         } else {
             Log.w(TAG, "No se encontró el cliente con ID: " + clientFirestoreId + " para actualizar.");
             statusMessage[0] = "Error al actualizar cliente: Cliente no encontrado.";
-            Toast.makeText(this, statusMessage[0], Toast.LENGTH_SHORT).show(); // Show toast even if client not found locally
-            showNotification("Error de Actualización", statusMessage[0]); // Notify if client not found
+            Toast.makeText(this, statusMessage[0], Toast.LENGTH_SHORT).show();
+            showNotification("Error de Actualización", statusMessage[0]);
         }
     }
 }
