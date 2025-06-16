@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AdminTaxistaDetalles">
-    <!-- Titulo principal -->
+
     <TextView
-        android:id="@+id/tvCuenta"
+        android:id="@+id/tvTituloTaxistasDetalles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Taxistas"
+        android:text="Detalles del Taxista"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
@@ -19,9 +19,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Card con nombre y foto pequeña -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardPerfil"
+        android:id="@+id/cardPerfilAdmin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardCornerRadius="4dp"
@@ -29,7 +28,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvCuenta"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloTaxistasDetalles"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -47,6 +46,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvNombreAdmin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Christopher Terrones"
@@ -54,6 +54,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/tvRolAdmin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Administrador de Hotel"
@@ -61,6 +62,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/imgFotoAdmin"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/foto_admin"
@@ -69,9 +71,8 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Card con los datos principales -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardDatos"
+        android:id="@+id/cardDatosTaxista"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -79,7 +80,7 @@
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/cardPerfil"
+        app:layout_constraintTop_toBottomOf="@id/cardPerfilAdmin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -88,114 +89,112 @@
             android:layout_height="wrap_content"
             android:padding="12dp">
 
-            <!-- Datos -->
             <LinearLayout
-                android:id="@+id/layoutInfo"
+                android:id="@+id/layoutInfoTaxista"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Nombres"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="nombres"
+                    android:id="@+id/tvNombres"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Apellidos"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="apellidos"
+                    android:id="@+id/tvApellidos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Modo de Identificación"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Tipo de Documento"
+                    android:textStyle="bold" />
                 <TextView
-                    android:text="DNI"
+                    android:id="@+id/tvTipoDocumento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Número de Identidad"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="dni"
+                    android:id="@+id/tvNumeroDocumento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Fecha de nacimiento"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Fecha de Nacimiento"
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="nacimiento"
+                    android:id="@+id/tvNacimiento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Correo electrónico"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="correo"
+                    android:id="@+id/tvCorreo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Teléfono"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="telefono"
+                    android:id="@+id/tvTelefono"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Domicilio"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="direccion"
+                    android:id="@+id/tvDireccion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Placa de vehículo"
-                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:text="Placa de vehículo"
+                    android:textStyle="bold" />
                 <TextView
-                    android:tag="placa"
+                    android:id="@+id/tvPlaca"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
             </LinearLayout>
 
-
-            <!-- Contenedor para las fotos con sus títulos -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -203,7 +202,6 @@
                 android:orientation="vertical"
                 android:layout_marginStart="12dp">
 
-                <!-- Foto de perfil con título -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -216,11 +214,10 @@
                     android:id="@+id/fotoPrincipal"
                     android:layout_width="100dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/taxista1"
+                    android:src="@drawable/ic_user_placeholder"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Foto de vehículo con título -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -233,26 +230,12 @@
                     android:id="@+id/fotoVehiculo"
                     android:layout_width="100dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/carrito"
+                    android:src="@drawable/car_taxi_driver"
                     android:scaleType="centerCrop"/>
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Flecha -->
-    <ImageView
-        android:id="@+id/flecha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@null"
-        app:layout_constraintTop_toBottomOf="@id/cardDatos"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"/>
-
-    <!-- Boton de desactivar -->
-
-    <!-- Barra de navegación inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
@@ -263,5 +246,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

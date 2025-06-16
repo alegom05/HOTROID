@@ -1,51 +1,91 @@
 package com.example.hotroid.bean;
 
 public class Taxista {
-    private String nombre, estado, dni, nacimiento, correo, telefono, direccion, placa;
-    private int imagenResId, vehiculoImagenResId;
+    // Campos principales del taxista
+    private String nombres;
+    private String apellidos;
+    private String tipoDocumento;
+    private String numeroDocumento;
+    private String nacimiento;
+    private String correo;
+    private String telefono;
+    private String direccion;
+    private String fotoPerfilUrl;
 
-    public Taxista(String nombre, String estado, int imagenResId) {
-        this.nombre = nombre;
-        this.estado = estado;
-        this.imagenResId = imagenResId;
+    // Campos específicos del vehículo
+    private String placa;
+    private String fotoVehiculoUrl;
+
+    // Campos de estado
+    private String estado; // Puede ser "activado", "desactivado", "pendiente"
+    private String estadoDeViaje; // Puede ser "Asignado", "No Asignado", "En Camino", "Llego a Destino"
+
+    // Constructor vacío requerido por Firebase Firestore para deserialización
+    public Taxista() {
+        // Constructor vacío
     }
 
-    public Taxista(String nombre, String estado, int imagenResId, String dni, String nacimiento,
-                   String correo, String telefono, String direccion, String placa, int vehiculoImagenResId) {
-        this.nombre = nombre;
+    // Constructor simplificado (útil para listas o vistas previas)
+    public Taxista(String nombres, String apellidos, String estado, String fotoPerfilUrl, String estadoDeViaje) {
+        this.nombres = nombres;
+        this.apellidos = apellidos;
         this.estado = estado;
-        this.imagenResId = imagenResId;
-        this.dni = dni;
+        this.fotoPerfilUrl = fotoPerfilUrl;
+        this.estadoDeViaje = estadoDeViaje;
+    }
+
+    // Constructor completo para cuando tienes todos los datos
+    public Taxista(String nombres, String apellidos, String tipoDocumento, String numeroDocumento,
+                   String nacimiento, String correo, String telefono, String direccion,
+                   String fotoPerfilUrl, String placa, String fotoVehiculoUrl,
+                   String estado, String estadoDeViaje) { // Nuevo campo aquí
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.tipoDocumento = tipoDocumento;
+        this.numeroDocumento = numeroDocumento;
         this.nacimiento = nacimiento;
         this.correo = correo;
         this.telefono = telefono;
         this.direccion = direccion;
+        this.fotoPerfilUrl = fotoPerfilUrl;
         this.placa = placa;
-        this.vehiculoImagenResId = vehiculoImagenResId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
+        this.fotoVehiculoUrl = fotoVehiculoUrl;
         this.estado = estado;
+        this.estadoDeViaje = estadoDeViaje; // Asignación del nuevo campo
     }
 
-    public String getDni() {
-        return dni;
+    // --- Getters y Setters ---
+
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
     }
 
     public String getNacimiento() {
@@ -80,6 +120,14 @@ public class Taxista {
         this.direccion = direccion;
     }
 
+    public String getFotoPerfilUrl() {
+        return fotoPerfilUrl;
+    }
+
+    public void setFotoPerfilUrl(String fotoPerfilUrl) {
+        this.fotoPerfilUrl = fotoPerfilUrl;
+    }
+
     public String getPlaca() {
         return placa;
     }
@@ -88,20 +136,27 @@ public class Taxista {
         this.placa = placa;
     }
 
-    public int getImagenResId() {
-        return imagenResId;
+    public String getFotoVehiculoUrl() {
+        return fotoVehiculoUrl;
     }
 
-    public void setImagenResId(int imagenResId) {
-        this.imagenResId = imagenResId;
+    public void setFotoVehiculoUrl(String fotoVehiculoUrl) {
+        this.fotoVehiculoUrl = fotoVehiculoUrl;
     }
 
-    public int getVehiculoImagenResId() {
-        return vehiculoImagenResId;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setVehiculoImagenResId(int vehiculoImagenResId) {
-        this.vehiculoImagenResId = vehiculoImagenResId;
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getEstadoDeViaje() { // Nuevo getter
+        return estadoDeViaje;
+    }
+
+    public void setEstadoDeViaje(String estadoDeViaje) { // Nuevo setter
+        this.estadoDeViaje = estadoDeViaje;
     }
 }
-

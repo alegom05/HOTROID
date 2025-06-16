@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.hotroid.bean.Taxista;
 
 import java.util.List;
@@ -34,97 +36,75 @@ public class TaxistaAdapter extends RecyclerView.Adapter<TaxistaAdapter.TaxistaV
     @Override
     public void onBindViewHolder(@NonNull TaxistaViewHolder holder, int position) {
         Taxista taxista = lista.get(position);
-        holder.tvNombre.setText(taxista.getNombre());
-        holder.tvEstado.setText(taxista.getEstado());
-        holder.imgTaxista.setImageResource(taxista.getImagenResId());
+
+        if (holder.tvNombre != null) {
+            holder.tvNombre.setText(taxista.getNombres());
+        } else {
+            Log.e("TaxistaAdapter", "tvNombre es null en ViewHolder para posición: " + position);
+        }
+
+        // --- ¡CORRECCIÓN AQUÍ! Mostrar estadoDeViaje en tvEstado ---
+        if (holder.tvEstado != null) {
+            holder.tvEstado.setText(taxista.getEstadoDeViaje());
+        } else {
+            Log.e("TaxistaAdapter", "tvEstado es null en ViewHolder para posición: " + position);
+        }
+        // -----------------------------------------------------------
+
+
+        if (holder.imgTaxista != null) {
+            if (taxista.getFotoPerfilUrl() != null && !taxista.getFotoPerfilUrl().isEmpty()) {
+                Glide.with(context)
+                        .load(taxista.getFotoPerfilUrl())
+                        .placeholder(R.drawable.ic_user_placeholder)
+                        .error(R.drawable.ic_user_placeholder)
+                        .into(holder.imgTaxista);
+            } else {
+                holder.imgTaxista.setImageResource(R.drawable.ic_user_placeholder);
+                Log.w("TaxistaAdapter", "fotoPerfilUrl es null o vacía para " + taxista.getNombres());
+            }
+        } else {
+            Log.e("TaxistaAdapter", "imgTaxista es null en ViewHolder para posición: " + position);
+        }
+
 
         holder.itemView.setOnClickListener(v -> {
-            switch (taxista.getNombre()) {
-                case "Carlos Alvarez":
-                    taxista.setDni("72341235");
-                    taxista.setNacimiento("11 de agosto de 2000");
-                    taxista.setCorreo("c.alvarez@gmail.com");
-                    taxista.setTelefono("912356124");
-                    taxista.setDireccion("Av. Perú 243, San Martín de Porres");
-                    taxista.setPlaca("ABC-1234");
-                    taxista.setVehiculoImagenResId(R.drawable.carrito);
-                    break;
-                case "Alex Russo":
-                    taxista.setDni("82456122");
-                    taxista.setNacimiento("5 de febrero de 1998");
-                    taxista.setCorreo("alex.russo@gmail.com");
-                    taxista.setTelefono("987654321");
-                    taxista.setDireccion("Calle Luna 456, Surco");
-                    taxista.setPlaca("XYZ-5678");
-                    taxista.setVehiculoImagenResId(R.drawable.carrito);
-                    break;
-                case "Marcelo Vilca":
-                    taxista.setDni("74581236");
-                    taxista.setNacimiento("20 de junio de 1995");
-                    taxista.setCorreo("m.vilca@gmail.com");
-                    taxista.setTelefono("911223344");
-                    taxista.setDireccion("Jr. Cusco 123, San Juan de Lurigancho");
-                    taxista.setPlaca("MNO-2345");
-                    taxista.setVehiculoImagenResId(R.drawable.carrito);
-                    break;
-                case "Jaime Mora":
-                    taxista.setDni("75963218");
-                    taxista.setNacimiento("15 de marzo de 1990");
-                    taxista.setCorreo("jaime.mora@gmail.com");
-                    taxista.setTelefono("900112233");
-                    taxista.setDireccion("Av. Arequipa 1500, Miraflores");
-                    taxista.setPlaca("JKL-8765");
-                    taxista.setVehiculoImagenResId(R.drawable.carrito);
-                    break;
-                case "Arturo Delgado":
-                    taxista.setDni("73592614");
-                    taxista.setNacimiento("29 de abril de 1985");
-                    taxista.setCorreo("arturo.d@gmail.com");
-                    taxista.setTelefono("933445566");
-                    taxista.setDireccion("Av. Colonial 980, Cercado de Lima");
-                    taxista.setPlaca("TAX-1122");
-                    taxista.setVehiculoImagenResId(R.drawable.carrito);
-                    break;
-                case "Farith Puente":
-                    taxista.setDni("76893421");
-                    taxista.setNacimiento("9 de septiembre de 1992");
-                    taxista.setCorreo("f.puente@gmail.com");
-                    taxista.setTelefono("922334455");
-                    taxista.setDireccion("Pasaje El Sol 88, Los Olivos");
-                    taxista.setPlaca("FPT-4321");
-                    taxista.setVehiculoImagenResId(R.drawable.carrito);
-                    break;
-            }
             Intent intent = new Intent(context, AdminTaxistaDetalles.class);
-            intent.putExtra("nombre", taxista.getNombre());
-            intent.putExtra("estado", taxista.getEstado());
-            intent.putExtra("imagen", taxista.getImagenResId());
-            intent.putExtra("dni", taxista.getDni());
-            intent.putExtra("nacimiento", taxista.getNacimiento());
-            intent.putExtra("correo", taxista.getCorreo());
-            intent.putExtra("telefono", taxista.getTelefono());
-            intent.putExtra("direccion", taxista.getDireccion());
-            intent.putExtra("placa", taxista.getPlaca());
-            intent.putExtra("fotoVehiculo", taxista.getVehiculoImagenResId());
+
+            intent.putExtra("taxista_firestore_id", "some_id_if_from_firebase");
+            intent.putExtra("taxista_nombres", taxista.getNombres());
+            intent.putExtra("taxista_apellidos", taxista.getApellidos());
+            intent.putExtra("taxista_tipo_documento", taxista.getTipoDocumento());
+            intent.putExtra("taxista_numero_documento", taxista.getNumeroDocumento());
+            intent.putExtra("taxista_nacimiento", taxista.getNacimiento());
+            intent.putExtra("taxista_correo", taxista.getCorreo());
+            intent.putExtra("taxista_telefono", taxista.getTelefono());
+            intent.putExtra("taxista_direccion", taxista.getDireccion());
+            intent.putExtra("taxista_placa", taxista.getPlaca());
+            intent.putExtra("taxista_foto_perfil_url", taxista.getFotoPerfilUrl());
+            intent.putExtra("taxista_foto_vehiculo_url", taxista.getFotoVehiculoUrl());
+            intent.putExtra("taxista_estado", taxista.getEstado()); // Estado principal (activado, etc.)
+            intent.putExtra("taxista_estado_viaje", taxista.getEstadoDeViaje()); // El estado de viaje
+
             context.startActivity(intent);
         });
-
     }
 
     @Override
     public int getItemCount() {
         return lista.size();
     }
+
     public void actualizarLista(List<Taxista> nuevaLista) {
         lista.clear();
         lista.addAll(nuevaLista);
         notifyDataSetChanged();
     }
 
-
     static class TaxistaViewHolder extends RecyclerView.ViewHolder {
         ImageView imgTaxista;
-        TextView tvNombre, tvEstado;
+        TextView tvNombre;
+        TextView tvEstado;
 
         public TaxistaViewHolder(@NonNull View itemView) {
             super(itemView);
