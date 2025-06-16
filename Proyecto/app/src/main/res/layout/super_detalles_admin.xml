@@ -127,11 +127,23 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DNI"
+                        android:text="Tipo de Documento"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp" />
                     <TextView
-                        android:id="@+id/tvDniDetalle"
+                        android:id="@+id/tvTipoDocumentoDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Número de Documento"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+                    <TextView
+                        android:id="@+id/tvNumeroDocumentoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-" />
@@ -194,7 +206,7 @@
                         android:id="@+id/tvHotelDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                    android:text="-" />
+                        android:text="-" />
 
                     <Spinner
                         android:id="@+id/spSeleccionarHotel"

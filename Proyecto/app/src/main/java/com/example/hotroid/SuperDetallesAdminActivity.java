@@ -17,16 +17,17 @@ import androidx.cardview.widget.CardView;
 
 import com.example.hotroid.bean.Admin;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.bumptech.glide.Glide; // Importar Glide para cargar imágenes por URL
-import com.bumptech.glide.request.RequestOptions; // Importar RequestOptions para opciones de Glide
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 public class SuperDetallesAdminActivity extends AppCompatActivity {
 
-    private String adminFirestoreId; // Para almacenar el ID de Firestore
+    private String adminFirestoreId;
     private Admin currentAdmin;
     private TextView tvUsuarioDetalle;
-    private TextView tvApellidosDetalle; // Nuevo TextView para Apellidos
-    private TextView tvDniDetalle;
+    private TextView tvApellidosDetalle;
+    private TextView tvTipoDocumentoDetalle; // Nuevo TextView para Tipo de Documento
+    private TextView tvNumeroDocumentoDetalle; // Nuevo TextView para Número de Documento
     private TextView tvFechaNacimientoDetalle;
     private TextView tvCorreoDetalle;
     private TextView tvTelefonoDetalle;
@@ -46,32 +47,35 @@ public class SuperDetallesAdminActivity extends AppCompatActivity {
         setContentView(R.layout.super_detalles_admin);
 
         Intent incomingIntent = getIntent();
-        adminFirestoreId = incomingIntent.getStringExtra("admin_firestore_id"); // Obtener el ID de Firestore
+        adminFirestoreId = incomingIntent.getStringExtra("admin_firestore_id");
 
         String nombres = incomingIntent.getStringExtra("admin_nombres");
         String apellidos = incomingIntent.getStringExtra("admin_apellidos");
         String estado = incomingIntent.getStringExtra("admin_estado");
-        String dni = incomingIntent.getStringExtra("admin_dni"); // Este es el DNI real, no el Firestore ID
+        // CAMBIOS AQUÍ: Recibir tipoDocumento y numeroDocumento en lugar de dni
+        String tipoDocumento = incomingIntent.getStringExtra("admin_tipo_documento");
+        String numeroDocumento = incomingIntent.getStringExtra("admin_numero_documento");
         String nacimiento = incomingIntent.getStringExtra("admin_nacimiento");
         String correo = incomingIntent.getStringExtra("admin_correo");
         String telefono = incomingIntent.getStringExtra("admin_telefono");
         String direccion = incomingIntent.getStringExtra("admin_direccion");
         String hotelAsignado = incomingIntent.getStringExtra("admin_hotelAsignado");
-        String fotoPerfilUrl = incomingIntent.getStringExtra("admin_fotoPerfilUrl"); // Obtener la URL de la foto
+        String fotoPerfilUrl = incomingIntent.getStringExtra("admin_fotoPerfilUrl");
 
-        // CORREGIDO: Llamada al constructor de Admin sin el 'int fotoPerfil'
-        currentAdmin = new Admin(nombres, apellidos, estado, dni, nacimiento, correo, telefono, direccion, hotelAsignado);
-        currentAdmin.setFirestoreId(adminFirestoreId); // Asignar el ID de Firestore al objeto Admin
-        currentAdmin.setFotoPerfilUrl(fotoPerfilUrl); // Asignar la URL de la foto al objeto Admin
-
+        // CAMBIOS AQUÍ: Usar el constructor de Admin con los nuevos campos
+        currentAdmin = new Admin(nombres, apellidos, estado, tipoDocumento, numeroDocumento, nacimiento, correo, telefono, direccion, hotelAsignado);
+        currentAdmin.setFirestoreId(adminFirestoreId);
+        currentAdmin.setFotoPerfilUrl(fotoPerfilUrl);
 
         // Referenciar los TextViews y botones
         tvNombreAdminActual = findViewById(R.id.tvNombreAdminActual);
         tvNombreAdminActual.setText("Pedro Bustamante"); // Se mantiene para el Superadmin
 
         tvUsuarioDetalle = findViewById(R.id.tvUsuarioDetalle);
-        tvApellidosDetalle = findViewById(R.id.tvApellidosDetalle); // Inicializar nuevo TextView
-        tvDniDetalle = findViewById(R.id.tvDniDetalle);
+        tvApellidosDetalle = findViewById(R.id.tvApellidosDetalle);
+        // CAMBIOS AQUÍ: Referenciar los nuevos TextViews
+        tvTipoDocumentoDetalle = findViewById(R.id.tvTipoDocumentoDetalle);
+        tvNumeroDocumentoDetalle = findViewById(R.id.tvNumeroDocumentoDetalle);
         tvFechaNacimientoDetalle = findViewById(R.id.tvFechaNacimientoDetalle);
         tvCorreoDetalle = findViewById(R.id.tvCorreoDetalle);
         tvTelefonoDetalle = findViewById(R.id.tvTelefonoDetalle);
@@ -117,8 +121,7 @@ public class SuperDetallesAdminActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                // Para volver a la lista de usuarios, simplemente finaliza esta actividad
-                setResult(RESULT_CANCELED); // No hay cambio si solo se navega de vuelta
+                setResult(RESULT_CANCELED);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_eventos) {
@@ -139,25 +142,26 @@ public class SuperDetallesAdminActivity extends AppCompatActivity {
         if (currentAdmin != null) {
             tvUsuarioDetalle.setText(currentAdmin.getNombres());
             tvApellidosDetalle.setText(currentAdmin.getApellidos());
-            tvDniDetalle.setText(currentAdmin.getDni()); // Mostrar el DNI real del admin
+            // CAMBIOS AQUÍ: Mostrar tipoDocumento y numeroDocumento
+            tvTipoDocumentoDetalle.setText(currentAdmin.getTipoDocumento());
+            tvNumeroDocumentoDetalle.setText(currentAdmin.getNumeroDocumento());
+
             tvFechaNacimientoDetalle.setText(currentAdmin.getNacimiento());
             tvCorreoDetalle.setText(currentAdmin.getCorreo());
             tvTelefonoDetalle.setText(currentAdmin.getTelefono());
             tvDomicilioDetalle.setText(currentAdmin.getDireccion());
             tvHotelDetalle.setText(currentAdmin.getHotelAsignado());
 
-            // CORREGIDO: Cargar la imagen usando Glide desde la URL
             if (currentAdmin.getFotoPerfilUrl() != null && !currentAdmin.getFotoPerfilUrl().isEmpty()) {
                 Glide.with(this)
                         .load(currentAdmin.getFotoPerfilUrl())
-                        .apply(RequestOptions.circleCropTransform()) // Opcional: hacerla circular
-                        .placeholder(R.drawable.ic_user_placeholder) // Un placeholder mientras carga
-                        .error(R.drawable.ic_user_error) // Imagen en caso de error de carga
+                        .apply(RequestOptions.circleCropTransform())
+                        .placeholder(R.drawable.ic_user_placeholder)
+                        .error(R.drawable.ic_user_error)
                         .into(fotoPrincipal);
             } else {
-                fotoPrincipal.setImageResource(R.drawable.ic_user_placeholder); // Imagen por defecto si no hay URL
+                fotoPrincipal.setImageResource(R.drawable.ic_user_placeholder);
             }
-
 
             boolean isActivado = Boolean.parseBoolean(currentAdmin.getEstado());
 
@@ -220,13 +224,18 @@ public class SuperDetallesAdminActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     private void returnResult(String action, String firestoreId, String adminNombres, String adminApellidos, String hotelAsignado) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("action", action);
-        resultIntent.putExtra("admin_firestore_id", firestoreId); // Enviar el ID de Firestore
+        resultIntent.putExtra("admin_firestore_id", firestoreId);
         resultIntent.putExtra("admin_nombres", adminNombres);
         resultIntent.putExtra("admin_apellidos", adminApellidos);
+        // CAMBIOS AQUÍ: También debes enviar el tipo y número de documento si son relevantes al regresar.
+        // Si no se modifican en esta vista, no es estrictamente necesario enviarlos de vuelta,
+        // pero es una buena práctica si la vista que llama podría necesitarlos actualizados.
+        resultIntent.putExtra("admin_tipo_documento", currentAdmin.getTipoDocumento());
+        resultIntent.putExtra("admin_numero_documento", currentAdmin.getNumeroDocumento());
+
         if (hotelAsignado != null) {
             resultIntent.putExtra("nuevo_hotel_asignado", hotelAsignado);
         }

@@ -7,7 +7,8 @@ public class Admin {
     private String nombres;
     private String apellidos;
     private String estado; // "true" or "false"
-    private String dni;
+    private String tipoDocumento; // Nuevo campo para el tipo de documento (DNI, Pasaporte, Carnet de Extranjería)
+    private String numeroDocumento; // Nuevo campo para el número de documento
     private String nacimiento;
     private String correo;
     private String telefono;
@@ -20,14 +21,14 @@ public class Admin {
         // Default constructor required for calls to DataSnapshot.toObject(Admin.class)
     }
 
-    // Constructor with 9 arguments (for initial creation without a photo URL,
-    // where the URL will be set after image upload)
-    public Admin(String nombres, String apellidos, String estado, String dni, String nacimiento,
-                 String correo, String telefono, String direccion, String hotelAsignado) {
+    // Constructor con 9 argumentos (adaptado para los nuevos campos de documento)
+    public Admin(String nombres, String apellidos, String estado, String tipoDocumento, String numeroDocumento,
+                 String nacimiento, String correo, String telefono, String direccion, String hotelAsignado) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.estado = estado;
-        this.dni = dni;
+        this.tipoDocumento = tipoDocumento; // Asignar el tipo de documento
+        this.numeroDocumento = numeroDocumento; // Asignar el número de documento
         this.nacimiento = nacimiento;
         this.correo = correo;
         this.telefono = telefono;
@@ -36,14 +37,14 @@ public class Admin {
         this.fotoPerfilUrl = ""; // Initialize empty, will be populated after Storage upload
     }
 
-    // Constructor with 10 arguments (including fotoPerfilUrl, useful if you're
-    // populating with existing URLs or generating them directly)
-    public Admin(String nombres, String apellidos, String estado, String dni, String nacimiento,
-                 String correo, String telefono, String direccion, String hotelAsignado, String fotoPerfilUrl) {
+    // Constructor con 10 argumentos (incluyendo fotoPerfilUrl, adaptado para los nuevos campos de documento)
+    public Admin(String nombres, String apellidos, String estado, String tipoDocumento, String numeroDocumento,
+                 String nacimiento, String correo, String telefono, String direccion, String hotelAsignado, String fotoPerfilUrl) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.estado = estado;
-        this.dni = dni;
+        this.tipoDocumento = tipoDocumento; // Asignar el tipo de documento
+        this.numeroDocumento = numeroDocumento; // Asignar el número de documento
         this.nacimiento = nacimiento;
         this.correo = correo;
         this.telefono = telefono;
@@ -54,8 +55,7 @@ public class Admin {
 
     // Getters and Setters
 
-    @Exclude // Important: This prevents Firestore from trying to save 'firestoreId' as a field within the document,
-    // as it's already the document's ID.
+    @Exclude
     public String getFirestoreId() {
         return firestoreId;
     }
@@ -88,12 +88,22 @@ public class Admin {
         this.estado = estado;
     }
 
-    public String getDni() {
-        return dni;
+    // Nuevos Getters y Setters para tipoDocumento
+    public String getTipoDocumento() {
+        return tipoDocumento;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    // Nuevos Getters y Setters para numeroDocumento
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
     }
 
     public String getNacimiento() {

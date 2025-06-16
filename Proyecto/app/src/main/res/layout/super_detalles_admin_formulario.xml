@@ -114,7 +114,8 @@
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etNombre" android:layout_width="match_parent"
+                android:id="@+id/etNombre"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Ingrese los nombres"
                 android:layout_marginBottom="16dp"
@@ -128,7 +129,8 @@
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etApellido" android:layout_width="match_parent"
+                android:id="@+id/etApellido"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Ingrese los apellidos"
                 android:layout_marginBottom="16dp"
@@ -156,7 +158,8 @@
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etNumDocumento" android:layout_width="match_parent"
+                android:id="@+id/etNumDocumento"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Ingrese el número"
                 android:inputType="number"
@@ -188,7 +191,8 @@
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etCorreo" android:layout_width="match_parent"
+                android:id="@+id/etCorreo"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Ingrese el correo"
                 android:inputType="textEmailAddress"
@@ -245,7 +249,8 @@
                 android:id="@+id/btnRegistrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" android:backgroundTint="#009688"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="#009688"
                 android:text="Registrar" />
 
         </LinearLayout>
@@ -262,4 +267,3 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_super" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-

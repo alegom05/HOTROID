@@ -22,13 +22,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView; // Make sure this is used if cardPerfil is present
+import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList; // Changed from Arrays.asList to allow modification if needed
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -140,13 +140,15 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
             btnRegistrar.setOnClickListener(v -> mostrarDialogoConfirmacion());
         }
 
-
-        // Configuración del CardView de perfil (Revisar si es necesario en un formulario de REGISTRO)
+        // Configuración del CardView de perfil (este cardview es de ejemplo,
+        // no debería ser interactuable en un formulario de registro)
         CardView cardPerfil = findViewById(R.id.cardPerfil);
         if (cardPerfil != null) {
+            // Se recomienda eliminar el setOnClickListener o cambiar su comportamiento
+            // ya que este formulario es para REGISTRAR, no para ver el perfil del superadmin.
             cardPerfil.setOnClickListener(v -> {
-                Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperCuentaActivity.class);
-                startActivity(intent);
+                // Aquí podrías no hacer nada o simplemente loggear que fue clickeado
+                Log.d(TAG, "Card de perfil clickeado en formulario de registro. Esto no debería redirigir.");
             });
         }
 
@@ -161,7 +163,13 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
                     finish(); // To prevent stacking activities
                     return true;
                 } else if (itemId == R.id.nav_usuarios) {
-                    return true; // Already on this activity or a related one (list of admins)
+                    // Si ya estamos en una actividad relacionada con usuarios (este formulario),
+                    // podríamos simplemente cerrar este formulario y regresar a la lista de admins.
+                    // O si quieres que nav_usuarios siempre abra la lista, haz esto:
+                    Intent intent = new Intent(SuperDetallesAdminFormularioActivity.this, SuperListaAdminActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return true;
                 } else if (itemId == R.id.nav_eventos) {
                     startActivity(new Intent(SuperDetallesAdminFormularioActivity.this, SuperEventosActivity.class));
                     finish(); // To prevent stacking activities
@@ -226,8 +234,8 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         // At this point, fields have been validated by mostrarDialogoConfirmacion()
         String nombre = etNombre.getText().toString().trim();
         String apellido = etApellido.getText().toString().trim();
-        // String tipoDocumento = spTipoDocumento.getSelectedItem().toString(); // Not directly used in Admin bean, but available if needed
-        String numDocumento = etNumDocumento.getText().toString().trim();
+        String tipoDocumento = spTipoDocumento.getSelectedItem().toString(); // Obtener el tipo de documento
+        String numeroDocumento = etNumDocumento.getText().toString().trim(); // Obtener el número de documento
         String fechaNacimiento = etFechaNacimiento.getText().toString().trim();
         String correo = etCorreo.getText().toString().trim();
         String telefono = etTelefono.getText().toString().trim();
@@ -238,7 +246,8 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
         resultIntent.putExtra("action", "registrado");
         resultIntent.putExtra("admin_nombres", nombre);
         resultIntent.putExtra("admin_apellidos", apellido);
-        resultIntent.putExtra("admin_dni", numDocumento); // Assuming DNI is the document number
+        resultIntent.putExtra("admin_tipo_documento", tipoDocumento); // <--- CAMBIO CLAVE: Pasar tipoDocumento
+        resultIntent.putExtra("admin_numero_documento", numeroDocumento); // <--- CAMBIO CLAVE: Pasar numeroDocumento
         resultIntent.putExtra("admin_nacimiento", fechaNacimiento);
         resultIntent.putExtra("admin_correo", correo);
         resultIntent.putExtra("admin_telefono", telefono);
@@ -280,19 +289,15 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
             etApellido.setError(null);
         }
 
-        if (spTipoDocumento.getSelectedItemPosition() == 0) { // Check if default "Seleccione tipo" is selected
-            TextView errorText = (TextView) spTipoDocumento.getSelectedView();
-            if (errorText != null) {
-                errorText.setError("Seleccione un tipo de documento");
-            }
+        // Validación para Spinner de Tipo de Documento
+        if (spTipoDocumento.getSelectedItemPosition() == 0) { // "Seleccione tipo"
+            // Mejorar la forma de mostrar error para spinners
+            Toast.makeText(this, "Por favor, seleccione un tipo de documento.", Toast.LENGTH_SHORT).show();
+            // Puedes intentar cambiar el color del texto del spinner si quieres,
+            // pero setError en el TextView interno es más común para EditText.
+            // Para spinners, un Toast es una forma efectiva de notificar al usuario.
             isValid = false;
-        } else {
-            TextView errorText = (TextView) spTipoDocumento.getSelectedView();
-            if (errorText != null) {
-                errorText.setError(null);
-            }
         }
-
 
         if (etNumDocumento.getText().toString().trim().isEmpty()) {
             etNumDocumento.setError("Este campo es obligatorio");
@@ -332,17 +337,11 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
             etDireccion.setError(null);
         }
 
-        if (spHotel.getSelectedItemPosition() == 0) { // Check if default "Seleccione hotel" is selected
-            TextView errorText = (TextView) spHotel.getSelectedView();
-            if (errorText != null) {
-                errorText.setError("Seleccione un hotel");
-            }
+        // Validación para Spinner de Hotel
+        if (spHotel.getSelectedItemPosition() == 0) { // "Seleccione hotel"
+            // Mejorar la forma de mostrar error para spinners
+            Toast.makeText(this, "Por favor, seleccione un hotel.", Toast.LENGTH_SHORT).show();
             isValid = false;
-        } else {
-            TextView errorText = (TextView) spHotel.getSelectedView();
-            if (errorText != null) {
-                errorText.setError(null);
-            }
         }
 
         // Optional: Make photo selection mandatory

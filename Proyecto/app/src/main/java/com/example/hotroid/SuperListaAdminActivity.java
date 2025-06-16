@@ -32,7 +32,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide; // Assuming you use Glide for image loading
+import com.bumptech.glide.Glide;
 import com.example.hotroid.bean.Admin;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,7 +54,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map; // Import Map for update operations if needed
+import java.util.Map;
 
 public class SuperListaAdminActivity extends AppCompatActivity {
 
@@ -128,28 +128,25 @@ public class SuperListaAdminActivity extends AppCompatActivity {
 
         setupSearchFunctionality();
 
-        // Assuming your super_lista_admins.xml also has these elements,
-        // similar to super_lista_clientes.xml's top card structure.
-        TextView tvTitulo = findViewById(R.id.tvTitulo); // Assuming it has this ID
-        TextView tvNombre = findViewById(R.id.tvNombre); // Assuming it has this ID for admin's name
-        TextView tvRol = findViewById(R.id.tvRol);       // Assuming it has this ID for admin's role
-        ImageView imagenPerfil = findViewById(R.id.imagenPerfil); // Assuming it has this ID for admin's image
+        TextView tvTitulo = findViewById(R.id.tvTitulo);
+        TextView tvNombre = findViewById(R.id.tvNombre);
+        TextView tvRol = findViewById(R.id.tvRol);
+        ImageView imagenPerfil = findViewById(R.id.imagenPerfil);
 
         if (tvTitulo != null) {
-            tvTitulo.setText("Lista de Administradores"); // Or whatever title you prefer
+            tvTitulo.setText("Lista de Administradores");
         }
         if (tvNombre != null) {
-            tvNombre.setText("Pedro Bustamante"); // Example Admin Name
+            tvNombre.setText("Pedro Bustamante");
         }
         if (tvRol != null) {
-            tvRol.setText("Administrador General"); // Example Admin Role
+            tvRol.setText("Administrador General");
         }
         if (imagenPerfil != null) {
             imagenPerfil.setImageResource(R.drawable.foto_admin); // Make sure this drawable exists
         }
 
-
-        CardView cardSuper = findViewById(R.id.cardSuper); // Using cardSuper for consistency
+        CardView cardSuper = findViewById(R.id.cardSuper);
         if (cardSuper != null) {
             cardSuper.setOnClickListener(v -> {
                 Intent intent = new Intent(SuperListaAdminActivity.this, SuperCuentaActivity.class);
@@ -157,7 +154,7 @@ public class SuperListaAdminActivity extends AppCompatActivity {
             });
         }
 
-        Button botonRegistrar = findViewById(R.id.button_regist); // Button to add new admins
+        Button botonRegistrar = findViewById(R.id.button_regist);
         if (botonRegistrar != null) {
             botonRegistrar.setOnClickListener(v -> {
                 Intent intent = new Intent(SuperListaAdminActivity.this, SuperDetallesAdminFormularioActivity.class);
@@ -194,7 +191,7 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         linearLayoutAdminsContainer.removeAllViews();
 
         db.collection("admins")
-                .orderBy("nombres", Query.Direction.ASCENDING) // Added ordering for consistent display
+                .orderBy("nombres", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -208,14 +205,16 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                         renderAdminList();
                         Log.d(TAG, "Admins cargados desde Firestore: " + adminDataList.size());
 
-                        // This block of code is only for populating the database if it's empty.
-                        // *** UNCOMMENT AND RUN ONCE IF YOUR FIREBASE DATABASE IS EMPTY.
-                        // *** THEN COMMENT IT OUT AGAIN.
+                        // --- ADICIÓN DE ADMINISTRADORES DE PRUEBA ---
+                        // Comentar esta sección después de la primera ejecución exitosa
+                        // para evitar duplicados en cada inicio de la actividad.
                         /*
                         if (adminDataList.isEmpty()) {
                             addInitialAdminsToFirestore();
                         }
-                        */
+                        // ------------------------------------------
+
+                         */
 
                     } else {
                         Log.w(TAG, "Error al obtener documentos: ", task.getException());
@@ -224,14 +223,26 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 });
     }
 
-    // This method is for populating initial data - use with caution!
     private void addInitialAdminsToFirestore() {
         List<Admin> initialAdmins = Arrays.asList(
-                new Admin("Ana", "García", "true", "12345678A", "1990-05-15", "ana.garcia@example.com", "600111222", "Calle Falsa 123", "Hotel Sol"),
-                new Admin("Luis", "Martínez", "true", "87654321B", "1988-11-20", "luis.martinez@example.com", "600333444", "Av. Siempre Viva 45", "Hotel Luna"),
-                new Admin("Marta", "Pérez", "false", "11223344C", "1995-03-10", "marta.perez@example.com", "600555666", "Plaza Mayor 7", "Hotel Estrella")
+                new Admin("Ana", "García", "true", "DNI", "12345678A", "1990-05-15", "ana.garcia@example.com", "600111222", "Calle Falsa 123", "Hotel Sol"),
+                new Admin("Luis", "Martínez", "true", "Pasaporte", "PAS987654", "1988-11-20", "luis.martinez@example.com", "600333444", "Av. Siempre Viva 45", "Hotel Luna"),
+                new Admin("Marta", "Pérez", "false", "DNI", "11223344C", "1995-03-10", "marta.perez@example.com", "600555666", "Plaza Mayor 7", "Hotel Estrella"),
+                new Admin("Carlos", "Ruiz", "true", "Carnet de Extranjería", "CE0012345", "1985-07-22", "carlos.ruiz@example.com", "600777888", "Jr. Unión 100", "Hotel Mar"),
+                new Admin("Sofía", "Herrera", "false", "DNI", "99887766D", "1992-01-30", "sofia.herrera@example.com", "600999000", "Av. La Paz 250", "Hotel Cielo")
         );
 
+        // Subir cada administrador con la imagen por defecto
+        for (Admin admin : initialAdmins) {
+            Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.foto_admin); // Usa tu drawable existente
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            defaultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // Puedes usar PNG si es necesario
+            byte[] imageData = baos.toByteArray();
+
+            // Mensaje para la notificación
+            final String notificationMessage = "Administrador de prueba " + admin.getNombres() + " " + admin.getApellidos() + " registrado.";
+            uploadImageAndSaveAdmin(admin, imageData, notificationMessage);
+        }
     }
 
 
@@ -270,8 +281,9 @@ public class SuperListaAdminActivity extends AppCompatActivity {
             for (Admin admin : adminDataList) {
                 if ((admin.getNombres() + " " + admin.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
                         admin.getHotelAsignado().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        admin.getDni().toLowerCase(Locale.getDefault()).contains(searchLower) || // Added DNI search
-                        admin.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower)) { // Added Email search
+                        admin.getTipoDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) || // Buscar por tipo de documento
+                        admin.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) || // Buscar por número de documento
+                        admin.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower)) {
                     filteredAdminList.add(admin);
                 }
             }
@@ -330,11 +342,12 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         for (int i = 0; i < filteredAdminList.size(); i++) {
             Admin admin = filteredAdminList.get(i);
             LayoutInflater inflater = LayoutInflater.from(this);
-            View adminItemView = inflater.inflate(R.layout.item_admin_card, linearLayoutAdminsContainer, false); // Make sure you have item_admin_card.xml
+            View adminItemView = inflater.inflate(R.layout.item_admin_card, linearLayoutAdminsContainer, false);
 
             TextView tvAdminName = adminItemView.findViewById(R.id.tvAdminName);
             TextView tvAdminHotel = adminItemView.findViewById(R.id.tvAdminHotel);
             TextView tvAdminStatus = adminItemView.findViewById(R.id.tvAdminStatus);
+
 
             tvAdminName.setText(admin.getNombres() + " " + admin.getApellidos());
 
@@ -356,13 +369,15 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 intent.putExtra("admin_nombres", admin.getNombres());
                 intent.putExtra("admin_apellidos", admin.getApellidos());
                 intent.putExtra("admin_estado", admin.getEstado());
-                intent.putExtra("admin_dni", admin.getDni());
+                // CAMBIOS AQUÍ: Pasar tipoDocumento y numeroDocumento
+                intent.putExtra("admin_tipo_documento", admin.getTipoDocumento());
+                intent.putExtra("admin_numero_documento", admin.getNumeroDocumento());
                 intent.putExtra("admin_nacimiento", admin.getNacimiento());
                 intent.putExtra("admin_correo", admin.getCorreo());
                 intent.putExtra("admin_telefono", admin.getTelefono());
                 intent.putExtra("admin_direccion", admin.getDireccion());
                 intent.putExtra("admin_hotelAsignado", admin.getHotelAsignado());
-                intent.putExtra("admin_fotoPerfilUrl", admin.getFotoPerfilUrl()); // Pass the URL
+                intent.putExtra("admin_fotoPerfilUrl", admin.getFotoPerfilUrl());
 
                 detailsResultLauncher.launch(intent);
             });
@@ -376,7 +391,9 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         if ("registrado".equals(action)) {
             String adminNombres = data.getStringExtra("admin_nombres");
             String adminApellidos = data.getStringExtra("admin_apellidos");
-            String dni = data.getStringExtra("admin_dni");
+            // CAMBIOS AQUÍ: Obtener tipoDocumento y numeroDocumento del Intent
+            String tipoDocumento = data.getStringExtra("admin_tipo_documento");
+            String numeroDocumento = data.getStringExtra("admin_numero_documento");
             String estado = data.getStringExtra("admin_estado");
             String nacimiento = data.getStringExtra("admin_nacimiento");
             String correo = data.getStringExtra("admin_correo");
@@ -389,7 +406,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                     adminNombres,
                     adminApellidos,
                     estado,
-                    dni,
+                    tipoDocumento, // Pasar tipoDocumento
+                    numeroDocumento, // Pasar numeroDocumento
                     nacimiento,
                     correo,
                     telefono,
@@ -397,9 +415,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                     hotelAsignado
             );
 
-            // Using final local variable for statusMessage to be accessed in lambda
             final String finalStatusMessage = "El administrador de hotel " + adminNombres + " " + adminApellidos + " ha sido registrado correctamente.";
-            uploadImageAndSaveAdmin(nuevoAdmin, adminFotoPerfilBytes, finalStatusMessage); // Pass message to be used in notifications
+            uploadImageAndSaveAdmin(nuevoAdmin, adminFotoPerfilBytes, finalStatusMessage);
         }
     }
 
@@ -410,7 +427,11 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         String adminApellidos = data.getStringExtra("admin_apellidos");
         String nuevoHotelAsignado = data.getStringExtra("nuevo_hotel_asignado");
 
-        // Use an array to make it effectively final and mutable within the scope.
+        // Aquí también podrías recibir tipoDocumento y numeroDocumento si la vista de detalles los modifica,
+        // pero por ahora solo se usará para mostrar, no para modificar desde esta actividad de lista.
+        // String tipoDocumento = data.getStringExtra("admin_tipo_documento");
+        // String numeroDocumento = data.getStringExtra("admin_numero_documento");
+
         final String[] statusMessage = {""};
 
         Admin adminToUpdate = null;
@@ -434,53 +455,54 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                     }
                     break;
                 case "desactivado":
-                    updates.put("hotelAsignado", "-"); // Clear hotel assignment on deactivation
+                    updates.put("hotelAsignado", "-");
                     updates.put("estado", "false");
                     statusMessage[0] = "El administrador de hotel " + adminNombres + " " + adminApellidos + " ha sido desactivado y su hotel desasignado.";
                     break;
-                case "actualizado": // Handle general updates from SuperDetallesAdminActivity
+                case "actualizado":
                     Log.d(TAG, "Admin updated from details screen. Reloading data.");
                     statusMessage[0] = "El administrador " + adminNombres + " " + adminApellidos + " ha sido actualizado.";
-                    // For "actualizado", the loadAdminsFromFirestore() call below will refresh everything.
-                    // Specific updates from the form would be handled within handleFormResult or by passing more data.
+                    // Si la vista de detalles permite la edición de tipoDocumento y numeroDocumento,
+                    // deberías incluirlos en el Intent de regreso y actualizar `updates` aquí.
+                    // updates.put("tipoDocumento", tipoDocumento);
+                    // updates.put("numeroDocumento", numeroDocumento);
                     break;
             }
 
-            // Only attempt Firestore update if there are actual updates to push
-            if (!updates.isEmpty()) { // For 'activado'/'desactivado'
+            if (!updates.isEmpty()) {
                 db.collection("admins").document(adminFirestoreId)
                         .update(updates)
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Estado del administrador actualizado en Firestore: " + adminFirestoreId);
                             Toast.makeText(SuperListaAdminActivity.this, statusMessage[0], Toast.LENGTH_SHORT).show();
-                            showNotification("Actualización de Administrador", statusMessage[0]); // Notification for status change
-                            loadAdminsFromFirestore(); // Reload to reflect changes
+                            showNotification("Actualización de Administrador", statusMessage[0]);
+                            loadAdminsFromFirestore();
                         })
                         .addOnFailureListener(e -> {
                             Log.w(TAG, "Error al actualizar estado del administrador en Firestore", e);
                             Toast.makeText(SuperListaAdminActivity.this, "Error al actualizar estado del administrador.", Toast.LENGTH_SHORT).show();
-                            showNotification("Error de Actualización", "Falló la actualización del administrador " + adminNombres + " " + adminApellidos + "."); // Notification on failure
+                            showNotification("Error de Actualización", "Falló la actualización del administrador " + adminNombres + " " + adminApellidos + ".");
                         });
-            } else if ("actualizado".equals(action)) { // If action is "actualizado" but no specific updates map was built
+            } else if ("actualizado".equals(action)) {
                 // This block is for general updates where the entire admin object might have changed in the details form.
                 // We just rely on a reload and show a general notification/toast.
                 Toast.makeText(SuperListaAdminActivity.this, statusMessage[0], Toast.LENGTH_SHORT).show();
                 showNotification("Actualización de Administrador", statusMessage[0]);
-                loadAdminsFromFirestore(); // Always reload to ensure latest data is shown
+                loadAdminsFromFirestore();
             }
         } else {
             Log.w(TAG, "No se encontró el administrador con ID: " + adminFirestoreId + " para actualizar.");
             statusMessage[0] = "Error al actualizar administrador: Administrador no encontrado.";
             Toast.makeText(this, statusMessage[0], Toast.LENGTH_SHORT).show();
-            showNotification("Error de Actualización", statusMessage[0]); // Notify if admin not found
+            showNotification("Error de Actualización", statusMessage[0]);
         }
     }
 
 
-    // Modified to accept a message for the notification/toast after successful save.
     private void uploadImageAndSaveAdmin(Admin admin, @Nullable byte[] imageData, final String notificationMessage) {
         if (imageData != null && imageData.length > 0) {
-            String fileName = "admin_photos/" + admin.getDni() + "_" + System.currentTimeMillis() + ".jpg";
+            // CAMBIO AQUÍ: Usar numeroDocumento en el nombre del archivo si quieres que sea más descriptivo
+            String fileName = "admin_photos/" + admin.getNumeroDocumento() + "_" + System.currentTimeMillis() + ".jpg";
             StorageReference imageRef = storage.getReference().child(fileName);
 
             UploadTask uploadTask = imageRef.putBytes(imageData);
@@ -488,63 +510,57 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     String imageUrl = uri.toString();
                     admin.setFotoPerfilUrl(imageUrl);
-                    saveAdminToFirestore(admin, notificationMessage); // Pass message
+                    saveAdminToFirestore(admin, notificationMessage);
                     Log.d(TAG, "Imagen subida a Storage. URL: " + imageUrl);
                 }).addOnFailureListener(e -> {
                     Log.w(TAG, "Error al obtener la URL de descarga de la imagen", e);
                     Toast.makeText(this, "Error al obtener URL de imagen. Guardando admin sin foto.", Toast.LENGTH_SHORT).show();
-                    showNotification("Error de Imagen", "No se pudo obtener la URL de la imagen de perfil."); // Notification on image URL error
+                    showNotification("Error de Imagen", "No se pudo obtener la URL de la imagen de perfil.");
                     admin.setFotoPerfilUrl("");
-                    saveAdminToFirestore(admin, notificationMessage); // Still try to save admin
+                    saveAdminToFirestore(admin, notificationMessage);
                 });
             }).addOnFailureListener(e -> {
                 Log.w(TAG, "Error al subir la imagen a Storage", e);
                 Toast.makeText(this, "Error al subir la imagen. Guardando admin sin foto.", Toast.LENGTH_SHORT).show();
-                showNotification("Error de Imagen", "No se pudo subir la imagen de perfil."); // Notification on image upload error
+                showNotification("Error de Imagen", "No se pudo subir la imagen de perfil.");
                 admin.setFotoPerfilUrl("");
-                saveAdminToFirestore(admin, notificationMessage); // Still try to save admin
+                saveAdminToFirestore(admin, notificationMessage);
             });
         } else {
             Log.d(TAG, "No hay imagen para subir o la imagen es nula/vacía. Guardando admin sin foto.");
             admin.setFotoPerfilUrl("");
-            saveAdminToFirestore(admin, notificationMessage); // Save admin without photo
+            saveAdminToFirestore(admin, notificationMessage);
         }
     }
 
-    // Modified to accept a message for the notification/toast after successful save.
     private void saveAdminToFirestore(Admin admin, final String notificationMessage) {
         db.collection("admins")
                 .add(admin)
                 .addOnSuccessListener(documentReference -> {
-                    admin.setFirestoreId(documentReference.getId()); // Set the ID after it's generated by Firestore
+                    admin.setFirestoreId(documentReference.getId());
                     Log.d(TAG, "Admin guardado en Firestore con ID: " + documentReference.getId());
-                    Toast.makeText(this, notificationMessage, Toast.LENGTH_SHORT).show(); // Show success toast
-                    showNotification("Administrador Registrado", notificationMessage); // Show success notification
-                    loadAdminsFromFirestore(); // Reload list
+                    Toast.makeText(this, notificationMessage, Toast.LENGTH_SHORT).show();
+                    showNotification("Administrador Registrado", notificationMessage);
+                    loadAdminsFromFirestore();
                 })
                 .addOnFailureListener(e -> {
                     Log.w(TAG, "Error al guardar admin en Firestore", e);
                     Toast.makeText(this, "Error al guardar admin en la base de datos.", Toast.LENGTH_SHORT).show();
-                    showNotification("Error de Registro", "Falló el registro del administrador."); // Notification on save failure
+                    showNotification("Error de Registro", "Falló el registro del administrador.");
                 });
     }
 
-    // This method is primarily for internal updates where the whole object is set.
-    // In handleDetailsResult, we use .update() which is more efficient for partial changes.
-    // You can keep this if you have other scenarios that need to fully replace the document.
     private void updateAdminInFirestore(Admin admin) {
         if (admin.getFirestoreId() != null && !admin.getFirestoreId().isEmpty()) {
             db.collection("admins").document(admin.getFirestoreId())
-                    .set(admin) // Use set() to fully replace the document
+                    .set(admin)
                     .addOnSuccessListener(aVoid -> {
                         Log.d(TAG, "Admin actualizado en Firestore: " + admin.getNombres() + " " + admin.getApellidos());
-                        // Toast and Notification handled in handleDetailsResult.
                         loadAdminsFromFirestore();
                     })
                     .addOnFailureListener(e -> {
                         Log.w(TAG, "Error al actualizar admin en Firestore", e);
                         Toast.makeText(SuperListaAdminActivity.this, "Error al actualizar admin.", Toast.LENGTH_SHORT).show();
-                        // Notification for failure might be good here too, if not handled upstream.
                     });
         } else {
             Log.w(TAG, "No se puede actualizar Admin sin un ID de Firestore (firestoreId nulo o vacío).");
