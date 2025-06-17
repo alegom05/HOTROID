@@ -77,13 +77,6 @@ public class MisReservasUser extends AppCompatActivity {
         return resultado;
     }
 
-    //data falsa de las reservas con los hoteles
-    /*hotelList.add(new Hotel("R001","Grand Hotel Madrid", 4.5f, "S/.145/noche","Madrid", R.drawable.hotel_decameron));
-        hotelList.add(new Hotel("R002","Barcelona Royal Suite", 5.0f, "S/.210/noche","Barcelona", R.drawable.hotel_aranwa));
-        hotelList.add(new Hotel("R003","Valencia Beach Resort", 4.0f, "S/.125/noche","Valencia", R.drawable.hotel_boca_raton));
-        hotelList.add(new Hotel("R004","Sevilla Boutique Hotel", 3.5f, "S/.95/noche", "Sevilla",R.drawable.hotel_oro_verde));
-        hotelList.add(new Hotel("R005","Granada Historic Palace", 4.8f, "S/.180/noche", "Inglaterra", R.drawable.hotel_sheraton));
-*/
     public static List<Hotel> obtenerHoteles() {
         List<Hotel> hoteles = new ArrayList<>();
         hoteles.add(new Hotel("H1", "Hotel Central", 4.5f, "$80", "Argentina", "High St 10, Old Town", R.drawable.hotel_decameron));
@@ -94,9 +87,14 @@ public class MisReservasUser extends AppCompatActivity {
 
     public static List<Reserva> obtenerReservas() {
         List<Reserva> reservas = new ArrayList<>();
-        reservas.add(new Reserva("R1", "H1", "U1", 2, 3, 1, "2025-05-01", "2025-05-03", "pasado", 160));
-        reservas.add(new Reserva("R2", "H2", "U1", 1, 2, 0, "2025-06-10", "2025-06-12", "activo", 240));
-        reservas.add(new Reserva("R3", "H3", "U1", 1, 2, 2, "2025-04-05", "2025-04-08", "cancelado", 0));
+        // Corrección: Añadir los nuevos 8 parámetros al constructor de Reserva
+        // Parámetros: checkInRealizado, checkOutRealizado, cobros_adicionales, estaCancelado, fechaCancelacion, idValoracion, roomNumber, tieneValoracion
+        reservas.add(new Reserva("R1", "H1", "U1", 2, 3, 1, "2025-05-01", "2025-05-03", "pasado", 160,
+                true, true, 20, false, "2025-05-03", "V1", "101", true));
+        reservas.add(new Reserva("R2", "H2", "U1", 1, 2, 0, "2025-06-10", "2025-06-12", "activo", 240,
+                false, false, 0, false, null, null, "205", false));
+        reservas.add(new Reserva("R3", "H3", "U1", 1, 2, 2, "2025-04-05", "2025-04-08", "cancelado", 0,
+                false, false, 0, true, "2025-04-01", null, null, false));
         return reservas;
     }
 
@@ -105,7 +103,6 @@ public class MisReservasUser extends AppCompatActivity {
         bottomNavigation.setSelectedItemId(R.id.nav_reservas_user); // selecciona el tab actual
 
         bottomNavigation.setOnItemSelectedListener(item -> {
-            //Fragment selectedFragment = null;
             int itemId = item.getItemId();
             Intent intent = new Intent(this, ClienteActivity.class);
 
@@ -128,6 +125,4 @@ public class MisReservasUser extends AppCompatActivity {
             return false;
         });
     }
-
-
 }

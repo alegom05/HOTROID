@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/hotroid/bean/Cliente.java
 package com.example.hotroid.bean;
 
 import com.google.firebase.firestore.Exclude; // Import for Firestore exclusion
@@ -76,3 +75,4 @@ public class Cliente {
         this.firestoreId = firestoreId;
     }
 }
+
