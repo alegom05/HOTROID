@@ -1,3 +1,4 @@
+// app/src/main/java/com/example/hotroid/bean/Servicios.java
 package com.example.hotroid.bean;
 
 import android.net.Uri;
@@ -6,30 +7,38 @@ import java.util.ArrayList;
 public class Servicios {
     private String nombre;
     private String descripcion;
-    // --- KEY CHANGE: precio is now a double ---
     private double precio;
-    // ------------------------------------------
     private String horario;
     private ArrayList<String> imagenes;
     private boolean habilitado = true;
-    private String documentId;
+    private String documentId; // Este campo puede ser null en Firestore si no lo guardas explícitamente
 
     public Servicios() {
         // Required empty constructor for Firestore deserialization
     }
 
-    // --- Update constructor parameter type for precio ---
+    // Constructor que deberías usar para añadir datos si no tienes imágenes o si las tienes en la lista de Strings
     public Servicios(String nombre, String descripcion, double precio, String horario, ArrayList<String> imagenes) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.precio = precio; // Use double here
+        this.precio = precio;
         this.horario = horario;
         this.imagenes = imagenes;
         this.habilitado = true;
     }
 
-    // --- Getters and Setters (ensure they match the new type) ---
+    // Si también usas un constructor sin la lista de imágenes, asegúrate de tenerlo
+    public Servicios(String nombre, String descripcion, double precio, String horario) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.horario = horario;
+        this.imagenes = new ArrayList<>(); // Inicializa la lista vacía
+        this.habilitado = true;
+    }
 
+
+    // --- Getters and Setters ---
     public String getDocumentId() {
         return documentId;
     }
@@ -54,7 +63,6 @@ public class Servicios {
         this.descripcion = descripcion;
     }
 
-    // --- Getter and Setter for precio (now double) ---
     public double getPrecio() {
         return precio;
     }
@@ -62,7 +70,6 @@ public class Servicios {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
-    // --------------------------------------------------
 
     public String getHorario() {
         return horario;
