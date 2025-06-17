@@ -1,6 +1,9 @@
 package com.example.hotroid.bean;
 
 public class Taxista {
+    // Nuevo campo para almacenar el ID del documento en Firestore
+    private String firestoreId;
+
     // Campos principales del taxista
     private String nombres;
     private String apellidos;
@@ -26,6 +29,8 @@ public class Taxista {
     }
 
     // Constructor simplificado (útil para listas o vistas previas)
+    // No se incluye firestoreId aquí porque este constructor se usaría para crear objetos
+    // que aún no han sido guardados en Firestore o para vistas temporales.
     public Taxista(String nombres, String apellidos, String estado, String fotoPerfilUrl, String estadoDeViaje) {
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -35,10 +40,12 @@ public class Taxista {
     }
 
     // Constructor completo para cuando tienes todos los datos
+    // Nota: El firestoreId NO se pasa en este constructor porque se genera en la base de datos
+    // cuando se guarda el objeto por primera vez. Se asigna con setFirestoreId() después.
     public Taxista(String nombres, String apellidos, String tipoDocumento, String numeroDocumento,
                    String nacimiento, String correo, String telefono, String direccion,
                    String fotoPerfilUrl, String placa, String fotoVehiculoUrl,
-                   String estado, String estadoDeViaje) { // Nuevo campo aquí
+                   String estado, String estadoDeViaje) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.tipoDocumento = tipoDocumento;
@@ -51,10 +58,19 @@ public class Taxista {
         this.placa = placa;
         this.fotoVehiculoUrl = fotoVehiculoUrl;
         this.estado = estado;
-        this.estadoDeViaje = estadoDeViaje; // Asignación del nuevo campo
+        this.estadoDeViaje = estadoDeViaje;
     }
 
     // --- Getters y Setters ---
+
+    // Getter y Setter para firestoreId
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
 
     public String getNombres() {
         return nombres;
@@ -152,11 +168,11 @@ public class Taxista {
         this.estado = estado;
     }
 
-    public String getEstadoDeViaje() { // Nuevo getter
+    public String getEstadoDeViaje() {
         return estadoDeViaje;
     }
 
-    public void setEstadoDeViaje(String estadoDeViaje) { // Nuevo setter
+    public void setEstadoDeViaje(String estadoDeViaje) {
         this.estadoDeViaje = estadoDeViaje;
     }
 }

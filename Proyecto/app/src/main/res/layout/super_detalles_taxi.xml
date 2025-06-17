@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".SuperDetallesTaxiActivadoActivity">
+    tools:context=".SuperDetallesTaxiActivity">
 
     <TextView
         android:id="@+id/tvTituloDetalleTaxi"
@@ -56,7 +57,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Administrador General"
+                    android:text="Super Administrador"
                     android:textStyle="italic" />
             </LinearLayout>
 
@@ -79,7 +80,8 @@
         app:layout_constraintTop_toBottomOf="@id/cardPerfil"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnDesactivar">
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        android:paddingBottom="12dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardDatos"
@@ -106,7 +108,7 @@
                     <TextView android:id="@+id/tvNombresDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Victor Manuel"
+                        tools:text="Victor Manuel"
                         />
 
                     <TextView android:text="Apellidos"
@@ -118,10 +120,10 @@
                     <TextView android:id="@+id/tvApellidosDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Díaz Arbulú"
+                        tools:text="Díaz Arbulú"
                         />
 
-                    <TextView android:text="Modo de Identificación"
+                    <TextView android:text="Tipo de Documento"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp"
                         android:layout_width="wrap_content"
@@ -130,7 +132,7 @@
                     <TextView android:id="@+id/tvTipoDocumentoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DNI"/>
+                        tools:text="DNI"/>
 
                     <TextView android:text="Número de Identidad"
                         android:textStyle="bold"
@@ -141,7 +143,7 @@
                     <TextView android:id="@+id/tvNumDocumentoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="72341235"
+                        tools:text="72341235"
                         />
 
                     <TextView android:text="Fecha de nacimiento"
@@ -153,7 +155,7 @@
                     <TextView android:id="@+id/tvFechaNacimientoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="11 de agosto de 2000"
+                        tools:text="11 de agosto de 2000"
                         />
 
                     <TextView android:text="Correo electrónico"
@@ -165,7 +167,7 @@
                     <TextView android:id="@+id/tvCorreoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="victor.diaz@gmail.com"
+                        tools:text="victor.diaz@gmail.com"
                         />
 
                     <TextView android:text="Teléfono"
@@ -177,7 +179,7 @@
                     <TextView android:id="@+id/tvTelefonoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="912356124"
+                        tools:text="912356124"
                         />
 
                     <TextView android:text="Domicilio"
@@ -189,9 +191,8 @@
                     <TextView android:id="@+id/tvDomicilioDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Av. Perú 243, San Martín de Porres "
+                        tools:text="Av. Perú 243, San Martín de Porres "
                         />
-
                     <TextView android:text="Placa de vehículo"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp"
@@ -201,11 +202,12 @@
                     <TextView android:id="@+id/tvPlacaVehiculoDetalle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ABC-1234"
+                        tools:text="ABC-1234"
                         />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layoutImages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -224,7 +226,7 @@
                         android:id="@+id/fotoPrincipal"
                         android:layout_width="100dp"
                         android:layout_height="120dp"
-                        android:src="@drawable/foto_admin"
+                        android:src="@drawable/ic_user_placeholder"
                         android:scaleType="centerCrop"
                         android:layout_marginBottom="16dp"/>
 
@@ -243,20 +245,61 @@
                         android:src="@drawable/carrito"
                         android:scaleType="centerCrop"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutActionButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@id/layoutInfo"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center_horizontal">
+
+                    <Button
+                        android:id="@+id/btnAprobar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aprobar Taxista"
+                        android:backgroundTint="#009688"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btnRechazar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rechazar Taxista"
+                        android:backgroundTint="@color/red_status"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btnDesactivar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Desactivar"
+                        android:backgroundTint="@color/red_status"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btnActivar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Activar"
+                        android:backgroundTint="#009688"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
     </ScrollView>
-
-    <Button
-        android:id="@+id/btnDesactivar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Desactivar"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="12dp"
-        android:backgroundTint="#009688"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

@@ -207,9 +207,8 @@
         <activity android:name=".SuperDetallesAdminActivity" />
         <activity android:name=".SuperDetallesAdminFormularioActivity" />
         <activity android:name=".SuperListaTaxisActivity" />
-        <activity android:name=".SuperDetallesTaxiActivadoActivity" />
-        <activity android:name=".SuperDetallesTaxiDesactivadoActivity" />
-        <activity android:name=".SuperDetallesTaxiPendienteActivity" />
+        <activity android:name=".SuperDetallesTaxiActivity" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
