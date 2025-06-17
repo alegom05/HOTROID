@@ -1,3 +1,4 @@
+// app/src/main/java/com/example/hotroid/bean/Cliente.java
 package com.example.hotroid.bean;
 
 import com.google.firebase.firestore.Exclude; // Import for Firestore exclusion
@@ -20,7 +21,6 @@ public class Cliente {
     }
 
     // Constructor con todos los campos (excepto firestoreId, que se asigna después de guardar)
-    // ADAPTADO: Ahora incluye tipoDocumento y numeroDocumento
     public Cliente(String nombres, String apellidos, String estado, String tipoDocumento, String numeroDocumento,
                    String nacimiento, String correo, String telefono, String direccion, String fotoPerfilUrl) {
         this.nombres = nombres;

@@ -3,34 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="4dp"
-    android:paddingTop="4dp"
-    android:gravity="center_vertical">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+
+    android:showDividers="middle">
 
     <TextView
-        android:id="@+id/tvItemServicioNombre"
+        android:id="@+id/tvServiceNombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:text="Nombre del Servicio"
+        android:text="Nombre Servicio"
         android:textSize="14sp"
-        android:gravity="center" />
+        android:gravity="center_horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"/>
 
     <TextView
-        android:id="@+id/tvItemCantidad"
+        android:id="@+id/tvCantidadTotal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:text="0"
         android:textSize="14sp"
-        android:gravity="center" />
+        android:gravity="center_horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"/>
 
     <TextView
-        android:id="@+id/tvItemMontoTotal"
+        android:id="@+id/tvMontoTotal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:text="0.00"
         android:textSize="14sp"
-        android:gravity="center" />
+        android:gravity="center_horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"/>
 </LinearLayout>

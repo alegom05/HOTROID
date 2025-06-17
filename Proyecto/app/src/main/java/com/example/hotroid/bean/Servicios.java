@@ -1,7 +1,5 @@
-// app/src/main/java/com/example/hotroid/bean/Servicios.java
 package com.example.hotroid.bean;
 
-import android.net.Uri;
 import java.util.ArrayList;
 
 public class Servicios {
@@ -11,40 +9,27 @@ public class Servicios {
     private String horario;
     private ArrayList<String> imagenes;
     private boolean habilitado = true;
-    private String documentId; // Este campo puede ser null en Firestore si no lo guardas explícitamente
+    private String documentId; // Campo para almacenar el ID de Firestore
 
-    public Servicios() {
-        // Required empty constructor for Firestore deserialization
-    }
+    // Constructor vacío requerido por Firestore
+    public Servicios() {}
 
-    // Constructor que deberías usar para añadir datos si no tienes imágenes o si las tienes en la lista de Strings
+    // Constructores con parámetros
     public Servicios(String nombre, String descripcion, double precio, String horario, ArrayList<String> imagenes) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.horario = horario;
         this.imagenes = imagenes;
-        this.habilitado = true;
     }
 
-    // Si también usas un constructor sin la lista de imágenes, asegúrate de tenerlo
-    public Servicios(String nombre, String descripcion, double precio, String horario) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.horario = horario;
-        this.imagenes = new ArrayList<>(); // Inicializa la lista vacía
-        this.habilitado = true;
-    }
-
-
-    // --- Getters and Setters ---
+    // Getters y setters (asegúrate de tener todos)
     public String getDocumentId() {
         return documentId;
     }
 
     public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+        this.documentId = documentId; // Setter crítico para el ID
     }
 
     public String getNombre() {

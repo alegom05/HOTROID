@@ -1,78 +1,50 @@
-// app/src/main/java/com/example/hotroid/bean/VentaServicio.java
 package com.example.hotroid.bean;
 
-import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.DocumentId; // Import for mapping Firestore document ID
 import java.util.Date;
 
 public class VentaServicio {
-    private String id; // Document ID from Firestore
-    private String idServicio; // Reference to the service document ID
+    @DocumentId // This annotation maps the Firestore document ID to this field
+    private String id; // Represents the Firestore document ID
+    private String idServicio;
+    private String idCliente; // Added client ID
     private int cantidad;
-    private double precioVentaUnitario; // Price at the time of sale
+    private double precioUnitario;
     private double totalVenta;
-    @ServerTimestamp // Automatically set by Firestore when the document is created/updated
     private Date fechaVenta;
 
-    public VentaServicio() {
-        // Public no-argument constructor needed for Firestore deserialization
-    }
+    public VentaServicio() {} // Required no-argument constructor for Firestore
 
-    public VentaServicio(String id, String idServicio, int cantidad, double precioVentaUnitario, double totalVenta, Date fechaVenta) {
-        this.id = id;
+    // Full constructor including idCliente
+    public VentaServicio(String id, String idServicio, String idCliente, int cantidad, double precioUnitario, double totalVenta, Date fechaVenta) {
+        this.id = id; // Can be null when creating a new object
         this.idServicio = idServicio;
+        this.idCliente = idCliente;
         this.cantidad = cantidad;
-        this.precioVentaUnitario = precioVentaUnitario;
+        this.precioUnitario = precioUnitario;
         this.totalVenta = totalVenta;
         this.fechaVenta = fechaVenta;
     }
 
-    // --- Getters ---
-    public String getId() {
-        return id;
-    }
+    // Getters and Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getIdServicio() {
-        return idServicio;
-    }
+    public String getIdServicio() { return idServicio; }
+    public void setIdServicio(String idServicio) { this.idServicio = idServicio; }
 
-    public int getCantidad() {
-        return cantidad;
-    }
+    public String getIdCliente() { return idCliente; }
+    public void setIdCliente(String idCliente) { this.idCliente = idCliente; }
 
-    public double getPrecioVentaUnitario() {
-        return precioVentaUnitario;
-    }
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 
-    public double getTotalVenta() {
-        return totalVenta;
-    }
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
 
-    public Date getFechaVenta() {
-        return fechaVenta;
-    }
+    public double getTotalVenta() { return totalVenta; }
+    public void setTotalVenta(double totalVenta) { this.totalVenta = totalVenta; }
 
-    // --- Setters (needed for Firestore deserialization) ---
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setIdServicio(String idServicio) {
-        this.idServicio = idServicio;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public void setPrecioVentaUnitario(double precioVentaUnitario) {
-        this.precioVentaUnitario = precioVentaUnitario;
-    }
-
-    public void setTotalVenta(double totalVenta) {
-        this.totalVenta = totalVenta;
-    }
-
-    public void setFechaVenta(Date fechaVenta) {
-        this.fechaVenta = fechaVenta;
-    }
+    public Date getFechaVenta() { return fechaVenta; }
+    public void setFechaVenta(Date fechaVenta) { this.fechaVenta = fechaVenta; }
 }

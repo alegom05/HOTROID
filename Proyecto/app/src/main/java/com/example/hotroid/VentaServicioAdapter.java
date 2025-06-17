@@ -1,5 +1,4 @@
-// app/src/main/java/com/example/hotroid/adapters/VentaServicioAdapter.java
-package com.example.hotroid;
+package com.example.hotroid; // Make sure this package matches your project
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotroid.bean.VentaServicioConsolidado; // Correct import for your bean
+import com.example.hotroid.bean.VentaServicioConsolidado;
 
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class VentaServicioAdapter extends RecyclerView.Adapter<VentaServicioAdapter.VentaServicioViewHolder> {
 
@@ -22,19 +21,16 @@ public class VentaServicioAdapter extends RecyclerView.Adapter<VentaServicioAdap
         this.ventasList = ventasList;
     }
 
-    /**
-     * Updates the data in the adapter and notifies the RecyclerView to refresh.
-     * @param newVentasList The new list of consolidated sales data.
-     */
-    public void updateData(List<VentaServicioConsolidado> newVentasList) {
-        this.ventasList = newVentasList;
-        notifyDataSetChanged(); // Notify adapter that the dataset has changed
+    public void updateData(List<VentaServicioConsolidado> newList) {
+        this.ventasList.clear();
+        this.ventasList.addAll(newList);
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public VentaServicioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout for a single item in the RecyclerView
+        // *** IMPORTANT: INFLATE THE CORRECT LAYOUT FOR THE TABLE ROW ***
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_venta_servicio, parent, false);
         return new VentaServicioViewHolder(view);
     }
@@ -42,31 +38,32 @@ public class VentaServicioAdapter extends RecyclerView.Adapter<VentaServicioAdap
     @Override
     public void onBindViewHolder(@NonNull VentaServicioViewHolder holder, int position) {
         VentaServicioConsolidado venta = ventasList.get(position);
-
-        // Bind data to the TextViews in the ViewHolder
-        holder.tvServicioNombre.setText(venta.getNombreServicio());
-        holder.tvCantidad.setText(String.valueOf(venta.getCantidadTotal()));
-        // Format the total amount to two decimal places and display
-        holder.tvMontoTotal.setText(String.format(Locale.getDefault(), "%.2f", venta.getMontoTotal()));
+        holder.bind(venta);
     }
 
     @Override
     public int getItemCount() {
-        return ventasList.size(); // Return the total number of items in the list
+        return ventasList.size();
     }
 
-    // ViewHolder class to hold references to the views for each item
     public static class VentaServicioViewHolder extends RecyclerView.ViewHolder {
-        TextView tvServicioNombre;
-        TextView tvCantidad;
-        TextView tvMontoTotal;
+        private TextView tvServiceNombre;
+        private TextView tvCantidadTotal;
+        private TextView tvMontoTotal;
+        private DecimalFormat df = new DecimalFormat("0.00"); // For formatting currency
 
         public VentaServicioViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Find views by their IDs from the item_venta_servicio.xml layout
-            tvServicioNombre = itemView.findViewById(R.id.tvItemServicioNombre);
-            tvCantidad = itemView.findViewById(R.id.tvItemCantidad);
-            tvMontoTotal = itemView.findViewById(R.id.tvItemMontoTotal);
+            // *** IMPORTANT: FIND THE CORRECT VIEWS BY THEIR IDS IN item_venta_servicio_row.xml ***
+            tvServiceNombre = itemView.findViewById(R.id.tvServiceNombre);
+            tvCantidadTotal = itemView.findViewById(R.id.tvCantidadTotal);
+            tvMontoTotal = itemView.findViewById(R.id.tvMontoTotal);
+        }
+
+        public void bind(VentaServicioConsolidado venta) {
+            tvServiceNombre.setText(venta.getNombreServicio());
+            tvCantidadTotal.setText(String.valueOf(venta.getCantidadTotal()));
+            tvMontoTotal.setText(df.format(venta.getMontoTotal())); // Format the amount
         }
     }
 }

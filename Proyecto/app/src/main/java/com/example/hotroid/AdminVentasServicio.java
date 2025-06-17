@@ -175,106 +175,89 @@ public class AdminVentasServicio extends AppCompatActivity {
 
 
     private void loadVentasServicioData() {
-        // Calcula el rango de fechas para el mes seleccionado
+        // Configuración de fechas
         Calendar startOfMonth = (Calendar) selectedCalendar.clone();
         startOfMonth.set(Calendar.DAY_OF_MONTH, 1);
         startOfMonth.set(Calendar.HOUR_OF_DAY, 0);
-        startOfMonth.set(Calendar.MINUTE, 0);
-        startOfMonth.set(Calendar.SECOND, 0);
-        startOfMonth.set(Calendar.MILLISECOND, 0);
         Date startDate = startOfMonth.getTime();
 
         Calendar endOfMonth = (Calendar) selectedCalendar.clone();
         endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
         endOfMonth.set(Calendar.HOUR_OF_DAY, 23);
-        endOfMonth.set(Calendar.MINUTE, 59);
-        endOfMonth.set(Calendar.SECOND, 59);
-        endOfMonth.set(Calendar.MILLISECOND, 999);
         Date endDate = endOfMonth.getTime();
 
-        Log.d(TAG, "Cargando datos para el rango: " + startDate + " a " + endDate);
-
-        Map<String, VentaServicioConsolidado> consolidadoMap = new HashMap<>();
-        Map<String, String> servicioNombres = new HashMap<>();
-
-        // Paso 1: Obtener todos los servicios para tener sus nombres
+        // 1. Primero cargamos los servicios para tener los nombres
         db.collection("servicios")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Servicios servicio = document.toObject(Servicios.class);
-                                // CORRECCIÓN CLAVE: Usar el ID del documento de Firestore directamente como clave
-                                // en lugar del campo 'documentId' del objeto si es null en Firestore.
-                                servicioNombres.put(document.getId(), servicio.getNombre());
-                            }
-                            Log.d(TAG, "Nombres de servicios cargados: " + servicioNombres.size());
+                .addOnCompleteListener(serviciosTask -> {
+                    if (serviciosTask.isSuccessful()) {
+                        Map<String, String> servicioNombres = new HashMap<>();
 
-                            // Paso 2: Obtener las ventas de servicios filtradas por fecha
-                            db.collection("ventas_servicios")
-                                    .whereGreaterThanOrEqualTo("fechaVenta", startDate)
-                                    .whereLessThanOrEqualTo("fechaVenta", endDate)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                if (task.getResult().isEmpty()) {
-                                                    Log.d(TAG, "No hay ventas para el mes seleccionado.");
-                                                    Toast.makeText(AdminVentasServicio.this, "No hay ventas para el mes seleccionado.", Toast.LENGTH_SHORT).show();
-                                                    ventasConsolidadas.clear();
-                                                    adapter.updateData(ventasConsolidadas);
-                                                    return;
-                                                }
+                        for (QueryDocumentSnapshot servicioDoc : serviciosTask.getResult()) {
+                            Servicios servicio = servicioDoc.toObject(Servicios.class);
+                            servicio.setDocumentId(servicioDoc.getId()); // Asignamos el ID correctamente
+                            servicioNombres.put(servicioDoc.getId(), servicio.getNombre());
 
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    VentaServicio venta = document.toObject(VentaServicio.class);
-                                                    venta.setId(document.getId());
+                            Log.d(TAG, "Servicio cargado - ID: " + servicioDoc.getId() +
+                                    ", Nombre: " + servicio.getNombre());
+                        }
 
-                                                    String idServicio = venta.getIdServicio();
-                                                    String nombreServicio = servicioNombres.getOrDefault(idServicio, "Servicio Desconocido");
+                        // 2. Ahora cargamos las ventas filtradas por fecha
+                        db.collection("ventas_servicios")
+                                .whereGreaterThanOrEqualTo("fechaVenta", startDate)
+                                .whereLessThanOrEqualTo("fechaVenta", endDate)
+                                .get()
+                                .addOnCompleteListener(ventasTask -> {
+                                    if (ventasTask.isSuccessful()) {
+                                        Map<String, VentaServicioConsolidado> consolidadoMap = new HashMap<>();
 
-                                                    if (consolidadoMap.containsKey(idServicio)) {
-                                                        VentaServicioConsolidado consolidadoExistente = consolidadoMap.get(idServicio);
-                                                        consolidadoMap.put(idServicio, new VentaServicioConsolidado(
-                                                                nombreServicio,
-                                                                consolidadoExistente.getCantidadTotal() + venta.getCantidad(),
-                                                                consolidadoExistente.getMontoTotal() + venta.getTotalVenta()
-                                                        ));
-                                                    } else {
-                                                        consolidadoMap.put(idServicio, new VentaServicioConsolidado(
-                                                                nombreServicio,
-                                                                venta.getCantidad(),
-                                                                venta.getTotalVenta()
-                                                        ));
-                                                    }
-                                                }
+                                        for (QueryDocumentSnapshot ventaDoc : ventasTask.getResult()) {
+                                            // Debug: Mostrar datos crudos de la venta
+                                            Log.d(TAG, "Venta encontrada - ID Servicio: " +
+                                                    ventaDoc.getString("idServicio") +
+                                                    ", Fecha: " + ventaDoc.getDate("fechaVenta") +
+                                                    ", Cantidad: " + ventaDoc.getLong("cantidad"));
 
-                                                ventasConsolidadas.clear();
-                                                ventasConsolidadas.addAll(consolidadoMap.values());
+                                            String idServicio = ventaDoc.getString("idServicio");
+                                            String nombreServicio = servicioNombres.getOrDefault(idServicio, "Servicio Desconocido");
+                                            long cantidad = ventaDoc.getLong("cantidad");
+                                            double totalVenta = ventaDoc.getDouble("totalVenta");
 
-                                                // Ordenar de menor a mayor por Monto Total
-                                                Collections.sort(ventasConsolidadas, Comparator.comparingDouble(VentaServicioConsolidado::getMontoTotal));
-
-                                                adapter.updateData(ventasConsolidadas);
-                                                Log.d(TAG, "Datos de ventas consolidados y ordenados. Total de items: " + ventasConsolidadas.size());
-
+                                            if (consolidadoMap.containsKey(idServicio)) {
+                                                VentaServicioConsolidado existente = consolidadoMap.get(idServicio);
+                                                existente.setCantidadTotal(existente.getCantidadTotal() + cantidad);
+                                                existente.setMontoTotal(existente.getMontoTotal() + totalVenta);
                                             } else {
-                                                Log.w(TAG, "Error al cargar ventas de servicios: ", task.getException());
-                                                Toast.makeText(AdminVentasServicio.this, "Error al cargar ventas: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                consolidadoMap.put(idServicio, new VentaServicioConsolidado(
+                                                        nombreServicio,
+                                                        cantidad,
+                                                        totalVenta
+                                                ));
                                             }
                                         }
-                                    });
-                        } else {
-                            Log.w(TAG, "Error al cargar nombres de servicios: ", task.getException());
-                            Toast.makeText(AdminVentasServicio.this, "Error al cargar servicios: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+
+                                        // Actualizar RecyclerView
+                                        ventasConsolidadas.clear();
+                                        ventasConsolidadas.addAll(consolidadoMap.values());
+
+                                        // Ordenar por monto total
+                                        Collections.sort(ventasConsolidadas, (v1, v2) ->
+                                                Double.compare(v1.getMontoTotal(), v2.getMontoTotal()));
+
+                                        adapter.notifyDataSetChanged();
+
+                                        Log.d(TAG, "Datos consolidados. Total items: " + ventasConsolidadas.size());
+                                    } else {
+                                        Log.e(TAG, "Error al cargar ventas", ventasTask.getException());
+                                        Toast.makeText(this, "Error al cargar ventas", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Log.e(TAG, "Error al cargar servicios", serviciosTask.getException());
+                        Toast.makeText(this, "Error al cargar servicios", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
 
     private void generatePdfReport() {
         if (ventasConsolidadas.isEmpty()) {
@@ -447,81 +430,5 @@ public class AdminVentasServicio extends AppCompatActivity {
         }
         Toast.makeText(this, "Añadiendo servicios de ejemplo...", Toast.LENGTH_SHORT).show();
     }
-
-
-    // Método para añadir datos de ventas de servicio de ejemplo
-    private void addSampleVentasServicioData() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<VentaServicio> sampleVentas = new ArrayList<>();
-
-        // --- IMPORTANT: REPLACE THESE WITH YOUR ACTUAL SERVICE IDs FROM FIRESTORE ---
-        // Estos son los IDs reales de los documentos de tu colección 'servicios' en Firestore.
-        // Cópialos directamente de la consola de Firebase.
-        String SERVICE_ID_PINTURA = "MHDuY7FWio4kGoclrOij"; // Reemplaza con tu ID real
-        String SERVICE_ID_JARDINERIA = "AySL6OmQ0uvut09LzWcd"; // Reemplaza con tu ID real
-        String SERVICE_ID_ELECTRICIDAD = "CXVY2UDbI5IhfOF5nyZH"; // Reemplaza con tu ID real
-        String SERVICE_ID_FONTANERIA = "8FtghYALwtcjjn9T7TNh"; // Reemplaza con tu ID real
-        String SERVICE_ID_GYM = "G6SmZnjshIeY55vxw7vn"; // Reemplaza con tu ID real
-        String SERVICE_ID_KARAOKE = "65QQCSuDAC9Sra1P6PnR"; // Reemplaza con tu ID real (según tu screenshot)
-        // --- END OF IMPORTANT REPLACEMENT ---
-
-        Calendar cal = Calendar.getInstance();
-
-        // --- Data for April (6 records) ---
-        cal.set(2025, Calendar.APRIL, 5, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, 2, 50.0, 100.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 12, 14, 30, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_JARDINERIA, 1, 75.0, 75.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 18, 9, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_ELECTRICIDAD, 1, 120.0, 120.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 25, 11, 45, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, 1, 50.0, 50.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 28, 16, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_FONTANERIA, 1, 90.0, 90.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 29, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_KARAOKE, 1, 50.5, 50.5, cal.getTime())); // Añadido un dato de Karaoke en abril
-
-        // --- Data for May (6 records) ---
-        cal.set(2025, Calendar.MAY, 3, 9, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_JARDINERIA, 2, 75.0, 150.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 10, 13, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_ELECTRICIDAD, 1, 120.0, 120.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 15, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_GYM, 1, 200.0, 200.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 20, 17, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, 3, 50.0, 150.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 22, 8, 30, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_FONTANERIA, 1, 90.0, 90.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 29, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_KARAOKE, 1, 50.5, 50.5, cal.getTime())); // Añadido un dato de Karaoke en mayo
-
-        // --- Data for June (6 records) ---
-        cal.set(2025, Calendar.JUNE, 1, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, 1, 50.0, 50.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 7, 15, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_JARDINERIA, 1, 75.0, 75.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 14, 11, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_ELECTRICIDAD, 2, 120.0, 240.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 16, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_GYM, 1, 200.0, 200.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 16, 14, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, 2, 50.0, 100.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 29, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_KARAOKE, 1, 50.5, 50.5, cal.getTime())); // Añadido un dato de Karaoke en junio
-
-
-        // Add all sales to Firestore
-        for (VentaServicio venta : sampleVentas) {
-            db.collection("ventas_servicios").add(venta)
-                    .addOnSuccessListener(documentReference -> {
-                        Log.d(TAG, "Venta de servicio añadida con ID: " + documentReference.getId());
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error al añadir venta de servicio: " + e.getMessage(), e);
-                    });
-        }
-        Toast.makeText(this, "Añadiendo ventas de servicio de ejemplo...", Toast.LENGTH_SHORT).show();
-    }
-
     // *** FIN DE MÉTODOS PARA AÑADIR DATOS DE PRUEBA (TEMPORAL) ***
 }
