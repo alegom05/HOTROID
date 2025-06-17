@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,16 +22,22 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.bean.Servicios;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AdminServiciosActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ServiciosAdapter adapter;
     private ArrayList<Servicios> serviciosList;
+    private ArrayList<Servicios> originalServiciosList;
+    private EditText etSearchServicio;
+    private Button btnClearSearch;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,70 +49,59 @@ public class AdminServiciosActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        db = FirebaseFirestore.getInstance();
+
         recyclerView = findViewById(R.id.rvServicios);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        etSearchServicio = findViewById(R.id.etSearchServicio);
+        btnClearSearch = findViewById(R.id.btnClearSearch);
 
-        // Initialize room data
-        serviciosList = new ArrayList<>();
-
-        // Lista 1: imagen de wifi
-        ArrayList<Uri> imagenesWifi = new ArrayList<>();
-        imagenesWifi.add(getUriFromDrawable(R.drawable.wifi));
-
-        // Lista 2: imagen de desayuno buffet
-        ArrayList<Uri> imagenesBuffet = new ArrayList<>();
-        imagenesBuffet.add(getUriFromDrawable(R.drawable.buffet));
-
-        // Lista 3: gimnasio
-        ArrayList<Uri> imagenesGimnasio = new ArrayList<>();
-        imagenesGimnasio.add(getUriFromDrawable(R.drawable.gimnasio));
-
-        // Lista 4: piscina
-        ArrayList<Uri> imagenesPiscina = new ArrayList<>();
-        imagenesPiscina.add(getUriFromDrawable(R.drawable.piscina));
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        originalServiciosList = new ArrayList<>();
         serviciosList = new ArrayList<>();
         adapter = new ServiciosAdapter(serviciosList);
         recyclerView.setAdapter(adapter);
 
+        // addInitialServicesToFirestore();
 
+        etSearchServicio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterServicios(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
+        btnClearSearch.setOnClickListener(v -> {
+            etSearchServicio.setText("");
+            filterServicios("");
+        });
 
-        // Set the adapter
-        adapter = new ServiciosAdapter(serviciosList);
-        recyclerView.setAdapter(adapter);
-
-        // Set up the Register button click listener
         findViewById(R.id.btnRegistrar).setOnClickListener(v -> {
-            // Open AdminNuevaHabitacionActivity when Register button is clicked
             Intent intent = new Intent(AdminServiciosActivity.this, AdminNuevoServicioActivity.class);
             startActivityForResult(intent, 100);
-
         });
-        // Set up click listener for each service item
+
         adapter.setOnItemClickListener((position) -> {
             Servicios selectedServicio = serviciosList.get(position);
 
-            // Create an Intent to open RoomDetailActivity
             Intent intent = new Intent(AdminServiciosActivity.this, AdminServiciosDetallesActivity.class);
             intent.putExtra("Service_name", selectedServicio.getNombre());
             intent.putExtra("Service_description", selectedServicio.getDescripcion());
+            // --- FIX: Pass price as double ---
             intent.putExtra("price", selectedServicio.getPrecio());
-            intent.putExtra("documentId", selectedServicio.getDocumentId()); // 👈 esto es lo que necesitas
-
-            ArrayList<String> uriStrings = new ArrayList<>();
-            for (Uri uri : selectedServicio.getImagenes()) {
-                uriStrings.add(uri.toString());
-            }
-            intent.putStringArrayListExtra("imagenes", uriStrings);
+            // ---------------------------------
+            intent.putExtra("schedule", selectedServicio.getHorario());
+            intent.putExtra("documentId", selectedServicio.getDocumentId());
+            intent.putStringArrayListExtra("imagenes", selectedServicio.getImagenes());
             startActivity(intent);
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_registros) {
                 Intent intentInicio = new Intent(AdminServiciosActivity.this, AdminActivity.class);
@@ -125,48 +124,96 @@ public class AdminServiciosActivity extends AppCompatActivity {
             }
         });
     }
-    private Servicios convertirAFirebase(ServicioFirebase servicio) {
-        ArrayList<Uri> imagenesUri = new ArrayList<>();
-        for (String uriString : servicio.getImagenes()) {
-            imagenesUri.add(Uri.parse(uriString));
-        }
 
-        Servicios servicioApp = new Servicios(
-                servicio.getNombre(),
-                servicio.getDescripcion(),
-                servicio.getPrecio(),
-                imagenesUri
-        );
-        servicioApp.setHabilitado(servicio.isHabilitado());
-        return servicioApp;
+    private void addInitialServicesToFirestore() {
+        db.collection("servicios").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        ArrayList<String> noImages = new ArrayList<>();
+
+                        // --- FIX: Use double for price ---
+                        Servicios wifi = new Servicios("Wi-fi Premium", "Acceso a internet de alta velocidad en todo el hotel.", 0.00, "24/7", getUriStringsFromDrawable(R.drawable.wifi));
+                        Servicios buffet = new Servicios("Desayuno Buffet", "Variedad de opciones de desayuno continental y local.", 35.00, "6:00 AM - 10:00 AM", getUriStringsFromDrawable(R.drawable.buffet));
+                        Servicios gimnasio = new Servicios("Gimnasio", "Acceso a equipos de cardio y pesas.", 0.00, "5:00 AM - 11:00 PM", getUriStringsFromDrawable(R.drawable.gimnasio));
+                        Servicios piscina = new Servicios("Piscina Climatizada", "Piscina cubierta con temperatura controlada.", 0.00, "7:00 AM - 10:00 PM", getUriStringsFromDrawable(R.drawable.piscina));
+                        Servicios karaoke = new Servicios("Sala de Karaoke", "Disfruta de una noche de diversión con amigos y familia.", 50.00, "7:00 PM - 2:00 AM", getUriStringsFromDrawable(R.drawable.karaoke));
+                        Servicios lavanderia = new Servicios("Servicio de Lavandería", "Lavado y planchado de ropa personal.", 15.50, "8:00 AM - 6:00 PM", getUriStringsFromDrawable(R.drawable.lavanderia)); // Example decimal price
+                        Servicios spa = new Servicios("Spa y Masajes", "Relájate con nuestros tratamientos y masajes profesionales.", 80.00, "9:00 AM - 8:00 PM", getUriStringsFromDrawable(R.drawable.spa));
+                        // ---------------------------------
+
+                        addServiceToFirestore(wifi);
+                        addServiceToFirestore(buffet);
+                        addServiceToFirestore(gimnasio);
+                        addServiceToFirestore(piscina);
+                        addServiceToFirestore(karaoke);
+                        addServiceToFirestore(lavanderia);
+                        addServiceToFirestore(spa);
+
+                        Toast.makeText(this, "Servicios iniciales añadidos a Firestore.", Toast.LENGTH_SHORT).show();
+                        recargarServicios();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al verificar servicios iniciales: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
+
+    private void addServiceToFirestore(Servicios servicio) {
+        db.collection("servicios")
+                .add(servicio)
+                .addOnSuccessListener(documentReference -> {
+                    servicio.setDocumentId(documentReference.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al añadir servicio " + servicio.getNombre() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private ArrayList<String> getUriStringsFromDrawable(int drawableId) {
+        ArrayList<String> uriStrings = new ArrayList<>();
+        uriStrings.add(Uri.parse("android.resource://" + getPackageName() + "/" + drawableId).toString());
+        return uriStrings;
+    }
+
+    private void filterServicios(String text) {
+        serviciosList.clear();
+        if (text.isEmpty()) {
+            serviciosList.addAll(originalServiciosList);
+        } else {
+            text = text.toLowerCase(Locale.getDefault());
+            for (Servicios servicio : originalServiciosList) {
+                if (servicio.getNombre().toLowerCase(Locale.getDefault()).contains(text) ||
+                        (servicio.getHorario() != null && servicio.getHorario().toLowerCase(Locale.getDefault()).contains(text))) {
+                    serviciosList.add(servicio);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         recargarServicios();
     }
+
     private void recargarServicios() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        serviciosList.clear();
         db.collection("servicios").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    originalServiciosList.clear();
+                    serviciosList.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        ServicioFirebase servicio = doc.toObject(ServicioFirebase.class);
-                        Servicios servicioApp = convertirAFirebase(servicio);
-                        servicioApp.setDocumentId(doc.getId());  // 💡 Aquí guardas el documentId real
-                        serviciosList.add(servicioApp);
+                        Servicios servicio = doc.toObject(Servicios.class);
+                        servicio.setDocumentId(doc.getId());
+                        originalServiciosList.add(servicio);
                     }
-
-                    adapter.notifyDataSetChanged();
+                    filterServicios(etSearchServicio.getText().toString());
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al recargar servicios", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error al recargar servicios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private Uri getUriFromDrawable(int drawableId) {
-        return Uri.parse("android.resource://" + getPackageName() + "/" + drawableId);
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,24 +221,39 @@ public class AdminServiciosActivity extends AppCompatActivity {
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             String nombre = data.getStringExtra("nombre");
             String descripcion = data.getStringExtra("descripcion");
-            String precio = data.getStringExtra("precio");
+            String horario = data.getStringExtra("horario");
             ArrayList<String> uriStrings = data.getStringArrayListExtra("imagenes");
 
-            ArrayList<Uri> imagenes = new ArrayList<>();
-            for (String uriStr : uriStrings) {
-                imagenes.add(Uri.parse(uriStr));
+            // --- FIX: Parse price String to double and handle potential errors ---
+            double precio = 0.0; // Default value
+            String precioStr = data.getStringExtra("precio");
+            if (precioStr != null && !precioStr.isEmpty()) {
+                try {
+                    precio = Double.parseDouble(precioStr);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Error: El precio no es un número válido.", Toast.LENGTH_SHORT).show();
+                    return; // Stop if price is invalid
+                }
             }
+            // -------------------------------------------------------------------
 
-            Servicios nuevoServicio = new Servicios(nombre, descripcion, precio, imagenes);
-            serviciosList.add(nuevoServicio);
-            adapter.notifyItemInserted(serviciosList.size() - 1);
-            showNotification("Servicio creado", "El servicio \"" + nombre + "\" fue registrado con éxito.");
+            Servicios nuevoServicio = new Servicios(nombre, descripcion, precio, horario, uriStrings);
+
+            db.collection("servicios").add(nuevoServicio)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(this, "Servicio registrado en Firestore.", Toast.LENGTH_SHORT).show();
+                        recargarServicios();
+                        showNotification("Servicio creado", "El servicio \"" + nombre + "\" fue registrado con éxito.");
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al registrar servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         }
     }
+
     private void showNotification(String title, String message) {
         String CHANNEL_ID = "servicios_channel";
 
-        // Crear canal de notificación si aún no existe (solo para Android O en adelante)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Notificaciones de Servicios";
             String description = "Canal para notificaciones de registro de servicios";
@@ -205,18 +267,14 @@ public class AdminServiciosActivity extends AppCompatActivity {
             }
         }
 
-        // Crear notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_hotroid_icon)  // Asegúrate de tener este ícono
+                .setSmallIcon(R.drawable.ic_hotroid_icon)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 
-        // Mostrarla
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(2, builder.build()); // ID arbitrario
+        notificationManager.notify(2, builder.build());
     }
-
-
 }

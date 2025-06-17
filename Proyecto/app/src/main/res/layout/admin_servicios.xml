@@ -19,7 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Card con datos del administrador -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardAdmin"
         android:layout_width="0dp"
@@ -98,7 +97,7 @@
             <LinearLayout
                 android:id="@+id/seccionesLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -114,9 +113,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Lista de servicios"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="8dp"/> <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-                <!-- RecyclerView for the room list -->
+                <EditText
+                    android:id="@+id/etSearchServicio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Buscar servicio..."
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
+
+                <Button
+                    android:id="@+id/btnClearSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Limpiar"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#FF5722"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvServicios"
                     android:layout_width="match_parent"

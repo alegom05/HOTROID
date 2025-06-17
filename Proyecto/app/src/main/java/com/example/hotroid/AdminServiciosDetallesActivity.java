@@ -15,10 +15,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.DecimalFormat; // Import for formatting
 import java.util.ArrayList;
 
 public class AdminServiciosDetallesActivity extends AppCompatActivity {
-    private TextView tvName, tvDescripcion, tvPrecio;
+    private TextView tvName, tvDescripcion, tvPrecio, tvHorario;
     private LinearLayout contenedorImagenes;
     private boolean estadoHabilitado = true;
 
@@ -33,26 +34,32 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         tvName = findViewById(R.id.tvName);
         tvDescripcion = findViewById(R.id.tvDescripcion);
         tvPrecio = findViewById(R.id.tvPrecio);
+        tvHorario = findViewById(R.id.tvHorario);
         contenedorImagenes = findViewById(R.id.contenedorImagenes);
 
 
-        // Obtener los datos de la habitación pasados a través del Intent
         String servicioNombre = getIntent().getStringExtra("Service_name");
         String servicioDescripcion = getIntent().getStringExtra("Service_description");
-        String precio = getIntent().getStringExtra("price");
+        // --- FIX: Get price as double ---
+        double precio = getIntent().getDoubleExtra("price", 0.0); // Default to 0.0 if not found
+        // ---------------------------------
+        String horario = getIntent().getStringExtra("schedule");
         ArrayList<String> uriStrings = getIntent().getStringArrayListExtra("imagenes");
-        String documentId = getIntent().getStringExtra("documentId"); // ✅
+        String documentId = getIntent().getStringExtra("documentId");
 
 
-        // Establecer los datos en los TextViews
         tvName.setText(servicioNombre);
         tvDescripcion.setText(servicioDescripcion);
-        tvPrecio.setText("S/. " + precio);
+        // --- FIX: Format double price for display ---
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        tvPrecio.setText("S/. " + decimalFormat.format(precio));
+        // ---------------------------------------------
+        tvHorario.setText(horario);
 
-        // Mostrar las imágenes
         if (uriStrings != null) {
             for (String uriStr : uriStrings) {
                 Uri uri = Uri.parse(uriStr);
@@ -68,13 +75,15 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             }
         }
 
-        // Acción para editar la habitación
         findViewById(R.id.btnEditarHabitacion).setOnClickListener(v -> {
             Intent intent = new Intent(AdminServiciosDetallesActivity.this, AdminEditarServicioActivity.class);
             intent.putExtra("documentId", documentId);
             intent.putExtra("Service_name", servicioNombre);
             intent.putExtra("Service_description", servicioDescripcion);
+            // --- FIX: Pass price as double ---
             intent.putExtra("price", precio);
+            // ---------------------------------
+            intent.putExtra("schedule", horario);
             intent.putStringArrayListExtra("imagenes", uriStrings);
             intent.putExtra("habilitado", estadoHabilitado);
 
@@ -82,8 +91,6 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_registros) {
                 Intent intentInicio = new Intent(AdminServiciosDetallesActivity.this, AdminActivity.class);
@@ -106,25 +113,30 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 200 && resultCode == RESULT_OK && data != null) {
-            // Obtener los datos editados
             String nuevoNombre = data.getStringExtra("nombre");
             String nuevaDescripcion = data.getStringExtra("descripcion");
-            String nuevoPrecio = data.getStringExtra("precio");
+            // --- FIX: Get updated price as double ---
+            double nuevoPrecio = data.getDoubleExtra("precio", 0.0);
+            // ----------------------------------------
+            String nuevoHorario = data.getStringExtra("horario");
             ArrayList<String> nuevasImagenes = data.getStringArrayListExtra("imagenes");
             estadoHabilitado = data.getBooleanExtra("habilitado", true);
 
 
-            // Actualizar los TextViews
             tvName.setText(nuevoNombre);
             tvDescripcion.setText(nuevaDescripcion);
-            tvPrecio.setText("S/. " + nuevoPrecio);
+            // --- FIX: Format updated double price for display ---
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            tvPrecio.setText("S/. " + decimalFormat.format(nuevoPrecio));
+            // ----------------------------------------------------
+            tvHorario.setText(nuevoHorario);
 
-            // Actualizar las imágenes
             contenedorImagenes.removeAllViews();
             if (nuevasImagenes != null) {
                 for (String uriStr : nuevasImagenes) {
@@ -142,5 +154,4 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             }
         }
     }
-
 }

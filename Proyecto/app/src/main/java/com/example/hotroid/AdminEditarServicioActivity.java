@@ -3,167 +3,114 @@ package com.example.hotroid;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton; // Import MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminEditarServicioActivity extends AppCompatActivity {
-    private static final int PICK_IMAGES_REQUEST = 1;
-    private EditText etNombreServicio, etDescripcion, etPrecio;
-    private ArrayList<Uri> imagenesSeleccionadas = new ArrayList<>();
+    private EditText etNombreServicio, etDescripcion, etPrecio, etHorario;
+    private MaterialButton btnToggleHabilitado, btnSeleccionarImagenes, btnLimpiarImagenes, btnGuardarCambios; // Changed to MaterialButton
     private LinearLayout contenedorImagenes;
-    private boolean estadoHabilitado = true;
 
+    private String documentId;
+    private boolean estadoHabilitado;
+    private ArrayList<String> currentImageUris = new ArrayList<>(); // To store selected image URIs as Strings
+    private FirebaseFirestore db;
+
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.admin_editar_servicio);
+        setContentView(R.layout.admin_editar_servicio); // Make sure this matches your layout file name
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        // Inicializar los campos
+
+        db = FirebaseFirestore.getInstance();
+
+        // Initialize UI components
         etNombreServicio = findViewById(R.id.etNombreServicio);
         etDescripcion = findViewById(R.id.etDescripcion);
         etPrecio = findViewById(R.id.etPrecio);
+        etHorario = findViewById(R.id.etHorario); // Initialize etHorario
+
+        // Initialize MaterialButtons
+        btnToggleHabilitado = findViewById(R.id.btnToggleHabilitado);
+        btnSeleccionarImagenes = findViewById(R.id.btnSeleccionarImagenes);
+        btnLimpiarImagenes = findViewById(R.id.btnLimpiarImagenes);
+        btnGuardarCambios = findViewById(R.id.btnGuardarCambios);
+
         contenedorImagenes = findViewById(R.id.contenedorImagenes);
+
+        // Get data from Intent
+        // Using null-safe defaults for String and 0.0 for double
+        documentId = getIntent().getStringExtra("documentId");
+        String serviceName = getIntent().getStringExtra("Service_name");
+        String serviceDescription = getIntent().getStringExtra("Service_description");
+        double price = getIntent().getDoubleExtra("price", 0.0); // Get price as double
+        String schedule = getIntent().getStringExtra("schedule"); // Get schedule
+        ArrayList<String> receivedImageUris = getIntent().getStringArrayListExtra("imagenes");
         estadoHabilitado = getIntent().getBooleanExtra("habilitado", true);
-        Button btnDeshabilitar = findViewById(R.id.btnDeshabilitarServicio);
-        actualizarTextoEstado(btnDeshabilitar);
 
+        // Populate EditText fields with received data
+        etNombreServicio.setText(serviceName != null ? serviceName : "");
+        etDescripcion.setText(serviceDescription != null ? serviceDescription : "");
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        etPrecio.setText(decimalFormat.format(price)); // Format double to String for EditText
+        etHorario.setText(schedule != null ? schedule : ""); // Set horario
 
-        // Obtener los datos de la habitación pasados a través del Intent
-        String ServicioNombre = getIntent().getStringExtra("Service_name");
-        String Descripcion = getIntent().getStringExtra("Service_description");
-        String precioValue = getIntent().getStringExtra("price");
-        ArrayList<String> uriStrings = getIntent().getStringArrayListExtra("imagenes");
-
-        // Establecer los datos en los campos EditText
-        etNombreServicio.setText(ServicioNombre);
-        etDescripcion.setText(Descripcion);
-        etPrecio.setText(precioValue);
-        // Convertir URIs
-        if (uriStrings != null) {
-            for (String uriStr : uriStrings) {
-                imagenesSeleccionadas.add(Uri.parse(uriStr));
-            }
+        // Copy received image URIs to currentImageUris for modification
+        if (receivedImageUris != null) {
+            currentImageUris.addAll(receivedImageUris);
         }
-        mostrarImagenesSeleccionadas();
 
-        // Seleccionar nuevas imágenes
-        findViewById(R.id.btnSeleccionarImagenes).setOnClickListener(v -> {
-            if (imagenesSeleccionadas.size() >= 4) {
-                Toast.makeText(this, "Máximo 4 imágenes permitidas", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        // Update Toggle Button text and color
+        updateToggleButtonText();
 
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Selecciona hasta 4 imágenes"), PICK_IMAGES_REQUEST);
-        });
-        findViewById(R.id.btnLimpiarImagenes).setOnClickListener(v -> {
-            imagenesSeleccionadas.clear();
-            contenedorImagenes.removeAllViews();
-            Toast.makeText(this, "Imágenes eliminadas. Puedes seleccionar nuevas.", Toast.LENGTH_SHORT).show();
+        // Display existing images
+        displayImages(currentImageUris);
+
+        // --- Event Listeners ---
+        btnToggleHabilitado.setOnClickListener(v -> {
+            estadoHabilitado = !estadoHabilitado; // Toggle the state
+            updateToggleButtonText(); // Update button UI
+            Toast.makeText(this, "Estado del servicio cambiado a " + (estadoHabilitado ? "Habilitado" : "Deshabilitado"), Toast.LENGTH_SHORT).show();
         });
 
+        btnSeleccionarImagenes.setOnClickListener(v -> openImageChooser());
 
-        // Acción para guardar los cambios
-        findViewById(R.id.btnGuardarCambios).setOnClickListener(v -> {
-            // Aquí puedes agregar la lógica para guardar los datos actualizados
-            String NombreServicio = etNombreServicio.getText().toString();
-            String DescripcionServicio = etDescripcion.getText().toString();
-            String precio = etPrecio.getText().toString();
-            String documentId = getIntent().getStringExtra("documentId");
-            if (documentId == null || documentId.isEmpty()) {
-                Toast.makeText(this, "No se pudo identificar el servicio a editar.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            // ID para actualizar en Firestore
-
-            // Validación simple
-            if (NombreServicio.isEmpty() || DescripcionServicio.isEmpty() || precio.isEmpty() || imagenesSeleccionadas.isEmpty()) {
-                Toast.makeText(AdminEditarServicioActivity.this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
-            } else {
-                // Guardar en Firebase
-                ArrayList<String> imagenesString = new ArrayList<>();
-                for (Uri uri : imagenesSeleccionadas) {
-                    imagenesString.add(uri.toString());
-                }
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                ServicioFirebase servicioActualizado = new ServicioFirebase(
-                        NombreServicio,
-                        DescripcionServicio,
-                        precio,
-                        imagenesString,
-                        estadoHabilitado
-                );
-
-                db.collection("servicios").document(documentId)
-                        .set(servicioActualizado)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(this, "Servicio actualizado correctamente.", Toast.LENGTH_SHORT).show();
-
-                            // Retornar resultado
-                            Intent result = new Intent();
-                            result.putExtra("nombre", NombreServicio);
-                            result.putExtra("descripcion", DescripcionServicio);
-                            result.putExtra("precio", precio);
-                            result.putStringArrayListExtra("imagenes", imagenesString);
-                            result.putExtra("habilitado", estadoHabilitado);
-                            setResult(RESULT_OK, result);
-                            finish();
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(this, "Error al actualizar el servicio.", Toast.LENGTH_SHORT).show();
-                        });
-
-                Toast.makeText(AdminEditarServicioActivity.this, "Servicio actualizado con éxito.", Toast.LENGTH_SHORT).show();
-                // Redirigir a la actividad AdminHabitacionesActivity después de guardar
-                Intent result = new Intent();
-                result.putExtra("nombre", NombreServicio);
-                result.putExtra("descripcion", DescripcionServicio);
-                result.putExtra("precio", precio);
-
-                result.putStringArrayListExtra("imagenes", imagenesString);
-                result.putExtra("habilitado", estadoHabilitado);  // 👈 ESTA LÍNEA FALTABA
-                setResult(RESULT_OK, result);
-                finish();  // Finaliza la actividad actual para evitar que el usuario regrese a ella con el botón de atrás
-            }
-        });
-        btnDeshabilitar.setOnClickListener(v -> {
-            estadoHabilitado = !estadoHabilitado;
-            actualizarTextoEstado(btnDeshabilitar);
+        btnLimpiarImagenes.setOnClickListener(v -> {
+            currentImageUris.clear(); // Clear all stored image URIs
+            contenedorImagenes.removeAllViews(); // Remove all ImageViews from layout
+            Toast.makeText(this, "Imágenes limpiadas.", Toast.LENGTH_SHORT).show();
         });
 
+        btnGuardarCambios.setOnClickListener(v -> saveChanges());
 
-
+        // Bottom Navigation (existing logic, no changes)
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_registros) {
                 Intent intentInicio = new Intent(AdminEditarServicioActivity.this, AdminActivity.class);
@@ -186,66 +133,143 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
             }
         });
     }
-    private void mostrarImagenesSeleccionadas() {
-        contenedorImagenes.removeAllViews();
-        for (Uri uri : imagenesSeleccionadas) {
-            ImageView imageView = new ImageView(this);
-            imageView.setImageURI(uri);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(200, 200);
-            params.setMargins(8, 8, 8, 8);
-            imageView.setLayoutParams(params);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            contenedorImagenes.addView(imageView);
-        }
-    }
 
-
-
-
-    // Utilidad: crear fila nueva
-    private LinearLayout crearNuevaFila() {
-        LinearLayout fila = new LinearLayout(this);
-        fila.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        fila.setOrientation(LinearLayout.HORIZONTAL);
-        fila.setClipChildren(false);
-        fila.setClipToPadding(false);
-        return fila;
-    }
-    private void actualizarTextoEstado(Button btn) {
+    /**
+     * Updates the text and background tint of the toggle habilitado button based on `estadoHabilitado`.
+     */
+    private void updateToggleButtonText() {
         if (estadoHabilitado) {
-            btn.setText("Habilitado");
-            btn.setBackgroundTintList(getResources().getColorStateList(R.color.color_estado_habilitado));
+            btnToggleHabilitado.setText("Deshabilitar");
+            btnToggleHabilitado.setBackgroundTintList(getResources().getColorStateList(R.color.red)); // Use ColorStateList for tint
         } else {
-            btn.setText("Deshabilitado");
-            btn.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_dark));
+            btnToggleHabilitado.setText("Habilitar");
+            btnToggleHabilitado.setBackgroundTintList(getResources().getColorStateList(R.color.color_estado_habilitado)); // Use ColorStateList for tint
         }
     }
 
+    /**
+     * Opens an image chooser intent to select multiple images.
+     */
+    private void openImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*"); // Specify image type
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Allow multiple image selection
+        startActivityForResult(Intent.createChooser(intent, "Seleccionar Imágenes"), PICK_IMAGE_REQUEST);
+    }
 
+    /**
+     * Displays images in the LinearLayout from a list of URI strings.
+     * Clears existing views before adding new ones.
+     */
+    private void displayImages(ArrayList<String> uriStrings) {
+        contenedorImagenes.removeAllViews(); // Clear existing image views
+        if (uriStrings != null && !uriStrings.isEmpty()) {
+            for (String uriStr : uriStrings) {
+                try {
+                    Uri uri = Uri.parse(uriStr);
+                    ImageView imageView = new ImageView(this);
+                    imageView.setImageURI(uri);
+                    imageView.setPadding(8, 0, 8, 0); // Add horizontal padding for spacing between images
+                    imageView.setContentDescription("Service Image"); // For accessibility
 
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 300); // Fixed size for consistency
+                    imageView.setLayoutParams(params);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP); // Scale image to fill bounds
+
+                    contenedorImagenes.addView(imageView);
+                } catch (Exception e) {
+                    // Log the error or show a toast if a URI string is invalid
+                    Toast.makeText(this, "Error al cargar una imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGES_REQUEST && resultCode == RESULT_OK) {
-            if (data != null) {
-                if (data.getClipData() != null) {
-                    int count = data.getClipData().getItemCount();
-                    for (int i = 0; i < count && imagenesSeleccionadas.size() < 4; i++) {
-                        Uri uri = data.getClipData().getItemAt(i).getUri();
-                        imagenesSeleccionadas.add(uri);
-                    }
-                } else if (data.getData() != null) {
-                    if (imagenesSeleccionadas.size() < 4) {
-                        imagenesSeleccionadas.add(data.getData());
-                    }
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            currentImageUris.clear(); // Clear old images before adding new ones
+
+            if (data.getClipData() != null) { // Multiple images selected
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                    // Take persistent URI permissions
+                    getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    currentImageUris.add(imageUri.toString()); // Store as String
                 }
-                mostrarImagenesSeleccionadas();
+            } else if (data.getData() != null) { // Single image selected
+                Uri imageUri = data.getData();
+                // Take persistent URI permissions
+                getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                currentImageUris.add(imageUri.toString()); // Store as String
             }
+            displayImages(currentImageUris); // Re-display all images, including newly selected ones
+        }
+    }
+
+    /**
+     * Saves the changes to Firestore and returns the updated data to the previous activity.
+     */
+    private void saveChanges() {
+        String nombre = etNombreServicio.getText().toString().trim();
+        String descripcion = etDescripcion.getText().toString().trim();
+        String precioStr = etPrecio.getText().toString().trim();
+        String horario = etHorario.getText().toString().trim();
+
+        // Input validation
+        if (nombre.isEmpty() || descripcion.isEmpty() || precioStr.isEmpty() || horario.isEmpty()) {
+            Toast.makeText(this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double precio;
+        try {
+            precio = Double.parseDouble(precioStr);
+            if (precio < 0) { // Ensure price is not negative
+                Toast.makeText(this, "El precio no puede ser negativo.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "El precio debe ser un número válido (ej. 35.50).", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Prepare data for Firestore update
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nombre", nombre);
+        updates.put("descripcion", descripcion);
+        updates.put("precio", precio);
+        updates.put("horario", horario);
+        updates.put("imagenes", currentImageUris); // Save image URIs as Strings
+        updates.put("habilitado", estadoHabilitado);
+
+        // Update document in Firestore
+        if (documentId != null && !documentId.isEmpty()) {
+            db.collection("servicios").document(documentId)
+                    .update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(AdminEditarServicioActivity.this, "Servicio actualizado con éxito.", Toast.LENGTH_SHORT).show();
+
+                        // Prepare result Intent to send back to AdminServiciosDetallesActivity
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("nombre", nombre);
+                        resultIntent.putExtra("descripcion", descripcion);
+                        resultIntent.putExtra("precio", precio); // Pass double
+                        resultIntent.putExtra("horario", horario);
+                        resultIntent.putStringArrayListExtra("imagenes", currentImageUris);
+                        resultIntent.putExtra("habilitado", estadoHabilitado);
+
+                        setResult(RESULT_OK, resultIntent);
+                        finish(); // Close activity
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(AdminEditarServicioActivity.this, "Error al actualizar servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(this, "Error: ID de documento de servicio no encontrado.", Toast.LENGTH_SHORT).show();
         }
     }
 }
