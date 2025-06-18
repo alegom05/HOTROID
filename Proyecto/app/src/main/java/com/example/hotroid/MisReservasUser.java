@@ -19,19 +19,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.text.ParseException; // Importar para el manejo de excepciones de parseo de fecha
-import java.text.SimpleDateFormat; // Importar para el formateo de fecha
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date; // Importar java.util.Date
+import java.util.Date;
 import java.util.List;
-import java.util.Locale; // Importar para especificar el locale en SimpleDateFormat
+import java.util.Locale;
 
 public class MisReservasUser extends AppCompatActivity {
 
-    // Se recomienda que SimpleDateFormat sea una instancia de clase si se usa repetidamente
-    // o declararla dentro del método si solo se usa una vez.
-    // Aquí la hacemos una instancia para consistencia y evitar recrearla.
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 
@@ -46,16 +43,13 @@ public class MisReservasUser extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         setupBottomNavigation();
 
-        //llamando a los datos que se supone están en la bd
         List<Reserva> reservas = obtenerReservas();
-        List<Hotel> hoteles = obtenerHoteles();
+        List<Hotel> hoteles = obtenerHoteles(); // Ahora usa el método actualizado
 
-        // Une reservas con hoteles
         ReservaRepository reservaRepository = new ReservaRepository();
         List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(reservas, hoteles);
 
 
-        // Preparas los datos separados por estado
         List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel,"activo");
         Log.d("DebugReservas", "Cantidad activos: " + activos.size());
         List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel,"pasado");
@@ -66,7 +60,6 @@ public class MisReservasUser extends AppCompatActivity {
         ReservasPagerAdapterUser adapter = new ReservasPagerAdapterUser(this, listas);
         viewPager.setAdapter(adapter);
 
-// Conecta con tabs
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0: tab.setText("Activos"); break;
@@ -76,11 +69,10 @@ public class MisReservasUser extends AppCompatActivity {
         }).attach();
 
     }
-    //filtrado de reservas por los estados activo, pasados y cancelados
+
     private List<ReservaConHotel> filtrarPorEstado(List<ReservaConHotel> todas, String estadoDeseado) {
         List<ReservaConHotel> resultado = new ArrayList<>();
         for (ReservaConHotel rh : todas) {
-            // Asegúrate de que el objeto Reserva no sea null y el estado exista
             if (rh.getReserva() != null && rh.getReserva().getEstado() != null &&
                     rh.getReserva().getEstado().equalsIgnoreCase(estadoDeseado)) {
                 resultado.add(rh);
@@ -91,21 +83,48 @@ public class MisReservasUser extends AppCompatActivity {
 
     public static List<Hotel> obtenerHoteles() {
         List<Hotel> hoteles = new ArrayList<>();
-        hoteles.add(new Hotel("H1", "Hotel Central", 4.5f, "$80", "Argentina", "High St 10, Old Town", R.drawable.hotel_decameron));
-        hoteles.add(new Hotel("H2", "Hotel D'Cameron", 4.0f, "$120", "USA","Av. del Prado 123, Centro Histórico", R.drawable.hotel_aranwa));
-        hoteles.add(new Hotel("H3", "Hotel Mar Azul", 3.8f, "$70", "Perú", "Paseo Marítimo 78, Playa Norte", R.drawable.hotel_boca_raton));
+
+        // HOTEL 1
+        Hotel hotel1 = new Hotel();
+        hotel1.setIdHotel("H1");
+        hotel1.setName("Hotel Central");
+        hotel1.setRating(4.5f);
+        hotel1.setPrice(130.00);
+        hotel1.setDireccion("Argentina");
+        hotel1.setDireccionDetallada("High St 10, Old Town");
+        hotel1.setDescription("Un hotel céntrico con todas las comodidades en Argentina."); // Añadir descripción
+        hotel1.setImageResourceId(R.drawable.hotel_decameron); // Usar R.drawable
+        hoteles.add(hotel1);
+
+        // HOTEL 2
+        Hotel hotel2 = new Hotel();
+        hotel2.setIdHotel("H2");
+        hotel2.setName("Hotel D'Cameron");
+        hotel2.setRating(4.0f);
+        hotel2.setPrice(123.00);
+        hotel2.setDireccion("USA");
+        hotel2.setDireccionDetallada("Av. del Prado 123, Centro Histórico");
+        hotel2.setDescription("Ubicado en el corazón de USA, ideal para viajeros de negocios y placer."); // Añadir descripción
+        hotel2.setImageResourceId(R.drawable.hotel_aranwa); // Usar R.drawable
+        hoteles.add(hotel2);
+
+        // HOTEL 3
+        Hotel hotel3 = new Hotel();
+        hotel3.setIdHotel("H3");
+        hotel3.setName("Hotel Mar Azul");
+        hotel3.setRating(3.8f);
+        hotel3.setPrice(230.00);
+        hotel3.setDireccion("Perú");
+        hotel3.setDireccionDetallada("Paseo Marítimo 78, Playa Norte");
+        hotel3.setDescription("Un encantador hotel frente al mar en Perú, perfecto para unas vacaciones relajantes."); // Añadir descripción
+        hotel3.setImageResourceId(R.drawable.hotel_boca_raton); // Usar R.drawable
+        hoteles.add(hotel3);
+
         return hoteles;
     }
 
     public static List<Reserva> obtenerReservas() {
         List<Reserva> reservas = new ArrayList<>();
-        // Corrección: Añadir los nuevos 8 parámetros al constructor de Reserva
-        // Parámetros: checkInRealizado, checkOutRealizado, cobros_adicionales, estaCancelado, fechaCancelacion, idValoracion, roomNumber, tieneValoracion
-
-        // Crear una instancia de SimpleDateFormat dentro del método si solo se usa aquí,
-        // o fuera como atributo de clase si es global. Ya la hicimos atributo de clase arriba.
-        // SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
         try {
             reservas.add(new Reserva("R1", "U1", "H1", 2, 3, 1,
                     dateFormatter.parse("2025-05-01"), dateFormatter.parse("2025-05-03"),
@@ -115,7 +134,7 @@ public class MisReservasUser extends AppCompatActivity {
             reservas.add(new Reserva("R2", "U1", "H2", 1, 2, 0,
                     dateFormatter.parse("2025-06-10"), dateFormatter.parse("2025-06-12"),
                     "activo", 240.0, false, false, 0.0, false,
-                    null, null, "205", false)); // fechaCancelacion y idValoracion pueden ser null
+                    null, null, "205", false));
 
             reservas.add(new Reserva("R3", "U1", "H3", 1, 2, 2,
                     dateFormatter.parse("2025-04-05"), dateFormatter.parse("2025-04-08"),
@@ -123,16 +142,14 @@ public class MisReservasUser extends AppCompatActivity {
                     dateFormatter.parse("2025-04-01"), null, null, false));
 
         } catch (ParseException e) {
-            // Manejar la excepción si el formato de fecha no es correcto
             Log.e("MisReservasUser", "Error al parsear la fecha: " + e.getMessage());
-            // Considera notificar al usuario o tomar alguna acción apropiada
         }
         return reservas;
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
-        bottomNavigation.setSelectedItemId(R.id.nav_reservas_user); // selecciona el tab actual
+        bottomNavigation.setSelectedItemId(R.id.nav_reservas_user);
 
         bottomNavigation.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -141,20 +158,18 @@ public class MisReservasUser extends AppCompatActivity {
             if (itemId == R.id.nav_hoteles_user) {
                 intent.putExtra("fragment_destino", "hoteles");
                 startActivity(intent);
-                // Si ClienteActivity va a manejar la navegación y no quieres volver aquí, puedes hacer finish()
-                // finish(); // Descomenta si no quieres que MisReservasUser permanezca en la pila de actividades
                 return true;
             } else if (itemId == R.id.nav_reservas_user) {
-                return true; // Ya estás en MisReservasUser, no hay que hacer nada
+                return true;
             } else if (itemId == R.id.nav_chat_user) {
                 intent.putExtra("fragment_destino", "chat");
                 startActivity(intent);
-                finish(); // Para evitar que se apilen muchas actividades en la pila
+                finish();
                 return true;
             } else if (itemId == R.id.nav_cuenta) {
                 intent.putExtra("fragment_destino", "cuenta");
                 startActivity(intent);
-                finish(); // Para evitar que se apilen muchas actividades en la pila
+                finish();
                 return true;
             }
             return false;
