@@ -12,7 +12,20 @@
           "package_name": "com.example.hotroid"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "579625493928-e7f8m04oehsjmbt4edbut622soboqkn3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hotroid",
+            "certificate_hash": "c6c81aa61808155108c725b3125c1e6395aa5dba"
+          }
+        },
+        {
+          "client_id": "579625493928-f1sjbm65haj83pdtr0p11rum7re1kons.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC2rLAGMKFkkWpTfwHTsQXp1VO2XbjhjIg"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579625493928-f1sjbm65haj83pdtr0p11rum7re1kons.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

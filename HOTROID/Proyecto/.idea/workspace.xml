@@ -116,7 +116,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="beaa9226-b7e8-462c-9c69-f696ea289baa" name="Changes" comment="" />
+    <list default="true" id="beaa9226-b7e8-462c-9c69-f696ea289baa" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Proyecto/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Proyecto/.idea/misc.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -125,7 +127,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\carlo\.android\avd\Pixel_4_API_31.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=RFCW71D1A9K)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -164,7 +166,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Users/carlo/OneDrive/Documentos/Github/HOTROID/HOTROID/Proyecto/app/src/main/res/mipmap-hdpi",
-    "last_opened_file_path": "C:/Users/carlo/OneDrive/Documentos/Github/HOTROID/Proyecto"
+    "last_opened_file_path": "C:/Users/usuario/AndroidStudioProjects/HOTROID"
   }
 }]]></component>
   <component name="RecentsManager">
