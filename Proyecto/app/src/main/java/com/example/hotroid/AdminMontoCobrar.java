@@ -29,6 +29,8 @@ public class AdminMontoCobrar extends AppCompatActivity {
 
         double montoTotal = getIntent().getDoubleExtra("MONTO_TOTAL", 0.0);
         String cliente = getIntent().getStringExtra("CLIENT_NAME");
+        String idCheckout = getIntent().getStringExtra("ID_CHECKOUT"); // <--- AÑADIR ESTA LÍNEA para recibir el ID
+
         tvMontoTotal.setText(String.format("S/. %.2f", montoTotal));
         Button btnConfirmar = findViewById(R.id.btnConfirmar);
 
@@ -36,6 +38,7 @@ public class AdminMontoCobrar extends AppCompatActivity {
             Intent intent = new Intent(AdminMontoCobrar.this, AdminCheckoutCompletado.class);
             intent.putExtra("MONTO_TOTAL", montoTotal);
             intent.putExtra("CLIENT_NAME", cliente);
+            intent.putExtra("ID_CHECKOUT", idCheckout); // <--- AÑADIR ESTA LÍNEA para pasar el ID
             startActivity(intent);
         });
 
@@ -44,26 +47,34 @@ public class AdminMontoCobrar extends AppCompatActivity {
 
         // BottomNavigationView o Barra inferior de menú
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_registros) {
+            int itemId = item.getItemId(); // Obtener el ID del item seleccionado
+            if (itemId == R.id.nav_registros) {
                 Intent intentInicio = new Intent(AdminMontoCobrar.this, AdminActivity.class);
                 startActivity(intentInicio);
+                finish(); // Añadir finish() para limpiar la pila
                 return true;
-            } else if (item.getItemId() == R.id.nav_taxistas) {
+            } else if (itemId == R.id.nav_taxistas) {
                 Intent intentUbicacion = new Intent(AdminMontoCobrar.this, AdminTaxistas.class);
                 startActivity(intentUbicacion);
+                finish(); // Añadir finish()
                 return true;
-            } else if (item.getItemId() == R.id.nav_checkout) {
-                Intent intentAlertas = new Intent(AdminMontoCobrar.this, AdminCheckout.class);
-                startActivity(intentAlertas);
+            } else if (itemId == R.id.nav_checkout) {
+                // Si el usuario presiona el icono de checkout en la barra inferior,
+                // queremos ir a la lista de checkouts (AdminCheckout), no volver a esta pantalla
+                Intent intentCheckout = new Intent(AdminMontoCobrar.this, AdminCheckout.class);
+                // Si es necesario limpiar el backstack al ir a la lista principal de checkouts
+                intentCheckout.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentCheckout);
+                finish(); // Añadir finish()
                 return true;
-            } else if (item.getItemId() == R.id.nav_reportes) {
+            } else if (itemId == R.id.nav_reportes) {
                 Intent intentAlertas = new Intent(AdminMontoCobrar.this, AdminReportes.class);
                 startActivity(intentAlertas);
+                finish(); // Añadir finish()
                 return true;
             } else {
                 return false;
             }
         });
-
     }
 }
