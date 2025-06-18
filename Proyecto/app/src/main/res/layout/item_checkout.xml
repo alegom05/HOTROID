@@ -3,50 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp">
+    app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:padding="16dp">
 
-        <!-- Número de habitación -->
-        <TextView
-            android:id="@+id/tvRoomNumber"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="101"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:gravity="start" />
-
-        <!-- Nombre del cliente -->
         <TextView
             android:id="@+id/tvClientName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Juan Pérez"
-            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:gravity="center" />
+            android:textSize="18sp"
+            android:text="Nombre del Cliente Apellido"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/arrowIcon"
+            android:layout_marginEnd="8dp"/>
 
-        <!-- Flecha -->
+        <TextView
+            android:id="@+id/tvRoomNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Habitación: 101"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvClientName"
+            app:layout_constraintEnd_toStartOf="@+id/arrowIcon"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/tvCheckoutDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Fecha Fin: 05/04/2005"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvRoomNumber"
+            app:layout_constraintEnd_toStartOf="@+id/arrowIcon"
+            android:layout_marginEnd="8dp"/>
+
         <ImageView
             android:id="@+id/arrowIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/baseline_keyboard_arrow_right_24"
-            android:tint="@color/black"
-            android:layout_gravity="center" />
-    </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Ver detalles" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

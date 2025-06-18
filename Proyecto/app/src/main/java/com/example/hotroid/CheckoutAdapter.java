@@ -5,49 +5,49 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull; // Asegúrate de que esta importación esté presente
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.hotroid.bean.CheckoutFirebase; // Importa la nueva clase CheckoutFirebase
-import java.util.List; // Usaremos List en lugar de ArrayList para mayor flexibilidad
+import com.example.hotroid.bean.CheckoutFirebase;
+import java.util.List;
+import java.text.SimpleDateFormat; // Para formatear la fecha
+import java.util.Locale; // Para el locale en SimpleDateFormat
 
 public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder>{
 
-    // Cambiado de ArrayList<Checkout> a List<CheckoutFirebase>
     private List<CheckoutFirebase> checkoutList;
     private OnItemClickListener listener;
 
-    public CheckoutAdapter(List<CheckoutFirebase> checkoutList) { // Cambiado el tipo de parámetro
+    public CheckoutAdapter(List<CheckoutFirebase> checkoutList) {
         this.checkoutList = checkoutList;
     }
 
-    @NonNull // Anotación para indicar que no puede ser null
+    @NonNull
     @Override
     public CheckoutViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Asegúrate de que 'item_checkout' es el nombre correcto de tu archivo XML de diseño para cada elemento del RecyclerView
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_checkout, parent, false);
         return new CheckoutViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CheckoutViewHolder holder, int position) { // Anotación para indicar que no puede ser null
-        CheckoutFirebase current = checkoutList.get(position); // Ahora trabaja con CheckoutFirebase
+    public void onBindViewHolder(@NonNull CheckoutViewHolder holder, int position) {
+        CheckoutFirebase current = checkoutList.get(position);
 
         // Asignación de texto a los TextViews
-        holder.tvRoomNumber.setText(current.getRoomNumber()); // Puedes ajustar el formato si lo deseas
         holder.tvClientName.setText(current.getClientName());
+        holder.tvRoomNumber.setText("Habitación: " + current.getRoomNumber()); // Añadir prefijo para claridad
 
-        // El arrowIcon ya lo tienes, si quieres que haga algo al hacer clic en él,
-        // puedes añadir un setOnClickListener aquí para ese ImageView en particular.
-        // holder.arrowIcon.setOnClickListener(v -> { ... });
-
+        // Formatear la fecha de fin para mostrarla de forma legible
+        if (current.getCheckoutDate() != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            holder.tvCheckoutDate.setText("Fecha Fin: " + sdf.format(current.getCheckoutDate()));
+        } else {
+            holder.tvCheckoutDate.setText("Fecha Fin: N/A");
+        }
 
         // Configuración del click listener para todo el item
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                // Notificamos al listener, pasando la posición del item clicado
                 listener.onItemClick(position);
             }
         });
@@ -66,22 +66,21 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         void onItemClick(int position);
     }
 
-    // Método para actualizar la lista de datos y notificar al adaptador
-    public void actualizarLista(List<CheckoutFirebase> nuevaLista) { // Cambiado el tipo de parámetro
+    public void actualizarLista(List<CheckoutFirebase> nuevaLista) {
         this.checkoutList = nuevaLista;
-        notifyDataSetChanged(); // Notifica al RecyclerView que los datos han cambiado
+        notifyDataSetChanged();
     }
 
     public static class CheckoutViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomNumber, tvClientName;
-        ImageView arrowIcon; // Mantienes el ImageView si tu layout item_checkout lo usa
+        TextView tvClientName, tvRoomNumber, tvCheckoutDate; // Añadido tvCheckoutDate
+        ImageView arrowIcon;
 
-        public CheckoutViewHolder(@NonNull View itemView) { // Anotación para indicar que no puede ser null
+        public CheckoutViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Asegúrate de que estos IDs existen en tu archivo item_checkout.xml
-            tvRoomNumber = itemView.findViewById(R.id.tvRoomNumber);
             tvClientName = itemView.findViewById(R.id.tvClientName);
-            arrowIcon = itemView.findViewById(R.id.arrowIcon); // Si este ID no existe en item_checkout.xml, eliminar esta línea
+            tvRoomNumber = itemView.findViewById(R.id.tvRoomNumber);
+            tvCheckoutDate = itemView.findViewById(R.id.tvCheckoutDate); // Asegúrate de que este ID existe en item_checkout.xml
+            arrowIcon = itemView.findViewById(R.id.arrowIcon);
         }
     }
 }
