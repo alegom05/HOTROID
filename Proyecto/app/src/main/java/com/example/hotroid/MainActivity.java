@@ -22,6 +22,7 @@ import com.example.hotroid.R;
 import com.example.hotroid.databinding.ActivityMainBinding;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.Arrays;
@@ -44,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
         Button btnAdmin = findViewById(R.id.btnAdmin);
         Button btnSuperAdmin = findViewById(R.id.btnSuperAdmin);
 
-        Intent intent2 = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(Arrays.asList(
-                        new AuthUI.IdpConfig.EmailBuilder().build(),
-                        new AuthUI.IdpConfig.GoogleBuilder().build()
-                ))
-                .build();
-        signInLauncher.launch(intent2);
 
 
         btnCliente.setOnClickListener(v -> {
@@ -74,6 +67,36 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.setLanguageCode("es-419");
+
+        if (auth.getCurrentUser() != null) {
+            // already signed in
+            Log.d("msg", "uid: " + auth.getCurrentUser().getUid());
+            Log.d("msg", "name: " + auth.getCurrentUser().getDisplayName());
+            Log.d("msg", "email: " + auth.getCurrentUser().getEmail());
+            if (auth.getCurrentUser().isEmailVerified()) {
+                Log.d("msg", "correo autenticado");
+                // continuar al siguiente activity
+            } else {
+                auth.getCurrentUser().sendEmailVerification()
+                        .addOnCompleteListener(task -> Log.d("msg", "correo enviado"));
+            }
+
+        } else {
+            // not signed in
+            Intent signInIntent = AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(Arrays.asList(
+                            new AuthUI.IdpConfig.EmailBuilder().build()
+                    ))
+                    .setIsSmartLockEnabled(false)
+                    .build();
+            signInLauncher.launch(signInIntent);
+        }
+
+
+
     }
 
    /* public void incrementarContador (View view) {
@@ -89,13 +112,24 @@ public class MainActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    // Usuario autenticado correctamente
-                    Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    if (auth.getCurrentUser() != null) {
+                        if (auth.getCurrentUser().isEmailVerified()) {
+                            Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            auth.getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(task -> Toast.makeText(this, "Verifica tu correo", Toast.LENGTH_LONG).show());
+                        }
+                    }
                 } else {
                     Toast.makeText(this, "Inicio de sesión cancelado", Toast.LENGTH_SHORT).show();
                 }
             }
     );
+
+
+
+
 
 
 
