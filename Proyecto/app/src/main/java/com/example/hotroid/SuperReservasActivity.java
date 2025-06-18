@@ -85,7 +85,7 @@ public class SuperReservasActivity extends AppCompatActivity {
         // Opcional: Ejecuta esta función UNA SOLA VEZ para subir tus clientes de prueba
         // DESCOMENTA LA SIGUIENTE LÍNEA SOLO PARA LA PRIMERA EJECUCIÓN (para crear los clientes en Firestore),
         // LUEGO COMENTA DE NUEVO PARA EVITAR DUPLICADOS.
-        //saveTestClientesToFirestore();
+        // saveTestClientesToFirestore();
 
         // Carga los clientes desde Firestore
         loadClientesFromFirestore(() -> {
@@ -95,7 +95,7 @@ public class SuperReservasActivity extends AppCompatActivity {
             // Opcional: Ejecuta esta función UNA SOLA VEZ para subir tus reservas de prueba
             // DESCOMENTA LA SIGUIENTE LÍNEA SOLO PARA LA PRIMERA EJECUCIÓN (para crear las reservas en Firestore),
             // LUEGO COMENTA DE NUEVO PARA EVITAR DUPLICADOS.
-            //saveAllReservasToFirestore(); // <--- Aquí la llamarías para guardar las reservas de prueba
+            // saveAllReservasToFirestore(); // <--- Aquí la llamarías para guardar las reservas de prueba
 
             currentHotelReservas = getReservationsForHotel(selectedHotelName);
             displayFilteredReservas(currentHotelReservas); // Y mostrar las reservas
@@ -162,48 +162,32 @@ public class SuperReservasActivity extends AppCompatActivity {
         // Crea los clientes con sus nombres y apellidos completos
         testClientes.add(new Cliente("Juan", "Molleda García", "true", "DNI", "12345678", "1990-01-15", "juan.molleda@example.com", "912345678", "Calle Falsa 123", ""));
         testClientes.add(new Cliente("Leandro", "Pérez Rojas", "true", "DNI", "87654321", "1985-03-20", "leandro.perez@example.com", "987654321", "Av. Siempre Viva 742", ""));
+
         testClientes.add(new Cliente("Augusto", "Medina Castro", "true", "DNI", "11223344", "1992-07-01", "augusto.medina@example.com", "911223344", "Jr. Los Álamos 45", ""));
-        testClientes.add(new Cliente("Gustavo", "Cuya Salazar", "true", "DNI", "55667788", "1988-11-10", "gustavo.cuya@example.com", "955667788", "Psje. Las Flores 99", ""));
-        testClientes.add(new Cliente("Roger", "Palomo Días", "true", "DNI", "99001122", "1995-04-25", "roger.palomo@example.com", "999001122", "Urb. El Sol 10", ""));
-        testClientes.add(new Cliente("Joaquín", "Álvarez Soto", "true", "DNI", "12312312", "1993-02-14", "joaquin.alvarez@example.com", "912312312", "Res. Los Olivos 50", ""));
-        testClientes.add(new Cliente("Nassim", "Ramírez Torres", "true", "DNI", "45645645", "1987-08-08", "nassim.ramirez@example.com", "945645645", "Calle Principal 200", ""));
-        testClientes.add(new Cliente("Elias", "Pulgar Vílchez", "true", "DNI", "78978978", "1991-06-30", "elias.pulgar@example.com", "978978978", "Av. Libertad 30", ""));
-        testClientes.add(new Cliente("Mirko", "Paz Robles", "true", "DNI", "10111213", "1994-01-01", "mirko.paz@example.com", "910111213", "Calle del Centro 15", ""));
-        testClientes.add(new Cliente("Eliezer", "Cruz Sánchez", "true", "DNI", "14151617", "1989-09-12", "eliezer.cruz@example.com", "914151617", "Jr. Unión 77", ""));
 
         testClientes.add(new Cliente("Joaquín", "Pozo Ramos", "true", "DNI", "18192021", "1990-04-05", "joaquin.pozo@example.com", "918192021", "Av. Las Palmeras 1", ""));
         testClientes.add(new Cliente("Roger", "Albino Gómez", "true", "DNI", "22232425", "1986-07-20", "roger.albino@example.com", "922232425", "Calle Los Sauces 2", ""));
         testClientes.add(new Cliente("Julio", "Uribe Flores", "true", "DNI", "26272829", "1991-03-17", "julio.uribe@example.com", "926272829", "Urb. San Juan 3", ""));
-        testClientes.add(new Cliente("Brian", "Ali Paredes", "true", "DNI", "30313233", "1993-10-01", "brian.ali@example.com", "930313233", "Pj. La Luna 4", ""));
-        testClientes.add(new Cliente("Miguel", "Jara Rojas", "true", "DNI", "34353637", "1988-05-11", "miguel.jara@example.com", "934353637", "Res. El Cóndor 5", ""));
-        testClientes.add(new Cliente("Flavio", "Farro Soto", "true", "DNI", "38394041", "1992-01-22", "flavio.farro@example.com", "938394041", "Av. El Sol 6", ""));
-        testClientes.add(new Cliente("Jose", "Phan Díaz", "true", "DNI", "42434445", "1987-12-03", "jose.phan@example.com", "942434445", "Jr. Huáscar 7", ""));
 
         testClientes.add(new Cliente("Eduardo", "Campos Ruíz", "true", "DNI", "46474849", "1990-09-09", "eduardo.campos@example.com", "946474849", "Calle Bolognesi 8", ""));
         testClientes.add(new Cliente("Rubén", "Cancho Vargas", "true", "DNI", "50515253", "1985-06-19", "ruben.cancho@example.com", "950515253", "Av. San Martín 9", ""));
         testClientes.add(new Cliente("Aaron", "Villa Pérez", "true", "DNI", "54555657", "1994-03-08", "aaron.villa@example.com", "954555657", "Jr. Puno 10", ""));
-        testClientes.add(new Cliente("Ollanta", "Humala Tasso", "true", "DNI", "58596061", "1962-06-27", "ollanta.humala@example.com", "958596061", "Av. Arequipa 11", ""));
-        testClientes.add(new Cliente("Nadine", "Heredia Alarcón", "true", "DNI", "62636465", "1976-05-25", "nadine.heredia@example.com", "962636465", "Av. Arequipa 12", ""));
 
         testClientes.add(new Cliente("Sigrid", "Bazán Narro", "true", "DNI", "66676869", "1991-08-20", "sigrid.bazan@example.com", "966676869", "Calle El Polo 13", ""));
         testClientes.add(new Cliente("Daniel", "Abugattás Majluf", "true", "DNI", "70717273", "1955-04-10", "daniel.abugattas@example.com", "970717273", "Av. Primavera 14", ""));
         testClientes.add(new Cliente("Mauricio", "Mulder Bedoya", "true", "DNI", "74757677", "1956-06-08", "mauricio.mulder@example.com", "974757677", "Jr. Junín 15", ""));
-        testClientes.add(new Cliente("Manuel", "Merino De Lama", "true", "DNI", "78798081", "1961-08-22", "manuel.merino@example.com", "978798081", "Calle Olmos 16", ""));
 
         testClientes.add(new Cliente("Pamela", "López Salas", "true", "DNI", "82838485", "1990-03-15", "pamela.lopez@example.com", "982838485", "Urb. Los Pinos 17", ""));
         testClientes.add(new Cliente("Carlos", "Álvarez Rodríguez", "true", "DNI", "86878889", "1978-01-05", "carlos.alvarez@example.com", "986878889", "Av. El Ejército 18", ""));
         testClientes.add(new Cliente("Robert", "Prevost Martínez", "true", "DNI", "90919293", "1955-09-18", "robert.prevost@example.com", "990919293", "Calle La Marina 19", ""));
-        testClientes.add(new Cliente("Alan", "García Pérez", "true", "DNI", "94959697", "1949-05-23", "alan.garcia@example.com", "994959697", "Av. Benavides 20", ""));
 
         testClientes.add(new Cliente("Alejandro", "Toledo Manrique", "true", "DNI", "98990001", "1946-03-28", "alejandro.toledo@example.com", "998990001", "Jr. Cusco 21", ""));
         testClientes.add(new Cliente("Keiko", "Fujimori Higuchi", "true", "DNI", "02030405", "1975-05-25", "keiko.fujimori@example.com", "902030405", "Av. Pardo 22", ""));
         testClientes.add(new Cliente("Pedro", "Castillo Terrones", "true", "DNI", "06070809", "1969-10-19", "pedro.castillo@example.com", "906070809", "Calle El Sol 23", ""));
-        testClientes.add(new Cliente("Agustín", "Lozano Saavedra", "true", "DNI", "10111213", "1971-06-25", "agustin.lozano@example.com", "910111213", "Av. La Paz 24", ""));
 
         testClientes.add(new Cliente("Oscar", "Ibáñez Velarde", "true", "DNI", "14151617", "1977-02-05", "oscar.ibanez@example.com", "914151617", "Jr. Callao 25", ""));
         testClientes.add(new Cliente("Verónica", "Mendoza Frisch", "true", "DNI", "18192021", "1980-12-09", "veronica.mendoza@example.com", "918192021", "Av. Brasil 26", ""));
         testClientes.add(new Cliente("Ismael", "Retes Espinoza", "true", "DNI", "22232425", "1990-07-03", "ismael.retes@example.com", "922232425", "Calle Lima 27", ""));
-        testClientes.add(new Cliente("Patricia", "Benavides Vargas", "true", "DNI", "26272829", "1965-05-18", "patricia.benavides@example.com", "926272829", "Av. La Cultura 28", ""));
 
         // Cliente para MisReservasUser
         testClientes.add(new Cliente("David", "Gómez Pulgar", "true", "DNI", "00000001", "1999-01-01", "david.gomez@example.com", "900000001", "Calle Falsa 456", ""));
@@ -266,47 +250,30 @@ public class SuperReservasActivity extends AppCompatActivity {
         String idJuanMolleda = getClienteIdByNombre("Juan", "Molleda García");
         String idLeandroPerez = getClienteIdByNombre("Leandro", "Pérez Rojas");
         String idAugustoMedina = getClienteIdByNombre("Augusto", "Medina Castro");
-        String idGustavoCuya = getClienteIdByNombre("Gustavo", "Cuya Salazar");
-        String idRogerPalomo = getClienteIdByNombre("Roger", "Palomo Días");
-        String idJoaquinAlvarez = getClienteIdByNombre("Joaquín", "Álvarez Soto");
-        String idNassimRamirez = getClienteIdByNombre("Nassim", "Ramírez Torres");
-        String idEliasPulgar = getClienteIdByNombre("Elias", "Pulgar Vílchez");
-        String idMirkoPaz = getClienteIdByNombre("Mirko", "Paz Robles");
-        String idEliezerCruz = getClienteIdByNombre("Eliezer", "Cruz Sánchez");
 
         String idJoaquinPozo = getClienteIdByNombre("Joaquín", "Pozo Ramos");
         String idRogerAlbino = getClienteIdByNombre("Roger", "Albino Gómez");
         String idJulioUribe = getClienteIdByNombre("Julio", "Uribe Flores");
-        String idBrianAli = getClienteIdByNombre("Brian", "Ali Paredes");
-        String idMiguelJara = getClienteIdByNombre("Miguel", "Jara Rojas");
-        String idFlavioFarro = getClienteIdByNombre("Flavio", "Farro Soto");
-        String idJosePhan = getClienteIdByNombre("Jose", "Phan Díaz");
 
         String idEduardoCampos = getClienteIdByNombre("Eduardo", "Campos Ruíz");
         String idRubenCancho = getClienteIdByNombre("Rubén", "Cancho Vargas");
         String idAaronVilla = getClienteIdByNombre("Aaron", "Villa Pérez");
-        String idOllantaHumala = getClienteIdByNombre("Ollanta", "Humala Tasso");
-        String idNadineHeredia = getClienteIdByNombre("Nadine", "Heredia Alarcón");
 
         String idSigridBazan = getClienteIdByNombre("Sigrid", "Bazán Narro");
         String idDanielAbugattas = getClienteIdByNombre("Daniel", "Abugattás Majluf");
         String idMauricioMulder = getClienteIdByNombre("Mauricio", "Mulder Bedoya");
-        String idManuelMerino = getClienteIdByNombre("Manuel", "Merino De Lama");
 
         String idPamelaLopez = getClienteIdByNombre("Pamela", "López Salas");
         String idCarlosAlvarez = getClienteIdByNombre("Carlos", "Álvarez Rodríguez");
         String idRobertPrevost = getClienteIdByNombre("Robert", "Prevost Martínez");
-        String idAlanGarcia = getClienteIdByNombre("Alan", "García Pérez");
 
         String idAlejandroToledo = getClienteIdByNombre("Alejandro", "Toledo Manrique");
         String idKeikoFujimori = getClienteIdByNombre("Keiko", "Fujimori Higuchi");
         String idPedroCastillo = getClienteIdByNombre("Pedro", "Castillo Terrones");
-        String idAgustinLozano = getClienteIdByNombre("Agustín", "Lozano Saavedra");
 
         String idOscarIbanez = getClienteIdByNombre("Oscar", "Ibáñez Velarde");
         String idVeronicaMendoza = getClienteIdByNombre("Verónica", "Mendoza Frisch");
         String idIsmaelRetes = getClienteIdByNombre("Ismael", "Retes Espinoza");
-        String idPatriciaBenavides = getClienteIdByNombre("Patricia", "Benavides Vargas");
 
         // Ahora, al crear las reservas, usa los IDs de los clientes obtenidos
         allReservas.add(new Reserva("R001", "Aranwa", idJuanMolleda, 1, 2, 0, "30/03/2025", "05/04/2025", "activo", 800,
@@ -315,20 +282,7 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "102", false));
         allReservas.add(new Reserva("R003", "Aranwa", idAugustoMedina, 2, 3, 1, "22/03/2025", "29/03/2025", "activo", 1200,
                 false, false, 0, false, null, null, "103", false));
-        allReservas.add(new Reserva("R004", "Aranwa", idGustavoCuya, 1, 2, 0, "20/03/2025", "26/03/2025", "activo", 750,
-                false, false, 0, false, null, null, "104", false));
-        allReservas.add(new Reserva("R005", "Aranwa", idRogerPalomo, 1, 2, 0, "15/04/2025", "20/04/2025", "activo", 900,
-                false, false, 0, false, null, null, "105", false));
-        allReservas.add(new Reserva("R025", "Aranwa", idJoaquinAlvarez, 1, 1, 0, "01/06/2025", "03/06/2025", "activo", 600,
-                false, false, 0, false, null, null, "106", false));
-        allReservas.add(new Reserva("R026", "Aranwa", idNassimRamirez, 2, 4, 2, "05/06/2025", "10/06/2025", "activo", 1500,
-                false, false, 0, false, null, null, "107", false));
-        allReservas.add(new Reserva("R040", "Aranwa", idEliasPulgar, 1, 2, 0, "12/06/2025", "15/06/2025", "activo", 850,
-                false, false, 0, false, null, null, "108", false));
-        allReservas.add(new Reserva("R041", "Aranwa", idMirkoPaz, 1, 1, 0, "18/06/2025", "20/06/2025", "activo", 580,
-                false, false, 0, false, null, null, "109", false));
-        allReservas.add(new Reserva("R042", "Aranwa", idEliezerCruz, 1, 2, 1, "25/06/2025", "30/06/2025", "activo", 1100,
-                false, false, 0, false, null, null, "110", false));
+
 
         // Reservas de Decameron
         allReservas.add(new Reserva("R006", "Decameron", idJoaquinPozo, 1, 2, 1, "01/05/2025", "07/05/2025", "activo", 1100,
@@ -337,14 +291,6 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "202", false));
         allReservas.add(new Reserva("R027", "Decameron", idJulioUribe, 1, 2, 0, "15/06/2025", "20/06/2025", "activo", 1000,
                 false, false, 0, false, null, null, "203", false));
-        allReservas.add(new Reserva("R028", "Decameron", idBrianAli, 2, 3, 1, "22/06/2025", "28/06/2025", "activo", 1800,
-                false, false, 0, false, null, null, "204", false));
-        allReservas.add(new Reserva("R029", "Decameron", idMiguelJara, 1, 1, 0, "01/07/2025", "03/07/2025", "activo", 700,
-                false, false, 0, false, null, null, "205", false));
-        allReservas.add(new Reserva("R043", "Decameron", idFlavioFarro, 1, 2, 0, "05/07/2025", "10/07/2025", "activo", 1200,
-                false, false, 0, false, null, null, "206", false));
-        allReservas.add(new Reserva("R044", "Decameron", idJosePhan, 1, 1, 0, "12/07/2025", "14/07/2025", "activo", 650,
-                false, false, 0, false, null, null, "207", false));
 
         // Reservas de Oro Verde
         allReservas.add(new Reserva("R008", "Oro Verde", idEduardoCampos, 1, 2, 0, "05/06/2025", "08/06/2025", "activo", 950,
@@ -353,10 +299,6 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "302", false));
         allReservas.add(new Reserva("R031", "Oro Verde", idAaronVilla, 1, 1, 0, "20/07/2025", "23/07/2025", "activo", 800,
                 false, false, 0, false, null, null, "303", false));
-        allReservas.add(new Reserva("R045", "Oro Verde", idOllantaHumala, 2, 3, 1, "01/08/2025", "06/08/2025", "activo", 1500,
-                false, false, 0, false, null, null, "304", false));
-        allReservas.add(new Reserva("R046", "Oro Verde", idNadineHeredia, 1, 2, 0, "10/08/2025", "13/08/2025", "activo", 900,
-                false, false, 0, false, null, null, "305", false));
 
         // Reservas de Boca Ratón
         allReservas.add(new Reserva("R009", "Boca Ratón", idSigridBazan, 1, 1, 0, "01/07/2025", "04/07/2025", "activo", 550,
@@ -365,8 +307,7 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "402", false));
         allReservas.add(new Reserva("R033", "Boca Ratón", idMauricioMulder, 1, 2, 0, "15/08/2025", "18/08/2025", "activo", 650,
                 false, false, 0, false, null, null, "403", false));
-        allReservas.add(new Reserva("R047", "Boca Ratón", idManuelMerino, 1, 1, 0, "20/08/2025", "22/08/2025", "activo", 580,
-                false, false, 0, false, null, null, "404", false));
+
 
         // Reservas de Libertador
         allReservas.add(new Reserva("R010", "Libertador", idPamelaLopez, 1, 2, 0, "25/07/2025", "28/07/2025", "activo", 1300,
@@ -375,8 +316,6 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "502", false));
         allReservas.add(new Reserva("R035", "Libertador", idRobertPrevost, 2, 4, 1, "10/09/2025", "15/09/2025", "activo", 2000,
                 false, false, 0, false, null, null, "503", false));
-        allReservas.add(new Reserva("R048", "Libertador", idAlanGarcia, 1, 2, 0, "18/09/2025", "22/09/2025", "activo", 1400,
-                false, false, 0, false, null, null, "504", false));
 
         // Reservas de Costa del Sol
         allReservas.add(new Reserva("R011", "Costa del Sol", idAlejandroToledo, 1, 2, 0, "12/08/2025", "15/08/2025", "activo", 700,
@@ -385,8 +324,6 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "602", false));
         allReservas.add(new Reserva("R037", "Costa del Sol", idPedroCastillo, 2, 3, 2, "01/10/2025", "07/10/2025", "activo", 1400,
                 false, false, 0, false, null, null, "603", false));
-        allReservas.add(new Reserva("R049", "Costa del Sol", idAgustinLozano, 1, 2, 1, "10/10/2025", "13/10/2025", "activo", 800,
-                false, false, 0, false, null, null, "604", false));
 
         // Reservas de Sonesta
         allReservas.add(new Reserva("R012", "Sonesta", idOscarIbanez, 1, 2, 0, "01/09/2025", "04/09/2025", "activo", 850,
@@ -395,8 +332,7 @@ public class SuperReservasActivity extends AppCompatActivity {
                 false, false, 0, false, null, null, "702", false));
         allReservas.add(new Reserva("R039", "Sonesta", idIsmaelRetes, 2, 3, 1, "15/10/2025", "20/10/2025", "activo", 1200,
                 false, false, 0, false, null, null, "703", false));
-        allReservas.add(new Reserva("R050", "Sonesta", idPatriciaBenavides, 1, 2, 0, "22/10/2025", "25/10/2025", "activo", 950,
-                false, false, 0, false, null, null, "704", false));
+
     }
 
 
@@ -534,17 +470,12 @@ public class SuperReservasActivity extends AppCompatActivity {
             String idPersona = reserva.getIdPersona();
             Cliente cliente = clientesMap.get(idPersona);
             String nombreCompletoCliente = (cliente != null) ? cliente.getNombres() + " " + cliente.getApellidos() : "Cliente: " + reserva.getIdPersona() + " (Cargando...)";
-            tvClienteCard.setText("Cliente: " + nombreCompletoCliente);
+            tvClienteCard.setText(nombreCompletoCliente);
 
 
             tvFechaReservaCard.setText("Fecha de Reserva: " + reserva.getFechaInicio() + " - " + reserva.getFechaFin());
             tvHabitacionCard.setText("Habitaciones: " + reserva.getHabitaciones());
             tvPrecioTotalCard.setText(String.format(Locale.getDefault(), "Precio Total: $%d", reserva.getPrecioTotal()));
-
-            cardView.setOnClickListener(v -> {
-                Toast.makeText(this, "Reserva ID: " + reserva.getIdReserva() + ", Cliente ID: " + reserva.getIdPersona() + " seleccionada.", Toast.LENGTH_SHORT).show();
-            });
-
             llReservasContainer.addView(cardView);
         }
     }

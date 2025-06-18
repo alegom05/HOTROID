@@ -190,10 +190,10 @@ public class SuperListaClientesActivity extends AppCompatActivity {
 
                             // --- DESCOMENTAR ESTE BLOQUE LA PRIMERA VEZ PARA AÑADIR CLIENTES DE EJEMPLO ---
                             // --- LUEGO DE LA PRIMERA EJECUCIÓN EXITOSA, VUELVE A COMENTARLO PARA EVITAR DUPLICADOS ---
-                            if (clientDataList.isEmpty()) { // Only add if the collection is empty
-                                addInitialClientsToFirestore();
-                            }
-                            // ----------------------------------------------------------------------------------
+                             if (clientDataList.isEmpty()) { // Only add if the collection is empty
+                                 // addInitialClientsToFirestore();
+                             }
+                             //----------------------------------------------------------------------------------
 
                         } else {
                             Log.w(TAG, "Error al obtener documentos de clientes: ", task.getException());

@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random; // Para generar números aleatorios
 import java.util.concurrent.atomic.AtomicInteger; // Para el contador en la carga de datos
 
 public class AdminVentasUsuario extends AppCompatActivity {
@@ -73,8 +74,9 @@ public class AdminVentasUsuario extends AppCompatActivity {
     private static final String TAG = "AdminVentasUsuario";
 
     private FirebaseFirestore db;
-    private CollectionReference ventasServiciosRef; // Añadido
-    private CollectionReference clientesRef; // Añadido
+    private CollectionReference ventasServiciosRef;
+    private CollectionReference clientesRef;
+    private CollectionReference serviciosRef; // Referencia a la colección de servicios
     private RecyclerView recyclerView;
     private VentaClienteAdapter adapter;
     private List<VentaClienteConsolidado> ventasConsolidadas;
@@ -82,6 +84,14 @@ public class AdminVentasUsuario extends AppCompatActivity {
     private ImageView ivMonthPicker;
 
     private Calendar selectedCalendar; // Para almacenar el mes y año seleccionados
+
+    // Listas para almacenar todos los IDs de clientes y servicios obtenidos de Firestore para selección aleatoria
+    private List<String> allClientIds = new ArrayList<>();
+    private List<String> allServiceIds = new ArrayList<>();
+
+    // Mapa para almacenar el nombre completo del cliente por su ID (para la visualización en RecyclerView y PDF)
+    private Map<String, String> clientNamesById = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +105,9 @@ public class AdminVentasUsuario extends AppCompatActivity {
         });
 
         db = FirebaseFirestore.getInstance();
-        ventasServiciosRef = db.collection("ventas_servicios"); // Inicializado
-        clientesRef = db.collection("clientes"); // Inicializado
+        ventasServiciosRef = db.collection("ventas_servicios");
+        clientesRef = db.collection("clientes");
+        serviciosRef = db.collection("servicios"); // Inicializado
 
         recyclerView = findViewById(R.id.recyclerVentasUsuario);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -114,13 +125,10 @@ public class AdminVentasUsuario extends AppCompatActivity {
         // Listener para abrir el DatePicker (para seleccionar mes/año)
         ivMonthPicker.setOnClickListener(v -> showMonthYearPicker());
 
-        // *** TEMPORARY: Call this method to add sample data ***
-        // Descomenta la siguiente línea solo para añadir los datos de prueba.
-        // Luego, vuelve a comentarla o bórrala después de la primera ejecución.
-        // addSampleVentasServicioData(); // Asegúrate de tener servicios y clientes reales en DB antes de esto.
-
-        // Cargar los datos inicialmente para el mes actual
-        loadVentasUsuarioData(); // Cargar datos de ventas por usuario
+        // *** PASO CLAVE: Cargar los IDs de clientes y servicios PRIMERO ***
+        // Después de cargar los IDs, se puede llamar a addSampleVentasServicioData() (si es necesario)
+        // y luego loadVentasUsuarioData().
+        loadFirebaseDataAndThenProceed();
 
         CardView cardAdmin = findViewById(R.id.cardAdmin);
         cardAdmin.setOnClickListener(v -> {
@@ -148,16 +156,75 @@ public class AdminVentasUsuario extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.nav_reportes) {
                 // Si esta es la actividad de reportes principal, simplemente retorna true para quedarte aquí.
-                // Si tienes una actividad "AdminReportes" más general, la iniciarías aquí:
-                // startActivity(new Intent(AdminVentasUsuario.this, AdminReportes.class));
                 return true;
             }
             return false;
         });
     }
 
+    /**
+     * Carga todos los IDs de clientes y servicios de Firestore en listas
+     * para su uso posterior (e.g., generación de datos de muestra, mapeo de nombres).
+     * Después de que se completan las cargas, procede a llamar a otros métodos.
+     */
+    private void loadFirebaseDataAndThenProceed() {
+        // Cargar IDs y nombres de clientes
+        Task<QuerySnapshot> loadClientsTask = clientesRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                allClientIds.clear(); // Limpiar lista de IDs anteriores
+                clientNamesById.clear(); // Limpiar mapa de nombres anteriores
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String clientId = document.getId();
+                    allClientIds.add(clientId); // Añadir el ID a la lista de IDs disponibles
+                    String nombres = document.getString("nombres");
+                    String apellidos = document.getString("apellidos");
+                    if (nombres != null && apellidos != null) {
+                        // Guardar el nombre completo asociado al ID para búsquedas rápidas
+                        clientNamesById.put(clientId, nombres + " " + apellidos);
+                    }
+                }
+                Log.d(TAG, "Clientes cargados: " + allClientIds.size());
+            } else {
+                Log.e(TAG, "Error cargando clientes: ", task.getException());
+                Toast.makeText(this, "Error al cargar datos de clientes.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Cargar IDs de servicios
+        Task<QuerySnapshot> loadServicesTask = serviciosRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                allServiceIds.clear(); // Limpiar lista de IDs anteriores
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String serviceId = document.getId();
+                    allServiceIds.add(serviceId); // Añadir el ID a la lista de IDs disponibles
+                }
+                Log.d(TAG, "Servicios cargados: " + allServiceIds.size());
+            } else {
+                Log.e(TAG, "Error cargando servicios: ", task.getException());
+                Toast.makeText(this, "Error al cargar datos de servicios.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Usar Tasks.whenAll para esperar que ambas cargas de datos se completen
+        Tasks.whenAll(loadClientsTask, loadServicesTask)
+                .addOnCompleteListener(allTasks -> {
+                    if (allTasks.isSuccessful()) {
+                        Log.d(TAG, "Todos los IDs de Firebase (clientes y servicios) cargados con éxito.");
+                        // *** DESCOMENTA LA SIGUIENTE LÍNEA SOLO UNA VEZ PARA AÑADIR DATOS DE PRUEBA ***
+                        // Luego, vuelve a comentarla o bórrala para evitar duplicados.
+                        // addSampleVentasServicioData();
+
+                        // Cargar los datos de ventas para el mes actual una vez que los IDs están disponibles
+                        loadVentasUsuarioData();
+                    } else {
+                        Log.e(TAG, "Falló la carga de algunos IDs de Firebase. La aplicación podría no funcionar correctamente.", allTasks.getException());
+                        Toast.makeText(this, "No se pudieron cargar todos los datos iniciales.", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     private void updateMonthDisplay() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES")); // Corregido el formato para mostrar el año
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
         tvMesSeleccionado.setText(sdf.format(selectedCalendar.getTime()));
     }
 
@@ -216,7 +283,6 @@ public class AdminVentasUsuario extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Map<String, VentaClienteConsolidado> ventasConsolidadoMap = new HashMap<>();
-                        List<Task<Void>> clientFetchTasks = new ArrayList<>();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             try {
@@ -226,8 +292,9 @@ public class AdminVentasUsuario extends AppCompatActivity {
 
                                 VentaClienteConsolidado consolidatedVenta = ventasConsolidadoMap.get(clientId);
                                 if (consolidatedVenta == null) {
-                                    // El nombre se buscará después, por ahora un placeholder vacío
-                                    consolidatedVenta = new VentaClienteConsolidado(clientId, "", 0.0);
+                                    // Obtener el nombre del cliente directamente del mapa clientNamesById
+                                    String nombreCompleto = clientNamesById.getOrDefault(clientId, "Cliente Desconocido (ID: " + clientId + ")");
+                                    consolidatedVenta = new VentaClienteConsolidado(clientId, nombreCompleto, 0.0);
                                     ventasConsolidadoMap.put(clientId, consolidatedVenta);
                                 }
                                 consolidatedVenta.addMonto(totalVenta); // Usando el método addMonto
@@ -237,57 +304,13 @@ public class AdminVentasUsuario extends AppCompatActivity {
                             }
                         }
 
-                        // Ahora, buscar los nombres de los clientes para las ventas consolidadas
-                        for (VentaClienteConsolidado consolidated : ventasConsolidadoMap.values()) {
-                            // Solo si el nombre aún no ha sido establecido (debería estar vacío al inicio)
-                            if (consolidated.getNombreCompletoCliente().isEmpty()) {
-                                Task<Void> fetchTask = clientesRef.document(consolidated.getIdCliente()).get()
-                                        .addOnSuccessListener(clientDocument -> {
-                                            if (clientDocument.exists()) {
-                                                Cliente cliente = clientDocument.toObject(Cliente.class);
-                                                if (cliente != null) {
-                                                    // Asumiendo que Cliente tiene getNombres() y getApellidos()
-                                                    String nombreCompleto = cliente.getNombres() + " " + cliente.getApellidos();
-                                                    consolidated.setNombreCompletoCliente(nombreCompleto);
-                                                }
-                                            } else {
-                                                Log.w(TAG, "Cliente con ID " + consolidated.getIdCliente() + " no encontrado en Firestore.");
-                                                consolidated.setNombreCompletoCliente("Cliente Desconocido (ID: " + consolidated.getIdCliente() + ")");
-                                            }
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.e(TAG, "Error al obtener cliente con ID: " + consolidated.getIdCliente() + ", " + e.getMessage());
-                                            consolidated.setNombreCompletoCliente("Error al cargar cliente (ID: " + consolidated.getIdCliente() + ")");
-                                        })
-                                        .continueWith(task1 -> null); // El lambda para continueWith debe retornar un valor (en este caso null para Task<Void>)
-                                clientFetchTasks.add(fetchTask);
-                            }
-                        }
-
-                        // Usar Tasks.whenAll para esperar que todas las tareas de obtención de clientes se completen
-                        if (!clientFetchTasks.isEmpty()) {
-                            Tasks.whenAll(clientFetchTasks)
-                                    .addOnCompleteListener(allTasks -> {
-                                        if (allTasks.isSuccessful()) {
-                                            Log.d(TAG, "Todos los nombres de clientes obtenidos. Actualizando UI.");
-                                            ventasConsolidadas.clear();
-                                            ventasConsolidadas.addAll(ventasConsolidadoMap.values());
-                                            sortAndDisplayVentas();
-                                        } else {
-                                            Log.e(TAG, "Algunas tareas de obtención de nombres de clientes fallaron: ", allTasks.getException());
-                                            // Aunque algunas fallen, actualizamos con los datos que tenemos
-                                            ventasConsolidadas.clear();
-                                            ventasConsolidadas.addAll(ventasConsolidadoMap.values());
-                                            sortAndDisplayVentas();
-                                        }
-                                    });
-                        } else {
-                            // No hay clientes que buscar, simplemente actualizar la UI
-                            Log.d(TAG, "No hay clientes en ventas para buscar nombres. Actualizando UI directamente.");
-                            ventasConsolidadas.clear();
-                            ventasConsolidadas.addAll(ventasConsolidadoMap.values());
-                            sortAndDisplayVentas();
-                        }
+                        // Los nombres de los clientes ya fueron obtenidos y mapeados en clientNamesById
+                        // por loadFirebaseDataAndThenProceed(), por lo que no necesitamos un bucle
+                        // adicional ni Tasks.whenAll para obtener los nombres aquí.
+                        Log.d(TAG, "Nombres de clientes ya disponibles. Actualizando UI con ventas consolidadas.");
+                        ventasConsolidadas.clear();
+                        ventasConsolidadas.addAll(ventasConsolidadoMap.values());
+                        sortAndDisplayVentas();
 
                     } else {
                         Log.e(TAG, "Error obteniendo documentos de ventas: ", task.getException());
@@ -338,7 +361,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
             title.setAlignment(Paragraph.ALIGN_CENTER);
             document.add(title);
 
-            SimpleDateFormat sdfReportMonth = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES")); // Corregido el formato
+            SimpleDateFormat sdfReportMonth = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
             Paragraph subtitle = new Paragraph("Mes: " + sdfReportMonth.format(selectedCalendar.getTime()), subtitleFont);
             subtitle.setAlignment(Paragraph.ALIGN_CENTER);
             subtitle.setSpacingAfter(20f);
@@ -429,7 +452,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
         );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // Asegúrate de tener un icono
+                .setSmallIcon(R.drawable.ic_launcher_foreground) // Asegúrate de tener un icono apropiado
                 .setContentTitle("PDF de Reporte de Ventas por Usuario Generado")
                 .setContentText("Haz clic para abrir el reporte de ventas por usuario.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -447,96 +470,84 @@ public class AdminVentasUsuario extends AppCompatActivity {
 
     // ************************************************************
     // *** INICIO DE MÉTODOS PARA AÑADIR DATOS DE PRUEBA (TEMPORAL) ***
-    // Puedes comentar o eliminar estos métodos después de usarlos.
-    // Asegúrate de que los IDs de cliente y servicio sean reales en tu base de datos.
     // ************************************************************
+    /**
+     * Añade datos de ventas de servicio de ejemplo a Firestore utilizando IDs
+     * de clientes y servicios existentes y aleatorios de las listas previamente cargadas.
+     * Este método solo debe llamarse una vez para poblar la base de datos de prueba.
+     */
     private void addSampleVentasServicioData() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (allClientIds.isEmpty() || allServiceIds.isEmpty()) {
+            Log.e(TAG, "No se pueden añadir ventas de ejemplo: Faltan IDs de clientes o servicios. " +
+                    "Asegúrate de que las colecciones 'clientes' y 'servicios' tengan documentos en Firestore.");
+            Toast.makeText(this, "Asegúrate de tener clientes y servicios en Firestore antes de añadir datos de muestra.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Random random = new Random();
         List<VentaServicio> sampleVentas = new ArrayList<>();
-
-        // --- IMPORTANTE: Reemplaza estos con tus IDs REALES de CLIENTES de Firestore ---
-        // Estos IDs de cliente son consistentes con tus capturas de pantalla de Firebase.
-        // Asumiendo que estos son los IDs de tus documentos en la colección 'clientes'.
-        String CLIENT_ID_PAMELA = "4WtmgavW2xpZtLclbg76"; // Tu ID de Pamela
-        String CLIENT_ID_ALONSO = "5PxcEUoWep0JVe67PZQy"; // ID de Alonso
-        String CLIENT_ID_ROBERT = "JQSEUylORLpKdyAH2Vt3"; // ID de Robert
-        String CLIENT_ID_RUBEN = "YgFzSkts9pMY3FoVGprg";  // ID de Ruben
-        String CLIENT_ID_GUMERCINDO = "ijAo74LEw6ANJRDGB8D5"; // ID de Gumercindo
-
-        // --- IMPORTANTE: Reemplaza estos con tus IDs REALES de SERVICIOS de Firestore ---
-        // He usado los IDs que aparecen en tus capturas de la colección 'servicios'.
-        // Verifica que estos IDs sean EXACTOS a los de tus documentos en la colección 'servicios'.
-        String SERVICE_ID_LAVANDERIA = "L5tMZ01Lzflhbr279Y9o"; //
-        String SERVICE_ID_JARDINERIA = "AySL6OmQ0uvut09LzWcd"; //
-        String SERVICE_ID_ELECTRICIDAD = "CXVY2UDbI5IhfOF5nyZH"; //
-        String SERVICE_ID_FONTANERIA = "8FtghYALwtcjjn9T7TNh"; //
-        String SERVICE_ID_PINTURA = "MHDuY7FWio4kGoclrOij"; //
-        String SERVICE_ID_KARAOKE = "65QQCSuDAC9Sra1P6PnR"; //
-        String SERVICE_ID_GYM = "G6SmZnjshIeY55vxw7vn"; //
-
-
         Calendar cal = Calendar.getInstance();
 
-        // --- Datos de Ventas para Abril 2025 (mezcla de clientes y servicios) ---
-        cal.set(2025, Calendar.APRIL, 5, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_LAVANDERIA, CLIENT_ID_PAMELA, 2, 50.0, 100.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 20, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_KARAOKE, CLIENT_ID_PAMELA, 1, 50.5, 50.5, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 22, 11, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_GYM, CLIENT_ID_ALONSO, 3, 50.0, 150.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 8, 11, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_JARDINERIA, CLIENT_ID_ALONSO, 1, 75.0, 75.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 12, 14, 30, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_ELECTRICIDAD, CLIENT_ID_ROBERT, 1, 120.0, 120.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 15, 9, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, CLIENT_ID_RUBEN, 1, 200.0, 200.0, cal.getTime()));
-        cal.set(2025, Calendar.APRIL, 18, 16, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_FONTANERIA, CLIENT_ID_GUMERCINDO, 1, 90.0, 90.0, cal.getTime()));
+        // Número de ventas de ejemplo a generar (puedes ajustar este número)
+        int numberOfSales = 20;
+
+        for (int i = 0; i < numberOfSales; i++) {
+            // Seleccionar un cliente y un servicio aleatorios de las listas cargadas
+            String randomClientId = allClientIds.get(random.nextInt(allClientIds.size()));
+            String randomServiceId = allServiceIds.get(random.nextInt(allServiceIds.size()));
+
+            // Generar un precio y cantidad aleatorios
+            double precioUnitario = 20.0 + (180.0 * random.nextDouble()); // Precio entre 20.0 y 200.0
+            int cantidad = 1 + random.nextInt(3); // Cantidad entre 1 y 3
+            double totalVenta = precioUnitario * cantidad;
+
+            // Generar una fecha aleatoria en los últimos 3 meses
+            cal.setTime(new Date()); // Empieza con la fecha y hora actuales
+            // Retrocede hasta 2 meses (0, 1 o 2 meses atrás)
+            cal.add(Calendar.MONTH, -random.nextInt(3));
+            // Establece un día aleatorio dentro del mes seleccionado
+            cal.set(Calendar.DAY_OF_MONTH, 1 + random.nextInt(cal.getActualMaximum(Calendar.DAY_OF_MONTH)));
+            // Establece una hora aleatoria de 8 AM a 5 PM
+            cal.set(Calendar.HOUR_OF_DAY, 8 + random.nextInt(10)); // 8 (inclusive) a 17 (exclusive) -> 8 a 16
+            cal.set(Calendar.MINUTE, random.nextInt(60));
+            cal.set(Calendar.SECOND, random.nextInt(60));
 
 
-        // --- Datos de Ventas para Mayo 2025 (mezcla de clientes y servicios) ---
-        cal.set(2025, Calendar.MAY, 15, 17, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_GYM, CLIENT_ID_PAMELA, 3, 50.0, 150.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 20, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_KARAOKE, CLIENT_ID_ROBERT, 1, 50.5, 50.5, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 25, 11, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_LAVANDERIA, CLIENT_ID_PAMELA, 1, 120.0, 120.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 3, 9, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_JARDINERIA, CLIENT_ID_ROBERT, 2, 75.0, 150.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 7, 13, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_ELECTRICIDAD, CLIENT_ID_RUBEN, 1, 120.0, 120.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 10, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, CLIENT_ID_GUMERCINDO, 1, 200.0, 200.0, cal.getTime()));
-        cal.set(2025, Calendar.MAY, 18, 8, 30, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_FONTANERIA, CLIENT_ID_ALONSO, 1, 90.0, 90.0, cal.getTime()));
+            sampleVentas.add(new VentaServicio(null, randomServiceId, randomClientId, cantidad, precioUnitario, totalVenta, cal.getTime()));
+        }
 
+        // Añadir todas las ventas generadas a Firestore
+        AtomicInteger successCount = new AtomicInteger(0);
+        AtomicInteger failureCount = new AtomicInteger(0);
+        int totalSalesToProcess = sampleVentas.size();
 
-        // --- Datos de Ventas para Junio 2025 (mezcla de clientes y servicios) ---
-        cal.set(2025, Calendar.JUNE, 1, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_LAVANDERIA, CLIENT_ID_ROBERT, 1, 50.0, 50.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 16, 14, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_GYM, CLIENT_ID_ALONSO, 2, 50.0, 100.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 20, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_KARAOKE, CLIENT_ID_ROBERT, 1, 50.5, 50.5, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 5, 15, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_JARDINERIA, CLIENT_ID_RUBEN, 1, 75.0, 75.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 10, 11, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_ELECTRICIDAD, CLIENT_ID_GUMERCINDO, 2, 120.0, 240.0, cal.getTime()));
-        cal.set(2025, Calendar.JUNE, 14, 10, 0, 0);
-        sampleVentas.add(new VentaServicio(null, SERVICE_ID_PINTURA, CLIENT_ID_PAMELA, 1, 200.0, 200.0, cal.getTime()));
+        if (totalSalesToProcess == 0) {
+            Toast.makeText(this, "No se generaron ventas de servicio de ejemplo para añadir.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-
-        // Añadir todas las ventas a Firestore
         for (VentaServicio venta : sampleVentas) {
             db.collection("ventas_servicios").add(venta)
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "Venta de servicio añadida con ID: " + documentReference.getId());
+                        successCount.incrementAndGet();
+                        // Si todas las operaciones se han completado (éxitos + fallos == total), mostrar Toast
+                        if (successCount.get() + failureCount.get() == totalSalesToProcess) {
+                            Toast.makeText(AdminVentasUsuario.this, "Añadidos " + successCount.get() + " ventas de servicio de ejemplo.", Toast.LENGTH_SHORT).show();
+                            loadVentasUsuarioData(); // Recargar los datos para mostrar las nuevas ventas
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Error al añadir venta de servicio: " + e.getMessage(), e);
+                        failureCount.incrementAndGet();
+                        // Si todas las operaciones se han completado, mostrar Toast (incluso con errores)
+                        if (successCount.get() + failureCount.get() == totalSalesToProcess) {
+                            Toast.makeText(AdminVentasUsuario.this, "Añadidos " + successCount.get() + " ventas de servicio de ejemplo con " + failureCount.get() + " errores.", Toast.LENGTH_LONG).show();
+                            loadVentasUsuarioData(); // Recargar los datos (mostrará lo que se haya añadido)
+                        }
                     });
         }
-        Toast.makeText(this, "Añadiendo ventas de servicio de ejemplo...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Intentando añadir " + totalSalesToProcess + " ventas de servicio de ejemplo...", Toast.LENGTH_SHORT).show();
     }
     // ************************************************************
     // *** FIN DE MÉTODOS PARA AÑADIR DATOS DE PRUEBA (TEMPORAL) ***

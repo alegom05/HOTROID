@@ -274,13 +274,13 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                         "ABC-123", null, // Placeholder, will use default image bytes
                         "activado", "En Camino"
                 ),
-                new Taxista(
+                /*new Taxista(
                         "Alex David", "Russo Muro", "DNI", "87654321", "1988-05-20",
                         "alex@example.com", "912345678", "Calle Falsa 456",
                         null,
                         "DEF-456", null,
                         "activado", "Asignado"
-                ),
+                ),*/
                 new Taxista(
                         "Marcelo Juan", "Vilca Lora", "DNI", "11223344", "1992-11-01",
                         "marcelo@example.com", "934567890", "Jr. Luna 789",
@@ -293,7 +293,7 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                         "arturo@example.com", "978901234", "Pje. Estrella 202",
                         null,
                         "MNO-202", null,
-                        "desactivado", "No Asignado"
+                        "pendiente", "No Asignado"
                 ),
                 new Taxista(
                         "Farid Antony", "Puente Aguilar", "DNI", "44332211", "1991-09-05",

@@ -110,8 +110,8 @@ public class AdminVentasServicio extends AppCompatActivity {
         // *** TEMPORARY: Call this method to add sample data ***
         // Descomenta la siguiente línea solo para añadir los datos de prueba
         // Luego, vuelve a comentarla o bórrala después de la primera ejecución.
-        // addSampleServicesToFirestore(); // Descomenta si necesitas añadir servicios primero
-        // addSampleVentasServicioData();
+        //addSampleServicesToFirestore(); // Descomenta si necesitas añadir servicios primero
+        //addSampleVentasServicioData();
 
 
         // Cargar los datos inicialmente para el mes actual
