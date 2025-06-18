@@ -19,14 +19,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hotroid.R;
+import com.example.hotroid.databinding.ActivityMainBinding;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.FirebaseApp;
+
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String TAG = "MAINACTDEBUG";
 
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "oncreate");
         Button btnCliente = findViewById(R.id.btnCliente);
@@ -34,6 +43,16 @@ public class MainActivity extends AppCompatActivity {
         Button btnTaxista = findViewById(R.id.btnTaxista);
         Button btnAdmin = findViewById(R.id.btnAdmin);
         Button btnSuperAdmin = findViewById(R.id.btnSuperAdmin);
+
+        Intent intent2 = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(Arrays.asList(
+                        new AuthUI.IdpConfig.EmailBuilder().build(),
+                        new AuthUI.IdpConfig.GoogleBuilder().build()
+                ))
+                .build();
+        signInLauncher.launch(intent2);
+
 
         btnCliente.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ClienteActivity.class);
@@ -65,6 +84,22 @@ public class MainActivity extends AppCompatActivity {
         Log.d ("contador", "" +  String.valueOf(contador));
         textView.setText(String.valueOf(contador));
     }*/
+
+    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Usuario autenticado correctamente
+                    Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Inicio de sesión cancelado", Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
+
+
+
+
 
     /**** App Bar - Start ****/
     @Override
