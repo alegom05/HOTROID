@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import androidx.annotation.NonNull; // Importar si no está
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +26,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SuperActivity extends AppCompatActivity {
+
+    private static final String TAG = "SuperActivity"; // Etiqueta para logs
 
     private FirebaseFirestore db;
     private RecyclerView recyclerViewHotels;
@@ -46,16 +50,22 @@ public class SuperActivity extends AppCompatActivity {
 
         // Inicializar lista y adaptador
         hotelList = new ArrayList<>();
+        // El adaptador necesita ser inicializado con la lista vacía al principio
+        // y se le pasarán los datos cuando se carguen.
         hotelAdapter = new SuperHotelAdapter(this, hotelList);
 
         // Configurar RecyclerView
         recyclerViewHotels = findViewById(R.id.recyclerViewHotels);
         recyclerViewHotels.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewHotels.setAdapter(hotelAdapter);
-        recyclerViewHotels.setHasFixedSize(true);
+        recyclerViewHotels.setHasFixedSize(true); // Optimización si el tamaño de los ítems es fijo
 
         // Cargar hoteles
-        checkAndLoadHotels();
+        // Retrasamos la carga inicial un poco para asegurar que la UI esté lista
+        // (aunque generalmente no es estrictamente necesario, ayuda en ciertos casos).
+        // Lo que es más importante es la lógica de checkAndLoadHotels.
+        new Handler().postDelayed(this::checkAndLoadHotels, 500);
+
 
         // Configurar buscador
         setupSearch();
@@ -65,76 +75,86 @@ public class SuperActivity extends AppCompatActivity {
     }
 
     private void checkAndLoadHotels() {
-        Log.d("SuperActivity", "Verificando existencia de hoteles...");
+        Log.d(TAG, "Verificando existencia de hoteles en Firestore...");
         db.collection("hoteles")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().isEmpty()) {
-                            Log.d("SuperActivity", "No hay hoteles, agregando datos iniciales...");
+                            Log.d(TAG, "No hay documentos en la colección 'hoteles'. Agregando datos iniciales...");
                             addInitialHotels();
                         } else {
-                            Log.d("SuperActivity", "Hoteles encontrados, cargando...");
+                            Log.d(TAG, "Documentos encontrados en 'hoteles'. Cargando hoteles...");
                             loadHotelsFromFirestore();
                         }
                     } else {
-                        Log.e("SuperActivity", "Error al verificar hoteles", task.getException());
-                        Toast.makeText(this, "Error al cargar hoteles", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Error al verificar la colección 'hoteles': " + task.getException().getMessage());
+                        Toast.makeText(this, "Error al verificar hoteles: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void loadHotelsFromFirestore() {
-        Log.d("SuperActivity", "Cargando hoteles desde Firestore...");
+        Log.d(TAG, "Iniciando carga de hoteles desde Firestore...");
         db.collection("hoteles")
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        hotelList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            try {
-                                Hotel hotel = document.toObject(Hotel.class);
-                                hotel.setIdHotel(document.getId());
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Hotel> fetchedHotels = new ArrayList<>(); // Nueva lista para los hoteles cargados
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                try {
+                                    // Intenta convertir el documento directamente a un objeto Hotel
+                                    Hotel hotel = document.toObject(Hotel.class);
+                                    hotel.setIdHotel(document.getId()); // Asigna el ID del documento Firestore
 
-                                // Convertir imageName a resource ID
-                                if (hotel.getImageName() != null && !hotel.getImageName().isEmpty()) {
-                                    int resId = getResources().getIdentifier(
-                                            hotel.getImageName().toLowerCase(),
-                                            "drawable",
-                                            getPackageName()
-                                    );
-                                    hotel.setImageResourceId(resId != 0 ? resId : R.drawable.placeholder_hotel);
-                                } else {
-                                    hotel.setImageResourceId(R.drawable.placeholder_hotel);
+                                    // Convierte el imageName a resource ID
+                                    if (hotel.getImageName() != null && !hotel.getImageName().isEmpty()) {
+                                        int resId = getResources().getIdentifier(
+                                                hotel.getImageName().toLowerCase(Locale.getDefault()), // Asegúrate de la minúscula y locale
+                                                "drawable",
+                                                getPackageName()
+                                        );
+                                        hotel.setImageResourceId(resId != 0 ? resId : R.drawable.placeholder_hotel);
+                                        Log.d(TAG, "Hotel: " + hotel.getName() + " - ImageName: " + hotel.getImageName() + " - ResId: " + resId);
+                                    } else {
+                                        hotel.setImageResourceId(R.drawable.placeholder_hotel);
+                                        Log.w(TAG, "Hotel: " + hotel.getName() + " no tiene imageName. Usando placeholder.");
+                                    }
+
+                                    fetchedHotels.add(hotel);
+                                    Log.d(TAG, "Hotel cargado exitosamente: " + hotel.getName() + " (ID: " + hotel.getIdHotel() + ")");
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error al procesar documento de hotel " + document.getId() + ": " + e.getMessage(), e);
+                                    // Opcional: Toast para errores individuales si son críticos
+                                    // Toast.makeText(SuperActivity.this, "Error al procesar un hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-
-                                hotelList.add(hotel);
-                                Log.d("SuperActivity", "Hotel añadido: " + hotel.getName());
-                            } catch (Exception e) {
-                                Log.e("SuperActivity", "Error al procesar hotel: " + e.getMessage());
                             }
-                        }
 
-                        // Actualizar adaptador
-                        hotelAdapter.setHotels(hotelList);
-                        Log.d("SuperActivity", "Total hoteles cargados: " + hotelList.size());
+                            // Actualizar adaptador con la nueva lista de hoteles
+                            hotelAdapter.setHotels(fetchedHotels); // Pasar la lista completa y actualizada
+                            Log.d(TAG, "Total de hoteles cargados y adaptador actualizado: " + fetchedHotels.size());
 
-                        if (hotelList.isEmpty()) {
-                            Log.d("SuperActivity", "La lista de hoteles está vacía");
-                            Toast.makeText(this, "No se encontraron hoteles", Toast.LENGTH_SHORT).show();
+                            if (fetchedHotels.isEmpty()) {
+                                Log.d(TAG, "La lista de hoteles cargados de Firestore está vacía.");
+                                Toast.makeText(SuperActivity.this, "No se encontraron hoteles en Firestore.", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Log.e(TAG, "Error al obtener documentos de hoteles: " + task.getException().getMessage(), task.getException());
+                            Toast.makeText(SuperActivity.this, "Error al cargar hoteles: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Log.e("SuperActivity", "Error al cargar hoteles", task.getException());
-                        Toast.makeText(this, "Error al cargar hoteles", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void addInitialHotels() {
-        Log.d("SuperActivity", "Agregando los 7 hoteles iniciales...");
+        Log.d(TAG, "Agregando los 7 hoteles iniciales...");
 
         List<Hotel> initialHotels = new ArrayList<>();
 
+        // ... (Tu código para crear los 7 objetos Hotel, el cual ya está bien) ...
         // Hotel 1: Boca Raton
         Hotel bocaRaton = new Hotel();
         bocaRaton.setName("Boca Raton");
@@ -213,20 +233,27 @@ public class SuperActivity extends AppCompatActivity {
         initialHotels.add(costaDelSol);
 
         // Guardar todos los hoteles en Firestore
+        // Usa addOnCompleteListener para saber cuándo ha terminado de añadir todos los hoteles
+        // y solo entonces intentar cargar.
+        CollectionReference hotelesRef = db.collection("hoteles");
+        int[] hotelsAddedCount = {0}; // Para contar los hoteles añadidos
         for (Hotel hotel : initialHotels) {
-            db.collection("hoteles")
-                    .add(hotel)
+            hotelesRef.add(hotel)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Log.d("SuperActivity", "Hotel agregado: " + hotel.getName());
+                            Log.d(TAG, "Hotel agregado a Firestore: " + hotel.getName());
+                            hotelsAddedCount[0]++;
+                            // Si es el último hotel agregado, entonces carga todos
+                            if (hotelsAddedCount[0] == initialHotels.size()) {
+                                Log.d(TAG, "Todos los hoteles iniciales han sido agregados. Cargando desde Firestore...");
+                                // Retraso opcional para asegurar sincronización de Firestore
+                                new Handler().postDelayed(this::loadHotelsFromFirestore, 1000); // Pequeño retraso
+                            }
                         } else {
-                            Log.e("SuperActivity", "Error al agregar hotel " + hotel.getName(), task.getException());
+                            Log.e(TAG, "Error al agregar hotel " + hotel.getName() + ": " + task.getException().getMessage(), task.getException());
                         }
                     });
         }
-
-        // Esperar 1.5 segundos y luego cargar los hoteles
-        new Handler().postDelayed(this::loadHotelsFromFirestore, 1500);
     }
 
     private void setupSearch() {
@@ -277,7 +304,8 @@ public class SuperActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recargar datos cuando la actividad se reanuda
+        // Cuando la actividad vuelve a estar visible, recarga los hoteles por si hubo cambios
+        // (Aunque loadHotelsFromFirestore ya lo hace en onCreate/addInitialHotels, esto es una buena práctica)
         loadHotelsFromFirestore();
     }
 }

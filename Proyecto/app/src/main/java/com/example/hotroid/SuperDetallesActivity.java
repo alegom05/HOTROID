@@ -9,66 +9,47 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide; // Para cargar imágenes desde URL
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale; // Si aún quieres mostrar rating/precio
 
 public class SuperDetallesActivity extends AppCompatActivity {
 
-    private TextView tvHotelNameAndLocation; // Combina nombre y ubicación
-    private TextView tvHotelDescription; // Para la descripción detallada
+    private TextView tvHotelName; // Para el nombre del hotel
+    private TextView tvHotelRating; // Para el rating
+    private TextView tvHotelPrice; // Para el precio
+    private TextView tvHotelDetailedAddress; // Para la dirección detallada
+    private TextView tvHotelDescription; // Para la descripción
     private ImageView imgHotelMain; // Tu ImageView para la imagen principal
     private Button btnVerReservas; // Tu botón de ver reservas
-
-    // Si quieres mostrar Rating, Precio, Dirección Detallada, necesitarás añadir estos TextViews a tu XML
-    // y luego descomentarlos y referenciarlos aquí. Por ahora, los dejo comentados.
-    // private TextView tvHotelRating;
-    // private TextView tvHotelPrice;
-    // private TextView tvHotelDetailedAddress;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_detalles_hotel); // ¡Tu XML correcto!
 
-        // Inicializar vistas según tus IDs de XML
-        tvHotelNameAndLocation = findViewById(R.id.tvNombreHotel); // Combina nombre y ubicación en uno
+        // 1. Inicializar vistas según tus IDs de XML
+        // tvTitulo es un TextView general que dice "Detalles del Hotel", no necesita ser modificado
+        // tvNombre y tvRol son para la CardView del administrador, no para el hotel detallado.
+
+        tvHotelName = findViewById(R.id.tvNombreHotel); // Usamos este para el nombre
+        tvHotelRating = findViewById(R.id.tvHotelRating);
+        tvHotelPrice = findViewById(R.id.tvHotelPrice);
+        tvHotelDetailedAddress = findViewById(R.id.tvHotelDetailedAddress);
         tvHotelDescription = findViewById(R.id.tvDescripcion);
-        imgHotelMain = findViewById(R.id.imgHotel); // Tu ImageView
+        imgHotelMain = findViewById(R.id.imgHotel);
         btnVerReservas = findViewById(R.id.btnVerReservas);
 
-        // Opcional: Referenciar otros TextViews si los agregas a tu XML
-        // tvHotelRating = findViewById(R.id.tvHotelRating);
-        // tvHotelPrice = findViewById(R.id.tvHotelPrice);
-        // tvHotelDetailedAddress = findViewById(R.id.tvHotelDetailedAddress);
-
-        // Configurar el click listener para la CardView del Super Admin (si es clickeable)
-        // Aunque en tu XML es clickable, si no lo manejas, no hará nada.
-        // Si cardSuper en activity_super_detalles.xml es la misma CardView que en super_main.xml
-        // y quieres que vaya a SuperCuentaActivity, descomenta esto:
-        /*
-        CardView cardSuper = findViewById(R.id.cardSuper);
-        cardSuper.setOnClickListener(v -> {
-            Intent intent = new Intent(SuperDetallesActivity.this, SuperCuentaActivity.class);
-            startActivity(intent);
-        });
-        */
-
-        // Configurar el BottomNavigationView
+        // 2. Configurar el BottomNavigationView (lo tienes bien, solo asegúrate de los IDs)
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         if (bottomNavigationView != null) {
-            // Asegúrate de que el ID seleccionado sea el correcto para esta vista,
-            // o simplemente desactiva la selección si no quieres que un item esté "activo" aquí.
-            // bottomNavigationView.setSelectedItemId(R.id.nav_hoteles); // O el que corresponda
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_hoteles) {
-                    // Si esta actividad es a la que se llega desde "Hoteles",
-                    // al volver a presionar Hoteles, simplemente finaliza para volver a SuperActivity
+                    // Si esta actividad se abrió desde "Hoteles" en SuperActivity, al volver a presionar
+                    // "Hoteles", simplemente finalizamos para regresar a SuperActivity.
+                    // Si esta fuera la actividad principal de Hoteles, no usaríamos finish()
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_usuarios) {
@@ -86,57 +67,51 @@ public class SuperDetallesActivity extends AppCompatActivity {
             });
         }
 
-        // Obtener datos del Intent
+        // 3. Obtener datos del Intent y rellenar las vistas
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String hotelId = extras.getString("hotel_id");
             String hotelName = extras.getString("hotel_name");
-            String hotelLocation = extras.getString("hotel_location");
-            float hotelRating = extras.getFloat("hotel_rating", 0.0f); // Valor por defecto
-            String hotelPrice = extras.getString("hotel_price");
+            String hotelLocation = extras.getString("hotel_location"); // No usado directamente en el XML de detalles, pero disponible
+            float hotelRating = extras.getFloat("hotel_rating", 0.0f);
+            double hotelPrice = extras.getDouble("hotel_price", 0.0); // Ahora es double
             String hotelDetailedAddress = extras.getString("hotel_detailed_address");
             String hotelDescription = extras.getString("hotel_description");
-            ArrayList<String> imageUrls = extras.getStringArrayList("hotel_image_urls");
+            String imageName = extras.getString("hotel_image_name"); // El nombre del drawable
 
-            // Rellenar vistas con los datos
-            // Combina nombre y ubicación en el TextView existente tvNombreHotel
-            tvHotelNameAndLocation.setText(hotelName + ", " + hotelLocation);
+            // Rellenar TextViews con los datos
+            tvHotelName.setText(hotelName); // Asigna solo el nombre al tvNombreHotel
+            tvHotelRating.setText(String.format(Locale.getDefault(), "%.1f", hotelRating));
+            tvHotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", hotelPrice)); // Formatear precio
+            tvHotelDetailedAddress.setText(hotelDetailedAddress); // Asigna la dirección detallada
             tvHotelDescription.setText(hotelDescription);
 
-            // Si agregas estos TextViews a tu XML, descomenta estas líneas
-            // tvHotelRating.setText(String.format(Locale.getDefault(), "%.1f", hotelRating));
-            // tvHotelPrice.setText(hotelPrice);
-            // tvHotelDetailedAddress.setText(hotelDetailedAddress);
-
-            // Cargar la primera imagen de la lista en tu ImageView imgHotel
-            if (imageUrls != null && !imageUrls.isEmpty()) {
-                Glide.with(this)
-                        .load(imageUrls.get(0)) // Carga la primera URL de la lista
-                        .placeholder(R.drawable.placeholder_hotel) // Asegúrate de tener este drawable
-                        .error(R.drawable.ic_user_error) // Asegúrate de tener este drawable
-                        .into(imgHotelMain);
-
-                // TODO: Aquí es donde integrarías la galería deslizable (ViewPager2 o similar)
-                // Usarías la lista 'imageUrls' para un adaptador que muestre todas las imágenes.
-                // Esta sección la desarrollarás cuando implementes la galería.
-                // Por ejemplo, si tienes un ViewPager2 con ID 'viewPagerGallery':
-                // ViewPager2 viewPagerGallery = findViewById(R.id.viewPagerGallery);
-                // ImageGalleryAdapter adapter = new ImageGalleryAdapter(imageUrls);
-                // viewPagerGallery.setAdapter(adapter);
-
+            // Cargar imagen usando el nombre del drawable
+            if (imageName != null && !imageName.isEmpty()) {
+                int imageResId = getResources().getIdentifier(imageName.toLowerCase(Locale.getDefault()), "drawable", getPackageName());
+                if (imageResId != 0) {
+                    imgHotelMain.setImageResource(imageResId);
+                } else {
+                    imgHotelMain.setImageResource(R.drawable.placeholder_hotel); // Placeholder si no se encuentra
+                    Toast.makeText(this, "Imagen no encontrada: " + imageName, Toast.LENGTH_SHORT).show();
+                }
             } else {
-                imgHotelMain.setImageResource(R.drawable.placeholder_hotel); // Si no hay URLs, muestra un placeholder
+                imgHotelMain.setImageResource(R.drawable.placeholder_hotel); // Placeholder si no hay nombre de imagen
             }
 
-            // Click listener para el botón "Ver Reservas"
+
+            // 4. Configurar el click listener para el botón "Ver Reservas"
             btnVerReservas.setOnClickListener(v -> {
-                // TODO: Aquí la lógica para ir a la actividad de reservas del hotel
-                // Puedes pasar el hotelId para cargar las reservas específicas de este hotel.
-                // Intent intentReservas = new Intent(SuperDetallesActivity.this, ReservasActivity.class);
-                // intentReservas.putExtra("hotel_id", hotelId);
-                // startActivity(intentReservas);
-                Toast.makeText(SuperDetallesActivity.this, "Ver Reservas del Hotel: " + hotelName, Toast.LENGTH_SHORT).show();
+                // Navegar a SuperReservasActivity, pasando el ID del hotel
+                Intent intentReservas = new Intent(SuperDetallesActivity.this, SuperReservasActivity.class);
+                intentReservas.putExtra("hotel_id", hotelId); // Pasar el ID del documento del hotel
+                Toast.makeText(SuperDetallesActivity.this, "Cargando reservas para: " + hotelName, Toast.LENGTH_SHORT).show();
+                startActivity(intentReservas);
             });
+        } else {
+            Toast.makeText(this, "No se recibieron datos del hotel.", Toast.LENGTH_SHORT).show();
+            // Opcional: Finalizar la actividad si no hay datos
+            // finish();
         }
     }
 }
