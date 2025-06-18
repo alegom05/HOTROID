@@ -1,152 +1,276 @@
 package com.example.hotroid;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.bean.Reserva;
 import com.example.hotroid.bean.Room;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import com.example.hotroid.RoomFirebase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random; // Para generar áreas aleatorias
 
 public class AdminHabitacionesActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerView rvHabitaciones;
     private HabitacionesAdapter adapter;
-    private ArrayList<Room> roomList;
+    private List<Room> roomList;
+    private List<Room> originalRoomList;
+    private FirebaseFirestore db;
+    private List<Reserva> reservasList;
+    private EditText etBuscadorHabitaciones;
+    private Button btnLimpiarBuscadorHabitaciones;
+    private Button btnRegistrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.admin_habitaciones);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        recyclerView = findViewById(R.id.rvHabitaciones);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-        // Set the adapter
+        db = FirebaseFirestore.getInstance();
         roomList = new ArrayList<>();
+        originalRoomList = new ArrayList<>();
+        reservasList = new ArrayList<>();
+
+        rvHabitaciones = findViewById(R.id.rvHabitaciones);
+        rvHabitaciones.setLayoutManager(new LinearLayoutManager(this));
+
         adapter = new HabitacionesAdapter(roomList);
-        recyclerView.setAdapter(adapter);
+        rvHabitaciones.setAdapter(adapter);
 
-        // Set up the Register button click listener
-        findViewById(R.id.btnRegistrar).setOnClickListener(v -> {
-            // Open AdminNuevaHabitacionActivity when Register button is clicked
-            Intent intent = new Intent(AdminHabitacionesActivity.this, AdminNuevaHabitacionActivity.class);
-            startActivityForResult(intent, 100);  // Código arbitrario
+        etBuscadorHabitaciones = findViewById(R.id.etBuscadorHabitaciones);
+        btnLimpiarBuscadorHabitaciones = findViewById(R.id.btnLimpiarBuscadorHabitaciones);
+        btnRegistrar = findViewById(R.id.btnRegistrar);
+
+        // --- Lógica del buscador ---
+        etBuscadorHabitaciones.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterRooms(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
-        // Set up click listener for each room item
-        adapter.setOnItemClickListener((position) -> {
-            Room selectedRoom = roomList.get(position);
 
-            // Create an Intent to open RoomDetailActivity
-            Intent intent = new Intent(AdminHabitacionesActivity.this, AdminHabitacionDetallesActivity.class);
-            intent.putExtra("ROOM_NUMBER", selectedRoom.getRoomNumber());
-            intent.putExtra("ROOM_TYPE", selectedRoom.getRoomType());
-            // Optionally add capacity and area
-            intent.putExtra("CAPACITY", selectedRoom.getCapacityAdults() + " Adultos, " + selectedRoom.getCapacityChildren() + " Niños");
-            intent.putExtra("AREA", selectedRoom.getArea());
-            startActivity(intent);
+        btnLimpiarBuscadorHabitaciones.setOnClickListener(v -> {
+            etBuscadorHabitaciones.setText("");
         });
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // BottomNavigationView o Barra inferior de menú
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_registros) {
-                Intent intentInicio = new Intent(AdminHabitacionesActivity.this, AdminActivity.class);
-                startActivity(intentInicio);
-                return true;
-            } else if (item.getItemId() == R.id.nav_taxistas) {
-                Intent intentUbicacion = new Intent(AdminHabitacionesActivity.this, AdminTaxistas.class);
-                startActivity(intentUbicacion);
-                return true;
-            } else if (item.getItemId() == R.id.nav_checkout) {
-                Intent intentAlertas = new Intent(AdminHabitacionesActivity.this, AdminCheckout.class);
-                startActivity(intentAlertas);
-                return true;
-            } else if (item.getItemId() == R.id.nav_reportes) {
-                Intent intentAlertas = new Intent(AdminHabitacionesActivity.this, AdminReportes.class);
-                startActivity(intentAlertas);
-                return true;
-            } else {
-                return false;
+        btnRegistrar.setOnClickListener(v -> {
+            Toast.makeText(AdminHabitacionesActivity.this, "Navegar a la pantalla de registro de habitación", Toast.LENGTH_SHORT).show();
+            // Intent intent = new Intent(AdminHabitacionesActivity.this, AdminRegistrarHabitacionActivity.class);
+            // startActivity(intent);
+        });
+
+        loadReservasThenGenerateAndLoadRooms();
+
+        adapter.setOnItemClickListener(new HabitacionesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Room clickedRoom = roomList.get(position);
+
+                Intent intent = new Intent(AdminHabitacionesActivity.this, AdminEditarHabitacionActivity.class);
+                intent.putExtra("ROOM_ID", clickedRoom.getId());
+                intent.putExtra("ROOM_NUMBER", clickedRoom.getRoomNumber());
+                intent.putExtra("ROOM_TYPE", clickedRoom.getRoomType());
+                intent.putExtra("CAPACITY_ADULTS", clickedRoom.getCapacityAdults()); // Pasar como int
+                intent.putExtra("CAPACITY_CHILDREN", clickedRoom.getCapacityChildren()); // Pasar como int
+                intent.putExtra("AREA", clickedRoom.getArea()); // ¡Pasar como double!
+                startActivity(intent);
             }
         });
 
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        recargarHabitacionesDesdeFirestore();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_registros);
+
+            bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_registros) {
+                    return true;
+                } else if (itemId == R.id.nav_taxistas) {
+                    Intent intentUbicacion = new Intent(AdminHabitacionesActivity.this, AdminTaxistas.class);
+                    startActivity(intentUbicacion);
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_checkout) {
+                    Intent intentCheckout = new Intent(AdminHabitacionesActivity.this, AdminCheckout.class);
+                    startActivity(intentCheckout);
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_reportes) {
+                    Intent intentAlertas = new Intent(AdminHabitacionesActivity.this, AdminReportes.class);
+                    startActivity(intentAlertas);
+                    finish();
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            Log.e("AdminHabitacionesActivity", "BottomNavigationView con ID R.id.bottom_navigation no encontrada.");
+        }
     }
 
-    private void recargarHabitacionesDesdeFirestore() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        roomList.clear();
-
-        db.collection("habitaciones").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        RoomFirebase rf = doc.toObject(RoomFirebase.class);
-                        Room r = new Room(rf.getRoomNumber(), rf.getRoomType(), rf.getCapacityAdults(), rf.getCapacityChildren(), rf.getArea());
-                        roomList.add(r);
+    private void loadReservasThenGenerateAndLoadRooms() {
+        db.collection("reservas")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            reservasList.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Reserva reserva = document.toObject(Reserva.class);
+                                reservasList.add(reserva);
+                            }
+                            Log.d("AdminHabitacionesActivity", "Reservas cargadas exitosamente: " + reservasList.size());
+                            // --- ¡DESCOMENTAR SOLO PARA LA PRIMERA EJECUCIÓN! ---
+                            // generateAndSaveRoomsFromReservas();
+                            // --- COMENTAR DESPUÉS DE LA PRIMERA EJECUCIÓN EXITOSA ---
+                            loadRoomsFromFirestore();
+                        } else {
+                            Log.w("AdminHabitacionesActivity", "Error al obtener documentos de reservas: ", task.getException());
+                            Toast.makeText(AdminHabitacionesActivity.this, "Error al cargar reservas: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                    adapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al cargar habitaciones", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-    private void showNotification(String title, String message) {
-        String CHANNEL_ID = "habitaciones_channel";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Canal Habitaciones",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+    private void generateAndSaveRoomsFromReservas() {
+        if (reservasList.isEmpty()) {
+            Log.w("AdminHabitacionesActivity", "No hay reservas para generar habitaciones.");
+            Toast.makeText(AdminHabitacionesActivity.this, "No hay reservas para generar habitaciones.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_hotroid_icon)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+        List<String> existingRoomNumbers = new ArrayList<>();
+        db.collection("habitaciones")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            existingRoomNumbers.add(document.getString("roomNumber"));
+                        }
+                    }
 
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(1, builder.build());
+                    Random random = new Random(); // Para generar áreas aleatorias
+                    for (Reserva reserva : reservasList) {
+                        if (!existingRoomNumbers.contains(reserva.getRoomNumber())) {
+                            String roomType;
+                            if (reserva.getPrecioTotal() >= 1000) {
+                                roomType = "Suite Lujo";
+                            } else if (reserva.getPrecioTotal() >= 500) {
+                                roomType = "Doble Superior";
+                            } else {
+                                roomType = "Estándar";
+                            }
+
+                            // Generar un área aleatoria para el ejemplo (entre 20 y 60 m²)
+                            double area = 20.0 + (60.0 - 20.0) * random.nextDouble();
+                            area = Math.round(area * 100.0) / 100.0; // Redondear a 2 decimales
+
+                            Room newRoom = new Room(
+                                    null,
+                                    reserva.getRoomNumber(),
+                                    roomType,
+                                    reserva.getAdultos(),
+                                    reserva.getNinos(),
+                                    area // ¡Pasado como double!
+                            );
+
+                            db.collection("habitaciones")
+                                    .add(newRoom)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Log.d("AdminHabitacionesActivity", "Habitación generada y guardada con ID: " + documentReference.getId());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.w("AdminHabitacionesActivity", "Error al añadir habitación", e);
+                                        Toast.makeText(AdminHabitacionesActivity.this, "Error al generar habitación: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    }
+                });
     }
 
+    private void loadRoomsFromFirestore() {
+        db.collection("habitaciones")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            roomList.clear();
+                            originalRoomList.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Room room = document.toObject(Room.class);
+                                roomList.add(room);
+                            }
+                            originalRoomList.addAll(roomList);
+                            adapter.notifyDataSetChanged();
+                            Log.d("AdminHabitacionesActivity", "Habitaciones cargadas: " + roomList.size());
+                            if (roomList.isEmpty()) {
+                                Toast.makeText(AdminHabitacionesActivity.this, "No hay habitaciones registradas.", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.w("AdminHabitacionesActivity", "Error al cargar habitaciones: ", task.getException());
+                            Toast.makeText(AdminHabitacionesActivity.this, "Error al cargar habitaciones: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
 
+    private void filterRooms(String searchText) {
+        List<Room> filteredList = new ArrayList<>();
+        if (searchText.isEmpty()) {
+            filteredList.addAll(originalRoomList);
+        } else {
+            String lowerCaseSearchText = searchText.toLowerCase(Locale.getDefault());
+            for (Room room : originalRoomList) {
+                // Filtrar por número de habitación o tipo de habitación
+                // Ahora convertimos el número de habitación a String para la comparación
+                if (String.valueOf(room.getRoomNumber()).toLowerCase(Locale.getDefault()).contains(lowerCaseSearchText) ||
+                        room.getRoomType().toLowerCase(Locale.getDefault()).contains(lowerCaseSearchText)) {
+                    filteredList.add(room);
+                }
+            }
+        }
+        adapter.updateList(filteredList);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadRoomsFromFirestore();
+    }
 }

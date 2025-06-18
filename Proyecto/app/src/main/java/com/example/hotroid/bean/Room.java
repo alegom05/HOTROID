@@ -1,13 +1,22 @@
 package com.example.hotroid.bean;
 
+import com.google.firebase.firestore.DocumentId;
+
 public class Room {
+    @DocumentId
+    private String id;
     private String roomNumber;
     private String roomType;
-    private String capacityAdults;
-    private String capacityChildren;
-    private String area;
+    private int capacityAdults;
+    private int capacityChildren;
+    private double area; // ¡Cambiado de String a double!
 
-    public Room(String roomNumber, String roomType, String capacityAdults, String capacityChildren, String area) {
+    public Room() {
+        // Default constructor required for calls to DataSnapshot.getValue(Room.class)
+    }
+
+    public Room(String id, String roomNumber, String roomType, int capacityAdults, int capacityChildren, double area) { // Cambiado a double
+        this.id = id;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.capacityAdults = capacityAdults;
@@ -16,6 +25,10 @@ public class Room {
     }
 
     // Métodos getter
+    public String getId() {
+        return id;
+    }
+
     public String getRoomNumber() {
         return roomNumber;
     }
@@ -24,15 +37,40 @@ public class Room {
         return roomType;
     }
 
-    public String getCapacityAdults() {
+    public int getCapacityAdults() {
         return capacityAdults;
     }
 
-    public String getCapacityChildren() {
+    public int getCapacityChildren() {
         return capacityChildren;
     }
 
-    public String getArea() {
+    public double getArea() { // ¡Cambiado a double!
         return area;
+    }
+
+    // Métodos setter
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public void setCapacityAdults(int capacityAdults) {
+        this.capacityAdults = capacityAdults;
+    }
+
+    public void setCapacityChildren(int capacityChildren) {
+        this.capacityChildren = capacityChildren;
+    }
+
+    public void setArea(double area) { // ¡Cambiado a double!
+        this.area = area;
     }
 }
