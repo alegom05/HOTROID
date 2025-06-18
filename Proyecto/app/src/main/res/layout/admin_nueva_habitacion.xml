@@ -11,7 +11,7 @@
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registros"
+        android:text="Registrar Nueva Habitación"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
@@ -19,7 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Card con datos del administrador -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardAdmin"
         android:layout_width="0dp"
@@ -29,7 +28,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="6dp"
-
         app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -98,25 +96,18 @@
             <LinearLayout
                 android:id="@+id/seccionesLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Habitaciones"
-                    android:textStyle="bold"
-                    android:textSize="24sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="Nueva Habitación"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Número de habitación -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -129,16 +120,13 @@
                     android:layout_height="wrap_content"
                     android:hint="Ej: 999"
                     android:inputType="number"
-                    android:layout_marginBottom="16dp"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:layout_marginBottom="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tipo de habitación"
                     android:textStyle="bold" />
-
                 <TextView
                     android:id="@+id/tvTipoHabitacion"
                     android:layout_width="match_parent"
@@ -153,64 +141,33 @@
                     android:paddingEnd="8dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="16dp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Capacidad"
+                    android:text="Capacidad de Adultos"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
-
-                <!-- Capacidad -->
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/idAdultos" android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:hint="Adultos"
+                    android:inputType="number"
+                    android:layout_marginBottom="16dp"/>
 
-
-                    <!-- Adultos -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cantidad de Adultos:   "
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp" />
-
-                    <!-- Niños -->
-                    <EditText
-                        android:id="@+id/etAdultos"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:hint="Adultos"
-                        android:inputType="number"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
-
-
-                    <!-- Adultos -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cantidad de Niños:       "
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp" />
-
-                    <!-- Niños -->
-                    <EditText
-                        android:id="@+id/etNinos"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:hint="Niños"
-                        android:inputType="number"
-                        android:layout_weight="1"/>
-                </LinearLayout>
+                    android:text="Capacidad de Niños"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+                <EditText
+                    android:id="@+id/idNinos" android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Niños"
+                    android:inputType="number"
+                    android:layout_marginBottom="16dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,30 +175,25 @@
                     android:text="Área (m²)"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
-
-                <!-- Área en m² -->
                 <EditText
-                    android:id="@+id/etArea"
-                    android:layout_width="match_parent"
+                    android:id="@+id/idArea" android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Ej: 25"
                     android:inputType="numberDecimal"
                     android:layout_marginBottom="16dp"/>
 
-
-
                 <Button
                     android:id="@+id/btnGuardarHabitacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Guardar"
+                    android:text="Registrar Habitación"
                     android:backgroundTint="#009688"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="16dp"/>
 
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
