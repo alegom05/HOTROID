@@ -19,11 +19,21 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.text.ParseException; // Importar para el manejo de excepciones de parseo de fecha
+import java.text.SimpleDateFormat; // Importar para el formateo de fecha
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date; // Importar java.util.Date
 import java.util.List;
+import java.util.Locale; // Importar para especificar el locale en SimpleDateFormat
 
 public class MisReservasUser extends AppCompatActivity {
+
+    // Se recomienda que SimpleDateFormat sea una instancia de clase si se usa repetidamente
+    // o declararla dentro del método si solo se usa una vez.
+    // Aquí la hacemos una instancia para consistencia y evitar recrearla.
+    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +80,9 @@ public class MisReservasUser extends AppCompatActivity {
     private List<ReservaConHotel> filtrarPorEstado(List<ReservaConHotel> todas, String estadoDeseado) {
         List<ReservaConHotel> resultado = new ArrayList<>();
         for (ReservaConHotel rh : todas) {
-            if (rh.getReserva().getEstado().equalsIgnoreCase(estadoDeseado)) {
+            // Asegúrate de que el objeto Reserva no sea null y el estado exista
+            if (rh.getReserva() != null && rh.getReserva().getEstado() != null &&
+                    rh.getReserva().getEstado().equalsIgnoreCase(estadoDeseado)) {
                 resultado.add(rh);
             }
         }
@@ -89,12 +101,32 @@ public class MisReservasUser extends AppCompatActivity {
         List<Reserva> reservas = new ArrayList<>();
         // Corrección: Añadir los nuevos 8 parámetros al constructor de Reserva
         // Parámetros: checkInRealizado, checkOutRealizado, cobros_adicionales, estaCancelado, fechaCancelacion, idValoracion, roomNumber, tieneValoracion
-        reservas.add(new Reserva("R1", "H1", "U1", 2, 3, 1, "2025-05-01", "2025-05-03", "pasado", 160,
-                true, true, 20, false, "2025-05-03", "V1", "101", true));
-        reservas.add(new Reserva("R2", "H2", "U1", 1, 2, 0, "2025-06-10", "2025-06-12", "activo", 240,
-                false, false, 0, false, null, null, "205", false));
-        reservas.add(new Reserva("R3", "H3", "U1", 1, 2, 2, "2025-04-05", "2025-04-08", "cancelado", 0,
-                false, false, 0, true, "2025-04-01", null, null, false));
+
+        // Crear una instancia de SimpleDateFormat dentro del método si solo se usa aquí,
+        // o fuera como atributo de clase si es global. Ya la hicimos atributo de clase arriba.
+        // SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        try {
+            reservas.add(new Reserva("R1", "U1", "H1", 2, 3, 1,
+                    dateFormatter.parse("2025-05-01"), dateFormatter.parse("2025-05-03"),
+                    "pasado", 160.0, true, true, 20.0, false,
+                    dateFormatter.parse("2025-05-03"), "V1", "101", true));
+
+            reservas.add(new Reserva("R2", "U1", "H2", 1, 2, 0,
+                    dateFormatter.parse("2025-06-10"), dateFormatter.parse("2025-06-12"),
+                    "activo", 240.0, false, false, 0.0, false,
+                    null, null, "205", false)); // fechaCancelacion y idValoracion pueden ser null
+
+            reservas.add(new Reserva("R3", "U1", "H3", 1, 2, 2,
+                    dateFormatter.parse("2025-04-05"), dateFormatter.parse("2025-04-08"),
+                    "cancelado", 0.0, false, false, 0.0, true,
+                    dateFormatter.parse("2025-04-01"), null, null, false));
+
+        } catch (ParseException e) {
+            // Manejar la excepción si el formato de fecha no es correcto
+            Log.e("MisReservasUser", "Error al parsear la fecha: " + e.getMessage());
+            // Considera notificar al usuario o tomar alguna acción apropiada
+        }
         return reservas;
     }
 
@@ -108,18 +140,21 @@ public class MisReservasUser extends AppCompatActivity {
 
             if (itemId == R.id.nav_hoteles_user) {
                 intent.putExtra("fragment_destino", "hoteles");
-                startActivity(intent);                return true;
+                startActivity(intent);
+                // Si ClienteActivity va a manejar la navegación y no quieres volver aquí, puedes hacer finish()
+                // finish(); // Descomenta si no quieres que MisReservasUser permanezca en la pila de actividades
+                return true;
             } else if (itemId == R.id.nav_reservas_user) {
-                return true; // O true, depende si quieres que el botón quede resaltado o no
+                return true; // Ya estás en MisReservasUser, no hay que hacer nada
             } else if (itemId == R.id.nav_chat_user) {
                 intent.putExtra("fragment_destino", "chat");
                 startActivity(intent);
-                finish();
+                finish(); // Para evitar que se apilen muchas actividades en la pila
                 return true;
             } else if (itemId == R.id.nav_cuenta) {
                 intent.putExtra("fragment_destino", "cuenta");
                 startActivity(intent);
-                finish();
+                finish(); // Para evitar que se apilen muchas actividades en la pila
                 return true;
             }
             return false;

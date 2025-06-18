@@ -30,7 +30,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException; // Importar para el manejo de fechas
+import java.text.SimpleDateFormat; // Importar para el manejo de fechas
 import java.util.ArrayList;
+import java.util.Date; // ¡Importante!
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +55,10 @@ public class SuperReservasActivity extends AppCompatActivity {
     private String selectedHotelName;
 
     private FirebaseFirestore db;
+
+    // Formato de fecha para parsear tus Strings a Date
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +102,7 @@ public class SuperReservasActivity extends AppCompatActivity {
             // Opcional: Ejecuta esta función UNA SOLA VEZ para subir tus reservas de prueba
             // DESCOMENTA LA SIGUIENTE LÍNEA SOLO PARA LA PRIMERA EJECUCIÓN (para crear las reservas en Firestore),
             // LUEGO COMENTA DE NUEVO PARA EVITAR DUPLICADOS.
-            // saveAllReservasToFirestore(); // <--- Aquí la llamarías para guardar las reservas de prueba
+            //saveAllReservasToFirestore(); // <--- Aquí la llamarías para guardar las reservas de prueba
 
             currentHotelReservas = getReservationsForHotel(selectedHotelName);
             displayFilteredReservas(currentHotelReservas); // Y mostrar las reservas
@@ -162,33 +169,25 @@ public class SuperReservasActivity extends AppCompatActivity {
         // Crea los clientes con sus nombres y apellidos completos
         testClientes.add(new Cliente("Juan", "Molleda García", "true", "DNI", "12345678", "1990-01-15", "juan.molleda@example.com", "912345678", "Calle Falsa 123", ""));
         testClientes.add(new Cliente("Leandro", "Pérez Rojas", "true", "DNI", "87654321", "1985-03-20", "leandro.perez@example.com", "987654321", "Av. Siempre Viva 742", ""));
-
         testClientes.add(new Cliente("Augusto", "Medina Castro", "true", "DNI", "11223344", "1992-07-01", "augusto.medina@example.com", "911223344", "Jr. Los Álamos 45", ""));
-
         testClientes.add(new Cliente("Joaquín", "Pozo Ramos", "true", "DNI", "18192021", "1990-04-05", "joaquin.pozo@example.com", "918192021", "Av. Las Palmeras 1", ""));
         testClientes.add(new Cliente("Roger", "Albino Gómez", "true", "DNI", "22232425", "1986-07-20", "roger.albino@example.com", "922232425", "Calle Los Sauces 2", ""));
         testClientes.add(new Cliente("Julio", "Uribe Flores", "true", "DNI", "26272829", "1991-03-17", "julio.uribe@example.com", "926272829", "Urb. San Juan 3", ""));
-
         testClientes.add(new Cliente("Eduardo", "Campos Ruíz", "true", "DNI", "46474849", "1990-09-09", "eduardo.campos@example.com", "946474849", "Calle Bolognesi 8", ""));
         testClientes.add(new Cliente("Rubén", "Cancho Vargas", "true", "DNI", "50515253", "1985-06-19", "ruben.cancho@example.com", "950515253", "Av. San Martín 9", ""));
         testClientes.add(new Cliente("Aaron", "Villa Pérez", "true", "DNI", "54555657", "1994-03-08", "aaron.villa@example.com", "954555657", "Jr. Puno 10", ""));
-
         testClientes.add(new Cliente("Sigrid", "Bazán Narro", "true", "DNI", "66676869", "1991-08-20", "sigrid.bazan@example.com", "966676869", "Calle El Polo 13", ""));
         testClientes.add(new Cliente("Daniel", "Abugattás Majluf", "true", "DNI", "70717273", "1955-04-10", "daniel.abugattas@example.com", "970717273", "Av. Primavera 14", ""));
         testClientes.add(new Cliente("Mauricio", "Mulder Bedoya", "true", "DNI", "74757677", "1956-06-08", "mauricio.mulder@example.com", "974757677", "Jr. Junín 15", ""));
-
         testClientes.add(new Cliente("Pamela", "López Salas", "true", "DNI", "82838485", "1990-03-15", "pamela.lopez@example.com", "982838485", "Urb. Los Pinos 17", ""));
         testClientes.add(new Cliente("Carlos", "Álvarez Rodríguez", "true", "DNI", "86878889", "1978-01-05", "carlos.alvarez@example.com", "986878889", "Av. El Ejército 18", ""));
         testClientes.add(new Cliente("Robert", "Prevost Martínez", "true", "DNI", "90919293", "1955-09-18", "robert.prevost@example.com", "990919293", "Calle La Marina 19", ""));
-
         testClientes.add(new Cliente("Alejandro", "Toledo Manrique", "true", "DNI", "98990001", "1946-03-28", "alejandro.toledo@example.com", "998990001", "Jr. Cusco 21", ""));
         testClientes.add(new Cliente("Keiko", "Fujimori Higuchi", "true", "DNI", "02030405", "1975-05-25", "keiko.fujimori@example.com", "902030405", "Av. Pardo 22", ""));
         testClientes.add(new Cliente("Pedro", "Castillo Terrones", "true", "DNI", "06070809", "1969-10-19", "pedro.castillo@example.com", "906070809", "Calle El Sol 23", ""));
-
         testClientes.add(new Cliente("Oscar", "Ibáñez Velarde", "true", "DNI", "14151617", "1977-02-05", "oscar.ibanez@example.com", "914151617", "Jr. Callao 25", ""));
         testClientes.add(new Cliente("Verónica", "Mendoza Frisch", "true", "DNI", "18192021", "1980-12-09", "veronica.mendoza@example.com", "918192021", "Av. Brasil 26", ""));
         testClientes.add(new Cliente("Ismael", "Retes Espinoza", "true", "DNI", "22232425", "1990-07-03", "ismael.retes@example.com", "922232425", "Calle Lima 27", ""));
-
         // Cliente para MisReservasUser
         testClientes.add(new Cliente("David", "Gómez Pulgar", "true", "DNI", "00000001", "1999-01-01", "david.gomez@example.com", "900000001", "Calle Falsa 456", ""));
 
@@ -275,63 +274,69 @@ public class SuperReservasActivity extends AppCompatActivity {
         String idVeronicaMendoza = getClienteIdByNombre("Verónica", "Mendoza Frisch");
         String idIsmaelRetes = getClienteIdByNombre("Ismael", "Retes Espinoza");
 
-        // Ahora, al crear las reservas, usa los IDs de los clientes obtenidos
-        allReservas.add(new Reserva("R001", "Aranwa", idJuanMolleda, 1, 2, 0, "30/03/2025", "05/04/2025", "activo", 800,
-                false, false, 0, false, null, null, "101", false));
-        allReservas.add(new Reserva("R002", "Aranwa", idLeandroPerez, 1, 1, 0, "24/03/2025", "29/03/2025", "activo", 500,
-                false, false, 0, false, null, null, "102", false));
-        allReservas.add(new Reserva("R003", "Aranwa", idAugustoMedina, 2, 3, 1, "22/03/2025", "29/03/2025", "activo", 1200,
-                false, false, 0, false, null, null, "103", false));
+        try {
+            // Ahora, al crear las reservas, usa los IDs de los clientes obtenidos y parsea las fechas
+            allReservas.add(new Reserva("R001", idJuanMolleda, "Aranwa", 1, 2, 0, dateFormatter.parse("30/03/2025"), dateFormatter.parse("05/04/2025"), "activo", 800.0,
+                    false, false, 0.0, false, null, null, "101", false));
+            allReservas.add(new Reserva("R002", idLeandroPerez, "Aranwa", 1, 1, 0, dateFormatter.parse("24/03/2025"), dateFormatter.parse("29/03/2025"), "activo", 500.0,
+                    false, false, 0.0, false, null, null, "102", false));
+            allReservas.add(new Reserva("R003", idAugustoMedina, "Aranwa", 2, 3, 1, dateFormatter.parse("22/03/2025"), dateFormatter.parse("29/03/2025"), "activo", 1200.0,
+                    false, false, 0.0, false, null, null, "103", false));
 
 
-        // Reservas de Decameron
-        allReservas.add(new Reserva("R006", "Decameron", idJoaquinPozo, 1, 2, 1, "01/05/2025", "07/05/2025", "activo", 1100,
-                false, false, 0, false, null, null, "201", false));
-        allReservas.add(new Reserva("R007", "Decameron", idRogerAlbino, 1, 1, 0, "10/05/2025", "13/05/2025", "activo", 600,
-                false, false, 0, false, null, null, "202", false));
-        allReservas.add(new Reserva("R027", "Decameron", idJulioUribe, 1, 2, 0, "15/06/2025", "20/06/2025", "activo", 1000,
-                false, false, 0, false, null, null, "203", false));
+            // Reservas de Decameron
+            allReservas.add(new Reserva("R006", idJoaquinPozo, "Decameron", 1, 2, 1, dateFormatter.parse("01/05/2025"), dateFormatter.parse("07/05/2025"), "activo", 1100.0,
+                    false, false, 0.0, false, null, null, "201", false));
+            allReservas.add(new Reserva("R007", idRogerAlbino, "Decameron", 1, 1, 0, dateFormatter.parse("10/05/2025"), dateFormatter.parse("13/05/2025"), "activo", 600.0,
+                    false, false, 0.0, false, null, null, "202", false));
+            allReservas.add(new Reserva("R027", idJulioUribe, "Decameron", 1, 2, 0, dateFormatter.parse("15/06/2025"), dateFormatter.parse("20/06/2025"), "activo", 1000.0,
+                    false, false, 0.0, false, null, null, "203", false));
 
-        // Reservas de Oro Verde
-        allReservas.add(new Reserva("R008", "Oro Verde", idEduardoCampos, 1, 2, 0, "05/06/2025", "08/06/2025", "activo", 950,
-                false, false, 0, false, null, null, "301", false));
-        allReservas.add(new Reserva("R030", "Oro Verde", idRubenCancho, 1, 2, 2, "10/07/2025", "15/07/2025", "activo", 1300,
-                false, false, 0, false, null, null, "302", false));
-        allReservas.add(new Reserva("R031", "Oro Verde", idAaronVilla, 1, 1, 0, "20/07/2025", "23/07/2025", "activo", 800,
-                false, false, 0, false, null, null, "303", false));
+            // Reservas de Oro Verde
+            allReservas.add(new Reserva("R008", idEduardoCampos, "Oro Verde", 1, 2, 0, dateFormatter.parse("05/06/2025"), dateFormatter.parse("08/06/2025"), "activo", 950.0,
+                    false, false, 0.0, false, null, null, "301", false));
+            allReservas.add(new Reserva("R030", idRubenCancho, "Oro Verde", 1, 2, 2, dateFormatter.parse("10/07/2025"), dateFormatter.parse("15/07/2025"), "activo", 1300.0,
+                    false, false, 0.0, false, null, null, "302", false));
+            allReservas.add(new Reserva("R031", idAaronVilla, "Oro Verde", 1, 1, 0, dateFormatter.parse("20/07/2025"), dateFormatter.parse("23/07/2025"), "activo", 800.0,
+                    false, false, 0.0, false, null, null, "303", false));
 
-        // Reservas de Boca Ratón
-        allReservas.add(new Reserva("R009", "Boca Ratón", idSigridBazan, 1, 1, 0, "01/07/2025", "04/07/2025", "activo", 550,
-                false, false, 0, false, null, null, "401", false));
-        allReservas.add(new Reserva("R032", "Boca Ratón", idDanielAbugattas, 2, 3, 0, "08/08/2025", "12/08/2025", "activo", 1000,
-                false, false, 0, false, null, null, "402", false));
-        allReservas.add(new Reserva("R033", "Boca Ratón", idMauricioMulder, 1, 2, 0, "15/08/2025", "18/08/2025", "activo", 650,
-                false, false, 0, false, null, null, "403", false));
+            // Reservas de Boca Ratón
+            allReservas.add(new Reserva("R009", idSigridBazan, "Boca Ratón", 1, 1, 0, dateFormatter.parse("01/07/2025"), dateFormatter.parse("04/07/2025"), "activo", 550.0,
+                    false, false, 0.0, false, null, null, "401", false));
+            allReservas.add(new Reserva("R032", idDanielAbugattas, "Boca Ratón", 2, 3, 0, dateFormatter.parse("08/08/2025"), dateFormatter.parse("12/08/2025"), "activo", 1000.0,
+                    false, false, 0.0, false, null, null, "402", false));
+            allReservas.add(new Reserva("R033", idMauricioMulder, "Boca Ratón", 1, 2, 0, dateFormatter.parse("15/08/2025"), dateFormatter.parse("18/08/2025"), "activo", 650.0,
+                    false, false, 0.0, false, null, null, "403", false));
 
 
-        // Reservas de Libertador
-        allReservas.add(new Reserva("R010", "Libertador", idPamelaLopez, 1, 2, 0, "25/07/2025", "28/07/2025", "activo", 1300,
-                false, false, 0, false, null, null, "501", false));
-        allReservas.add(new Reserva("R034", "Libertador", idCarlosAlvarez, 1, 1, 0, "05/09/2025", "07/09/2025", "activo", 900,
-                false, false, 0, false, null, null, "502", false));
-        allReservas.add(new Reserva("R035", "Libertador", idRobertPrevost, 2, 4, 1, "10/09/2025", "15/09/2025", "activo", 2000,
-                false, false, 0, false, null, null, "503", false));
+            // Reservas de Libertador
+            allReservas.add(new Reserva("R010", idPamelaLopez, "Libertador", 1, 2, 0, dateFormatter.parse("25/07/2025"), dateFormatter.parse("28/07/2025"), "activo", 1300.0,
+                    false, false, 0.0, false, null, null, "501", false));
+            allReservas.add(new Reserva("R034", idCarlosAlvarez, "Libertador", 1, 1, 0, dateFormatter.parse("05/09/2025"), dateFormatter.parse("07/09/2025"), "activo", 900.0,
+                    false, false, 0.0, false, null, null, "502", false));
+            allReservas.add(new Reserva("R035", idRobertPrevost, "Libertador", 2, 4, 1, dateFormatter.parse("10/09/2025"), dateFormatter.parse("15/09/2025"), "activo", 2000.0,
+                    false, false, 0.0, false, null, null, "503", false));
 
-        // Reservas de Costa del Sol
-        allReservas.add(new Reserva("R011", "Costa del Sol", idAlejandroToledo, 1, 2, 0, "12/08/2025", "15/08/2025", "activo", 700,
-                false, false, 0, false, null, null, "601", false));
-        allReservas.add(new Reserva("R036", "Costa del Sol", idKeikoFujimori, 1, 1, 0, "20/09/2025", "23/09/2025", "activo", 500,
-                false, false, 0, false, null, null, "602", false));
-        allReservas.add(new Reserva("R037", "Costa del Sol", idPedroCastillo, 2, 3, 2, "01/10/2025", "07/10/2025", "activo", 1400,
-                false, false, 0, false, null, null, "603", false));
+            // Reservas de Costa del Sol
+            allReservas.add(new Reserva("R011", idAlejandroToledo, "Costa del Sol", 1, 2, 0, dateFormatter.parse("12/08/2025"), dateFormatter.parse("15/08/2025"), "activo", 700.0,
+                    false, false, 0.0, false, null, null, "601", false));
+            allReservas.add(new Reserva("R036", idKeikoFujimori, "Costa del Sol", 1, 1, 0, dateFormatter.parse("20/09/2025"), dateFormatter.parse("23/09/2025"), "activo", 500.0,
+                    false, false, 0.0, false, null, null, "602", false));
+            allReservas.add(new Reserva("R037", idPedroCastillo, "Costa del Sol", 2, 3, 2, dateFormatter.parse("01/10/2025"), dateFormatter.parse("07/10/2025"), "activo", 1400.0,
+                    false, false, 0.0, false, null, null, "603", false));
 
-        // Reservas de Sonesta
-        allReservas.add(new Reserva("R012", "Sonesta", idOscarIbanez, 1, 2, 0, "01/09/2025", "04/09/2025", "activo", 850,
-                false, false, 0, false, null, null, "701", false));
-        allReservas.add(new Reserva("R038", "Sonesta", idVeronicaMendoza, 1, 1, 0, "10/10/2025", "12/10/2025", "activo", 600,
-                false, false, 0, false, null, null, "702", false));
-        allReservas.add(new Reserva("R039", "Sonesta", idIsmaelRetes, 2, 3, 1, "15/10/2025", "20/10/2025", "activo", 1200,
-                false, false, 0, false, null, null, "703", false));
+            // Reservas de Sonesta
+            allReservas.add(new Reserva("R012", idOscarIbanez, "Sonesta", 1, 2, 0, dateFormatter.parse("01/09/2025"), dateFormatter.parse("04/09/2025"), "activo", 850.0,
+                    false, false, 0.0, false, null, null, "701", false));
+            allReservas.add(new Reserva("R038", idVeronicaMendoza, "Sonesta", 1, 1, 0, dateFormatter.parse("10/10/2025"), dateFormatter.parse("12/10/2025"), "activo", 600.0,
+                    false, false, 0.0, false, null, null, "702", false));
+            allReservas.add(new Reserva("R039", idIsmaelRetes, "Sonesta", 2, 3, 1, dateFormatter.parse("15/10/2025"), dateFormatter.parse("20/10/2025"), "activo", 1200.0,
+                    false, false, 0.0, false, null, null, "703", false));
+
+        } catch (ParseException e) {
+            Log.e(TAG, "Error parseando fecha al inicializar reservas: " + e.getMessage());
+            Toast.makeText(this, "Error de formato de fecha en datos de reserva.", Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -369,28 +374,14 @@ public class SuperReservasActivity extends AppCompatActivity {
         }
 
         for (Reserva reserva : allReservas) {
-            Map<String, Object> reservaMap = new HashMap<>();
-            reservaMap.put("idReserva", reserva.getIdReserva());
-            reservaMap.put("idPersona", reserva.getIdPersona()); // Este ahora será el ID de Firestore del cliente
-            reservaMap.put("idHotel", reserva.getIdHotel());
-            reservaMap.put("habitaciones", reserva.getHabitaciones());
-            reservaMap.put("adultos", reserva.getAdultos());
-            reservaMap.put("ninos", reserva.getNinos());
-            reservaMap.put("fechaInicio", reserva.getFechaInicio());
-            reservaMap.put("fechaFin", reserva.getFechaFin());
-            reservaMap.put("estado", reserva.getEstado());
-            reservaMap.put("precioTotal", reserva.getPrecioTotal());
-            reservaMap.put("checkInRealizado", reserva.isCheckInRealizado());
-            reservaMap.put("checkOutRealizado", reserva.isCheckOutRealizado());
-            reservaMap.put("cobros_adicionales", reserva.getCobros_adicionales());
-            reservaMap.put("estaCancelado", reserva.isEstaCancelado());
-            reservaMap.put("fechaCancelacion", reserva.getFechaCancelacion());
-            reservaMap.put("idValoracion", reserva.getIdValoracion());
-            reservaMap.put("roomNumber", reserva.getRoomNumber());
-            reservaMap.put("tieneValoracion", reserva.isTieneValoracion());
-
+            // Cuando usas .set(Object), Firestore automáticamente mapea los campos.
+            // No es necesario crear un Map manualmente a menos que tengas lógica compleja.
+            // Asegúrate de que el idReserva se establezca en el objeto antes de guardarlo
+            // Si el idReserva ya existe en el objeto, Firestore lo usará como ID del documento.
+            // Si es null, .add(reserva) generará uno. Pero aquí usamos .document(idReserva).set()
+            // para usar el ID definido en tu Reserva (R001, R002, etc.)
             db.collection("reservas").document(reserva.getIdReserva())
-                    .set(reservaMap)
+                    .set(reserva) // ¡Aquí estamos pasando el objeto Reserva directamente!
                     .addOnSuccessListener(aVoid -> {
                         Log.d(TAG, "Documento de reserva añadido/actualizado con ID: " + reserva.getIdReserva());
                     })
@@ -458,6 +449,10 @@ public class SuperReservasActivity extends AppCompatActivity {
 
         LayoutInflater inflater = LayoutInflater.from(this);
 
+        // Define el formato para mostrar las fechas
+        SimpleDateFormat displayFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+
         for (Reserva reserva : reservasToDisplay) {
             View cardView = inflater.inflate(R.layout.item_reserva_card, llReservasContainer, false);
 
@@ -469,13 +464,18 @@ public class SuperReservasActivity extends AppCompatActivity {
             // Intentamos obtener el nombre del cliente del mapa
             String idPersona = reserva.getIdPersona();
             Cliente cliente = clientesMap.get(idPersona);
-            String nombreCompletoCliente = (cliente != null) ? cliente.getNombres() + " " + cliente.getApellidos() : "Cliente: " + reserva.getIdPersona() + " (Cargando...)";
+            String nombreCompletoCliente = (cliente != null) ? (cliente.getNombres() + " " + cliente.getApellidos()) : "Cliente: " + reserva.getIdPersona() + " (Cargando...)";
             tvClienteCard.setText(nombreCompletoCliente);
 
 
-            tvFechaReservaCard.setText("Fecha de Reserva: " + reserva.getFechaInicio() + " - " + reserva.getFechaFin());
+            // Formatear las fechas Date a String para mostrar
+            String fechaInicioStr = (reserva.getFechaInicio() != null) ? displayFormatter.format(reserva.getFechaInicio()) : "N/A";
+            String fechaFinStr = (reserva.getFechaFin() != null) ? displayFormatter.format(reserva.getFechaFin()) : "N/A";
+            tvFechaReservaCard.setText("Fecha de Reserva: " + fechaInicioStr + " - " + fechaFinStr);
+
             tvHabitacionCard.setText("Habitaciones: " + reserva.getHabitaciones());
-            tvPrecioTotalCard.setText(String.format(Locale.getDefault(), "Precio Total: $%d", reserva.getPrecioTotal()));
+            // Ahora precioTotal es double, usar % .2f para formato de decimales si es necesario
+            tvPrecioTotalCard.setText(String.format(Locale.getDefault(), "Precio Total: $%.2f", reserva.getPrecioTotal()));
             llReservasContainer.addView(cardView);
         }
     }
