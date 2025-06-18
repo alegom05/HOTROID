@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
         Button btnAdmin = findViewById(R.id.btnAdmin);
         Button btnSuperAdmin = findViewById(R.id.btnSuperAdmin);
 
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setLogo(R.drawable.ic_hotroid_icon)
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
+                .build();
+        signInLauncher.launch(signInIntent);
 
 
         btnCliente.setOnClickListener(v -> {
@@ -85,14 +93,16 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             // not signed in
-            Intent signInIntent = AuthUI.getInstance()
+            signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(Arrays.asList(
                             new AuthUI.IdpConfig.EmailBuilder().build()
                     ))
                     .setIsSmartLockEnabled(false)
                     .build();
+
             signInLauncher.launch(signInIntent);
+
         }
 
 
@@ -107,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d ("contador", "" +  String.valueOf(contador));
         textView.setText(String.valueOf(contador));
     }*/
+
+    List<AuthUI.IdpConfig> providers = Arrays.asList(
+            new AuthUI.IdpConfig.EmailBuilder().build(),
+            new AuthUI.IdpConfig.GoogleBuilder().build()
+    );
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -126,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
     );
+
+
+
 
 
 
