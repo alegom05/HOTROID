@@ -67,7 +67,7 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
 
         etBuscadorHabitaciones = findViewById(R.id.etBuscadorHabitaciones);
         btnLimpiarBuscadorHabitaciones = findViewById(R.id.btnLimpiarBuscadorHabitaciones);
-        btnRegistrar = findViewById(R.id.btnRegistrar);
+        btnRegistrar = findViewById(R.id.btnRegistrarNuevaHabitacion);
 
         // --- Lógica del buscador ---
         etBuscadorHabitaciones.addTextChangedListener(new TextWatcher() {
@@ -89,8 +89,8 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
 
         btnRegistrar.setOnClickListener(v -> {
             Toast.makeText(AdminHabitacionesActivity.this, "Navegar a la pantalla de registro de habitación", Toast.LENGTH_SHORT).show();
-            // Intent intent = new Intent(AdminHabitacionesActivity.this, AdminRegistrarHabitacionActivity.class);
-            // startActivity(intent);
+             Intent intent = new Intent(AdminHabitacionesActivity.this, AdminNuevaHabitacionActivity.class);
+            startActivity(intent);
         });
 
         loadReservasThenGenerateAndLoadRooms();
@@ -100,7 +100,7 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 Room clickedRoom = roomList.get(position);
 
-                Intent intent = new Intent(AdminHabitacionesActivity.this, AdminEditarHabitacionActivity.class);
+                Intent intent = new Intent(AdminHabitacionesActivity.this,AdminHabitacionDetallesActivity.class);
                 intent.putExtra("ROOM_ID", clickedRoom.getId());
                 intent.putExtra("ROOM_NUMBER", clickedRoom.getRoomNumber());
                 intent.putExtra("ROOM_TYPE", clickedRoom.getRoomType());

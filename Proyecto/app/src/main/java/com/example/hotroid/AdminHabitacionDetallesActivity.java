@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,8 +13,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Locale;
+
 public class AdminHabitacionDetallesActivity extends AppCompatActivity {
-    private TextView tvRoomNumber, tvRoomType, tvCapacity, tvArea;
+    private TextView tvRoomNumber, tvRoomType, tvCapacityAdults, tvCapacityChildren, tvArea, tvStatus; // Añadido tvStatus
+    private Button btnEditarHabitacion;
+    private String roomId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,56 +30,74 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        // Inicializar los campos de texto
+
         tvRoomNumber = findViewById(R.id.tvRoomNumber);
         tvRoomType = findViewById(R.id.tvRoomType);
-        tvCapacity = findViewById(R.id.tvCapacity);
+        tvCapacityAdults = findViewById(R.id.tvCapacityAdults);
+        tvCapacityChildren = findViewById(R.id.tvCapacityChildren);
         tvArea = findViewById(R.id.tvArea);
+        tvStatus = findViewById(R.id.tvStatus); // Inicializar tvStatus
+        btnEditarHabitacion = findViewById(R.id.btnEditarHabitacion);
 
-        // Obtener los datos de la habitación pasados a través del Intent
+        roomId = getIntent().getStringExtra("ROOM_ID");
         String roomNumber = getIntent().getStringExtra("ROOM_NUMBER");
         String roomType = getIntent().getStringExtra("ROOM_TYPE");
-        String capacity = getIntent().getStringExtra("CAPACITY");
-        String area = getIntent().getStringExtra("AREA");
+        int capacityAdults = getIntent().getIntExtra("CAPACITY_ADULTS", 0);
+        int capacityChildren = getIntent().getIntExtra("CAPACITY_CHILDREN", 0);
+        double area = getIntent().getDoubleExtra("AREA", 0.0);
+        String status = getIntent().getStringExtra("STATUS"); // Recibir status
 
-        // Establecer los datos en los TextViews
-        tvRoomNumber.setText("Número: " + roomNumber);
-        tvRoomType.setText("Tipo: " + roomType);
-        tvCapacity.setText("Capacidad: " + capacity);
-        tvArea.setText("Área(m²): " + area);
+        tvRoomNumber.setText("Número de habitación: " + roomNumber);
+        tvRoomType.setText("Tipo de habitación: " + roomType);
+        tvCapacityAdults.setText("Capacidad Adultos: " + capacityAdults);
+        tvCapacityChildren.setText("Capacidad Niños: " + capacityChildren);
+        tvArea.setText(String.format(Locale.getDefault(), "Área: %.2f m²", area));
+        tvStatus.setText("Estado: " + status); // Mostrar status
 
-        // Acción para editar la habitación
-        findViewById(R.id.btnEditarHabitacion).setOnClickListener(v -> {
+        btnEditarHabitacion.setOnClickListener(v -> {
             Intent intent = new Intent(AdminHabitacionDetallesActivity.this, AdminEditarHabitacionActivity.class);
+            intent.putExtra("ROOM_ID", roomId);
             intent.putExtra("ROOM_NUMBER", roomNumber);
             intent.putExtra("ROOM_TYPE", roomType);
-            intent.putExtra("CAPACITY", capacity);
+            intent.putExtra("CAPACITY_ADULTS", capacityAdults);
+            intent.putExtra("CAPACITY_CHILDREN", capacityChildren);
             intent.putExtra("AREA", area);
+            intent.putExtra("STATUS", status); // Pasar status a la actividad de edición
             startActivity(intent);
         });
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // BottomNavigationView o Barra inferior de menú
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_registros) {
-                Intent intentInicio = new Intent(AdminHabitacionDetallesActivity.this, AdminActivity.class);
-                startActivity(intentInicio);
-                return true;
-            } else if (item.getItemId() == R.id.nav_taxistas) {
-                Intent intentUbicacion = new Intent(AdminHabitacionDetallesActivity.this, AdminTaxistas.class);
-                startActivity(intentUbicacion);
-                return true;
-            } else if (item.getItemId() == R.id.nav_checkout) {
-                Intent intentAlertas = new Intent(AdminHabitacionDetallesActivity.this, AdminCheckout.class);
-                startActivity(intentAlertas);
-                return true;
-            } else if (item.getItemId() == R.id.nav_reportes) {
-                Intent intentAlertas = new Intent(AdminHabitacionDetallesActivity.this, AdminReportes.class);
-                startActivity(intentAlertas);
-                return true;
-            } else {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_registros) {
+                    Intent intentRegistros = new Intent(AdminHabitacionDetallesActivity.this, AdminHabitacionesActivity.class);
+                    // Para evitar duplicados en la pila y volver al estado correcto
+                    intentRegistros.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intentRegistros);
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_taxistas) {
+                    Intent intentUbicacion = new Intent(AdminHabitacionDetallesActivity.this, AdminTaxistas.class);
+                    intentUbicacion.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intentUbicacion);
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_checkout) {
+                    Intent intentCheckout = new Intent(AdminHabitacionDetallesActivity.this, AdminCheckout.class);
+                    intentCheckout.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intentCheckout);
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_reportes) {
+                    Intent intentReportes = new Intent(AdminHabitacionDetallesActivity.this, AdminReportes.class);
+                    intentReportes.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intentReportes);
+                    finish();
+                    return true;
+                }
                 return false;
-            }
-        });
+            });
+        }
     }
 }

@@ -16,6 +16,7 @@ import com.example.hotroid.bean.Hotel;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
+import java.util.Locale;
 
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHolder> {
 
@@ -40,7 +41,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.hotelName.setText(hotel.getName());
         holder.hotelRating.setRating(hotel.getRating());
         holder.ratingText.setText(String.valueOf(hotel.getRating()));
-        holder.hotelPrice.setText(hotel.getPrice());
+        holder.hotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", hotel.getPrice()));
         holder.hotelImage.setImageResource(hotel.getImageResourceId());
 
         holder.viewDetailButton.setOnClickListener(v -> {

@@ -152,10 +152,16 @@
                     android:layout_marginBottom="16dp" />
 
                 <Button
-                    android:id="@+id/btnRegistrar"
+                    android:id="@+id/btnRegistrarNuevaHabitacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Registrar Nueva Habitación"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+
                     android:backgroundTint="#009688"
                     android:textColor="@android:color/white" />
 
