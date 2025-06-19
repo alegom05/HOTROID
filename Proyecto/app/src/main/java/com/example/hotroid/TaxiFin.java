@@ -53,7 +53,7 @@ public class TaxiFin extends AppCompatActivity {
                 return true;
             }
             else if (item.getItemId() == R.id.notify) {
-                Intent intentAlertas = new Intent(TaxiFin.this, TaxiAlertas.class);
+                Intent intentAlertas = new Intent(TaxiFin.this, TaxiDashboardActivity.class);
                 startActivity(intentAlertas);
                 return true;
             }

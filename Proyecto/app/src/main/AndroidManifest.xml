@@ -186,7 +186,7 @@
             android:theme="@style/Theme.Hotroid" />
         <activity android:name=".UserServTaxi" />
         <activity android:name=".UserDetalleTaxista" />
-        <activity android:name=".TaxiAlertas" />
+        <activity android:name=".TaxiDashboardActivity" />
         <activity android:name=".TaxiCuenta" />
         <activity android:name=".TaxiLocation" />
         <activity android:name=".TaxiFin" />

@@ -11,7 +11,7 @@ public class TaxiUsuario extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxi_alertas);
+        setContentView(R.layout.taxi_main);
 
 
 

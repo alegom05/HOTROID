@@ -65,7 +65,7 @@ public class TaxiCuenta extends AppCompatActivity {
                 return true;
             }
             else if (item.getItemId() == R.id.notify) {
-                Intent intentAlertas = new Intent(TaxiCuenta.this, TaxiAlertas.class);
+                Intent intentAlertas = new Intent(TaxiCuenta.this, TaxiDashboardActivity.class);
                 startActivity(intentAlertas);
                 return true;
             }

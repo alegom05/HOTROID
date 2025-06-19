@@ -37,7 +37,7 @@ public class TaxiLocation extends AppCompatActivity {
                 return true;
             }
             else if (item.getItemId() == R.id.notify) {
-                Intent intentAlertas = new Intent(TaxiLocation.this, TaxiAlertas.class);
+                Intent intentAlertas = new Intent(TaxiLocation.this, TaxiDashboardActivity.class);
                 startActivity(intentAlertas);
                 return true;
             }
