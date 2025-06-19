@@ -46,13 +46,20 @@ public class MainActivity extends AppCompatActivity {
         Button btnAdmin = findViewById(R.id.btnAdmin);
         Button btnSuperAdmin = findViewById(R.id.btnSuperAdmin);
 
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setLogo(R.drawable.ic_hotroid_icon)
-                .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false)
-                .build();
-        signInLauncher.launch(signInIntent);
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(task -> {
+                            Log.d("infoApp", "logout exitoso");
+
+                    Intent signInIntent = AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setLogo(R.drawable.ic_hotroid_icon)
+                            .setAvailableProviders(providers)
+                            .setIsSmartLockEnabled(false)
+                            .build();
+
+                    signInLauncher.launch(signInIntent);
+                });
 
 
         btnCliente.setOnClickListener(v -> {
@@ -93,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             // not signed in
-            signInIntent = AuthUI.getInstance()
+            Intent signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(Arrays.asList(
                             new AuthUI.IdpConfig.EmailBuilder().build()
@@ -102,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             signInLauncher.launch(signInIntent);
+        
 
         }
 
