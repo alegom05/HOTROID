@@ -190,10 +190,10 @@ public class SuperListaClientesActivity extends AppCompatActivity {
 
                             // --- DESCOMENTAR ESTE BLOQUE LA PRIMERA VEZ PARA AÑADIR CLIENTES DE EJEMPLO ---
                             // --- LUEGO DE LA PRIMERA EJECUCIÓN EXITOSA, VUELVE A COMENTARLO PARA EVITAR DUPLICADOS ---
-                             if (clientDataList.isEmpty()) { // Only add if the collection is empty
-                                 // addInitialClientsToFirestore();
-                             }
-                             //----------------------------------------------------------------------------------
+                            /*if (clientDataList.isEmpty()) { // Only add if the collection is empty
+                                addInitialClientsToFirestore(); // ¡Asegúrate de que esta línea esté descomentada para la primera vez!
+                            }*/
+                            //----------------------------------------------------------------------------------
 
                         } else {
                             Log.w(TAG, "Error al obtener documentos de clientes: ", task.getException());
@@ -211,14 +211,27 @@ public class SuperListaClientesActivity extends AppCompatActivity {
      */
     private void addInitialClientsToFirestore() {
         List<Cliente> initialClients = Arrays.asList(
-                // Ajusta los constructores para usar tipoDocumento y numeroDocumento
-                new Cliente("Juan", "Pérez", "true", "DNI", "12345678", "1990-01-01", "juan.perez@example.com", "911223344", "Calle Falsa 123", ""),
-                new Cliente("María", "González", "true", "Pasaporte", "PA987654321", "1985-03-15", "maria.gonzalez@example.com", "922334455", "Av. Siempre Viva 45", ""),
-                new Cliente("Carlos", "Rodríguez", "false", "CE", "CE11223344", "1992-07-20", "carlos.rodriguez@example.com", "933445566", "Plaza Central 7", ""),
-                new Cliente("Laura", "Fernández", "true", "DNI", "98765432", "1998-11-25", "laura.fernandez@example.com", "944556677", "Paseo de las Flores 8", ""),
-                new Cliente("Pedro", "Sánchez", "false", "Pasaporte", "PA456789012", "1980-04-10", "pedro.sanchez@example.com", "955667788", "Avenida del Sol 21", ""),
-                new Cliente("Ana", "López", "true", "DNI", "23456789", "1993-09-05", "ana.lopez@example.com", "966778899", "Calle de la Luna 10", ""),
-                new Cliente("David", "Gómez", "true", "CE", "CE78901234", "1987-02-28", "david.gomez@example.com", "977889900", "Bulevar del Río 5", "")
+                // Clientes con dos nombres y dos apellidos
+                new Cliente("Jorge Aaron", "Coronado Villacorta", "true", "DNI", "12345678", "1990-01-01", "jorge.coronado@example.com", "911223344", "Av. Los Rosales 101", ""),
+                new Cliente("Ana Sofía", "Gonzáles Flores", "true", "Pasaporte", "PA987654321", "1985-03-15", "ana.gonzales@example.com", "922334455", "Jr. Las Palmas 202", ""),
+                new Cliente("Luis Miguel", "Ramírez Castro", "false", "CE", "CE11223344", "1992-07-20", "luis.ramirez@example.com", "933445566", "Calle Los Olivos 303", ""),
+                new Cliente("María José", "Sánchez Vásquez", "true", "DNI", "98765432", "1998-11-25", "maria.sanchez@example.com", "944556677", "Urb. El Sol 404", ""),
+                new Cliente("Pedro Alejandro", "Gómez Hidalgo", "false", "Pasaporte", "PA456789012", "1980-04-10", "pedro.gomez@example.com", "955667788", "Psje. Las Flores 505", ""),
+                new Cliente("Laura Camila", "Morales Ruiz", "true", "DNI", "23456789", "1993-09-05", "laura.morales@example.com", "966778899", "Av. La Paz 606", ""),
+                new Cliente("Carlos Alberto", "Díaz Pinedo", "true", "CE", "CE78901234", "1987-02-28", "carlos.diaz@example.com", "977889900", "Jr. San Martín 707", ""),
+                new Cliente("Daniel Felipe", "Vargas Rojas", "true", "DNI", "87654321", "1995-06-01", "daniel.vargas@example.com", "987654321", "Calle Los Andes 808", ""),
+                new Cliente("Sofía Alejandra", "Espinoza Luna", "false", "Pasaporte", "PA098765432", "1989-12-01", "sofia.espinoza@example.com", "998877665", "Av. Primavera 909", ""),
+                new Cliente("Gabriel Andrés", "Herrera Salazar", "true", "DNI", "11223344", "1991-03-22", "gabriel.herrera@example.com", "912345678", "Urb. El Mirador 110", ""),
+                new Cliente("Valentina Paz", "Guerrero Soto", "true", "CE", "CE56789012", "1983-09-10", "valentina.guerrero@example.com", "923456789", "Jr. Amazonas 120", ""),
+                new Cliente("Diego Armando", "Ortiz Paredes", "false", "DNI", "55667788", "1997-01-05", "diego.ortiz@example.com", "934567890", "Av. Central 130", ""),
+                new Cliente("Camila Fernanda", "Reyes Bustamante", "true", "Pasaporte", "PA345678901", "1988-07-18", "camila.reyes@example.com", "945678901", "Calle Los Sauces 140", ""),
+                new Cliente("José Antonio", "Soto Valdivia", "true", "DNI", "99001122", "1994-04-30", "jose.soto@example.com", "956789012", "Psje. La Luna 150", ""),
+                new Cliente("Martín Alonso", "Huamán Cueva", "false", "CE", "CE12345678", "1996-08-08", "martin.huaman@example.com", "967890123", "Av. Del Ejército 160", ""),
+                new Cliente("Flavia Nicole", "Navarro Paredes", "true", "DNI", "33445566", "1999-02-14", "flavia.navarro@example.com", "978901234", "Jr. Grau 170", ""),
+                new Cliente("Renzo Fabián", "Quispe Tello", "true", "Pasaporte", "PA234567890", "1982-10-21", "renzo.quispe@example.com", "989012345", "Calle Bolognesi 180", ""),
+                new Cliente("Andrea Luciana", "Vásquez Rojas", "false", "DNI", "44556677", "1990-05-03", "andrea.vasquez@example.com", "990123456", "Urb. La Ensenada 190", ""),
+                new Cliente("Juan Pablo", "Salazar Mendoza", "true", "CE", "CE98765432", "1986-11-11", "juanpablo.salazar@example.com", "901234567", "Av. El Sol 200", ""),
+                new Cliente("Gabriela Fernanda", "Castañeda Ríos", "true", "DNI", "66778899", "1997-07-07", "gabriela.castaneda@example.com", "912345670", "Psje. Las Dalias 210", "")
         );
 
         // Use a Firestore batch to write all documents efficiently
@@ -231,7 +244,7 @@ public class SuperListaClientesActivity extends AppCompatActivity {
 
         batch.commit()
                 .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "7 clientes iniciales añadidos a Firestore con éxito.");
+                    Log.d(TAG, "Clientes iniciales añadidos a Firestore con éxito.");
                     Toast.makeText(SuperListaClientesActivity.this, "Clientes de ejemplo añadidos.", Toast.LENGTH_SHORT).show();
                     // After adding, reload to display them
                     loadClientsFromFirestore();
@@ -277,8 +290,11 @@ public class SuperListaClientesActivity extends AppCompatActivity {
             String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
             for (Cliente cliente : clientDataList) {
                 // Search by name, surname, numeroDocumento, or email
-                if ((cliente.getNombres() + " " + cliente.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        cliente.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) || // CAMBIO A getNumeroDocumento()
+                // Concatenamos nombres y apellidos para la búsqueda en un solo bloque
+                String nombreCompleto = (cliente.getNombres() + " " + cliente.getApellidos()).toLowerCase(Locale.getDefault());
+
+                if (nombreCompleto.contains(searchLower) ||
+                        cliente.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) ||
                         cliente.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower)) {
                     filteredClientList.add(cliente);
                 }
@@ -344,6 +360,7 @@ public class SuperListaClientesActivity extends AppCompatActivity {
             TextView tvNombreCliente = clientItemView.findViewById(R.id.tvNombreCliente);
             TextView tvEstado = clientItemView.findViewById(R.id.tvEstado);
 
+            // Muestra nombres y apellidos juntos en la tarjeta
             tvNombreCliente.setText(cliente.getNombres() + " " + cliente.getApellidos());
 
 
@@ -362,8 +379,8 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                 intent.putExtra("client_nombres", cliente.getNombres());
                 intent.putExtra("client_apellidos", cliente.getApellidos());
                 intent.putExtra("client_estado", cliente.getEstado());
-                intent.putExtra("client_tipo_documento", cliente.getTipoDocumento()); // CAMBIO CLAVE: Pasar tipo de documento
-                intent.putExtra("client_numero_documento", cliente.getNumeroDocumento()); // CAMBIO CLAVE: Pasar número de documento
+                intent.putExtra("client_tipo_documento", cliente.getTipoDocumento());
+                intent.putExtra("client_numero_documento", cliente.getNumeroDocumento());
                 intent.putExtra("client_nacimiento", cliente.getNacimiento());
                 intent.putExtra("client_correo", cliente.getCorreo());
                 intent.putExtra("client_telefono", cliente.getTelefono());

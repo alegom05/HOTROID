@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.annotation.NonNull; // Importar si no está
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,13 +30,11 @@ import java.util.Locale;
 
 public class SuperActivity extends AppCompatActivity {
 
-    private static final String TAG = "SuperActivity"; // Etiqueta para logs
-
+    private static final String TAG = "SuperActivity";
     private FirebaseFirestore db;
     private RecyclerView recyclerViewHotels;
     private SuperHotelAdapter hotelAdapter;
     private List<Hotel> hotelList;
-
     private EditText etSearchHotel;
     private Button btnClearSearch;
 
@@ -45,32 +43,18 @@ public class SuperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_main);
 
-        // Inicializar Firebase Firestore
         db = FirebaseFirestore.getInstance();
-
-        // Inicializar lista y adaptador
         hotelList = new ArrayList<>();
-        // El adaptador necesita ser inicializado con la lista vacía al principio
-        // y se le pasarán los datos cuando se carguen.
         hotelAdapter = new SuperHotelAdapter(this, hotelList);
 
-        // Configurar RecyclerView
         recyclerViewHotels = findViewById(R.id.recyclerViewHotels);
         recyclerViewHotels.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewHotels.setAdapter(hotelAdapter);
-        recyclerViewHotels.setHasFixedSize(true); // Optimización si el tamaño de los ítems es fijo
+        recyclerViewHotels.setHasFixedSize(true);
 
-        // Cargar hoteles
-        // Retrasamos la carga inicial un poco para asegurar que la UI esté lista
-        // (aunque generalmente no es estrictamente necesario, ayuda en ciertos casos).
-        // Lo que es más importante es la lógica de checkAndLoadHotels.
         new Handler().postDelayed(this::checkAndLoadHotels, 500);
 
-
-        // Configurar buscador
         setupSearch();
-
-        // Configurar navegación inferior
         setupBottomNavigation();
     }
 
@@ -102,45 +86,35 @@ public class SuperActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            List<Hotel> fetchedHotels = new ArrayList<>(); // Nueva lista para los hoteles cargados
+                            List<Hotel> fetchedHotels = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 try {
-                                    // Intenta convertir el documento directamente a un objeto Hotel
                                     Hotel hotel = document.toObject(Hotel.class);
-                                    hotel.setIdHotel(document.getId()); // Asigna el ID del documento Firestore
+                                    hotel.setIdHotel(document.getId());
 
-                                    // Convierte el imageName a resource ID
                                     if (hotel.getImageName() != null && !hotel.getImageName().isEmpty()) {
                                         int resId = getResources().getIdentifier(
-                                                hotel.getImageName().toLowerCase(Locale.getDefault()), // Asegúrate de la minúscula y locale
+                                                hotel.getImageName().toLowerCase(Locale.getDefault()),
                                                 "drawable",
                                                 getPackageName()
                                         );
                                         hotel.setImageResourceId(resId != 0 ? resId : R.drawable.placeholder_hotel);
-                                        Log.d(TAG, "Hotel: " + hotel.getName() + " - ImageName: " + hotel.getImageName() + " - ResId: " + resId);
                                     } else {
                                         hotel.setImageResourceId(R.drawable.placeholder_hotel);
-                                        Log.w(TAG, "Hotel: " + hotel.getName() + " no tiene imageName. Usando placeholder.");
                                     }
 
                                     fetchedHotels.add(hotel);
-                                    Log.d(TAG, "Hotel cargado exitosamente: " + hotel.getName() + " (ID: " + hotel.getIdHotel() + ")");
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error al procesar documento de hotel " + document.getId() + ": " + e.getMessage(), e);
-                                    // Opcional: Toast para errores individuales si son críticos
-                                    // Toast.makeText(SuperActivity.this, "Error al procesar un hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
-                            // Actualizar adaptador con la nueva lista de hoteles
-                            hotelAdapter.setHotels(fetchedHotels); // Pasar la lista completa y actualizada
-                            Log.d(TAG, "Total de hoteles cargados y adaptador actualizado: " + fetchedHotels.size());
+                            hotelAdapter.setHotels(fetchedHotels);
+                            Log.d(TAG, "Total de hoteles cargados: " + fetchedHotels.size());
 
                             if (fetchedHotels.isEmpty()) {
-                                Log.d(TAG, "La lista de hoteles cargados de Firestore está vacía.");
                                 Toast.makeText(SuperActivity.this, "No se encontraron hoteles en Firestore.", Toast.LENGTH_SHORT).show();
                             }
-
                         } else {
                             Log.e(TAG, "Error al obtener documentos de hoteles: " + task.getException().getMessage(), task.getException());
                             Toast.makeText(SuperActivity.this, "Error al cargar hoteles: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -154,7 +128,6 @@ public class SuperActivity extends AppCompatActivity {
 
         List<Hotel> initialHotels = new ArrayList<>();
 
-        // ... (Tu código para crear los 7 objetos Hotel, el cual ya está bien) ...
         // Hotel 1: Boca Raton
         Hotel bocaRaton = new Hotel();
         bocaRaton.setName("Boca Raton");
@@ -232,22 +205,17 @@ public class SuperActivity extends AppCompatActivity {
         costaDelSol.setImageName("hotel_costa_sol");
         initialHotels.add(costaDelSol);
 
-        // Guardar todos los hoteles en Firestore
-        // Usa addOnCompleteListener para saber cuándo ha terminado de añadir todos los hoteles
-        // y solo entonces intentar cargar.
         CollectionReference hotelesRef = db.collection("hoteles");
-        int[] hotelsAddedCount = {0}; // Para contar los hoteles añadidos
+        int[] hotelsAddedCount = {0};
         for (Hotel hotel : initialHotels) {
             hotelesRef.add(hotel)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Hotel agregado a Firestore: " + hotel.getName());
                             hotelsAddedCount[0]++;
-                            // Si es el último hotel agregado, entonces carga todos
                             if (hotelsAddedCount[0] == initialHotels.size()) {
                                 Log.d(TAG, "Todos los hoteles iniciales han sido agregados. Cargando desde Firestore...");
-                                // Retraso opcional para asegurar sincronización de Firestore
-                                new Handler().postDelayed(this::loadHotelsFromFirestore, 1000); // Pequeño retraso
+                                new Handler().postDelayed(SuperActivity.this::loadHotelsFromFirestore, 1000);
                             }
                         } else {
                             Log.e(TAG, "Error al agregar hotel " + hotel.getName() + ": " + task.getException().getMessage(), task.getException());
@@ -262,12 +230,9 @@ public class SuperActivity extends AppCompatActivity {
 
         etSearchHotel.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 hotelAdapter.filter(s.toString());
             }
-
             @Override public void afterTextChanged(Editable s) {}
         });
 
@@ -283,7 +248,6 @@ public class SuperActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
-
             if (itemId == R.id.nav_hoteles) {
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
@@ -304,8 +268,6 @@ public class SuperActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Cuando la actividad vuelve a estar visible, recarga los hoteles por si hubo cambios
-        // (Aunque loadHotelsFromFirestore ya lo hace en onCreate/addInitialHotels, esto es una buena práctica)
         loadHotelsFromFirestore();
     }
 }

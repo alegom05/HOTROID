@@ -5,7 +5,10 @@ import com.example.hotroid.bean.Reserva;
 import com.example.hotroid.bean.ReservaConHotel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors; // For Java 8+ streams
 
 public class ReservaRepository {
     /**
@@ -17,8 +20,14 @@ public class ReservaRepository {
     public List<ReservaConHotel> obtenerReservasConHotel(List<Reserva> reservas, List<Hotel> hoteles) {
         List<ReservaConHotel> resultado = new ArrayList<>();
 
+        // Optimize hotel lookup using a Map
+        Map<String, Hotel> hotelMap = new HashMap<>();
+        for (Hotel h : hoteles) {
+            hotelMap.put(h.getIdHotel(), h);
+        }
+
         for (Reserva r : reservas) {
-            Hotel hotelEncontrado = buscarHotelPorId(hoteles, r.getIdHotel());
+            Hotel hotelEncontrado = hotelMap.get(r.getIdHotel());
             if (hotelEncontrado != null) {
                 resultado.add(new ReservaConHotel(r, hotelEncontrado));
             }
@@ -26,20 +35,4 @@ public class ReservaRepository {
 
         return resultado;
     }
-
-    /**
-     * Busca un hotel por su ID.
-     * @param hoteles Lista de hoteles.
-     * @param idHotel ID a buscar.
-     * @return Hotel correspondiente, o null si no se encuentra.
-     */
-    private Hotel buscarHotelPorId(List<Hotel> hoteles, String idHotel) {
-        for (Hotel h : hoteles) {
-            if (h.getIdHotel().equals(idHotel)) {
-                return h;
-            }
-        }
-        return null;
-    }
 }
-

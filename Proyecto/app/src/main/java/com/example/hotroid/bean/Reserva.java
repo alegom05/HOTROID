@@ -1,47 +1,52 @@
 package com.example.hotroid.bean;
 
-import com.google.firebase.firestore.DocumentId; // ¡Importante!
-import java.util.Date; // ¡Importante para fechas!
+import com.google.firebase.firestore.DocumentId;
+
+import java.util.Date;
 
 public class Reserva {
-    @DocumentId // Esto mapea el ID del documento de Firestore a esta propiedad
+
+    @DocumentId // Esta anotación le dice a Firestore que este campo debe usarse como el ID del documento
     private String idReserva;
-
-    private String idPersona; // id de la persona que reserva
-    private String idHotel; // id del hotel al que se reservó
-
-    private int habitaciones; // cantidad de habitaciones reservadas
+    private String idPersona;
+    private String nombresCliente; // Campo desnormalizado
+    private String apellidosCliente; // Campo desnormalizado
+    private String idHotel;
+    private String nombreHotel; // Campo desnormalizado
+    private int habitaciones;
     private int adultos;
     private int ninos;
-    private Date fechaInicio; // Cambiado a Date
-    private Date fechaFin;   // Cambiado a Date
-    private String estado;   // "activo", "pasado", "cancelado"
-    private double precioTotal; // Cambiado a double
-
-    // Atributos adicionales basados en la imagen/requerimientos
+    private Date fechaInicio;
+    private Date fechaFin;
+    private String estado;
+    private double precioTotal;
     private boolean checkInRealizado;
     private boolean checkOutRealizado;
-    private double cobros_adicionales; // Cambiado a double
+    private double cobros_adicionales;
     private boolean estaCancelado;
-    private Date fechaCancelacion; // Cambiado a Date (puede ser null)
-    private String idValoracion;   // Puede ser null
-    private String roomNumber;     // Asumo que es String, si es un objeto en Firebase, necesitará un bean aparte
+    private Date fechaCancelacion;
+    private String idValoracion;
+    private String roomNumber;
     private boolean tieneValoracion;
 
-    // CONSTRUCTOR VACÍO - ¡ESTE ES CRÍTICO PARA FIRESTORE!
+    // Constructor vacío requerido por Firestore
     public Reserva() {
-        // Constructor vacío requerido por Firebase Firestore para la deserialización
+        // Constructor vacío
     }
 
-    // Constructor completo con todos los parámetros
-    // Puedes tener múltiples constructores si necesitas formas diferentes de crear objetos
-    public Reserva(String idReserva, String idPersona, String idHotel, int habitaciones, int adultos, int ninos,
+    // Constructor completo para cuando creas una nueva reserva en tu código
+    public Reserva(String idReserva, String idPersona, String nombresCliente, String apellidosCliente,
+                   String idHotel, String nombreHotel, int habitaciones, int adultos, int ninos,
                    Date fechaInicio, Date fechaFin, String estado, double precioTotal,
                    boolean checkInRealizado, boolean checkOutRealizado, double cobros_adicionales,
-                   boolean estaCancelado, Date fechaCancelacion, String idValoracion, String roomNumber, boolean tieneValoracion) {
+                   boolean estaCancelado, Date fechaCancelacion, String idValoracion,
+                   String roomNumber, boolean tieneValoracion) {
         this.idReserva = idReserva;
         this.idPersona = idPersona;
+        this.nombresCliente = nombresCliente;
+        this.apellidosCliente = apellidosCliente;
         this.idHotel = idHotel;
+        this.nombreHotel = nombreHotel;
         this.habitaciones = habitaciones;
         this.adultos = adultos;
         this.ninos = ninos;
@@ -59,147 +64,170 @@ public class Reserva {
         this.tieneValoracion = tieneValoracion;
     }
 
-    // --- Getters --- (Todos necesarios para Firestore)
+    // --- Getters y Setters ---
+
     public String getIdReserva() {
         return idReserva;
+    }
+
+    public void setIdReserva(String idReserva) {
+        this.idReserva = idReserva;
     }
 
     public String getIdPersona() {
         return idPersona;
     }
 
-    public String getIdHotel() {
-        return idHotel;
-    }
-
-    public int getHabitaciones() {
-        return habitaciones;
-    }
-
-    public int getAdultos() {
-        return adultos;
-    }
-
-    public int getNinos() {
-        return ninos;
-    }
-
-    public Date getFechaInicio() { // Cambiado a Date
-        return fechaInicio;
-    }
-
-    public Date getFechaFin() { // Cambiado a Date
-        return fechaFin;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public double getPrecioTotal() { // Cambiado a double
-        return precioTotal;
-    }
-
-    public boolean isCheckInRealizado() {
-        return checkInRealizado;
-    }
-
-    public boolean isCheckOutRealizado() {
-        return checkOutRealizado;
-    }
-
-    public double getCobros_adicionales() { // Cambiado a double
-        return cobros_adicionales;
-    }
-
-    public boolean isEstaCancelado() {
-        return estaCancelado;
-    }
-
-    public Date getFechaCancelacion() { // Cambiado a Date
-        return fechaCancelacion;
-    }
-
-    public String getIdValoracion() {
-        return idValoracion;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public boolean isTieneValoracion() {
-        return tieneValoracion;
-    }
-
-    // --- Setters --- (Todos son NECESARIOS para que Firestore pueda "llenar" tu objeto)
-    // Firestore usa los setters para establecer los valores de las propiedades al deserializar.
-    public void setIdReserva(String idReserva) {
-        this.idReserva = idReserva;
-    }
-
     public void setIdPersona(String idPersona) {
         this.idPersona = idPersona;
+    }
+
+    public String getNombresCliente() {
+        return nombresCliente;
+    }
+
+    public void setNombresCliente(String nombresCliente) {
+        this.nombresCliente = nombresCliente;
+    }
+
+    public String getApellidosCliente() {
+        return apellidosCliente;
+    }
+
+    public void setApellidosCliente(String apellidosCliente) {
+        this.apellidosCliente = apellidosCliente;
+    }
+
+    public String getIdHotel() {
+        return idHotel;
     }
 
     public void setIdHotel(String idHotel) {
         this.idHotel = idHotel;
     }
 
+    public String getNombreHotel() {
+        return nombreHotel;
+    }
+
+    public void setNombreHotel(String nombreHotel) {
+        this.nombreHotel = nombreHotel;
+    }
+
+    public int getHabitaciones() {
+        return habitaciones;
+    }
+
     public void setHabitaciones(int habitaciones) {
         this.habitaciones = habitaciones;
+    }
+
+    public int getAdultos() {
+        return adultos;
     }
 
     public void setAdultos(int adultos) {
         this.adultos = adultos;
     }
 
+    public int getNinos() {
+        return ninos;
+    }
+
     public void setNinos(int ninos) {
         this.ninos = ninos;
     }
 
-    public void setFechaInicio(Date fechaInicio) { // Cambiado a Date
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public void setFechaFin(Date fechaFin) { // Cambiado a Date
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public String getEstado() {
+        return estado;
     }
 
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
-    public void setPrecioTotal(double precioTotal) { // Cambiado a double
+    public double getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(double precioTotal) {
         this.precioTotal = precioTotal;
+    }
+
+    public boolean isCheckInRealizado() {
+        return checkInRealizado;
     }
 
     public void setCheckInRealizado(boolean checkInRealizado) {
         this.checkInRealizado = checkInRealizado;
     }
 
+    public boolean isCheckOutRealizado() {
+        return checkOutRealizado;
+    }
+
     public void setCheckOutRealizado(boolean checkOutRealizado) {
         this.checkOutRealizado = checkOutRealizado;
     }
 
-    public void setCobros_adicionales(double cobros_adicionales) { // Cambiado a double
+    public double getCobros_adicionales() {
+        return cobros_adicionales;
+    }
+
+    public void setCobros_adicionales(double cobros_adicionales) {
         this.cobros_adicionales = cobros_adicionales;
+    }
+
+    public boolean isEstaCancelado() {
+        return estaCancelado;
     }
 
     public void setEstaCancelado(boolean estaCancelado) {
         this.estaCancelado = estaCancelado;
     }
 
-    public void setFechaCancelacion(Date fechaCancelacion) { // Cambiado a Date
+    public Date getFechaCancelacion() {
+        return fechaCancelacion;
+    }
+
+    public void setFechaCancelacion(Date fechaCancelacion) {
         this.fechaCancelacion = fechaCancelacion;
+    }
+
+    public String getIdValoracion() {
+        return idValoracion;
     }
 
     public void setIdValoracion(String idValoracion) {
         this.idValoracion = idValoracion;
     }
 
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    public boolean isTieneValoracion() {
+        return tieneValoracion;
     }
 
     public void setTieneValoracion(boolean tieneValoracion) {

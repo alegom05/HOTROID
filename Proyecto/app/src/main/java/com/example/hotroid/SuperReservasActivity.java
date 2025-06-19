@@ -1,13 +1,10 @@
 package com.example.hotroid;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,507 +17,188 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.example.hotroid.bean.Cliente;
 import com.example.hotroid.bean.Reserva;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.ParseException; // Importar para el manejo de fechas
-import java.text.SimpleDateFormat; // Importar para el manejo de fechas
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date; // ¡Importante!
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class SuperReservasActivity extends AppCompatActivity {
-
-    private static final String TAG = "SuperReservasActivity";
 
     private TextView tvHotelNombre;
     private LinearLayout llReservasContainer;
     private EditText etSearchUser;
     private Button btnLimpiar;
 
-    private List<Reserva> allReservas;
-    private List<Reserva> currentHotelReservas;
-    private Map<String, Cliente> clientesMap; // Para almacenar clientes por su ID de Firestore
-
-    private String selectedHotelName;
-
+    private List<Reserva> allReservas; // Todas las reservas del hotel
+    private List<Reserva> filteredReservas; // Reservas filtradas por búsqueda
     private FirebaseFirestore db;
-
-    // Formato de fecha para parsear tus Strings a Date
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
+    private String selectedHotelId;
+    private String selectedHotelName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_reservas_hotel);
 
+        // Inicializar Firestore
         db = FirebaseFirestore.getInstance();
-        clientesMap = new HashMap<>(); // Inicializar el mapa de clientes
+        allReservas = new ArrayList<>();
+        filteredReservas = new ArrayList<>();
 
+        // Obtener datos del hotel del Intent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("hotel_id")) {
+            selectedHotelId = intent.getStringExtra("hotel_id");
+            selectedHotelName = intent.getStringExtra("hotel_name");
+        } else {
+            Toast.makeText(this, "Error: No se recibió información del hotel", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        // Inicializar vistas
         tvHotelNombre = findViewById(R.id.tvHotelNombre);
         llReservasContainer = findViewById(R.id.llReservasContainer);
         etSearchUser = findViewById(R.id.etSearchUser);
         btnLimpiar = findViewById(R.id.btnClearSearch);
 
-        Intent intent = getIntent();
-        selectedHotelName = "Hotel Desconocido";
-
-        if (intent != null && intent.hasExtra("hotel_name")) {
-            String receivedName = intent.getStringExtra("hotel_name");
-            if (receivedName != null && !receivedName.isEmpty()) {
-                selectedHotelName = receivedName;
-            }
-        }
-
         tvHotelNombre.setText("Reservas para " + selectedHotelName);
 
-        // --- PASO CLAVE: Primero carga los clientes, luego las reservas ---
-        // Esto es importante porque las reservas referencian los IDs de los clientes.
-        // Después de que los clientes se carguen, inicializamos las reservas y mostramos.
+        // Configurar buscador
+        setupSearch();
 
-        // Opcional: Ejecuta esta función UNA SOLA VEZ para subir tus clientes de prueba
-        // DESCOMENTA LA SIGUIENTE LÍNEA SOLO PARA LA PRIMERA EJECUCIÓN (para crear los clientes en Firestore),
-        // LUEGO COMENTA DE NUEVO PARA EVITAR DUPLICADOS.
-        // saveTestClientesToFirestore();
+        // Cargar reservas
+        loadReservasFromFirestore();
 
-        // Carga los clientes desde Firestore
-        loadClientesFromFirestore(() -> {
-            // Callback que se ejecuta cuando los clientes han sido cargados
-            initializeReservasData(); // Ahora puedes inicializar las reservas con los IDs de cliente
+        // Configurar navegación
+        setupBottomNavigation();
+        setupCardSuper();
+    }
 
-            // Opcional: Ejecuta esta función UNA SOLA VEZ para subir tus reservas de prueba
-            // DESCOMENTA LA SIGUIENTE LÍNEA SOLO PARA LA PRIMERA EJECUCIÓN (para crear las reservas en Firestore),
-            // LUEGO COMENTA DE NUEVO PARA EVITAR DUPLICADOS.
-            //saveAllReservasToFirestore(); // <--- Aquí la llamarías para guardar las reservas de prueba
+    private void loadReservasFromFirestore() {
+        db.collection("reservas")
+                .whereEqualTo("idHotel", selectedHotelId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        allReservas.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Reserva reserva = document.toObject(Reserva.class);
+                            reserva.setIdReserva(document.getId());
+                            allReservas.add(reserva);
+                        }
+                        filteredReservas = new ArrayList<>(allReservas);
+                        displayReservas(filteredReservas);
+                    } else {
+                        Log.e("SuperReservas", "Error al cargar reservas", task.getException());
+                        Toast.makeText(this, "Error al cargar reservas", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
-            currentHotelReservas = getReservationsForHotel(selectedHotelName);
-            displayFilteredReservas(currentHotelReservas); // Y mostrar las reservas
-        });
-
-
+    private void setupSearch() {
         etSearchUser.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 filterReservas(s.toString());
             }
+
             @Override
             public void afterTextChanged(Editable s) {}
         });
 
         btnLimpiar.setOnClickListener(v -> {
             etSearchUser.setText("");
-            Toast.makeText(this, "Búsqueda limpiada.", Toast.LENGTH_SHORT).show();
+            filterReservas("");
         });
+    }
 
+    private void filterReservas(String searchText) {
+        filteredReservas.clear();
+
+        if (searchText.isEmpty()) {
+            filteredReservas.addAll(allReservas);
+        } else {
+            String searchLower = searchText.toLowerCase(Locale.getDefault());
+            for (Reserva reserva : allReservas) {
+                if (reserva.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchLower) ||
+                        reserva.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchLower) ||
+                        reserva.getRoomNumber().toLowerCase(Locale.getDefault()).contains(searchLower)) {
+                    filteredReservas.add(reserva);
+                }
+            }
+        }
+        displayReservas(filteredReservas);
+    }
+
+    private void displayReservas(List<Reserva> reservas) {
+        llReservasContainer.removeAllViews();
+
+        if (reservas.isEmpty()) {
+            TextView noResults = new TextView(this);
+            noResults.setText("No se encontraron reservas");
+            noResults.setTextSize(16);
+            noResults.setGravity(android.view.Gravity.CENTER);
+            llReservasContainer.addView(noResults);
+            return;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        for (Reserva reserva : reservas) {
+            View itemView = inflater.inflate(R.layout.item_reserva_card, llReservasContainer, false);
+
+            TextView tvCliente = itemView.findViewById(R.id.tvClienteCard);
+            TextView tvFechas = itemView.findViewById(R.id.tvFechaReservaCard);
+            TextView tvHabitacion = itemView.findViewById(R.id.tvHabitacionCard);
+            TextView tvPrecio = itemView.findViewById(R.id.tvPrecioTotalCard);
+
+            tvCliente.setText(reserva.getNombresCliente() + " " + reserva.getApellidosCliente());
+            tvFechas.setText("Estancia: " + dateFormat.format(reserva.getFechaInicio()) + " - " + dateFormat.format(reserva.getFechaFin()));
+            tvHabitacion.setText(String.format(Locale.getDefault(),
+                    "Habitaciones: %d | Adultos: %d | Niños: %d | Hab. Nro: %s",
+                    reserva.getHabitaciones(), reserva.getAdultos(), reserva.getNinos(), reserva.getRoomNumber()));
+            tvPrecio.setText(String.format(Locale.getDefault(), "Total: S/ %.2f", reserva.getPrecioTotal()));
+
+            llReservasContainer.addView(itemView);
+        }
+    }
+
+    private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_hoteles);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
-                Intent intentInicio = new Intent(SuperReservasActivity.this, SuperActivity.class);
-                startActivity(intentInicio);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                Intent intentUbicacion = new Intent(SuperReservasActivity.this, SuperUsuariosActivity.class);
-                startActivity(intentUbicacion);
+                startActivity(new Intent(this, SuperListaClientesActivity.class));
                 finish();
                 return true;
             } else if (itemId == R.id.nav_eventos) {
-                Intent intentAlertas = new Intent(SuperReservasActivity.this, SuperEventosActivity.class);
-                startActivity(intentAlertas);
+                startActivity(new Intent(this, SuperEventosActivity.class));
                 finish();
                 return true;
             }
             return false;
         });
+    }
 
+    private void setupCardSuper() {
         CardView cardSuper = findViewById(R.id.cardSuper);
         cardSuper.setOnClickListener(v -> {
-            Intent intentAccount = new Intent(SuperReservasActivity.this, SuperCuentaActivity.class);
-            startActivity(intentAccount);
+            startActivity(new Intent(this, SuperCuentaActivity.class));
         });
-    }
-
-    // --- NUEVA FUNCIÓN PARA SUBIR CLIENTES DE PRUEBA A FIRESTORE ---
-    // EJECUTAR ESTA FUNCIÓN UNA SOLA VEZ PARA POBLAR TU BASE DE DATOS DE CLIENTES
-    private void saveTestClientesToFirestore() {
-        if (db == null) {
-            Log.e(TAG, "Firestore no inicializado.");
-            Toast.makeText(this, "Error: Firestore no está listo.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        List<Cliente> testClientes = new ArrayList<>();
-        // Crea los clientes con sus nombres y apellidos completos
-        testClientes.add(new Cliente("Juan", "Molleda García", "true", "DNI", "12345678", "1990-01-15", "juan.molleda@example.com", "912345678", "Calle Falsa 123", ""));
-        testClientes.add(new Cliente("Leandro", "Pérez Rojas", "true", "DNI", "87654321", "1985-03-20", "leandro.perez@example.com", "987654321", "Av. Siempre Viva 742", ""));
-        testClientes.add(new Cliente("Augusto", "Medina Castro", "true", "DNI", "11223344", "1992-07-01", "augusto.medina@example.com", "911223344", "Jr. Los Álamos 45", ""));
-        testClientes.add(new Cliente("Joaquín", "Pozo Ramos", "true", "DNI", "18192021", "1990-04-05", "joaquin.pozo@example.com", "918192021", "Av. Las Palmeras 1", ""));
-        testClientes.add(new Cliente("Roger", "Albino Gómez", "true", "DNI", "22232425", "1986-07-20", "roger.albino@example.com", "922232425", "Calle Los Sauces 2", ""));
-        testClientes.add(new Cliente("Julio", "Uribe Flores", "true", "DNI", "26272829", "1991-03-17", "julio.uribe@example.com", "926272829", "Urb. San Juan 3", ""));
-        testClientes.add(new Cliente("Eduardo", "Campos Ruíz", "true", "DNI", "46474849", "1990-09-09", "eduardo.campos@example.com", "946474849", "Calle Bolognesi 8", ""));
-        testClientes.add(new Cliente("Rubén", "Cancho Vargas", "true", "DNI", "50515253", "1985-06-19", "ruben.cancho@example.com", "950515253", "Av. San Martín 9", ""));
-        testClientes.add(new Cliente("Aaron", "Villa Pérez", "true", "DNI", "54555657", "1994-03-08", "aaron.villa@example.com", "954555657", "Jr. Puno 10", ""));
-        testClientes.add(new Cliente("Sigrid", "Bazán Narro", "true", "DNI", "66676869", "1991-08-20", "sigrid.bazan@example.com", "966676869", "Calle El Polo 13", ""));
-        testClientes.add(new Cliente("Daniel", "Abugattás Majluf", "true", "DNI", "70717273", "1955-04-10", "daniel.abugattas@example.com", "970717273", "Av. Primavera 14", ""));
-        testClientes.add(new Cliente("Mauricio", "Mulder Bedoya", "true", "DNI", "74757677", "1956-06-08", "mauricio.mulder@example.com", "974757677", "Jr. Junín 15", ""));
-        testClientes.add(new Cliente("Pamela", "López Salas", "true", "DNI", "82838485", "1990-03-15", "pamela.lopez@example.com", "982838485", "Urb. Los Pinos 17", ""));
-        testClientes.add(new Cliente("Carlos", "Álvarez Rodríguez", "true", "DNI", "86878889", "1978-01-05", "carlos.alvarez@example.com", "986878889", "Av. El Ejército 18", ""));
-        testClientes.add(new Cliente("Robert", "Prevost Martínez", "true", "DNI", "90919293", "1955-09-18", "robert.prevost@example.com", "990919293", "Calle La Marina 19", ""));
-        testClientes.add(new Cliente("Alejandro", "Toledo Manrique", "true", "DNI", "98990001", "1946-03-28", "alejandro.toledo@example.com", "998990001", "Jr. Cusco 21", ""));
-        testClientes.add(new Cliente("Keiko", "Fujimori Higuchi", "true", "DNI", "02030405", "1975-05-25", "keiko.fujimori@example.com", "902030405", "Av. Pardo 22", ""));
-        testClientes.add(new Cliente("Pedro", "Castillo Terrones", "true", "DNI", "06070809", "1969-10-19", "pedro.castillo@example.com", "906070809", "Calle El Sol 23", ""));
-        testClientes.add(new Cliente("Oscar", "Ibáñez Velarde", "true", "DNI", "14151617", "1977-02-05", "oscar.ibanez@example.com", "914151617", "Jr. Callao 25", ""));
-        testClientes.add(new Cliente("Verónica", "Mendoza Frisch", "true", "DNI", "18192021", "1980-12-09", "veronica.mendoza@example.com", "918192021", "Av. Brasil 26", ""));
-        testClientes.add(new Cliente("Ismael", "Retes Espinoza", "true", "DNI", "22232425", "1990-07-03", "ismael.retes@example.com", "922232425", "Calle Lima 27", ""));
-        // Cliente para MisReservasUser
-        testClientes.add(new Cliente("David", "Gómez Pulgar", "true", "DNI", "00000001", "1999-01-01", "david.gomez@example.com", "900000001", "Calle Falsa 456", ""));
-
-
-        // Guardar cada cliente
-        for (Cliente cliente : testClientes) {
-            db.collection("clientes").add(cliente) // add() genera un ID automático para el documento
-                    .addOnSuccessListener(documentReference -> {
-                        // Aquí recuperamos el ID generado por Firestore y lo asignamos al objeto Cliente
-                        String firestoreId = documentReference.getId();
-                        cliente.setFirestoreId(firestoreId); // Guardamos el ID en el objeto Cliente
-
-                        // Luego, podemos añadir este cliente al mapa para usarlo
-                        clientesMap.put(firestoreId, cliente);
-                        Log.d(TAG, "Cliente añadido con ID: " + firestoreId + ", Nombre: " + cliente.getNombres() + " " + cliente.getApellidos());
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w(TAG, "Error al añadir cliente", e);
-                        Toast.makeText(this, "Error al guardar cliente: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        }
-        Toast.makeText(this, "Intentando guardar clientes de prueba en Firestore...", Toast.LENGTH_SHORT).show();
-    }
-
-    // --- FUNCIÓN PARA CARGAR CLIENTES DESDE FIRESTORE ---
-    private void loadClientesFromFirestore(Runnable onCompleteCallback) {
-        if (db == null) {
-            Log.e(TAG, "Firestore no inicializado para cargar clientes.");
-            onCompleteCallback.run(); // Ejecuta el callback incluso en caso de error
-            return;
-        }
-
-        db.collection("clientes")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        clientesMap.clear(); // Limpiar el mapa existente
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Cliente cliente = document.toObject(Cliente.class);
-                            cliente.setFirestoreId(document.getId()); // Asignar el ID de Firestore al objeto Cliente
-                            clientesMap.put(document.getId(), cliente); // Guardar el cliente en el mapa
-                        }
-                        Log.d(TAG, "Clientes cargados de Firestore: " + clientesMap.size());
-                        // No es necesario un Toast aquí, ya que el usuario no siempre lo verá.
-                    } else {
-                        Log.e(TAG, "Error al cargar clientes de Firestore: ", task.getException());
-                        Toast.makeText(this, "Error al cargar clientes: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    onCompleteCallback.run(); // Ejecutar el callback cuando la carga de clientes ha terminado
-                });
-    }
-
-    private void initializeReservasData() {
-        allReservas = new ArrayList<>();
-
-        // Obtener los IDs de los clientes del mapa que acabamos de cargar de Firestore
-        // Estos IDs son los que usarás en tus objetos Reserva.
-        // Asegúrate de que los nombres y apellidos coincidan EXACTAMENTE con los que pusiste en saveTestClientesToFirestore()
-        String idJuanMolleda = getClienteIdByNombre("Juan", "Molleda García");
-        String idLeandroPerez = getClienteIdByNombre("Leandro", "Pérez Rojas");
-        String idAugustoMedina = getClienteIdByNombre("Augusto", "Medina Castro");
-
-        String idJoaquinPozo = getClienteIdByNombre("Joaquín", "Pozo Ramos");
-        String idRogerAlbino = getClienteIdByNombre("Roger", "Albino Gómez");
-        String idJulioUribe = getClienteIdByNombre("Julio", "Uribe Flores");
-
-        String idEduardoCampos = getClienteIdByNombre("Eduardo", "Campos Ruíz");
-        String idRubenCancho = getClienteIdByNombre("Rubén", "Cancho Vargas");
-        String idAaronVilla = getClienteIdByNombre("Aaron", "Villa Pérez");
-
-        String idSigridBazan = getClienteIdByNombre("Sigrid", "Bazán Narro");
-        String idDanielAbugattas = getClienteIdByNombre("Daniel", "Abugattás Majluf");
-        String idMauricioMulder = getClienteIdByNombre("Mauricio", "Mulder Bedoya");
-
-        String idPamelaLopez = getClienteIdByNombre("Pamela", "López Salas");
-        String idCarlosAlvarez = getClienteIdByNombre("Carlos", "Álvarez Rodríguez");
-        String idRobertPrevost = getClienteIdByNombre("Robert", "Prevost Martínez");
-
-        String idAlejandroToledo = getClienteIdByNombre("Alejandro", "Toledo Manrique");
-        String idKeikoFujimori = getClienteIdByNombre("Keiko", "Fujimori Higuchi");
-        String idPedroCastillo = getClienteIdByNombre("Pedro", "Castillo Terrones");
-
-        String idOscarIbanez = getClienteIdByNombre("Oscar", "Ibáñez Velarde");
-        String idVeronicaMendoza = getClienteIdByNombre("Verónica", "Mendoza Frisch");
-        String idIsmaelRetes = getClienteIdByNombre("Ismael", "Retes Espinoza");
-
-        try {
-            // Ahora, al crear las reservas, usa los IDs de los clientes obtenidos y parsea las fechas
-            allReservas.add(new Reserva("R001", idJuanMolleda, "Aranwa", 1, 2, 0, dateFormatter.parse("30/03/2025"), dateFormatter.parse("05/04/2025"), "activo", 800.0,
-                    false, false, 0.0, false, null, null, "101", false));
-            allReservas.add(new Reserva("R002", idLeandroPerez, "Aranwa", 1, 1, 0, dateFormatter.parse("24/03/2025"), dateFormatter.parse("29/03/2025"), "activo", 500.0,
-                    false, false, 0.0, false, null, null, "102", false));
-            allReservas.add(new Reserva("R003", idAugustoMedina, "Aranwa", 2, 3, 1, dateFormatter.parse("22/03/2025"), dateFormatter.parse("29/03/2025"), "activo", 1200.0,
-                    false, false, 0.0, false, null, null, "103", false));
-
-
-            // Reservas de Decameron
-            allReservas.add(new Reserva("R006", idJoaquinPozo, "Decameron", 1, 2, 1, dateFormatter.parse("01/05/2025"), dateFormatter.parse("07/05/2025"), "activo", 1100.0,
-                    false, false, 0.0, false, null, null, "201", false));
-            allReservas.add(new Reserva("R007", idRogerAlbino, "Decameron", 1, 1, 0, dateFormatter.parse("10/05/2025"), dateFormatter.parse("13/05/2025"), "activo", 600.0,
-                    false, false, 0.0, false, null, null, "202", false));
-            allReservas.add(new Reserva("R027", idJulioUribe, "Decameron", 1, 2, 0, dateFormatter.parse("15/06/2025"), dateFormatter.parse("20/06/2025"), "activo", 1000.0,
-                    false, false, 0.0, false, null, null, "203", false));
-
-            // Reservas de Oro Verde
-            allReservas.add(new Reserva("R008", idEduardoCampos, "Oro Verde", 1, 2, 0, dateFormatter.parse("05/06/2025"), dateFormatter.parse("08/06/2025"), "activo", 950.0,
-                    false, false, 0.0, false, null, null, "301", false));
-            allReservas.add(new Reserva("R030", idRubenCancho, "Oro Verde", 1, 2, 2, dateFormatter.parse("10/07/2025"), dateFormatter.parse("15/07/2025"), "activo", 1300.0,
-                    false, false, 0.0, false, null, null, "302", false));
-            allReservas.add(new Reserva("R031", idAaronVilla, "Oro Verde", 1, 1, 0, dateFormatter.parse("20/07/2025"), dateFormatter.parse("23/07/2025"), "activo", 800.0,
-                    false, false, 0.0, false, null, null, "303", false));
-
-            // Reservas de Boca Ratón
-            allReservas.add(new Reserva("R009", idSigridBazan, "Boca Ratón", 1, 1, 0, dateFormatter.parse("01/07/2025"), dateFormatter.parse("04/07/2025"), "activo", 550.0,
-                    false, false, 0.0, false, null, null, "401", false));
-            allReservas.add(new Reserva("R032", idDanielAbugattas, "Boca Ratón", 2, 3, 0, dateFormatter.parse("08/08/2025"), dateFormatter.parse("12/08/2025"), "activo", 1000.0,
-                    false, false, 0.0, false, null, null, "402", false));
-            allReservas.add(new Reserva("R033", idMauricioMulder, "Boca Ratón", 1, 2, 0, dateFormatter.parse("15/08/2025"), dateFormatter.parse("18/08/2025"), "activo", 650.0,
-                    false, false, 0.0, false, null, null, "403", false));
-
-
-            // Reservas de Libertador
-            allReservas.add(new Reserva("R010", idPamelaLopez, "Libertador", 1, 2, 0, dateFormatter.parse("25/07/2025"), dateFormatter.parse("28/07/2025"), "activo", 1300.0,
-                    false, false, 0.0, false, null, null, "501", false));
-            allReservas.add(new Reserva("R034", idCarlosAlvarez, "Libertador", 1, 1, 0, dateFormatter.parse("05/09/2025"), dateFormatter.parse("07/09/2025"), "activo", 900.0,
-                    false, false, 0.0, false, null, null, "502", false));
-            allReservas.add(new Reserva("R035", idRobertPrevost, "Libertador", 2, 4, 1, dateFormatter.parse("10/09/2025"), dateFormatter.parse("15/09/2025"), "activo", 2000.0,
-                    false, false, 0.0, false, null, null, "503", false));
-
-            // Reservas de Costa del Sol
-            allReservas.add(new Reserva("R011", idAlejandroToledo, "Costa del Sol", 1, 2, 0, dateFormatter.parse("12/08/2025"), dateFormatter.parse("15/08/2025"), "activo", 700.0,
-                    false, false, 0.0, false, null, null, "601", false));
-            allReservas.add(new Reserva("R036", idKeikoFujimori, "Costa del Sol", 1, 1, 0, dateFormatter.parse("20/09/2025"), dateFormatter.parse("23/09/2025"), "activo", 500.0,
-                    false, false, 0.0, false, null, null, "602", false));
-            allReservas.add(new Reserva("R037", idPedroCastillo, "Costa del Sol", 2, 3, 2, dateFormatter.parse("01/10/2025"), dateFormatter.parse("07/10/2025"), "activo", 1400.0,
-                    false, false, 0.0, false, null, null, "603", false));
-
-            // Reservas de Sonesta
-            allReservas.add(new Reserva("R012", idOscarIbanez, "Sonesta", 1, 2, 0, dateFormatter.parse("01/09/2025"), dateFormatter.parse("04/09/2025"), "activo", 850.0,
-                    false, false, 0.0, false, null, null, "701", false));
-            allReservas.add(new Reserva("R038", idVeronicaMendoza, "Sonesta", 1, 1, 0, dateFormatter.parse("10/10/2025"), dateFormatter.parse("12/10/2025"), "activo", 600.0,
-                    false, false, 0.0, false, null, null, "702", false));
-            allReservas.add(new Reserva("R039", idIsmaelRetes, "Sonesta", 2, 3, 1, dateFormatter.parse("15/10/2025"), dateFormatter.parse("20/10/2025"), "activo", 1200.0,
-                    false, false, 0.0, false, null, null, "703", false));
-
-        } catch (ParseException e) {
-            Log.e(TAG, "Error parseando fecha al inicializar reservas: " + e.getMessage());
-            Toast.makeText(this, "Error de formato de fecha en datos de reserva.", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-
-    // Helper para obtener ID de cliente por nombre y apellido
-    // Busca en el mapa `clientesMap` que ya se cargó de Firestore.
-    private String getClienteIdByNombre(String nombres, String apellidos) {
-        Log.d(TAG, "Buscando cliente: " + nombres + " " + apellidos); // Depuración
-        for (Map.Entry<String, Cliente> entry : clientesMap.entrySet()) {
-            Cliente cliente = entry.getValue();
-            // Imprime cada cliente que está en el mapa
-            Log.d(TAG, "Comparando con cliente en mapa: " + cliente.getNombres() + " " + cliente.getApellidos() + " (ID: " + entry.getKey() + ")");
-
-            if (cliente.getNombres().equalsIgnoreCase(nombres) && cliente.getApellidos().equalsIgnoreCase(apellidos)) {
-                Log.d(TAG, "¡Cliente ENCONTRADO! ID: " + entry.getKey()); // Depuración
-                return entry.getKey(); // Retorna el Firestore ID del documento
-            }
-        }
-        Log.w(TAG, "Cliente con nombre: " + nombres + " " + apellidos + " no encontrado en el mapa de clientes.");
-        return "ID_NO_ENCONTRADO"; // Retorna un ID por defecto si no lo encuentra (manejar este caso)
-    }
-
-
-    private void saveAllReservasToFirestore() {
-        if (db == null) {
-            Log.e(TAG, "Firestore no inicializado.");
-            Toast.makeText(this, "Error: Firestore no está listo.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (allReservas == null || allReservas.isEmpty()) {
-            Log.d(TAG, "No hay reservas para guardar.");
-            Toast.makeText(this, "No hay reservas en la lista para guardar.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        for (Reserva reserva : allReservas) {
-            // Cuando usas .set(Object), Firestore automáticamente mapea los campos.
-            // No es necesario crear un Map manualmente a menos que tengas lógica compleja.
-            // Asegúrate de que el idReserva se establezca en el objeto antes de guardarlo
-            // Si el idReserva ya existe en el objeto, Firestore lo usará como ID del documento.
-            // Si es null, .add(reserva) generará uno. Pero aquí usamos .document(idReserva).set()
-            // para usar el ID definido en tu Reserva (R001, R002, etc.)
-            db.collection("reservas").document(reserva.getIdReserva())
-                    .set(reserva) // ¡Aquí estamos pasando el objeto Reserva directamente!
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "Documento de reserva añadido/actualizado con ID: " + reserva.getIdReserva());
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w(TAG, "Error al añadir/actualizar documento de reserva", e);
-                        Toast.makeText(this, "Error al guardar reserva " + reserva.getIdReserva() + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
-        }
-        Toast.makeText(this, "Intentando guardar todas las reservas en Firestore...", Toast.LENGTH_SHORT).show();
-    }
-
-
-    private List<Reserva> getReservationsForHotel(String hotelIdentifier) {
-        List<Reserva> filteredList = new ArrayList<>();
-        if (allReservas != null) {
-            for (Reserva reserva : allReservas) {
-                if (reserva.getIdHotel().equalsIgnoreCase(hotelIdentifier)) {
-                    filteredList.add(reserva);
-                }
-            }
-        }
-        return filteredList;
-    }
-
-    private void filterReservas(String searchText) {
-        llReservasContainer.removeAllViews();
-
-        List<Reserva> filteredReservas = new ArrayList<>();
-        if (searchText.isEmpty()) {
-            filteredReservas.addAll(currentHotelReservas);
-        } else {
-            String lowerCaseSearchText = searchText.toLowerCase(Locale.getDefault());
-            for (Reserva reserva : currentHotelReservas) {
-                // Para la búsqueda por nombre de cliente, ahora que tenemos el mapa:
-                String idPersona = reserva.getIdPersona();
-                Cliente cliente = clientesMap.get(idPersona);
-                String nombreCompletoCliente = (cliente != null) ? (cliente.getNombres() + " " + cliente.getApellidos()).toLowerCase(Locale.getDefault()) : "";
-
-                if (nombreCompletoCliente.contains(lowerCaseSearchText) ||
-                        reserva.getIdReserva().toLowerCase(Locale.getDefault()).contains(lowerCaseSearchText)) {
-                    filteredReservas.add(reserva);
-                }
-            }
-        }
-
-        if (filteredReservas.isEmpty()) {
-            TextView noReservationsText = new TextView(this);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            noReservationsText.setLayoutParams(lp);
-            noReservationsText.setText("No hay reservas encontradas para '" + searchText + "' en " + selectedHotelName + ".");
-            noReservationsText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            noReservationsText.setTextColor(Color.GRAY);
-            noReservationsText.setGravity(Gravity.CENTER);
-            noReservationsText.setPadding(0, dpToPx(32), 0, dpToPx(32));
-            llReservasContainer.addView(noReservationsText);
-        } else {
-            displayFilteredReservas(filteredReservas);
-        }
-    }
-
-    private void displayFilteredReservas(List<Reserva> reservasToDisplay) {
-        llReservasContainer.removeAllViews();
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        // Define el formato para mostrar las fechas
-        SimpleDateFormat displayFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-
-        for (Reserva reserva : reservasToDisplay) {
-            View cardView = inflater.inflate(R.layout.item_reserva_card, llReservasContainer, false);
-
-            TextView tvClienteCard = cardView.findViewById(R.id.tvClienteCard);
-            TextView tvFechaReservaCard = cardView.findViewById(R.id.tvFechaReservaCard);
-            TextView tvHabitacionCard = cardView.findViewById(R.id.tvHabitacionCard);
-            TextView tvPrecioTotalCard = cardView.findViewById(R.id.tvPrecioTotalCard);
-
-            // Intentamos obtener el nombre del cliente del mapa
-            String idPersona = reserva.getIdPersona();
-            Cliente cliente = clientesMap.get(idPersona);
-            String nombreCompletoCliente = (cliente != null) ? (cliente.getNombres() + " " + cliente.getApellidos()) : "Cliente: " + reserva.getIdPersona() + " (Cargando...)";
-            tvClienteCard.setText(nombreCompletoCliente);
-
-
-            // Formatear las fechas Date a String para mostrar
-            String fechaInicioStr = (reserva.getFechaInicio() != null) ? displayFormatter.format(reserva.getFechaInicio()) : "N/A";
-            String fechaFinStr = (reserva.getFechaFin() != null) ? displayFormatter.format(reserva.getFechaFin()) : "N/A";
-            tvFechaReservaCard.setText("Fecha de Reserva: " + fechaInicioStr + " - " + fechaFinStr);
-
-            tvHabitacionCard.setText("Habitaciones: " + reserva.getHabitaciones());
-            // Ahora precioTotal es double, usar % .2f para formato de decimales si es necesario
-            tvPrecioTotalCard.setText(String.format(Locale.getDefault(), "Precio Total: $%.2f", reserva.getPrecioTotal()));
-            llReservasContainer.addView(cardView);
-        }
-    }
-
-    /**
-     * Esta función ya no es necesaria llamarla directamente en `displayFilteredReservas`
-     * porque ahora `displayFilteredReservas` intentará obtener el nombre del cliente
-     * del `clientesMap` que se cargó al inicio.
-     * Solo la mantengo aquí como ejemplo de consulta directa.
-     * @param clienteId El ID del documento del cliente en la colección "clientes".
-     */
-    private void getClienteNameAndLastName(String clienteId) {
-        if (db == null) {
-            Log.e(TAG, "Firestore no inicializado.");
-            return;
-        }
-
-        db.collection("clientes").document(clienteId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                String nombres = document.getString("nombres");
-                                String apellidos = document.getString("apellidos");
-                                Log.d(TAG, "Cliente encontrado - ID: " + clienteId + ", Nombre: " + nombres + " " + apellidos);
-                                // Toast.makeText(SuperReservasActivity.this, "Cliente: " + nombres + " " + apellidos, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Log.d(TAG, "No se encontró el documento del cliente con ID: " + clienteId);
-                                // Toast.makeText(SuperReservasActivity.this, "Cliente no encontrado.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Log.e(TAG, "Error al obtener documento del cliente: ", task.getException());
-                            // Toast.makeText(SuperReservasActivity.this, "Error al obtener cliente: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    private int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                getResources().getDisplayMetrics()
-        );
     }
 }
