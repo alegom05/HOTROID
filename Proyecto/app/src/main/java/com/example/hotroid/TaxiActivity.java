@@ -55,18 +55,19 @@ public class TaxiActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerNotificaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // --- INICIO: Generación de Datos Estáticos con Timestamps Simulados y Nombres/Apellidos Separados ---
+        // --- INICIO: Generación de Datos Estáticos con Timestamps y Estado de Viaje (Capitalización Consistente) ---
         listaAlertasOriginal = new ArrayList<>();
         long now = System.currentTimeMillis();
 
-        // Nombres y Apellidos de clientes separados
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Mauricio", "Guerra Sanchez", "Hotel Costa del Sol", "Aeropuerto Internacional Cap. FAP Carlos Martínez de Pinillos (TRU)", new Date(now - (7 * 60 * 1000))));
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Lisa", "Cáceres Vega", "Hotel Sonesta", "Aeropuerto Internacional Rodríguez Ballón (AQP)", new Date(now - (25 * 60 * 1000))));
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Sol", "Díaz Rojas", "Hotel Decameron", "Aeropuerto Capitán FAP Pedro Canga Rodríguez (TBP)", new Date(now - (50 * 60 * 1000))));
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Juan", "Perez Luna", "Hotel Oro Verde", "Aeropuerto Internacional Coronel FAP Francisco Secada Vignetta (IQT)", new Date(now - (75 * 60 * 1000))));
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Maria", "Lopez Cruz", "Hotel Aranwa", "Aeropuerto Capitán FAP Renán Elías Olivera (PIO)", new Date(now - (100 * 60 * 1000))));
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Carlos", "Garcia Ramos", "Hotel Boca Raton", "Aeropuerto Cadete FAP Guillermo del Castillo Paredes (TPP)", new Date(now - (130 * 60 * 1000))));
-        listaAlertasOriginal.add(new TaxiAlertasBeans("Laura", "Fernandez Soto", "Hotel Libertador", "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)", new Date(now - (1 * 60 * 1000))));
+        // Notificaciones con Nombres/Apellidos, Origen, Destino, Timestamp y ESTADO DE VIAJE:
+        // Aseguramos la capitalización exacta: "Asignado", "En camino", "Llegó a destino"
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Mauricio", "Guerra Sanchez", "Hotel Costa del Sol", "Aeropuerto Internacional Cap. FAP Carlos Martínez de Pinillos (TRU)", new Date(now - (7 * 60 * 1000)), "Asignado"));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Lisa", "Cáceres Vega", "Hotel Sonesta", "Aeropuerto Internacional Rodríguez Ballón (AQP)", new Date(now - (25 * 60 * 1000)), "Asignado"));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Sol", "Díaz Rojas", "Hotel Decameron", "Aeropuerto Capitán FAP Pedro Canga Rodríguez (TBP)", new Date(now - (50 * 60 * 1000)), "Asignado"));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Juan", "Perez Luna", "Hotel Oro Verde", "Aeropuerto Internacional Coronel FAP Francisco Secada Vignetta (IQT)", new Date(now - (75 * 60 * 1000)), "En camino"));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Maria", "Lopez Cruz", "Hotel Aranwa", "Aeropuerto Capitán FAP Renán Elías Olivera (PIO)", new Date(now - (100 * 60 * 1000)), "Asignado"));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Carlos", "Garcia Ramos", "Hotel Boca Raton", "Aeropuerto Cadete FAP Guillermo del Castillo Paredes (TPP)", new Date(now - (130 * 60 * 1000)), "Llegó a destino"));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Laura", "Fernandez Soto", "Hotel Libertador", "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)", new Date(now - (1 * 60 * 1000)), "Asignado"));
         // --- FIN: Generación de Datos Estáticos ---
 
         listaAlertasFiltrada = new ArrayList<>(listaAlertasOriginal);
@@ -78,10 +79,10 @@ public class TaxiActivity extends AppCompatActivity {
 
         etBuscador.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int  count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int  before, int count) {
                 filtrarNotificaciones(s.toString());
             }
 
@@ -116,7 +117,7 @@ public class TaxiActivity extends AppCompatActivity {
 
     /**
      * Filtra la lista de notificaciones basándose en el texto de búsqueda.
-     * Busca coincidencias en los nombres del cliente, apellidos del cliente, origen o destino.
+     * Busca coincidencias en los nombres del cliente, apellidos del cliente, origen, destino o estado del viaje.
      * @param textoBusqueda El texto introducido por el usuario en el buscador.
      */
     private void filtrarNotificaciones(String textoBusqueda) {
@@ -127,11 +128,12 @@ public class TaxiActivity extends AppCompatActivity {
         } else {
             String searchTextLower = textoBusqueda.toLowerCase(Locale.getDefault());
             for (TaxiAlertasBeans alerta : listaAlertasOriginal) {
-                // Modificado para buscar en nombresCliente, apellidosCliente, origen y destino
+                // El filtro sigue siendo case-insensitive para la búsqueda
                 if (alerta.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
                         alerta.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
                         alerta.getOrigen().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
-                        alerta.getDestino().toLowerCase(Locale.getDefault()).contains(searchTextLower)) {
+                        alerta.getDestino().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
+                        alerta.getEstadoViaje().toLowerCase(Locale.getDefault()).contains(searchTextLower)) {
                     listaAlertasFiltrada.add(alerta);
                 }
             }

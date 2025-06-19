@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log; // Importar para depuración
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,15 +38,16 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 2;
     private static final String CHANNEL_ID = "taxi_channel";
+    private static final String TAG = "TaxiViajeDebug"; // Etiqueta para los logs
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
 
-    private TextView tvNombrePasajero, tvOrigenViaje, tvDestinoViaje, tvTiempo, tvEstadoViaje; // Añadido tvTiempo
+    private TextView tvNombrePasajero, tvOrigenViaje, tvDestinoViaje, tvTiempo, tvEstadoViaje;
     private Button btnIniciarViaje;
 
-    private String nombrePasajero, origen, destino;
-    private long timestampViaje; // Para almacenar el timestamp del viaje
+    private String nombrePasajero, origen, destino, estadoViajeActual;
+    private long timestampViaje;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +58,80 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         tvNombrePasajero = findViewById(R.id.tvCliente);
         tvOrigenViaje = findViewById(R.id.tvOrigen);
         tvDestinoViaje = findViewById(R.id.tvDestino);
-        tvTiempo = findViewById(R.id.tvTiempo); // Inicializar tvTiempo
+        tvTiempo = findViewById(R.id.tvTiempo);
         tvEstadoViaje = findViewById(R.id.tvEstadoViaje);
         btnIniciarViaje = findViewById(R.id.btnIniciarViaje);
 
         // Obtener datos del intent
         if (getIntent().getExtras() != null) {
-            nombrePasajero = getIntent().getStringExtra("nombreCliente"); // Clave corregida
-            origen = getIntent().getStringExtra("origen"); // Clave corregida
-            destino = getIntent().getStringExtra("destino"); // Clave corregida
-            timestampViaje = getIntent().getLongExtra("timestamp", 0); // Obtener el timestamp como long
+            nombrePasajero = getIntent().getStringExtra("nombreCliente");
+            origen = getIntent().getStringExtra("origen");
+            destino = getIntent().getStringExtra("destino");
+            timestampViaje = getIntent().getLongExtra("timestamp", 0);
+            estadoViajeActual = getIntent().getStringExtra("estadoViaje"); // Recibir el estado de la notificación
+
+            Log.d(TAG, "Datos recibidos en TaxiViaje:");
+            Log.d(TAG, "  Nombre Cliente: " + nombrePasajero);
+            Log.d(TAG, "  Origen: " + origen);
+            Log.d(TAG, "  Destino: " + destino);
+            Log.d(TAG, "  Timestamp: " + timestampViaje);
+            Log.d(TAG, "  Estado Inicial de Viaje: " + estadoViajeActual);
+
 
             // Mostrar datos en las vistas
             tvNombrePasajero.setText(nombrePasajero);
             tvOrigenViaje.setText(origen);
             tvDestinoViaje.setText(destino);
-            // Mostrar el tiempo transcurrido
             tvTiempo.setText(getTiempoTranscurrido(timestampViaje));
+
+            // --- LÓGICA DE ESTADO INICIAL DEL BOTÓN Y TEXTO ---
+            if (estadoViajeActual != null) {
+                // Asegurarse de que el texto del estado en la UI es exactamente el que se espera
+                tvEstadoViaje.setText(estadoViajeActual);
+
+                if ("Asignado".equals(estadoViajeActual)) { // Comparación corregida
+                    tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+                    btnIniciarViaje.setEnabled(true);
+                    btnIniciarViaje.setText("Iniciar Viaje");
+                    Log.d(TAG, "Estado: Asignado. Botón: Iniciar Viaje");
+                } else if ("En camino".equals(estadoViajeActual)) { // Comparación corregida
+                    tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark));
+                    btnIniciarViaje.setEnabled(true);
+                    btnIniciarViaje.setText("Llegué a Origen");
+                    Log.d(TAG, "Estado: En camino. Botón: Llegué a Origen");
+                } else if ("Llegó a destino".equals(estadoViajeActual)) { // Comparación corregida
+                    tvEstadoViaje.setTextColor(ContextCompat.getColor(this, R.color.verdejade));
+                    btnIniciarViaje.setEnabled(true);
+                    btnIniciarViaje.setText("Viaje Completado");
+                    Log.d(TAG, "Estado: Llegó a destino. Botón: Viaje Completado");
+                } else {
+                    // Si el estado recibido no coincide con ninguno de los esperados
+                    tvEstadoViaje.setText("Estado: Desconocido"); // Para el usuario
+                    tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                    btnIniciarViaje.setText("Estado no válido"); // Texto del botón para indicar un problema
+                    btnIniciarViaje.setEnabled(false); // Deshabilitar el botón
+                    Log.e(TAG, "Estado inicial de viaje no reconocido: " + estadoViajeActual);
+                    Toast.makeText(this, "Error: Estado de viaje no reconocido.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                // Si estadoViajeActual es null
+                tvEstadoViaje.setText("Estado: No disponible");
+                tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                btnIniciarViaje.setText("No disponible");
+                btnIniciarViaje.setEnabled(false);
+                Log.e(TAG, "Estado inicial de viaje es NULL.");
+                Toast.makeText(this, "Error: Datos de viaje incompletos.", Toast.LENGTH_LONG).show();
+            }
+            // --- FIN LÓGICA DE ESTADO INICIAL DEL BOTÓN Y TEXTO ---
+
+        } else {
+            // Si no hay extras en el intent
+            tvEstadoViaje.setText("Datos de viaje no disponibles.");
+            tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+            btnIniciarViaje.setText("Error de carga");
+            btnIniciarViaje.setEnabled(false);
+            Log.e(TAG, "No se recibieron extras en el intent.");
+            Toast.makeText(this, "Error: No se pudieron cargar los datos del viaje.", Toast.LENGTH_LONG).show();
         }
 
         // Configurar el cliente de ubicación
@@ -89,21 +149,46 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
 
         // Configurar botón de iniciar viaje
         btnIniciarViaje.setOnClickListener(v -> {
-            tvEstadoViaje.setText("Viaje iniciado");
-            // Usar ContextCompat.getColor para obtener el color de forma segura
-            tvEstadoViaje.setTextColor(ContextCompat.getColor(this, R.color.verdejade));
-            Toast.makeText(this, "Viaje iniciado con " + nombrePasajero, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Botón pulsado. Estado actual antes del cambio: " + estadoViajeActual);
+            // --- LÓGICA DE CAMBIO DE ESTADO AL CLIC ---
+            if ("Asignado".equals(estadoViajeActual)) { // Comparación corregida
+                estadoViajeActual = "En camino"; // Asignación corregida
+                tvEstadoViaje.setText(estadoViajeActual);
+                tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark));
+                btnIniciarViaje.setText("Llegué a Origen");
+                Toast.makeText(this, "¡Viaje iniciado! En camino a origen.", Toast.LENGTH_SHORT).show();
+                showTripStartedNotification("¡Viaje Iniciado!", "En camino a recoger a " + nombrePasajero + " en " + origen);
+                Log.d(TAG, "Transición: Asignado -> En camino. Botón: Llegué a Origen");
 
-            // Llamar al método para mostrar la notificación
-            showTripStartedNotification();
+            } else if ("En camino".equals(estadoViajeActual)) { // Comparación corregida
+                estadoViajeActual = "Llegó a destino"; // Asignación corregida
+                tvEstadoViaje.setText(estadoViajeActual);
+                tvEstadoViaje.setTextColor(ContextCompat.getColor(this, R.color.verdejade));
+                btnIniciarViaje.setText("Viaje Completado");
+                Toast.makeText(this, "¡Has llegado a destino!", Toast.LENGTH_SHORT).show();
+                showTripStartedNotification("¡Viaje Finalizado!", "Has llegado a destino con " + nombrePasajero + ".");
+                Log.d(TAG, "Transición: En camino -> Llegó a destino. Botón: Viaje Completado");
+
+            } else if ("Llegó a destino".equals(estadoViajeActual)) { // Comparación corregida
+                Toast.makeText(this, "Viaje completado. Volviendo al Dashboard.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Transición: Llegó a destino -> Navegando a TaxiDashboardActivity.");
+                Intent intent = new Intent(TaxiViaje.this, TaxiDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish(); // Cierra esta actividad
+            } else {
+                Log.e(TAG, "Botón pulsado en estado inesperado: " + estadoViajeActual);
+                Toast.makeText(this, "Acción no válida para el estado actual.", Toast.LENGTH_SHORT).show();
+            }
+            // --- FIN LÓGICA DE CAMBIO DE ESTADO AL CLIC ---
         });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        Log.d(TAG, "Mapa listo.");
 
-        // Verificar permisos de ubicación
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             enableMyLocation();
@@ -111,6 +196,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
+            Log.d(TAG, "Solicitando permiso de ubicación.");
         }
     }
 
@@ -119,20 +205,26 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Permiso de ubicación no concedido. No se puede habilitar mi ubicación.");
             return;
         }
 
         mMap.setMyLocationEnabled(true);
+        Log.d(TAG, "Mi ubicación habilitada en el mapa.");
 
-        // Obtener ubicación actual
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
-                    // Obtuvimos la ubicación exitosamente
                     if (location != null) {
                         LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(miPosicion).title("Mi posición actual"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, 15));
+                        Log.d(TAG, "Ubicación actual obtenida y marcada: " + miPosicion.latitude + ", " + miPosicion.longitude);
+                    } else {
+                        Log.w(TAG, "Ubicación actual es null.");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al obtener la última ubicación: " + e.getMessage());
                 });
     }
 
@@ -142,14 +234,24 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 enableMyLocation();
+                Log.d(TAG, "Permiso de ubicación concedido.");
             } else {
                 Toast.makeText(this, "Se requiere permiso de ubicación para mostrar tu posición", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Permiso de ubicación denegado.");
             }
         } else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showTripStartedNotification();
+                Log.d(TAG, "Permiso de notificación concedido.");
+                if ("Asignado".equals(estadoViajeActual)) {
+                    showTripStartedNotification("¡Viaje Iniciado!", "En camino a recoger a " + nombrePasajero + " en " + origen);
+                } else if ("En camino".equals(estadoViajeActual)) {
+                    showTripStartedNotification("¡Viaje Finalizado!", "Has llegado a destino con " + nombrePasajero + ".");
+                } else {
+                    showTripStartedNotification("Notificación de Viaje", "El estado del viaje ha cambiado.");
+                }
             } else {
                 Toast.makeText(this, "No se pueden mostrar notificaciones sin el permiso.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Permiso de notificación denegado.");
             }
         }
     }
@@ -169,25 +271,27 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
+                Log.d(TAG, "Canal de notificación creado.");
             }
         }
     }
 
-    private void showTripStartedNotification() {
+    private void showTripStartedNotification(String title, String text) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
                         NOTIFICATION_PERMISSION_REQUEST_CODE);
+                Log.d(TAG, "Solicitando permiso POST_NOTIFICATIONS.");
                 return;
             }
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_hotroid2_round)
-                .setContentTitle("¡Viaje Iniciado!")
-                .setContentText("Tu viaje con " + nombrePasajero + " desde " + origen + " ha comenzado.")
+                .setContentTitle(title)
+                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 
@@ -195,15 +299,12 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
 
         if (notificationManager != null) {
             notificationManager.notify(1, builder.build());
+            Log.d(TAG, "Notificación mostrada: Título='" + title + "', Texto='" + text + "'");
         }
     }
 
-    /**
-     * Helper method to format elapsed time similar to TaxiAlertasBeans.
-     * Replicated here to avoid dependency if TaxiViaje only needs this function.
-     */
     private String getTiempoTranscurrido(long timestampMillis) {
-        if (timestampMillis == 0) { // Check for default value if not passed
+        if (timestampMillis == 0) {
             return "Tiempo desconocido";
         }
 

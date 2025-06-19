@@ -11,18 +11,20 @@ public class TaxiAlertasBeans {
     private String origen;        // El Hotel
     private String destino;       // El Aeropuerto
     private Date timestamp;       // Fecha y hora de creación de la notificación
+    private String estadoViaje;   // Estado del viaje (ej. "Asignado", "En camino", "Llegó a destino")
 
     // Constructor vacío requerido por Firestore
     public TaxiAlertasBeans() {
     }
 
-    // Constructor actualizado para recibir nombres y apellidos por separado
-    public TaxiAlertasBeans(String nombresCliente, String apellidosCliente, String origen, String destino, Date timestamp) {
+    // Constructor actualizado para recibir nombres y apellidos por separado Y el estado del viaje
+    public TaxiAlertasBeans(String nombresCliente, String apellidosCliente, String origen, String destino, Date timestamp, String estadoViaje) {
         this.nombresCliente = nombresCliente;
         this.apellidosCliente = apellidosCliente;
         this.origen = origen;
         this.destino = destino;
         this.timestamp = timestamp;
+        this.estadoViaje = estadoViaje; // Inicializamos el nuevo campo
     }
 
     // --- Getters ---
@@ -47,6 +49,10 @@ public class TaxiAlertasBeans {
         return timestamp;
     }
 
+    public String getEstadoViaje() { // Getter para el nuevo campo
+        return estadoViaje;
+    }
+
     // --- Setters ---
     public void setNombresCliente(String nombresCliente) {
         this.nombresCliente = nombresCliente;
@@ -66,6 +72,10 @@ public class TaxiAlertasBeans {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public void setEstadoViaje(String estadoViaje) { // Setter para el nuevo campo
+        this.estadoViaje = estadoViaje;
     }
 
     /**
