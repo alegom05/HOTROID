@@ -2,62 +2,51 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log; // Mantengo Log para Firebase si se sigue usando aquí
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.view.Window; // Para la barra de estado
-import android.widget.Button; // Si usas un botón en la vista de alertas
-import androidx.annotation.NonNull; // Si usas Firebase u otras anotaciones
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat; // Para el color de la barra de estado
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotroid.bean.TaxiAlertasBeans; // Asegúrate de que esta clase exista
+import com.example.hotroid.bean.TaxiAlertasBeans;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot; // Si sigues usando Firebase aquí
-import com.google.firebase.firestore.FirebaseFirestore; // Si sigues usando Firebase aquí
-
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class TaxiActivity extends AppCompatActivity { // Esta Activity es ahora la nueva "Home" de Alertas
+public class TaxiActivity extends AppCompatActivity {
 
-    // Puedes mantener la inicialización de Firebase aquí si la consideras global para la app
     FirebaseFirestore db;
+    private TaxiAlertasAdapter adapter;
+    private List<TaxiAlertasBeans> listaAlertasOriginal;
+    private List<TaxiAlertasBeans> listaAlertasFiltrada;
+
+    private EditText etBuscador;
+    private Button btnLimpiar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxi_main); // Ahora taxi_main.xml es la vista de alertas
+        setContentView(R.layout.taxi_main);
 
-        // Inicialización de Firebase Firestore (si es necesario para la vista de alertas)
-        // Puedes mover esto a un Application class o Singleton si necesitas una instancia global
         db = FirebaseFirestore.getInstance();
-        // Ejemplo de uso de Firebase que estaba en el TaxiActivity original, mantenido aquí
-        // si la "nueva" Home (Alertas) lo requiere. Si no, quítalo.
-        UsuarioDto usuario = new UsuarioDto();
-        usuario.setNombre("Juan");
-        usuario.setCorreo("juan.perez@pucp.edu.pe");
-        usuario.setDni("12345678");
-        db.collection("usuarios")
-                .add(usuario)
-                .addOnSuccessListener(unused -> {
-                    Log.d("msg-test","Data guardada exitosamente");
-                })
-                .addOnFailureListener(e -> e.printStackTrace());
 
-        // Configurar color de la barra de estado para esta Activity (Alertas)
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.verdejade));
 
-
-        // Lógica específica de la vista de Alertas (movida de la antigua TaxiAlertas.java)
         CardView cardUsuario = findViewById(R.id.cardUsuario);
         cardUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirige a TaxiCuenta al hacer clic en la tarjeta de usuario
                 Intent intent = new Intent(TaxiActivity.this, TaxiCuenta.class);
                 startActivity(intent);
             }
@@ -66,34 +55,87 @@ public class TaxiActivity extends AppCompatActivity { // Esta Activity es ahora 
         RecyclerView recyclerView = findViewById(R.id.recyclerNotificaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<TaxiAlertasBeans> lista = new ArrayList<>();
-        // Creamos las notificaciones con Origen y Destino claros
-        lista.add(new TaxiAlertasBeans("Mauricio Guerra", "Hotel Marriot","Hotel Miraflores", "ahora"));
-        lista.add(new TaxiAlertasBeans("Lisa Cáceres", "Hotel Marriot", "Grand Hotel Madrid","hace 1 minuto"));
-        lista.add(new TaxiAlertasBeans("Sol Díaz", "Hotel Marriot", "Valencia Beach Resort","hace 20 minutos"));
+        // --- INICIO: Generación de Datos Estáticos con Timestamps Simulados y Nombres/Apellidos Separados ---
+        listaAlertasOriginal = new ArrayList<>();
+        long now = System.currentTimeMillis();
 
-        TaxiAlertasAdapter adapter = new TaxiAlertasAdapter(this, lista); // Asegúrate de que TaxiAlertasAdapter exista
+        // Nombres y Apellidos de clientes separados
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Mauricio", "Guerra Sanchez", "Hotel Costa del Sol", "Aeropuerto Internacional Cap. FAP Carlos Martínez de Pinillos (TRU)", new Date(now - (7 * 60 * 1000))));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Lisa", "Cáceres Vega", "Hotel Sonesta", "Aeropuerto Internacional Rodríguez Ballón (AQP)", new Date(now - (25 * 60 * 1000))));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Sol", "Díaz Rojas", "Hotel Decameron", "Aeropuerto Capitán FAP Pedro Canga Rodríguez (TBP)", new Date(now - (50 * 60 * 1000))));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Juan", "Perez Luna", "Hotel Oro Verde", "Aeropuerto Internacional Coronel FAP Francisco Secada Vignetta (IQT)", new Date(now - (75 * 60 * 1000))));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Maria", "Lopez Cruz", "Hotel Aranwa", "Aeropuerto Capitán FAP Renán Elías Olivera (PIO)", new Date(now - (100 * 60 * 1000))));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Carlos", "Garcia Ramos", "Hotel Boca Raton", "Aeropuerto Cadete FAP Guillermo del Castillo Paredes (TPP)", new Date(now - (130 * 60 * 1000))));
+        listaAlertasOriginal.add(new TaxiAlertasBeans("Laura", "Fernandez Soto", "Hotel Libertador", "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)", new Date(now - (1 * 60 * 1000))));
+        // --- FIN: Generación de Datos Estáticos ---
+
+        listaAlertasFiltrada = new ArrayList<>(listaAlertasOriginal);
+        adapter = new TaxiAlertasAdapter(this, listaAlertasFiltrada);
         recyclerView.setAdapter(adapter);
 
+        etBuscador = findViewById(R.id.etBuscador);
+        btnLimpiar = findViewById(R.id.btnLimpiar);
 
-        // Configurar BottomNavigationView
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarNotificaciones(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText("");
+            filtrarNotificaciones("");
+        });
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.wifi); // Este es ahora el icono de la nueva Home (Alertas)
+        bottomNavigationView.setSelectedItemId(R.id.wifi);
 
-        // Listener para la barra de navegación inferior
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.wifi) { // Ya estás en la nueva Home (Alertas)
+            int itemId = item.getItemId();
+            if (itemId == R.id.wifi) {
                 return true;
-            } else if (item.getItemId() == R.id.location) {
-                Intent intentUbicacion = new Intent(TaxiActivity.this, TaxiLocation.class); // Asegúrate de que TaxiLocation exista
+            } else if (itemId == R.id.location) {
+                Intent intentUbicacion = new Intent(TaxiActivity.this, TaxiLocation.class);
                 startActivity(intentUbicacion);
                 return true;
-            } else if (item.getItemId() == R.id.notify) { // Este icono ahora apunta a la antigua Home (Dashboard)
+            } else if (itemId == R.id.notify) {
                 Intent intentDashboard = new Intent(TaxiActivity.this, TaxiDashboardActivity.class);
                 startActivity(intentDashboard);
                 return true;
             }
             return false;
         });
+    }
+
+    /**
+     * Filtra la lista de notificaciones basándose en el texto de búsqueda.
+     * Busca coincidencias en los nombres del cliente, apellidos del cliente, origen o destino.
+     * @param textoBusqueda El texto introducido por el usuario en el buscador.
+     */
+    private void filtrarNotificaciones(String textoBusqueda) {
+        listaAlertasFiltrada.clear();
+
+        if (textoBusqueda.isEmpty()) {
+            listaAlertasFiltrada.addAll(listaAlertasOriginal);
+        } else {
+            String searchTextLower = textoBusqueda.toLowerCase(Locale.getDefault());
+            for (TaxiAlertasBeans alerta : listaAlertasOriginal) {
+                // Modificado para buscar en nombresCliente, apellidosCliente, origen y destino
+                if (alerta.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
+                        alerta.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
+                        alerta.getOrigen().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
+                        alerta.getDestino().toLowerCase(Locale.getDefault()).contains(searchTextLower)) {
+                    listaAlertasFiltrada.add(alerta);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

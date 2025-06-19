@@ -16,7 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat; // Importa NotificationCompat
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,20 +28,23 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Date;
+import java.util.Locale;
+
 public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    // Agregamos un código para el permiso de notificaciones (para Android 13+)
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 2;
-    private static final String CHANNEL_ID = "taxi_channel"; // ID del canal de notificación
+    private static final String CHANNEL_ID = "taxi_channel";
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
 
-    private TextView tvNombrePasajero, tvOrigenViaje, tvDestinoViaje, tvEstadoViaje;
+    private TextView tvNombrePasajero, tvOrigenViaje, tvDestinoViaje, tvTiempo, tvEstadoViaje; // Añadido tvTiempo
     private Button btnIniciarViaje;
 
     private String nombrePasajero, origen, destino;
+    private long timestampViaje; // Para almacenar el timestamp del viaje
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +55,23 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         tvNombrePasajero = findViewById(R.id.tvCliente);
         tvOrigenViaje = findViewById(R.id.tvOrigen);
         tvDestinoViaje = findViewById(R.id.tvDestino);
+        tvTiempo = findViewById(R.id.tvTiempo); // Inicializar tvTiempo
         tvEstadoViaje = findViewById(R.id.tvEstadoViaje);
         btnIniciarViaje = findViewById(R.id.btnIniciarViaje);
 
         // Obtener datos del intent
         if (getIntent().getExtras() != null) {
-            nombrePasajero = getIntent().getStringExtra("NOMBRE_USUARIO");
-            origen = getIntent().getStringExtra("ORIGEN");
-            destino = getIntent().getStringExtra("DESTINO");
+            nombrePasajero = getIntent().getStringExtra("nombreCliente"); // Clave corregida
+            origen = getIntent().getStringExtra("origen"); // Clave corregida
+            destino = getIntent().getStringExtra("destino"); // Clave corregida
+            timestampViaje = getIntent().getLongExtra("timestamp", 0); // Obtener el timestamp como long
 
             // Mostrar datos en las vistas
             tvNombrePasajero.setText(nombrePasajero);
             tvOrigenViaje.setText(origen);
             tvDestinoViaje.setText(destino);
+            // Mostrar el tiempo transcurrido
+            tvTiempo.setText(getTiempoTranscurrido(timestampViaje));
         }
 
         // Configurar el cliente de ubicación
@@ -83,7 +90,8 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         // Configurar botón de iniciar viaje
         btnIniciarViaje.setOnClickListener(v -> {
             tvEstadoViaje.setText("Viaje iniciado");
-            tvEstadoViaje.setTextColor(getResources().getColor(R.color.verdejade));
+            // Usar ContextCompat.getColor para obtener el color de forma segura
+            tvEstadoViaje.setTextColor(ContextCompat.getColor(this, R.color.verdejade));
             Toast.makeText(this, "Viaje iniciado con " + nombrePasajero, Toast.LENGTH_SHORT).show();
 
             // Llamar al método para mostrar la notificación
@@ -137,9 +145,8 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             } else {
                 Toast.makeText(this, "Se requiere permiso de ubicación para mostrar tu posición", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) { // Manejar el resultado del permiso de notificación
+        } else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso de notificación concedido, intentar mostrar la notificación de nuevo
                 showTripStartedNotification();
             } else {
                 Toast.makeText(this, "No se pueden mostrar notificaciones sin el permiso.", Toast.LENGTH_SHORT).show();
@@ -147,19 +154,17 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
-    // Método para crear el canal de notificación
     private void createNotificationChannel() {
-        // Los canales de notificación solo son necesarios en Android 8.0 (API nivel 26) y superiores
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Notificaciones de Viaje"; // Nombre visible para el usuario
-            String description = "Notificaciones sobre el estado de los viajes de taxi"; // Descripción para el usuario
-            int importance = NotificationManager.IMPORTANCE_DEFAULT; // Nivel de importancia
+            CharSequence name = "Notificaciones de Viaje";
+            String description = "Notificaciones sobre el estado de los viajes de taxi";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            channel.enableLights(true); // Habilitar luces de notificación
-            channel.setLightColor(Color.GREEN); // Color de la luz
-            channel.enableVibration(true); // Habilitar vibración
+            channel.enableLights(true);
+            channel.setLightColor(Color.GREEN);
+            channel.enableVibration(true);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if (notificationManager != null) {
@@ -168,34 +173,60 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
-    // Método para mostrar la notificación de inicio de viaje
     private void showTripStartedNotification() {
-        // Para Android 13 (API 33) y superiores, necesitamos solicitar el permiso POST_NOTIFICATIONS
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
-                // Si el permiso no está concedido, solicitarlo
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
                         NOTIFICATION_PERMISSION_REQUEST_CODE);
-                return; // Salir para que la notificación se muestre después de conceder el permiso
+                return;
             }
         }
 
-        // Construir la notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_hotroid2_round) // Icono pequeño de la notificación (asegúrate de tener uno)
-                .setContentTitle("¡Viaje Iniciado!") // Título de la notificación
-                .setContentText("Tu viaje con " + nombrePasajero + " desde " + origen + " ha comenzado.") // Contenido principal
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Prioridad de la notificación
-                .setAutoCancel(true); // La notificación se cierra automáticamente al hacer clic
+                .setSmallIcon(R.mipmap.ic_hotroid2_round)
+                .setContentTitle("¡Viaje Iniciado!")
+                .setContentText("Tu viaje con " + nombrePasajero + " desde " + origen + " ha comenzado.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
 
-        // Obtener el NotificationManager
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Mostrar la notificación
         if (notificationManager != null) {
-            notificationManager.notify(1, builder.build()); // El "1" es un ID único para esta notificación
+            notificationManager.notify(1, builder.build());
+        }
+    }
+
+    /**
+     * Helper method to format elapsed time similar to TaxiAlertasBeans.
+     * Replicated here to avoid dependency if TaxiViaje only needs this function.
+     */
+    private String getTiempoTranscurrido(long timestampMillis) {
+        if (timestampMillis == 0) { // Check for default value if not passed
+            return "Tiempo desconocido";
+        }
+
+        long diffMillis = System.currentTimeMillis() - timestampMillis;
+        long minutes = diffMillis / (60 * 1000);
+
+        if (minutes < 1) {
+            return "Hace un instante";
+        } else if (minutes < 60) {
+            return "Hace " + minutes + " min";
+        } else {
+            long hours = minutes / 60;
+            long remainingMinutes = minutes % 60;
+
+            if (hours < 2) {
+                if (remainingMinutes > 0) {
+                    return "Hace " + hours + " hr y " + remainingMinutes + " min";
+                } else {
+                    return "Hace " + hours + " hr";
+                }
+            } else {
+                return "Más de 2 hrs";
+            }
         }
     }
 }

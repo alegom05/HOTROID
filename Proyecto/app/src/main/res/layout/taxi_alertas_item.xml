@@ -1,44 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="@color/verde_jade_claro"
-    android:layout_marginBottom="6dp"
-    android:padding="5dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:background="#FFFFFF"
+        android:padding="16dp">
+
+    <!-- Contenedor para Nombre, Origen y Destino -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="8dp"> <!-- Añadido margen inferior para separar del tiempo -->
 
         <TextView
             android:id="@+id/tvNombreNoti"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="16sp"
-            tools:text="Nombre del Cliente" /> <TextView
-        android:id="@+id/tvLugarNoti"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        tools:text="Origen: Lugar de partida" /> <TextView
-        android:id="@+id/tvLugarNoti2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/verdejade"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        tools:text="Destino: Lugar de llegada" /> </LinearLayout>
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp"
+            tools:text="Nombre y Apellido del Cliente" />
 
+        <TextView
+            android:id="@+id/tvLugarNoti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:layout_marginBottom="2dp"
+            tools:text="Origen: Nombre del Hotel" />
+
+        <TextView
+            android:id="@+id/tvLugarNoti2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/verdejade"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            tools:text="Destino: Nombre del Aeropuerto" />
+    </LinearLayout>
+
+    <!-- TextView para el tiempo, ahora debajo y alineado a la derecha -->
     <TextView
         android:id="@+id/tvTiempoNoti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
-        tools:text="Hace 5 min" /> </LinearLayout>
+        android:layout_gravity="end"
+    android:textSize="14sp"
+    android:textColor="#777777"
+    tools:text="Hace 5 min" />
+
+</LinearLayout>
+    </androidx.cardview.widget.CardView>
