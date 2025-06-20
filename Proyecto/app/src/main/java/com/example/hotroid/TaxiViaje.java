@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log; // Importar para depuración
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Date;
 import java.util.Locale;
@@ -38,13 +39,14 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 2;
     private static final String CHANNEL_ID = "taxi_channel";
-    private static final String TAG = "TaxiViajeDebug"; // Etiqueta para los logs
+    private static final String TAG = "TaxiViajeDebug";
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
 
     private TextView tvNombrePasajero, tvOrigenViaje, tvDestinoViaje, tvTiempo, tvEstadoViaje;
     private Button btnIniciarViaje;
+    private BottomNavigationView bottomNavigationView;
 
     private String nombrePasajero, origen, destino, estadoViajeActual;
     private long timestampViaje;
@@ -62,13 +64,38 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         tvEstadoViaje = findViewById(R.id.tvEstadoViaje);
         btnIniciarViaje = findViewById(R.id.btnIniciarViaje);
 
+        // --- Configuración de BottomNavigationView ---
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.notify) {
+                // Navegar al Dashboard principal de alertas/viajes completados
+                Intent intent = new Intent(TaxiViaje.this, TaxiDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish(); // Finaliza esta actividad
+                return true;
+            } else if (itemId == R.id.wifi) {
+                Intent intentAlertas = new Intent(TaxiViaje.this, TaxiActivity.class);
+                startActivity(intentAlertas);
+                return true;
+            } else if (itemId == R.id.location) {
+                Intent intentUbicacion = new Intent(TaxiViaje.this, TaxiLocation.class);
+                startActivity(intentUbicacion);
+                return true;
+            }
+            return false;
+        });
+        // --- FIN: Configuración de BottomNavigationView ---
+
+
         // Obtener datos del intent
         if (getIntent().getExtras() != null) {
             nombrePasajero = getIntent().getStringExtra("nombreCliente");
             origen = getIntent().getStringExtra("origen");
             destino = getIntent().getStringExtra("destino");
             timestampViaje = getIntent().getLongExtra("timestamp", 0);
-            estadoViajeActual = getIntent().getStringExtra("estadoViaje"); // Recibir el estado de la notificación
+            estadoViajeActual = getIntent().getStringExtra("estadoViaje");
 
             Log.d(TAG, "Datos recibidos en TaxiViaje:");
             Log.d(TAG, "  Nombre Cliente: " + nombrePasajero);
@@ -76,7 +103,6 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             Log.d(TAG, "  Destino: " + destino);
             Log.d(TAG, "  Timestamp: " + timestampViaje);
             Log.d(TAG, "  Estado Inicial de Viaje: " + estadoViajeActual);
-
 
             // Mostrar datos en las vistas
             tvNombrePasajero.setText(nombrePasajero);
@@ -86,35 +112,32 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
 
             // --- LÓGICA DE ESTADO INICIAL DEL BOTÓN Y TEXTO ---
             if (estadoViajeActual != null) {
-                // Asegurarse de que el texto del estado en la UI es exactamente el que se espera
                 tvEstadoViaje.setText(estadoViajeActual);
 
-                if ("Asignado".equals(estadoViajeActual)) { // Comparación corregida
+                if ("Asignado".equals(estadoViajeActual)) {
                     tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
                     btnIniciarViaje.setEnabled(true);
                     btnIniciarViaje.setText("Iniciar Viaje");
                     Log.d(TAG, "Estado: Asignado. Botón: Iniciar Viaje");
-                } else if ("En camino".equals(estadoViajeActual)) { // Comparación corregida
+                } else if ("En camino".equals(estadoViajeActual)) {
                     tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark));
                     btnIniciarViaje.setEnabled(true);
                     btnIniciarViaje.setText("Llegué a Origen");
                     Log.d(TAG, "Estado: En camino. Botón: Llegué a Origen");
-                } else if ("Llegó a destino".equals(estadoViajeActual)) { // Comparación corregida
+                } else if ("Llegó a destino".equals(estadoViajeActual)) {
                     tvEstadoViaje.setTextColor(ContextCompat.getColor(this, R.color.verdejade));
                     btnIniciarViaje.setEnabled(true);
                     btnIniciarViaje.setText("Viaje Completado");
                     Log.d(TAG, "Estado: Llegó a destino. Botón: Viaje Completado");
                 } else {
-                    // Si el estado recibido no coincide con ninguno de los esperados
-                    tvEstadoViaje.setText("Estado: Desconocido"); // Para el usuario
+                    tvEstadoViaje.setText("Estado: Desconocido");
                     tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
-                    btnIniciarViaje.setText("Estado no válido"); // Texto del botón para indicar un problema
-                    btnIniciarViaje.setEnabled(false); // Deshabilitar el botón
+                    btnIniciarViaje.setText("Estado no válido");
+                    btnIniciarViaje.setEnabled(false);
                     Log.e(TAG, "Estado inicial de viaje no reconocido: " + estadoViajeActual);
                     Toast.makeText(this, "Error: Estado de viaje no reconocido.", Toast.LENGTH_LONG).show();
                 }
             } else {
-                // Si estadoViajeActual es null
                 tvEstadoViaje.setText("Estado: No disponible");
                 tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
                 btnIniciarViaje.setText("No disponible");
@@ -125,7 +148,6 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             // --- FIN LÓGICA DE ESTADO INICIAL DEL BOTÓN Y TEXTO ---
 
         } else {
-            // Si no hay extras en el intent
             tvEstadoViaje.setText("Datos de viaje no disponibles.");
             tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
             btnIniciarViaje.setText("Error de carga");
@@ -134,25 +156,20 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             Toast.makeText(this, "Error: No se pudieron cargar los datos del viaje.", Toast.LENGTH_LONG).show();
         }
 
-        // Configurar el cliente de ubicación
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Configurar el mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
-        // Crear el canal de notificación (solo es necesario una vez)
         createNotificationChannel();
 
-        // Configurar botón de iniciar viaje
         btnIniciarViaje.setOnClickListener(v -> {
             Log.d(TAG, "Botón pulsado. Estado actual antes del cambio: " + estadoViajeActual);
-            // --- LÓGICA DE CAMBIO DE ESTADO AL CLIC ---
-            if ("Asignado".equals(estadoViajeActual)) { // Comparación corregida
-                estadoViajeActual = "En camino"; // Asignación corregida
+            if ("Asignado".equals(estadoViajeActual)) {
+                estadoViajeActual = "En camino";
                 tvEstadoViaje.setText(estadoViajeActual);
                 tvEstadoViaje.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark));
                 btnIniciarViaje.setText("Llegué a Origen");
@@ -160,8 +177,8 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                 showTripStartedNotification("¡Viaje Iniciado!", "En camino a recoger a " + nombrePasajero + " en " + origen);
                 Log.d(TAG, "Transición: Asignado -> En camino. Botón: Llegué a Origen");
 
-            } else if ("En camino".equals(estadoViajeActual)) { // Comparación corregida
-                estadoViajeActual = "Llegó a destino"; // Asignación corregida
+            } else if ("En camino".equals(estadoViajeActual)) {
+                estadoViajeActual = "Llegó a destino";
                 tvEstadoViaje.setText(estadoViajeActual);
                 tvEstadoViaje.setTextColor(ContextCompat.getColor(this, R.color.verdejade));
                 btnIniciarViaje.setText("Viaje Completado");
@@ -169,18 +186,17 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                 showTripStartedNotification("¡Viaje Finalizado!", "Has llegado a destino con " + nombrePasajero + ".");
                 Log.d(TAG, "Transición: En camino -> Llegó a destino. Botón: Viaje Completado");
 
-            } else if ("Llegó a destino".equals(estadoViajeActual)) { // Comparación corregida
+            } else if ("Llegó a destino".equals(estadoViajeActual)) {
                 Toast.makeText(this, "Viaje completado. Volviendo al Dashboard.", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Transición: Llegó a destino -> Navegando a TaxiDashboardActivity.");
                 Intent intent = new Intent(TaxiViaje.this, TaxiDashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish(); // Cierra esta actividad
+                finish();
             } else {
                 Log.e(TAG, "Botón pulsado en estado inesperado: " + estadoViajeActual);
                 Toast.makeText(this, "Acción no válida para el estado actual.", Toast.LENGTH_SHORT).show();
             }
-            // --- FIN LÓGICA DE CAMBIO DE ESTADO AL CLIC ---
         });
     }
 
@@ -242,13 +258,6 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         } else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "Permiso de notificación concedido.");
-                if ("Asignado".equals(estadoViajeActual)) {
-                    showTripStartedNotification("¡Viaje Iniciado!", "En camino a recoger a " + nombrePasajero + " en " + origen);
-                } else if ("En camino".equals(estadoViajeActual)) {
-                    showTripStartedNotification("¡Viaje Finalizado!", "Has llegado a destino con " + nombrePasajero + ".");
-                } else {
-                    showTripStartedNotification("Notificación de Viaje", "El estado del viaje ha cambiado.");
-                }
             } else {
                 Toast.makeText(this, "No se pueden mostrar notificaciones sin el permiso.", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Permiso de notificación denegado.");

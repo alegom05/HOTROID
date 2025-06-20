@@ -3,22 +3,20 @@ package com.example.hotroid;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.example.hotroid.bean.TaxiFinBeans;
+import com.example.hotroid.bean.TaxiAlertasBeans; // Use TaxiAlertasBeans
 
 import java.util.List;
 
 public class TaxiFinAdapter extends RecyclerView.Adapter<TaxiFinAdapter.ViewHolder> {
 
-    private final List<TaxiFinBeans> listaViajes;
+    private final List<TaxiAlertasBeans> listaViajes;
 
-    public TaxiFinAdapter(List<TaxiFinBeans> listaViajes) {
+    public TaxiFinAdapter(List<TaxiAlertasBeans> listaViajes) {
         this.listaViajes = listaViajes;
     }
 
@@ -32,13 +30,14 @@ public class TaxiFinAdapter extends RecyclerView.Adapter<TaxiFinAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TaxiFinAdapter.ViewHolder holder, int position) {
-        TaxiFinBeans viaje = listaViajes.get(position);
+        TaxiAlertasBeans alerta = listaViajes.get(position); // Renamed for clarity
 
-        holder.tvNombre.setText(viaje.getNombre());
-        holder.tvHorario.setText(viaje.getHorario());
-//Falta
-        // Si manejas imágenes dinámicas, aquí podrías usar Glide o Picasso
-        holder.imgUsuario.setImageResource(viaje.getImagenResId());
+        // Concatenate first and last names for display
+        holder.tvNombreCompleto.setText(alerta.getNombresCliente() + " " + alerta.getApellidosCliente());
+        holder.tvOrigen.setText("Origen: " + alerta.getOrigen());
+        holder.tvDestino.setText("Destino: " + alerta.getDestino());
+        holder.tvTiempoTranscurrido.setText("Tiempo: " + alerta.getTiempoTranscurrido());
+        holder.tvEstadoViaje.setText("Estado: " + alerta.getEstadoViaje());
     }
 
     @Override
@@ -47,15 +46,15 @@ public class TaxiFinAdapter extends RecyclerView.Adapter<TaxiFinAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre, tvHorario, tvRol;
-        ImageView imgUsuario;
+        TextView tvNombreCompleto, tvOrigen, tvDestino, tvTiempoTranscurrido, tvEstadoViaje;
 
         public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvNombre = itemView.findViewById(R.id.tvNombre);
-            tvHorario = itemView.findViewById(R.id.tvHorario);
-            tvRol = itemView.findViewById(R.id.tvRol);
-            imgUsuario = itemView.findViewById(R.id.imgUsuario);
+            super(itemView); // Corrected this line!
+            tvNombreCompleto = itemView.findViewById(R.id.tvNombreCompleto);
+            tvOrigen = itemView.findViewById(R.id.tvOrigen);
+            tvDestino = itemView.findViewById(R.id.tvDestino);
+            tvTiempoTranscurrido = itemView.findViewById(R.id.tvTiempoTranscurrido);
+            tvEstadoViaje = itemView.findViewById(R.id.tvEstadoViaje);
         }
     }
 }

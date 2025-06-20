@@ -5,185 +5,311 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".TaxiDashboardActivity"> <!-- Contexto actualizado a la nueva Activity -->
+    android:background="#F8F8F8"
+    tools:context=".TaxiDashboardActivity">
 
-    <!-- Título -->
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hotroid Taxi"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
+    <!-- NestedScrollView para hacer toda la pantalla scrollable (excepto la BottomNavigationView) -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Card de taxista -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardTaxista"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"> <!-- Padding general para el contenido scrollable -->
+
+            <!-- Título de la Aplicación (ajustado a "Viajes realizados" según tu último input) -->
+            <TextView
+                android:id="@+id/tvTituloApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Viajes realizados"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Card de datos del Taxista (Alejandro Gómez) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardTaxista"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvNombreTaxistaCard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alejandro Gómez"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:textColor="@android:color/black"/>
+
+                        <TextView
+                            android:id="@+id/tvRolTaxistaCard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Taxista"
+                            android:textStyle="italic"
+                            android:textSize="16sp"
+                            android:textColor="#606060"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imagenTaxistaCard"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/taxipic1"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/border_circle"
+                        android:contentDescription="Imagen del Taxista" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card: Viaje Actual -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViajeActual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tvViajeActualTitulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Viaje Actual"
+                        android:textStyle="bold"
+                        android:textSize="24sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Contenido del Viaje Actual (similar a item_taxi_alerta) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pasajero: "
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:id="@+id/tvClienteActual"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="#333333"
+                                tools:text="Nombre Apellido del Pasajero" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Origen: "
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:id="@+id/tvOrigenActual"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="#333333"
+                                tools:text="Hotel de Origen" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Destino: "
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:id="@+id/tvDestinoActual"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="@color/verdejade"
+                                android:textStyle="bold"
+                                tools:text="Aeropuerto de Destino" />
+                        </LinearLayout>
+
+                        <!-- Tiempo del viaje actual (estático por ahora) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tiempo: "
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:id="@+id/tvTiempoActual"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="#777777"
+                                tools:text="Hace 10 min" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvEstadoViajeActual"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Estado: En Curso"
+                        android:textAlignment="center"
+                        android:textColor="@color/verdejade"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
+
+                    <Button
+                        android:id="@+id/btnFinViaje"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Finalizar Viaje"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/verdejade"
+                    android:textColor="@android:color/white" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card: Viajes Terminados -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViajesTerminados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tvViajesTerminadosTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Viajes Terminados"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- BUSCADOR PARA VIAJES TERMINADOS -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical">
+
+                        <EditText
+                            android:id="@+id/etBuscadorTerminados"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Buscar viaje terminado..."
+                            android:padding="12dp"
+                            android:background="@drawable/edittext_background"
+                            android:drawableStart="@drawable/ic_search"
+                            android:drawablePadding="8dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <Button
+                            android:id="@+id/btnLimpiarTerminados"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Limpiar"
+                            android:backgroundTint="@color/verdejade"
+                            android:textColor="@android:color/white"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"/>
+                    </LinearLayout>
+                    <!-- FIN BUSCADOR -->
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViajesTerminados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:clipToPadding="false" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Barra de navegación inferior (FUERA del NestedScrollView para que esté fija) -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="2dp"
-    app:layout_constraintTop_toBottomOf="@id/tvTitulo"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/bottom_taxista"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="8dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Alejandro Gómez"
-                android:textStyle="bold"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Taxista"
-                android:textStyle="italic" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/taxipic1"
-            android:scaleType="centerCrop"
-            android:background="@drawable/border_circle" />
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
-
-    <!-- Card: Viaje actual -->
-<androidx.cardview.widget.CardView
-android:id="@+id/cardViajeActual"
-android:layout_width="0dp"
-android:layout_height="wrap_content"
-android:layout_marginTop="8dp"
-android:layout_marginStart="16dp"
-android:layout_marginEnd="16dp"
-app:cardCornerRadius="4dp"
-app:cardElevation="2dp"
-app:layout_constraintTop_toBottomOf="@id/cardTaxista"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintEnd_toEndOf="parent">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp">
-
-    <TextView
-        android:id="@+id/tvViajeActual"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Viaje actual"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:layout_marginBottom="8dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
-
-        <ImageView
-            android:id="@+id/imagenPasajero"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/usuariopic1"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/border_circle" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvNombrePasajero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bárbara Homeidan"
-                android:textStyle="bold"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvHoraViaje"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5.50 pm"
-                android:textStyle="bold"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnFinViaje"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Terminar viaje"
-        android:textStyle="bold"
-        android:backgroundTint="@color/verdejade"
-        android:textColor="@android:color/white" />
-</LinearLayout>
-</androidx.cardview.widget.CardView>
-
-    <!-- RecyclerView para lista de taxis u otros -->
-<androidx.recyclerview.widget.RecyclerView
-android:id="@+id/recyclerViewTaxi"
-android:layout_width="0dp"
-android:layout_height="wrap_content"
-android:layout_marginTop="8dp"
-app:layout_constraintTop_toBottomOf="@id/cardViajeActual"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintEnd_toEndOf="parent"
-android:layout_marginStart="16dp"
-android:layout_marginEnd="16dp"
-android:nestedScrollingEnabled="false" />
-
-<ImageView
-android:id="@+id/imagenAuto"
-android:layout_width="0dp"
-android:layout_height="0dp"
-android:src="@drawable/taxilogo1"
-android:scaleType="centerInside"
-app:layout_constraintTop_toBottomOf="@id/recyclerViewTaxi"
-app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintEnd_toEndOf="parent" />
-
-<com.google.android.material.bottomnavigation.BottomNavigationView
-android:id="@+id/bottom_navigation"
-android:layout_width="0dp"
-android:layout_height="wrap_content"
-android:background="?android:attr/windowBackground"
-app:menu="@menu/bottom_taxista"
-app:labelVisibilityMode="labeled"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+</androidx.constraintlayout.widget.ConstraintLayout>
