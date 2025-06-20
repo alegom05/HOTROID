@@ -6,28 +6,43 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class TaxiAlertasBeans {
-    private String nombresCliente; // Primeros nombres del cliente
-    private String apellidosCliente; // Apellidos del cliente
-    private String origen;        // El Hotel
-    private String destino;       // El Aeropuerto
-    private Date timestamp;       // Fecha y hora de creación de la notificación
-    private String estadoViaje;   // Estado del viaje (ej. "Asignado", "En camino", "Llegó a destino")
+    private String documentId;
+    private String nombresCliente;
+    private String apellidosCliente;
+    private String origen;
+    private String destino;
+    private Date timestamp;
+    private String estadoViaje;
+    private String region;
 
-    // Constructor vacío requerido por Firestore
     public TaxiAlertasBeans() {
     }
 
-    // Constructor actualizado para recibir nombres y apellidos por separado Y el estado del viaje
-    public TaxiAlertasBeans(String nombresCliente, String apellidosCliente, String origen, String destino, Date timestamp, String estadoViaje) {
+    public TaxiAlertasBeans(String nombresCliente, String apellidosCliente, String origen, String destino, Date timestamp, String estadoViaje, String region) {
         this.nombresCliente = nombresCliente;
         this.apellidosCliente = apellidosCliente;
         this.origen = origen;
         this.destino = destino;
         this.timestamp = timestamp;
-        this.estadoViaje = estadoViaje; // Inicializamos el nuevo campo
+        this.estadoViaje = estadoViaje;
+        this.region = region;
     }
 
-    // --- Getters ---
+    public TaxiAlertasBeans(String documentId, String nombresCliente, String apellidosCliente, String origen, String destino, Date timestamp, String estadoViaje, String region) {
+        this.documentId = documentId;
+        this.nombresCliente = nombresCliente;
+        this.apellidosCliente = apellidosCliente;
+        this.origen = origen;
+        this.destino = destino;
+        this.timestamp = timestamp;
+        this.estadoViaje = estadoViaje;
+        this.region = region;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
     public String getNombresCliente() {
         return nombresCliente;
     }
@@ -49,11 +64,18 @@ public class TaxiAlertasBeans {
         return timestamp;
     }
 
-    public String getEstadoViaje() { // Getter para el nuevo campo
+    public String getEstadoViaje() {
         return estadoViaje;
     }
 
-    // --- Setters ---
+    public String getRegion() {
+        return region;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
     public void setNombresCliente(String nombresCliente) {
         this.nombresCliente = nombresCliente;
     }
@@ -74,15 +96,14 @@ public class TaxiAlertasBeans {
         this.timestamp = timestamp;
     }
 
-    public void setEstadoViaje(String estadoViaje) { // Setter para el nuevo campo
+    public void setEstadoViaje(String estadoViaje) {
         this.estadoViaje = estadoViaje;
     }
 
-    /**
-     * Calcula y retorna el tiempo transcurrido desde el timestamp de la alerta
-     * en un formato amigable (ej. "Hace 5 min", "Hace 1 hr y 20 min", "Más de 2 hrs").
-     * El tiempo máximo considerado es 2 horas.
-     */
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
     public String getTiempoTranscurrido() {
         if (timestamp == null) {
             return "Tiempo desconocido";

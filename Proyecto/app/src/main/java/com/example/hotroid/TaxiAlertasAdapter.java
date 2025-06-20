@@ -43,11 +43,14 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TaxiViaje.class);
 
-            intent.putExtra("nombreCliente", nombreCompletoCliente);
+            intent.putExtra("documentId", alerta.getDocumentId());
+            intent.putExtra("nombresCliente", alerta.getNombresCliente());
+            intent.putExtra("apellidosCliente", alerta.getApellidosCliente());
             intent.putExtra("origen", alerta.getOrigen());
             intent.putExtra("destino", alerta.getDestino());
-            intent.putExtra("timestamp", alerta.getTimestamp().getTime());
-            intent.putExtra("estadoViaje", alerta.getEstadoViaje()); // Pasamos el nuevo campo estadoViaje
+            intent.putExtra("timestamp", alerta.getTimestamp() != null ? alerta.getTimestamp().getTime() : 0);
+            intent.putExtra("estadoViaje", alerta.getEstadoViaje());
+            intent.putExtra("region", alerta.getRegion());
 
             context.startActivity(intent);
         });

@@ -1,200 +1,168 @@
 package com.example.hotroid;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotroid.bean.TaxiAlertasBeans;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TaxiFin extends AppCompatActivity {
 
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    private PreviewView previewView;
-    private ExecutorService cameraExecutor;
-    private BarcodeScanner barcodeScanner;
+    private static final String TAG = "TaxiFinDebug";
+    private Button btnScanQr;
+    private TextView tvScanResult;
+    private FirebaseFirestore db;
+    private String currentTripDocumentId;
 
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
-    private boolean qrScanned = false; // Bandera para evitar múltiples lanzamientos
+    private ImageButton btnAtras;
+    private BottomNavigationView bottomNavigationView; // Declarar aquí
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_fin);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        ImageButton btnAtras = findViewById(R.id.btnAtras);
-        previewView = findViewById(R.id.cameraPreview);
+        db = FirebaseFirestore.getInstance();
 
-        cameraExecutor = Executors.newSingleThreadExecutor();
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.verdejade));
 
-        BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                .build();
-        barcodeScanner = BarcodeScanning.getClient(options);
+        btnScanQr = findViewById(R.id.btnScanQr);
+        tvScanResult = findViewById(R.id.tvScanResult);
+        btnAtras = findViewById(R.id.btnAtras);
+        bottomNavigationView = findViewById(R.id.bottom_navigation); // Inicializar aquí
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.wifi) {
-                Intent intentInicio = new Intent(TaxiFin.this, TaxiActivity.class);
-                startActivity(intentInicio);
-                return true;
-            } else if (item.getItemId() == R.id.location) {
-                Intent intentUbicacion = new Intent(TaxiFin.this, TaxiLocation.class);
-                startActivity(intentUbicacion);
-                return true;
-            } else if (item.getItemId() == R.id.notify) {
-                Intent intentAlertas = new Intent(TaxiFin.this, TaxiDashboardActivity.class);
-                startActivity(intentAlertas);
-                return true;
-            }
-            return false;
-        });
+        ImageView qrPlaceholder = findViewById(R.id.qrPlaceholderImage);
+        if (qrPlaceholder != null) {
+            qrPlaceholder.setVisibility(View.VISIBLE);
+        }
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViajes);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        currentTripDocumentId = getIntent().getStringExtra("documentId");
 
-        List<TaxiAlertasBeans> lista = new ArrayList<>();
-        long now = System.currentTimeMillis();
-        lista.add(new TaxiAlertasBeans("Roberto", "Nuñez Prado", "Hotel Costa del Sol", "Aeropuerto Internacional Jorge Chávez (LIM)", new Date(now - (150 * 60 * 1000)), "Llegó a destino"));
+        if (currentTripDocumentId == null || currentTripDocumentId.isEmpty()) {
+            Log.e(TAG, "TaxiFin iniciado sin documentId válido. Redirigiendo a Dashboard.");
+            Toast.makeText(this, "Error: No se encontró información del viaje. Redirigiendo.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(TaxiFin.this, TaxiDashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        } else {
+            Log.d(TAG, "TaxiFin iniciado para el documento: " + currentTripDocumentId);
+        }
 
-        TaxiFinAdapter adapter = new TaxiFinAdapter(lista);
-        recyclerView.setAdapter(adapter);
+        btnScanQr.setOnClickListener(v -> initiateScan());
 
         btnAtras.setOnClickListener(v -> {
-            Intent intent = new Intent(TaxiFin.this, TaxiActivity.class);
+            Log.d(TAG, "Botón de atrás presionado en TaxiFin. Volviendo al Dashboard.");
+            Intent intent = new Intent(TaxiFin.this, TaxiDashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         });
 
-        if (checkCameraPermission()) {
-            startCamera();
-        } else {
-            requestCameraPermission();
-        }
-    }
+        // *** INICIO DE LA LÓGICA DE NAVEGACIÓN PARA BOTTOM NAVIGATION ***
+        bottomNavigationView.setSelectedItemId(R.id.wifi); // Puedes elegir qué ítem seleccionar por defecto
 
-    private boolean checkCameraPermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            Intent targetIntent;
 
-    private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{android.Manifest.permission.CAMERA},
-                CAMERA_PERMISSION_REQUEST_CODE);
-    }
-
-    private void startCamera() {
-        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindCameraUseCases(cameraProvider);
-            } catch (ExecutionException | InterruptedException e) {
-                Toast.makeText(this, "Error iniciando la cámara: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }, ContextCompat.getMainExecutor(this));
-    }
-
-    private void bindCameraUseCases(@NonNull ProcessCameraProvider cameraProvider) {
-        Preview preview = new Preview.Builder().build();
-
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                // Usando la constante que funciona para ti
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build();
-
-        imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
-            // Solo procesa si aún no se ha escaneado un QR
-            if (!qrScanned) {
-                processImageProxy(imageProxy);
+            if (itemId == R.id.wifi) {
+                Log.d(TAG, "Navegando a TaxiActivity (Alertas) desde TaxiFin.");
+                targetIntent = new Intent(TaxiFin.this, TaxiActivity.class);
+            } else if (itemId == R.id.location) {
+                Log.d(TAG, "Navegando a TaxiLocation (Ubicación) desde TaxiFin.");
+                targetIntent = new Intent(TaxiFin.this, TaxiLocation.class);
+            } else if (itemId == R.id.notify) {
+                Log.d(TAG, "Navegando a TaxiDashboardActivity (Dashboard) desde TaxiFin.");
+                targetIntent = new Intent(TaxiFin.this, TaxiDashboardActivity.class);
             } else {
-                imageProxy.close(); // Cierra el proxy si ya escaneamos para liberar recursos
+                return false; // Si no es ninguno de los IDs del menú, no hace nada
             }
-        });
 
-        cameraProvider.unbindAll();
-        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
+            // Estas flags aseguran que la actividad destino sea la raíz de una nueva tarea
+            // y que las actividades anteriores se cierren, manteniendo una pila limpia.
+            targetIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(targetIntent);
+            finish(); // Cierra TaxiFin después de la navegación
+            return true; // Indica que el ítem fue seleccionado y manejado
+        });
+        // *** FIN DE LA LÓGICA DE NAVEGACIÓN PARA BOTTOM NAVIGATION ***
+
+        // Eliminamos el bucle que deshabilitaba los ítems, ya que la intención es que sean navegables
+        // for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+        //     bottomNavigationView.getMenu().getItem(i).setEnabled(false);
+        // }
     }
 
-    private void processImageProxy(ImageProxy imageProxy) {
-        @SuppressLint("UnsafeOptInUsageError")
-        InputImage inputImage = InputImage.fromMediaImage(imageProxy.getImage(), imageProxy.getImageInfo().getRotationDegrees());
-
-        barcodeScanner.process(inputImage)
-                .addOnSuccessListener(barcodes -> {
-                    // Verifica si se detectaron códigos QR y si no hemos lanzado la actividad aún
-                    if (!barcodes.isEmpty() && !qrScanned) {
-                        qrScanned = true; // Marca que ya se escaneó
-                        // Lanza la nueva actividad de confirmación
-                        Intent intent = new Intent(TaxiFin.this, ConfirmationActivity.class);
-                        startActivity(intent);
-                        finish(); // Opcional: Finaliza TaxiFin para que no se pueda regresar aquí con el botón "Atrás"
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Maneja errores de escaneo si es necesario
-                    // Log.e("QRScan", "Error al escanear código de barras", e);
-                })
-                .addOnCompleteListener(task -> {
-                    imageProxy.close(); // Importante: Cierra el ImageProxy para liberar el buffer
-                });
+    private void initiateScan() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setPrompt("Escanea el código QR del cliente");
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
+        Log.d(TAG, "Iniciando escaneo de QR.");
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCamera();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                tvScanResult.setText("Escaneo cancelado");
+                Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Escaneo de QR cancelado.");
+                // Si se cancela el escaneo, regresamos al Dashboard
+                Intent intent = new Intent(TaxiFin.this, TaxiDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             } else {
-                Toast.makeText(this, "Se requiere permiso de cámara para escanear QR",
-                        Toast.LENGTH_SHORT).show();
+                String scannedCode = result.getContents();
+                tvScanResult.setText("Resultado: " + scannedCode);
+                Log.d(TAG, "Código QR escaneado: " + scannedCode);
+
+                // *** MODIFICADO: Ahora cualquier QR escaneado con éxito completa el viaje ***
+                Toast.makeText(this, "¡QR escaneado! Viaje completado.", Toast.LENGTH_LONG).show();
+                updateTripStatusInFirestore("Completado");
+                Log.d(TAG, "Código QR escaneado. Viaje marcado como 'Completado'. Contenido: " + scannedCode);
+
+                // Redirigir a ConfirmationActivity como solicitaste
+                Intent intent = new Intent(TaxiFin.this, ConfirmationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (cameraExecutor != null) {
-            cameraExecutor.shutdown();
+    private void updateTripStatusInFirestore(String newStatus) {
+        if (currentTripDocumentId != null) {
+            DocumentReference tripRef = db.collection("alertas_taxi").document(currentTripDocumentId);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("estadoViaje", newStatus);
+            tripRef.update(updates)
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Estado del viaje en Firestore actualizado a: " + newStatus))
+                    .addOnFailureListener(e -> Log.e(TAG, "Error al actualizar el estado del viaje en Firestore: " + e.getMessage()));
         }
     }
 }

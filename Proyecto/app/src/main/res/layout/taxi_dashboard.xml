@@ -21,9 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"> <!-- Padding general para el contenido scrollable -->
+            android:padding="16dp">
 
-            <!-- Título de la Aplicación (ajustado a "Viajes realizados" según tu último input) -->
+            <!-- Título de la Aplicación -->
             <TextView
                 android:id="@+id/tvTituloApp"
                 android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Card: Viaje Actual -->
+            <!-- Card: Viaje Actual (se muestra u oculta dinámicamente) -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViajeActual"
                 android:layout_width="match_parent"
@@ -99,7 +99,8 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                android:visibility="gone" tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -117,7 +118,7 @@
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="12dp" />
 
-                    <!-- Contenido del Viaje Actual (similar a item_taxi_alerta) -->
+                    <!-- Contenido del Viaje Actual -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -185,7 +186,7 @@
                                 tools:text="Aeropuerto de Destino" />
                         </LinearLayout>
 
-                        <!-- Tiempo del viaje actual (estático por ahora) -->
+                        <!-- Tiempo del viaje actual -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -220,15 +221,45 @@
 
                     <Button
                         android:id="@+id/btnFinViaje"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Finalizar Viaje"
-                    android:textStyle="bold"
-                    android:backgroundTint="@color/verdejade"
-                    android:textColor="@android:color/white" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Finalizar Viaje"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/verdejade"
+                        android:textColor="@android:color/white" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <!-- Mensaje cuando no hay viaje actual -->
+            <LinearLayout
+                android:id="@+id/layoutNoViajeActual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="24dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/rounded_border_light_gray"
+                android:visibility="visible" tools:visibility="gone">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_no_trips"
+                    android:contentDescription="No hay viajes"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="No hay viajes en proceso, por favor revisa tus notificaciones en 'Alertas'."
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textColor="#606060"
+                    android:textStyle="italic" />
+            </LinearLayout>
 
             <!-- Card: Viajes Terminados -->
             <androidx.cardview.widget.CardView
