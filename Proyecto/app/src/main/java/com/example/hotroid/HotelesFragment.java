@@ -3,12 +3,14 @@ package com.example.hotroid;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,11 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.hotroid.databinding.UserHotelesBinding;
 import com.example.hotroid.bean.Hotel;
-// NOTA: Si tienes un HotelAdapter específico para el cliente, asegúrate de que el import sea correcto.
-// Si tu HotelAdapter para clientes está en com.example.hotroid.adapter.HotelAdapter, mantén ese.
-// Si lo renombraste para admin, este import debe ser el de cliente.
-import com.example.hotroid.HotelAdapter; // Asumiendo que este es el HotelAdapter para clientes
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +28,15 @@ import java.util.Locale;
 
 public class HotelesFragment extends Fragment {
 
+    private static final String TAG = "HotelesFragment";
     private UserHotelesBinding binding;
     private int numHabitaciones = 1;
     private int numPersonas = 2;
     private int valoracionMinima = 3;
     private List<Hotel> hotelList;
-    private HotelAdapter hotelAdapter; // Usa el HotelAdapter para clientes
+    private HotelAdapter hotelAdapter;
+    private FirebaseFirestore db;
+    private String destino = "";
 
     public HotelesFragment() {}
 
@@ -42,10 +45,23 @@ public class HotelesFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = UserHotelesBinding.inflate(inflater, container, false);
 
+        // Inicializar Firebase Firestore
+        db = FirebaseFirestore.getInstance();
+
         configurarCalendario();
         configurarSelectorPersonas();
         configurarSelectorValoracion();
-        cargarHotelesEstaticos(); // Esta función ahora usa setters en lugar del constructor largo
+
+        // Inicializar lista de hoteles vacía
+        hotelList = new ArrayList<>();
+
+        // Configurar RecyclerView
+        binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        hotelAdapter = new HotelAdapter(hotelList);
+        binding.hotelRecyclerView.setAdapter(hotelAdapter);
+
+        // Cargar hoteles desde Firestore
+        cargarHotelesDinamicos();
 
         // Animación de entrada
         binding.searchCard.setAlpha(0f);
@@ -60,6 +76,90 @@ public class HotelesFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void cargarHotelesDinamicos() {
+        // Mostrar indicador de carga
+        Toast.makeText(requireContext(), "Cargando hoteles...", Toast.LENGTH_SHORT).show();
+
+        // Limpiar lista actual
+        hotelList.clear();
+
+        // Consultar colección de hoteles en Firestore
+        db.collection("hoteles")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            try {
+                                // Crear objeto Hotel desde documento Firestore
+                                String id = document.getId();
+                                String nombre = document.getString("name");
+                                String descripcion = document.getString("description");
+                                String direccion = document.getString("direccion");
+                                String direccionDetallada = document.getString("direccionDetallada");
+                                double price = document.getDouble("price");
+                                double ratingDouble = document.getDouble("rating");
+                                float rating = (float) ratingDouble;
+                                String imageName = document.getString("imageName");
+
+                                // Crear objeto Hotel
+                                Hotel hotel = new Hotel();
+                                hotel.setIdHotel(id);
+                                hotel.setName(nombre);
+                                hotel.setDescription(descripcion);
+                                hotel.setDireccion(direccion);
+                                hotel.setDireccionDetallada(direccionDetallada);
+                                hotel.setPrice(price);
+                                hotel.setRating(rating);
+
+                                // Determinar el recurso de imagen basado en el nombre de la imagen
+                                int imageResourceId = getImageResourceId(imageName);
+                                hotel.setImageResourceId(imageResourceId);
+
+                                // Agregar a la lista
+                                hotelList.add(hotel);
+
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al procesar documento: " + document.getId(), e);
+                            }
+                        }
+
+                        // Actualizar adaptador y título
+                        hotelAdapter = new HotelAdapter(hotelList);
+                        binding.hotelRecyclerView.setAdapter(hotelAdapter);
+                        binding.resultsTitle.setText("Hoteles recomendados (" + hotelList.size() + ")");
+
+                    } else {
+                        Log.e(TAG, "Error al obtener documentos: ", task.getException());
+                        Toast.makeText(requireContext(), "Error al cargar hoteles", Toast.LENGTH_SHORT).show();
+
+                        // Si hay error, cargar datos estáticos como respaldo
+                        cargarHotelesEstaticos();
+                    }
+                });
+    }
+
+    // Método para obtener el ID del recurso de imagen basado en el nombre
+    private int getImageResourceId(String imageName) {
+        // Mapear nombres de imágenes a recursos
+        switch (imageName) {
+            case "hotel_costa_sol":
+                return R.drawable.hotel_costa_sol;
+            case "hotel_boca_raton":
+                return R.drawable.hotel_boca_raton;
+            case "hotel_decameron":
+                return R.drawable.hotel_decameron;
+            case "hotel_aranwa":
+                return R.drawable.hotel_aranwa;
+            case "hotel_oro_verde":
+                return R.drawable.hotel_oro_verde;
+            case "hotel_sheraton":
+                return R.drawable.hotel_sheraton;
+            default:
+                // Imagen por defecto si no hay coincidencia
+                return R.drawable.hotel_decameron;
+        }
     }
 
     private void configurarCalendario() {
@@ -159,11 +259,21 @@ public class HotelesFragment extends Fragment {
     }
 
     private void realizarBusqueda() {
-        String destino = binding.searchEditText.getText().toString();
+        destino = binding.searchEditText.getText().toString().trim();
         String fechas = binding.selectedDatesText.getText().toString();
 
-        filtrarHotelesPorValoracion();
+        // Mostrar indicador de búsqueda
+        Toast.makeText(requireContext(), "Buscando hoteles...", Toast.LENGTH_SHORT).show();
 
+        // Si hay un destino específico, filtrar por ubicación
+        if (!destino.isEmpty()) {
+            filtrarHotelesPorUbicacion(destino);
+        } else {
+            // Si no hay destino, solo filtrar por valoración
+            filtrarHotelesPorValoracion();
+        }
+
+        // Mostrar resumen de búsqueda
         new AlertDialog.Builder(requireContext())
                 .setTitle("Búsqueda iniciada")
                 .setMessage("Buscando en: " + (destino.isEmpty() ? "Todos los destinos" : destino) + "\n" +
@@ -175,19 +285,145 @@ public class HotelesFragment extends Fragment {
                 .show();
     }
 
+    private void filtrarHotelesPorUbicacion(String ubicacion) {
+        // Crear consulta para buscar hoteles que contengan la ubicación especificada
+        db.collection("hoteles")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Hotel> hotelesFiltrados = new ArrayList<>();
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            try {
+                                String nombre = document.getString("name");
+                                String direccion = document.getString("direccion");
+                                String descripcion = document.getString("description");
+
+                                // Comprobar si la ubicación coincide con algún campo relevante
+                                if ((direccion != null && direccion.toLowerCase().contains(ubicacion.toLowerCase())) ||
+                                        (nombre != null && nombre.toLowerCase().contains(ubicacion.toLowerCase())) ||
+                                        (descripcion != null && descripcion.toLowerCase().contains(ubicacion.toLowerCase()))) {
+
+                                    // Crear objeto Hotel desde documento Firestore
+                                    String id = document.getId();
+                                    String direccionDetallada = document.getString("direccionDetallada");
+                                    double price = document.getDouble("price");
+                                    double ratingDouble = document.getDouble("rating");
+                                    float rating = (float) ratingDouble;
+                                    String imageName = document.getString("imageName");
+
+                                    // Filtrar también por valoración mínima
+                                    if (rating >= valoracionMinima) {
+                                        // Crear objeto Hotel
+                                        Hotel hotel = new Hotel();
+                                        hotel.setIdHotel(id);
+                                        hotel.setName(nombre);
+                                        hotel.setDescription(descripcion);
+                                        hotel.setDireccion(direccion);
+                                        hotel.setDireccionDetallada(direccionDetallada);
+                                        hotel.setPrice(price);
+                                        hotel.setRating(rating);
+
+                                        // Determinar el recurso de imagen basado en el nombre de la imagen
+                                        int imageResourceId = getImageResourceId(imageName);
+                                        hotel.setImageResourceId(imageResourceId);
+
+                                        // Agregar a la lista
+                                        hotelesFiltrados.add(hotel);
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al procesar documento: " + document.getId(), e);
+                            }
+                        }
+
+                        // Actualizar adaptador y título
+                        hotelAdapter = new HotelAdapter(hotelesFiltrados);
+                        binding.hotelRecyclerView.setAdapter(hotelAdapter);
+                        binding.resultsTitle.setText("Hoteles en " + ubicacion + " (" + hotelesFiltrados.size() + ")");
+
+                    } else {
+                        Log.e(TAG, "Error al obtener documentos: ", task.getException());
+                        Toast.makeText(requireContext(), "Error al buscar hoteles", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void filtrarHotelesPorValoracion() {
+        // Consultar todos los hoteles y filtrar por valoración mínima
+        db.collection("hoteles")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Hotel> hotelesFiltrados = new ArrayList<>();
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            try {
+                                // Obtener rating del documento
+                                double ratingDouble = document.getDouble("rating");
+                                float rating = (float) ratingDouble;
+
+                                // Filtrar por valoración mínima
+                                if (rating >= valoracionMinima) {
+                                    // Crear objeto Hotel desde documento Firestore
+                                    String id = document.getId();
+                                    String nombre = document.getString("name");
+                                    String descripcion = document.getString("description");
+                                    String direccion = document.getString("direccion");
+                                    String direccionDetallada = document.getString("direccionDetallada");
+                                    double price = document.getDouble("price");
+                                    String imageName = document.getString("imageName");
+
+                                    // Crear objeto Hotel
+                                    Hotel hotel = new Hotel();
+                                    hotel.setIdHotel(id);
+                                    hotel.setName(nombre);
+                                    hotel.setDescription(descripcion);
+                                    hotel.setDireccion(direccion);
+                                    hotel.setDireccionDetallada(direccionDetallada);
+                                    hotel.setPrice(price);
+                                    hotel.setRating(rating);
+
+                                    // Determinar el recurso de imagen basado en el nombre de la imagen
+                                    int imageResourceId = getImageResourceId(imageName);
+                                    hotel.setImageResourceId(imageResourceId);
+
+                                    // Agregar a la lista
+                                    hotelesFiltrados.add(hotel);
+                                }
+
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al procesar documento: " + document.getId(), e);
+                            }
+                        }
+
+                        // Actualizar adaptador y título
+                        hotelAdapter = new HotelAdapter(hotelesFiltrados);
+                        binding.hotelRecyclerView.setAdapter(hotelAdapter);
+                        binding.resultsTitle.setText("Hoteles recomendados (" + hotelesFiltrados.size() + ")");
+
+                    } else {
+                        Log.e(TAG, "Error al obtener documentos: ", task.getException());
+                        Toast.makeText(requireContext(), "Error al filtrar hoteles", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Método de respaldo para cargar datos estáticos si falla la conexión a Firestore
     private void cargarHotelesEstaticos() {
         hotelList = new ArrayList<>();
 
         // HOTEL 1: Grand Hotel Madrid
         Hotel hotel1 = new Hotel();
-        hotel1.setIdHotel("R001"); // Aunque no se use en Firestore para esta vista, mantenemos la consistencia
+        hotel1.setIdHotel("R001");
         hotel1.setName("Grand Hotel Madrid");
         hotel1.setRating(4.5f);
         hotel1.setPrice(223.00);
         hotel1.setDireccion("Madrid");
         hotel1.setDireccionDetallada("Av. del Prado 123, Centro Histórico");
         hotel1.setDescription("Un hotel elegante en el corazón de Madrid, cerca de los principales museos y atracciones.");
-        hotel1.setImageResourceId(R.drawable.hotel_decameron); // Usar R.drawable
+        hotel1.setImageResourceId(R.drawable.hotel_decameron);
         hotelList.add(hotel1);
 
         // HOTEL 2: Barcelona Royal Suite
@@ -199,7 +435,7 @@ public class HotelesFragment extends Fragment {
         hotel2.setDireccion("Barcelona");
         hotel2.setDireccionDetallada("Calle Mallorca 456, Eixample");
         hotel2.setDescription("Lujo y confort en el centro de Barcelona, con suites espaciosas y servicios exclusivos.");
-        hotel2.setImageResourceId(R.drawable.hotel_aranwa); // Usar R.drawable
+        hotel2.setImageResourceId(R.drawable.hotel_aranwa);
         hotelList.add(hotel2);
 
         // HOTEL 3: Valencia Beach Resort
@@ -211,7 +447,7 @@ public class HotelesFragment extends Fragment {
         hotel3.setDireccion("Valencia");
         hotel3.setDireccionDetallada("Paseo Marítimo 78, Playa Norte");
         hotel3.setDescription("Disfruta del sol y la playa en este resort moderno con acceso directo a la costa valenciana.");
-        hotel3.setImageResourceId(R.drawable.hotel_boca_raton); // Usar R.drawable
+        hotel3.setImageResourceId(R.drawable.hotel_boca_raton);
         hotelList.add(hotel3);
 
         // HOTEL 4: Sevilla Boutique Hotel
@@ -223,7 +459,7 @@ public class HotelesFragment extends Fragment {
         hotel4.setDireccion("Sevilla");
         hotel4.setDireccionDetallada("Calle Sierpes 22, Casco Antiguo");
         hotel4.setDescription("Un encantador hotel boutique en el histórico barrio de Sevilla, perfecto para explorar a pie.");
-        hotel4.setImageResourceId(R.drawable.hotel_oro_verde); // Usar R.drawable
+        hotel4.setImageResourceId(R.drawable.hotel_oro_verde);
         hotelList.add(hotel4);
 
         // HOTEL 5: Granada Historic Palace
@@ -232,31 +468,16 @@ public class HotelesFragment extends Fragment {
         hotel5.setName("Granada Historic Palace");
         hotel5.setRating(4.8f);
         hotel5.setPrice(356.60);
-        hotel5.setDireccion("Inglaterra"); // Aquí la dirección está como "Inglaterra", lo mantengo según tu código.
-        hotel5.setDireccionDetallada("High St 10, Old Town");
+        hotel5.setDireccion("Granada");
+        hotel5.setDireccionDetallada("Calle Alhamar 15, Centro");
         hotel5.setDescription("Un palacio convertido en hotel, ofreciendo una estancia lujosa y con historia en Granada.");
-        hotel5.setImageResourceId(R.drawable.hotel_sheraton); // Usar R.drawable
+        hotel5.setImageResourceId(R.drawable.hotel_sheraton);
         hotelList.add(hotel5);
-
 
         // Configurar el RecyclerView
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        hotelAdapter = new HotelAdapter(hotelList); // Asegúrate de que este HotelAdapter sea el de cliente
+        hotelAdapter = new HotelAdapter(hotelList);
         binding.hotelRecyclerView.setAdapter(hotelAdapter);
-    }
-
-    private void filtrarHotelesPorValoracion() {
-        List<Hotel> hotelesFiltrados = new ArrayList<>();
-        for (Hotel hotel : hotelList) {
-            if (hotel.getRating() >= valoracionMinima) {
-                hotelesFiltrados.add(hotel);
-            }
-        }
-
-        hotelAdapter = new HotelAdapter(hotelesFiltrados); // Se crea un nuevo adaptador con la lista filtrada
-        binding.hotelRecyclerView.setAdapter(hotelAdapter);
-
-        binding.resultsTitle.setText("Hoteles recomendados (" + hotelesFiltrados.size() + ")");
     }
 
     @Override
