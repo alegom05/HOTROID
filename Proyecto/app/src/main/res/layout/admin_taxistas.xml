@@ -92,6 +92,7 @@
         app:cardElevation="3dp"
         app:cardCornerRadius="4dp">
 
+        <!-- CONTENIDO DEL CARD SECCIONESCARD (MODIFICADO) -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -106,15 +107,55 @@
                 android:textSize="24sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- BUSCADOR Y BOTÓN LIMPIAR AÑADIDOS -->
+            <LinearLayout
+                android:id="@+id/layoutBuscador"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                app:layout_constraintTop_toBottomOf="@id/tvLista"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <EditText
+                    android:id="@+id/etBuscador"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Buscar por nombre, DNI o placa..."
+                    android:padding="12dp"
+                    android:background="@drawable/edittext_background"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="8dp"
+                    android:singleLine="true"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:layout_marginEnd="8dp"/>
+
+                <Button
+                    android:id="@+id/btnLimpiar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Limpiar"
+                    android:backgroundTint="#009688"
+                    android:textColor="@android:color/white"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tvFiltrarEstado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Filtrar por estado:"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/tvLista"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="8dp" />
+                app:layout_constraintTop_toBottomOf="@id/layoutBuscador"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
 
             <Spinner
                 android:id="@+id/spinnerEstado"
@@ -143,7 +184,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -110,6 +110,36 @@
                     android:textSize="20sp"
                     android:layout_marginBottom="8dp"/>
 
+                <!-- BUSCADOR AGREGADO AQUÍ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/etBuscador"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Buscar cliente..."
+                        android:padding="12dp"
+                        android:background="@drawable/edittext_background"
+                        android:drawableStart="@drawable/ic_search"
+                        android:drawablePadding="8dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button
+                        android:id="@+id/btnLimpiar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Limpiar"
+                        android:backgroundTint="#009688"
+                        android:textColor="@android:color/white"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"/>
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCheckouts"

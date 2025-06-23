@@ -2,7 +2,11 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -27,16 +31,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Date;
+import java.util.Date; // Asegúrate de que Date esté importado
 
 public class AdminCheckout extends AppCompatActivity {
 
     private RecyclerView rvCheckouts;
     private CheckoutAdapter adapter;
-    private List<CheckoutFirebase> checkoutList;
+    private List<CheckoutFirebase> checkoutList; // Esta lista ahora será la que se muestra y se filtra
+    private List<CheckoutFirebase> originalCheckoutList; // Esta lista mantendrá todos los checkouts sin filtrar
     private FirebaseFirestore db;
     private List<Reserva> reservasList;
     private List<Cliente> clientesList;
+
+    // Elementos del buscador
+    private EditText etBuscador;
+    private Button btnLimpiar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +60,47 @@ public class AdminCheckout extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         checkoutList = new ArrayList<>();
+        originalCheckoutList = new ArrayList<>(); // Inicializar la lista original
         reservasList = new ArrayList<>();
         clientesList = new ArrayList<>();
 
         rvCheckouts = findViewById(R.id.rvCheckouts);
         rvCheckouts.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new CheckoutAdapter(checkoutList);
+        adapter = new CheckoutAdapter(checkoutList); // Pasar la lista que se usará para mostrar
         rvCheckouts.setAdapter(adapter);
 
-        // ATENCIÓN: ESTA LÍNEA ESTÁ DESCOMENTADA PARA POBLAR FIRESTORE UNA VEZ
-        // DEBES COMENTARLA DESPUÉS DE LA PRIMERA EJECUCIÓN EXITOSA.
-        // saveInitialCheckoutsToFirestore(); // No veo este método definido, si lo tienes, asegúrate de que no genere duplicados.
-        // El método 'generateAndSaveRandomCheckouts' está bien, pero descomenta solo cuando necesites.
+        // Inicializar elementos del buscador
+        etBuscador = findViewById(R.id.etBuscador);
+        btnLimpiar = findViewById(R.id.btnLimpiar);
+
+        // Listener para el campo de búsqueda
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No se necesita implementación
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Filtrar la lista cada vez que el texto cambia
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No se necesita implementación
+            }
+        });
+
+        // Listener para el botón "Limpiar"
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText(""); // Limpiar el texto del buscador
+            adapter.filterList(originalCheckoutList); // Restaurar la lista original sin filtrar
+            checkoutList.clear(); // Limpiar la lista visible
+            checkoutList.addAll(originalCheckoutList); // Añadir todos los elementos de la lista original
+        });
+
 
         // Primero, carga reservas y clientes, luego genera y carga checkouts
         loadReservasAndClientesThenGenerateCheckouts();
@@ -72,10 +109,10 @@ public class AdminCheckout extends AppCompatActivity {
         adapter.setOnItemClickListener(new CheckoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                CheckoutFirebase seleccionado = checkoutList.get(position);
+                CheckoutFirebase seleccionado = checkoutList.get(position); // Obtener de la lista actual/filtrada
 
                 Intent intent = new Intent(AdminCheckout.this, AdminCheckoutDetalles.class);
-                intent.putExtra("ID_CHECKOUT", seleccionado.getIdCheckout()); // <--- AÑADIR ESTA LÍNEA
+                intent.putExtra("ID_CHECKOUT", seleccionado.getIdCheckout());
                 intent.putExtra("ROOM_NUMBER", seleccionado.getRoomNumber());
                 intent.putExtra("CLIENT_NAME", seleccionado.getClientName());
                 intent.putExtra("BASE_RATE", seleccionado.getBaseRate());
@@ -155,7 +192,7 @@ public class AdminCheckout extends AppCompatActivity {
                             }
                             Log.d("AdminCheckout", "Clientes cargados exitosamente: " + clientesList.size());
                             // Solo se debe descomentar esta línea para la primera ejecución si quieres generar nuevos checkouts
-                            // generateAndSaveRandomCheckouts();
+                            // generateAndSaveRandomCheckouts(); // Asegúrate de que este método exista y sea seguro contra duplicados
                             loadCheckoutsFromFirestore();
                         } else {
                             Log.w("AdminCheckout", "Error al obtener documentos de clientes: ", task.getException());
@@ -214,14 +251,15 @@ public class AdminCheckout extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            checkoutList.clear();
+                            originalCheckoutList.clear(); // Limpiar la lista original
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                // Aquí es donde el ID del documento se mapea automáticamente a 'idCheckout'
-                                // gracias a @DocumentId en tu clase CheckoutFirebase.
                                 CheckoutFirebase checkout = document.toObject(CheckoutFirebase.class);
-                                checkoutList.add(checkout);
+                                originalCheckoutList.add(checkout);
                             }
-                            adapter.notifyDataSetChanged();
+                            // Después de cargar, inicializa ambas listas y notifica al adaptador
+                            checkoutList.clear();
+                            checkoutList.addAll(originalCheckoutList); // Copiar todos a la lista visible
+                            adapter.filterList(checkoutList); // Pasar la lista ya copiada al adaptador
                             Log.d("AdminCheckout", "Checkouts cargados: " + checkoutList.size());
                             if (checkoutList.isEmpty()) {
                                 Toast.makeText(AdminCheckout.this, "No hay checkouts pendientes.", Toast.LENGTH_SHORT).show();
@@ -234,11 +272,26 @@ public class AdminCheckout extends AppCompatActivity {
                 });
     }
 
+    // Método de filtrado
+    private void filter(String text) {
+        List<CheckoutFirebase> filteredList = new ArrayList<>();
+        for (CheckoutFirebase item : originalCheckoutList) { // Filtrar desde la lista original
+            if (item.getClientName().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+        checkoutList.clear(); // Limpiar la lista visible
+        checkoutList.addAll(filteredList); // Añadir los elementos filtrados
+        adapter.filterList(filteredList); // Notificar al adaptador con la lista filtrada
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
         // Recargar los checkouts cada vez que la actividad vuelve a estar en primer plano
         // Esto es crucial para ver la lista actualizada después de una eliminación
         loadCheckoutsFromFirestore();
+        etBuscador.setText(""); // Asegurarse de que el buscador esté limpio al regresar
     }
 }

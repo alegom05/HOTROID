@@ -2,10 +2,14 @@ package com.example.hotroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText; // Importar EditText
+import android.widget.Button; // Importar Button para el botón Limpiar
 import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
@@ -19,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hotroid.bean.Taxista;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot; // Import this
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +31,13 @@ import java.util.List;
 public class AdminTaxistas extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TaxistaAdapter adapter;
-    private List<Taxista> listaTaxistas;
-
+    private List<Taxista> listaTaxistas; // Lista original, no filtrada, de todos los taxistas
     private FirebaseFirestore db;
+
+    private EditText etBuscador; // Cambiado de etSearch a etBuscador
+    private Button btnLimpiar; // Declarar el botón Limpiar
+    private Spinner spinnerEstado;
+    private String currentSearchText = ""; // Variable para mantener el texto de búsqueda actual
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,65 +54,51 @@ public class AdminTaxistas extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         db = FirebaseFirestore.getInstance();
-        listaTaxistas = new ArrayList<>();
+        listaTaxistas = new ArrayList<>(); // Inicializa la lista que contendrá todos los taxistas
 
-        // Initialize the adapter with an empty list FIRST
-        // This prevents null pointer issues if Firestore load is slow
-        adapter = new TaxistaAdapter(new ArrayList<>(), this);
+        adapter = new TaxistaAdapter(new ArrayList<>(), this); // Inicializar con una lista vacía
         recyclerView.setAdapter(adapter);
 
-        // --- IMPORTANT: Ensure this block is COMMENTED OUT if data is already in Firestore ---
-        // If you need to populate data, use the addInitialTaxisToFirestore() in SuperListaTaxisActivity
-        // or ensure this specific block runs only once.
-        /*
-        // Example: To add one taxista if database is empty for testing,
-        // you might use a flag in SharedPreferences or check DB size first.
-        // For production, this should not be in onCreate().
-        Log.d("AdminTaxistas", "Attempting to add initial taxistas if not present...");
-        db.collection("taxistas").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult().isEmpty()) {
-                List<Taxista> initialDummyTaxistas = Arrays.asList(
-                    new Taxista(
-                            "Carlos Josue", "Alvarez Retes", "DNI", "12345678", "1990-01-15",
-                            "carlos.alvarez@gmail.com", "987654321", "Av. Siempre Viva 123",
-                            "android.resource://" + getPackageName() + "/" + R.drawable.taxista1, // Foto de perfil
-                            "ABC-123", "android.resource://" + getPackageName() + "/" + R.drawable.car_taxi_driver, // Foto de vehículo
-                            "activado", "En Camino"
-                    ),
-                    new Taxista(
-                            "Alex David", "Russo Vera", "DNI", "87654321", "1988-05-20",
-                            "alex.russo@gmail.com", "912345678", "Calle Falsa 456",
-                            "android.resource://" + getPackageName() + "/" + R.drawable.taxista2,
-                            "DEF-456", "android.resource://" + getPackageName() + "/" + R.drawable.carrito, // Otra foto de vehículo
-                            "activado", "Asignado"
-                    )
-                    // ... add all your 6 taxistas here if you want to use this block for initial setup
-                );
+        // --- Configuración del buscador (EditText y Botón Limpiar) ---
+        etBuscador = findViewById(R.id.etBuscador); // Referencia al EditText
+        btnLimpiar = findViewById(R.id.btnLimpiar); // Referencia al botón Limpiar
 
-                for (Taxista taxista : initialDummyTaxistas) {
-                    db.collection("taxistas")
-                        .add(taxista)
-                        .addOnSuccessListener(documentReference -> {
-                            Log.d("AdminTaxistas", "Initial Taxista added with ID: " + documentReference.getId());
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.w("AdminTaxistas", "Error adding initial taxista", e);
-                        });
-                }
-            } else if (task.isSuccessful()) {
-                Log.d("AdminTaxistas", "Database already contains taxistas. Skipping initial add.");
-            } else {
-                Log.e("AdminTaxistas", "Error checking database for initial data: ", task.getException());
+        // Añadir TextWatcher para filtrar mientras el usuario escribe
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No se necesita implementación aquí
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchText = s.toString(); // Actualizar el texto de búsqueda actual
+                // Llamar al filtro con el estado actual del spinner y el nuevo texto de búsqueda
+                String estadoSeleccionado = spinnerEstado.getSelectedItem().toString();
+                filtrarTaxistas(estadoSeleccionado, currentSearchText);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No se necesita implementación aquí
             }
         });
-        */
-        // --- End of initial data population block ---
+
+        // Listener para el botón "Limpiar"
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText(""); // Limpiar el texto del buscador
+            currentSearchText = ""; // Resetear la variable de búsqueda
+            // Recargar el filtro para mostrar todos los taxistas del estado seleccionado
+            String estadoSeleccionado = spinnerEstado.getSelectedItem().toString();
+            filtrarTaxistas(estadoSeleccionado, currentSearchText);
+        });
+        // --- Fin de configuración del buscador ---
 
 
-        cargarTaxistasDesdeFirestore(); // This should be the main way to load data
+        cargarTaxistasDesdeFirestore();
 
         // Spinner setup
-        Spinner spinnerEstado = findViewById(R.id.spinnerEstado);
+        spinnerEstado = findViewById(R.id.spinnerEstado); // Inicializar spinnerEstado aquí
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(
                 this, R.array.estados_taxistas, R.layout.spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -114,12 +108,13 @@ public class AdminTaxistas extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String estadoSeleccionado = parent.getItemAtPosition(position).toString();
-                filtrarTaxistas(estadoSeleccionado);
+                // Llamar al filtro con el nuevo estado del spinner y el texto de búsqueda actual
+                filtrarTaxistas(estadoSeleccionado, currentSearchText);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // No doing nothing if nothing is selected
+                // No hacer nada si no se selecciona nada
             }
         });
 
@@ -155,9 +150,11 @@ public class AdminTaxistas extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // It's good practice to reload data on resume if changes might have occurred
-        // (e.g., from AdminTaxistaDetalles). This will ensure the list is always fresh.
+        // Recargar datos para asegurar que la lista esté actualizada y los filtros se apliquen
         cargarTaxistasDesdeFirestore();
+        // Opcional: Limpiar el buscador cada vez que la actividad vuelve a primer plano
+        etBuscador.setText("");
+        currentSearchText = "";
     }
 
     private void cargarTaxistasDesdeFirestore() {
@@ -165,43 +162,59 @@ public class AdminTaxistas extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        listaTaxistas.clear(); // CRUCIAL: Clear the list before adding
+                        listaTaxistas.clear(); // Limpiar la lista antes de añadir nuevos datos
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Taxista taxista = document.toObject(Taxista.class);
-                            // IMPORTANT: If you need the Firestore ID in your Taxista object for updates/deletes,
-                            // make sure to set it here! Your Taxista class must have a `firestoreId` field and setter.
+                            // Si necesitas el ID de Firestore en tu objeto Taxista:
                             // taxista.setFirestoreId(document.getId());
                             listaTaxistas.add(taxista);
                         }
                         Log.d("AdminTaxistas", "Loaded " + listaTaxistas.size() + " taxistas from Firestore.");
-                        // After loading, apply the current filter or display all
-                        Spinner spinnerEstado = findViewById(R.id.spinnerEstado);
-                        if (spinnerEstado != null) {
-                            String selectedState = spinnerEstado.getSelectedItem().toString();
-                            filtrarTaxistas(selectedState); // Filter based on current spinner selection
-                        } else {
-                            adapter.actualizarLista(listaTaxistas); // If spinner not ready, show all
-                        }
+
+                        // Después de cargar, aplicar los filtros actuales (spinner y búsqueda)
+                        String estadoSeleccionado = (spinnerEstado != null && spinnerEstado.getSelectedItem() != null) ? spinnerEstado.getSelectedItem().toString() : "Todos";
+                        filtrarTaxistas(estadoSeleccionado, currentSearchText);
+
                     } else {
                         Log.w("AdminTaxistas", "Error al obtener documentos: ", task.getException());
                     }
                 });
     }
 
-    private void filtrarTaxistas(String estadoSeleccionado) {
-        List<Taxista> listaFiltrada = new ArrayList<>();
-        if (estadoSeleccionado.equals("Todos") || estadoSeleccionado.equals("Todos los estados")) { // Make sure "Todos" matches your R.array.estados_taxistas
-            listaFiltrada.addAll(listaTaxistas);
+    // MODIFICADO: El método filtrarTaxistas recibe el estado seleccionado y el texto de búsqueda
+    private void filtrarTaxistas(String estadoSeleccionado, String searchText) {
+        List<Taxista> listaFiltradaTemporal = new ArrayList<>();
+
+        // Paso 1: Filtrar por estado desde la lista original de todos los taxistas
+        if (estadoSeleccionado.equals("Todos") || estadoSeleccionado.equals("Todos los estados") || estadoSeleccionado.equals("all")) { // Asegúrate de que "Todos" coincida con tu array
+            listaFiltradaTemporal.addAll(listaTaxistas);
         } else {
             for (Taxista t : listaTaxistas) {
-                // Ensure null check and case-insensitive comparison
                 if (t.getEstadoDeViaje() != null && t.getEstadoDeViaje().equalsIgnoreCase(estadoSeleccionado)) {
-                    listaFiltrada.add(t);
+                    listaFiltradaTemporal.add(t);
                 }
             }
         }
-        Log.d("AdminTaxistas", "Filtered list size: " + listaFiltrada.size() + " for state: " + estadoSeleccionado);
-        adapter.actualizarLista(listaFiltrada);
+
+        // Paso 2: Aplicar el filtro de búsqueda a la lista ya filtrada por estado
+        List<Taxista> listaFinalFiltrada = new ArrayList<>();
+        if (searchText == null || searchText.trim().isEmpty()) {
+            listaFinalFiltrada.addAll(listaFiltradaTemporal);
+        } else {
+            String lowerCaseSearchText = searchText.toLowerCase().trim();
+            for (Taxista t : listaFiltradaTemporal) {
+                // Se busca en nombres, apellidos, DNI, o placa
+                if ((t.getNombres() != null && t.getNombres().toLowerCase().contains(lowerCaseSearchText)) ||
+                        (t.getApellidos() != null && t.getApellidos().toLowerCase().contains(lowerCaseSearchText)) ||
+                        (t.getPlaca() != null && t.getPlaca().toLowerCase().contains(lowerCaseSearchText)) ||
+                        (t.getNumeroDocumento() != null && t.getNumeroDocumento().toLowerCase().contains(lowerCaseSearchText)))
+                {
+                    listaFinalFiltrada.add(t);
+                }
+            }
+        }
+        Log.d("AdminTaxistas", "Filtered list size: " + listaFinalFiltrada.size() + " for state: " + estadoSeleccionado + " and search: '" + searchText + "'");
+        adapter.actualizarLista(listaFinalFiltrada);
     }
 
     public void abrirDetalle(Taxista taxista) {
