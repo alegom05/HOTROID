@@ -239,6 +239,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
 
     private void mostrarOpcionesHabitacion() {
         Intent intent = new Intent(this, OpcionesHabitacionUser.class);
+        intent.putExtra("HOTEL_ID", getIntent().getStringExtra("HOTEL_ID"));
         startActivity(intent);
     }
 
