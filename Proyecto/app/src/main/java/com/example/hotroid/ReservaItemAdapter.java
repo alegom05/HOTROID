@@ -1,10 +1,12 @@
 package com.example.hotroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +40,15 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
         return new ReservaViewHolder(view);
     }
 
+    // Método auxiliar para obtener información de huéspedes
+    private String getGuestsInfo(ReservaConHotel item) {
+        String info = item.getReserva().getAdultos() + " adultos";
+        if (item.getReserva().getNinos() > 0) {
+            info += ", " + item.getReserva().getNinos() + " niños";
+        }
+        return info;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
         ReservaConHotel item = reservas.get(position);
@@ -51,12 +62,8 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
         String fechaFin = dateFormat.format(item.getReserva().getFechaFin());
         holder.tvFechas.setText("Desde: " + fechaInicio + "\nHasta: " + fechaFin);
 
-        // Mostrar huéspedes
-        String huespedesText = item.getReserva().getAdultos() + " adultos";
-        if (item.getReserva().getNinos() > 0) {
-            huespedesText += ", " + item.getReserva().getNinos() + " niños";
-        }
-        holder.tvHuespedes.setText(huespedesText);
+        // Mostrar huéspedes usando el método auxiliar
+        holder.tvHuespedes.setText(getGuestsInfo(item));
 
         // Mostrar precio
         holder.tvPrecio.setText(String.format("PEN %.2f", item.getReserva().getPrecioTotal()));
@@ -69,11 +76,52 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
             holder.imagenHotel.setImageResource(R.drawable.hotel_placeholder);
         }
 
+        // Eliminar cualquier onClick listener previamente establecido
+        holder.btnAccion.setOnClickListener(null);
+
         // Configurar botón según estado
         if (item.getReserva().getEstado().equals("activo")) {
-            holder.btnAccion.setText("Cancelar reserva");
+            holder.btnAccion.setText("Detalles");  // Cambiar texto del botón
             holder.btnAccion.setBackgroundTintList(context.getColorStateList(R.color.cliente2));
             holder.btnAccion.setVisibility(View.VISIBLE);
+
+            // Configurar el OnClickListener para abrir DetalleReservaActivo
+            holder.btnAccion.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(context, DetalleReservaActivo.class);
+
+                    // Enviamos los datos necesarios para DetalleReservaActivo
+                    intent.putExtra("hotel_name", item.getReserva().getNombreHotel());
+
+                    // Si hay información de ubicación del hotel, la incluimos
+                    if (item.getHotel() != null) {
+                        String ciudad = item.getHotel().getDireccion();
+                        intent.putExtra("city", ciudad != null ? ", " + ciudad : "");
+                        intent.putExtra("hotel_location", item.getHotel().getDireccion());
+                    } else {
+                        intent.putExtra("city", "");
+                        intent.putExtra("hotel_location", "");
+                    }
+
+                    // Información de la habitación
+                    intent.putExtra("room_details", "Habitación: " + item.getReserva().getRoomNumber());
+
+                    // Estado, fechas y código de reserva
+                    intent.putExtra("status", "Confirmado");
+                    intent.putExtra("checkInDate", fechaInicio);
+                    intent.putExtra("checkOutDate", fechaFin);
+                    intent.putExtra("reservationCode", item.getReserva().getIdReserva());
+
+                    // Usar el método auxiliar para la información de huéspedes
+                    intent.putExtra("guestsInfo", getGuestsInfo(item));
+
+                    // Iniciamos la actividad
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(context, "Error al abrir detalles: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            });
         } else if (item.getReserva().getEstado().equals("pasado")) {
             holder.btnAccion.setText("Valorar estancia");
             holder.btnAccion.setBackgroundTintList(context.getColorStateList(R.color.cliente1));

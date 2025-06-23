@@ -38,7 +38,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
     private TextView tvHotelName, tvHotelLocation, tvRoomDetails;
     private TextView tvStatus, tvArrivalDay, tvGuestsInfo;
     private TextView tvCheckIn, tvCheckOut, tvReservationCode;
-    private Button btnCheckIn, btnCancelReservation,btnCheckOut, btnSolicitarTaxi;
+    private Button btnCheckIn, btnCancelReservation, btnCheckOut, btnSolicitarTaxi;
     private Bitmap qrCodeBitmap;
     private boolean checkInRealizado = false;
 
@@ -52,7 +52,6 @@ public class DetalleReservaActivo extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         btnSolicitarTaxi = findViewById(R.id.btnSolicitarTaxi);
-
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -73,42 +72,77 @@ public class DetalleReservaActivo extends AppCompatActivity {
         btnCancelReservation = findViewById(R.id.btnCancelReservation);
         btnCheckOut = findViewById(R.id.btnCheckOut);
 
-        // Obtener datos del intent
-        Intent intent = getIntent();
-        String hotelName = intent.getStringExtra("hotel_name");
-        String roomDetails = intent.getStringExtra("room_details");
-        String hotelciudad = intent.getStringExtra("city");
-        String hotelLocation = intent.getStringExtra("hotel_location");
-        String status = intent.getStringExtra("status");
-        String checkInDate = intent.getStringExtra("checkInDate");
-        String checkOutDate = intent.getStringExtra("checkOutDate");
-        String reservationCode = intent.getStringExtra("reservationCode");
+        try {
+            // Obtener datos del intent
+            Intent intent = getIntent();
+            String hotelName = intent.getStringExtra("hotel_name");
+            String roomDetails = intent.getStringExtra("room_details");
+            String hotelciudad = intent.getStringExtra("city");
+            String hotelLocation = intent.getStringExtra("hotel_location");
+            String status = intent.getStringExtra("status");
+            String checkInDate = intent.getStringExtra("checkInDate");
+            String checkOutDate = intent.getStringExtra("checkOutDate");
+            String reservationCode = intent.getStringExtra("reservationCode");
+            String guestsInfo = intent.getStringExtra("guestsInfo"); // Nuevo extra para información de huéspedes
 
-        // Configurar datos de ejemplo (estos vendrían de la BD en una app real)
-        tvHotelName.setText((hotelName != null ? hotelName : "Hotel Desconocido, Perú") + hotelciudad);
-        //tvHotelLocation.setText("Av. El Sol 594, Centro Histórico");
-        tvHotelLocation.setText(hotelLocation != null ? " " + hotelLocation : "");
-        tvRoomDetails.setText(roomDetails != null ? roomDetails : "Detalles no disponibles");
-        //tvRoomDetails.setText(roomDetails != null ? roomDetails : "Habitación Deluxe - 1 cama king size");
-        tvGuestsInfo.setText(roomDetails != null ? roomDetails.split(", ")[1] + ", " + roomDetails.split(", ")[2] : "Desconocido");
-        //tvGuestsInfo.setText("2 adultos, 1 niño");
-        tvCheckIn.setText("Check-in: " + (checkInDate != null ? checkInDate : "-"));
-        tvCheckOut.setText("Check-out: " + (checkOutDate != null ? checkOutDate : "-"));
-        tvArrivalDay.setText("Día de llegada: " + getDayOfWeek(checkInDate));
-        tvReservationCode.setText("Código de reserva: " + (reservationCode != null ? reservationCode : "-"));
-        tvStatus.setText("Estado: " + (status != null ? status : "Confirmado"));
+            // Configurar datos
+            tvHotelName.setText((hotelName != null ? hotelName : "Hotel Desconocido") +
+                    (hotelciudad != null ? hotelciudad : ""));
+            tvHotelLocation.setText(hotelLocation != null ? hotelLocation : "");
+            tvRoomDetails.setText(roomDetails != null ? roomDetails : "Detalles no disponibles");
 
-        // Fechas de check-in y check-out
-        //String checkInDate = "22/04/2025";
-        //String checkOutDate = "27/04/2025";
-        tvCheckIn.setText("Check-in: " + checkInDate);
-        tvCheckOut.setText("Check-out: " + checkOutDate);
+            // Usar el parámetro guestsInfo si está disponible, o usar una opción alternativa
+            if (guestsInfo != null) {
+                tvGuestsInfo.setText(guestsInfo);
+            } else {
+                // Intentar extraer información de huéspedes de roomDetails como fallback
+                try {
+                    if (roomDetails != null && roomDetails.contains(", ") && roomDetails.split(", ").length >= 3) {
+                        tvGuestsInfo.setText(roomDetails.split(", ")[1] + ", " + roomDetails.split(", ")[2]);
+                    } else {
+                        tvGuestsInfo.setText("Información no disponible");
+                    }
+                } catch (Exception e) {
+                    tvGuestsInfo.setText("Información no disponible");
+                }
+            }
 
-        // Calcular día de llegada
-        tvArrivalDay.setText("Día de llegada: " + getDayOfWeek(checkInDate));
+            tvStatus.setText("Estado: " + (status != null ? status : "Confirmado"));
 
-        /*se debe originar luego de realizar el checkin? o ya debe existir?*/
-        //tvReservationCode.setText("Código de reserva: RES123456");
+            // Fechas de check-in y check-out
+            if (checkInDate != null && !checkInDate.startsWith("Check-in:")) {
+                tvCheckIn.setText("Check-in: " + checkInDate);
+            } else {
+                tvCheckIn.setText(checkInDate != null ? checkInDate : "Check-in: -");
+            }
+
+            if (checkOutDate != null && !checkOutDate.startsWith("Check-out:")) {
+                tvCheckOut.setText("Check-out: " + checkOutDate);
+            } else {
+                tvCheckOut.setText(checkOutDate != null ? checkOutDate : "Check-out: -");
+            }
+
+            // Intentar calcular el día de la semana
+            String dayOfWeek = "Desconocido";
+            try {
+                // Extraer la fecha sin el prefijo "Check-in: " si existe
+                String dateStr = checkInDate;
+                if (dateStr != null && dateStr.startsWith("Check-in: ")) {
+                    dateStr = dateStr.substring("Check-in: ".length());
+                }
+                dayOfWeek = getDayOfWeek(dateStr);
+            } catch (Exception e) {
+                // En caso de error, usar valor por defecto
+            }
+
+            tvArrivalDay.setText("Día de llegada: " + dayOfWeek);
+            tvReservationCode.setText(reservationCode != null ? reservationCode : "Código de reserva: -");
+
+        } catch (Exception e) {
+            // Manejar cualquier excepción
+            Toast.makeText(this, "Error al cargar los datos de la reserva", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
         // Configurar botones
         setupButtons();
@@ -133,11 +167,8 @@ public class DetalleReservaActivo extends AppCompatActivity {
         btnSolicitarTaxi.setOnClickListener(v -> {
             showTaxiConfirmationDialog();
         });
-
-
-
-
     }
+
     private void showTaxiConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Solicitar Taxi");
@@ -152,9 +183,6 @@ public class DetalleReservaActivo extends AppCompatActivity {
 
         builder.show();
     }
-
-
-
 
     private void showCheckInDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -276,6 +304,8 @@ public class DetalleReservaActivo extends AppCompatActivity {
 
     // Método para obtener el día de la semana a partir de una fecha
     private String getDayOfWeek(String dateString) {
+        if (dateString == null) return "Desconocido";
+
         try {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             Date date = format.parse(dateString);
