@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+
 public class SuperDetallesActivity extends AppCompatActivity {
 
     private TextView tvHotelName;
@@ -51,8 +53,7 @@ public class SuperDetallesActivity extends AppCompatActivity {
             double hotelPrice = intent.getDoubleExtra("hotel_price", 0.0);
             String hotelDetailedAddress = intent.getStringExtra("hotel_detailed_address");
             String hotelDescription = intent.getStringExtra("hotel_description");
-            String imageName = intent.getStringExtra("hotel_image_name");
-            int imageResourceId = intent.getIntExtra("hotel_image_resource_id", 0);
+            ArrayList<String> imageUrls = intent.getStringArrayListExtra("hotel_image_urls");
 
             // Mostrar datos del hotel
             tvHotelName.setText(selectedHotelName);
@@ -61,10 +62,12 @@ public class SuperDetallesActivity extends AppCompatActivity {
             tvHotelDetailedAddress.setText(hotelDetailedAddress);
             tvHotelDescription.setText(hotelDescription);
 
-            if (imageResourceId != 0) {
+            if (imageUrls != null && !imageUrls.isEmpty()) {
+                // Mostrar la primera imagen
                 Glide.with(this)
-                        .load(imageResourceId)
+                        .load(imageUrls.get(0))
                         .placeholder(R.drawable.placeholder_hotel)
+                        .error(R.drawable.ic_user_error)
                         .into(imgHotelMain);
             } else {
                 imgHotelMain.setImageResource(R.drawable.placeholder_hotel);

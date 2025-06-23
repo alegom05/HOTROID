@@ -46,12 +46,11 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
         holder.tvHotelLocation.setText(hotel.getDireccion());
         holder.tvHotelRating.setText(String.format(Locale.getDefault(), "%.1f", hotel.getRating()));
         holder.tvHotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", hotel.getPrice()));
-
         holder.ratingBar.setRating(hotel.getRating());
 
-        if (hotel.getImageResourceId() != 0) {
+        if (hotel.getImageUrls() != null && !hotel.getImageUrls().isEmpty()) {
             Glide.with(context)
-                    .load(hotel.getImageResourceId())
+                    .load(hotel.getImageUrls().get(0)) // Carga la primera imagen de la lista
                     .placeholder(R.drawable.placeholder_hotel)
                     .error(R.drawable.ic_user_error)
                     .into(holder.ivHotelImage);
@@ -61,7 +60,6 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, SuperDetallesActivity.class);
-            // Pasamos todos los datos necesarios para SuperDetallesActivity
             intent.putExtra("hotel_id", hotel.getIdHotel());
             intent.putExtra("hotel_name", hotel.getName());
             intent.putExtra("hotel_location", hotel.getDireccion());
@@ -69,8 +67,7 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
             intent.putExtra("hotel_rating", hotel.getRating());
             intent.putExtra("hotel_price", hotel.getPrice());
             intent.putExtra("hotel_description", hotel.getDescription());
-            intent.putExtra("hotel_image_name", hotel.getImageName());
-            intent.putExtra("hotel_image_resource_id", hotel.getImageResourceId());
+            intent.putExtra("hotel_image_urls", new ArrayList<>(hotel.getImageUrls())); // <-- PASA LA LISTA
             context.startActivity(intent);
         });
     }

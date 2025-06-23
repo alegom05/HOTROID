@@ -92,17 +92,7 @@ public class SuperActivity extends AppCompatActivity {
                                     Hotel hotel = document.toObject(Hotel.class);
                                     hotel.setIdHotel(document.getId());
 
-                                    if (hotel.getImageName() != null && !hotel.getImageName().isEmpty()) {
-                                        int resId = getResources().getIdentifier(
-                                                hotel.getImageName().toLowerCase(Locale.getDefault()),
-                                                "drawable",
-                                                getPackageName()
-                                        );
-                                        hotel.setImageResourceId(resId != 0 ? resId : R.drawable.placeholder_hotel);
-                                    } else {
-                                        hotel.setImageResourceId(R.drawable.placeholder_hotel);
-                                    }
-
+                                    // Ya no se necesita cargar imágenes locales desde drawable
                                     fetchedHotels.add(hotel);
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error al procesar documento de hotel " + document.getId() + ": " + e.getMessage(), e);
