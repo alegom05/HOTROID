@@ -151,9 +151,10 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
      * Opens an image chooser intent to select multiple images.
      */
     private void openImageChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*"); // Specify image type
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Allow multiple image selection
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); // <-- cambio importante
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(intent, "Seleccionar Imágenes"), PICK_IMAGE_REQUEST);
     }
 
