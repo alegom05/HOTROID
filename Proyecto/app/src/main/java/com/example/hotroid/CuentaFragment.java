@@ -31,12 +31,7 @@ public class CuentaFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = UserAccountOptionBinding.inflate(inflater, container, false);
 
-        // Tema guardado
-        SharedPreferences prefs = requireContext().getSharedPreferences("ajustes", 0);
-        boolean oscuro = prefs.getBoolean("modo_oscuro", false);
-        AppCompatDelegate.setDefaultNightMode(
-                oscuro ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
-        );
+        // Ya no es necesario configurar el tema aquí, se hace en la Application o MainActivity
 
         return binding.getRoot();
     }
@@ -70,6 +65,7 @@ public class CuentaFragment extends Fragment {
         binding.cerrarSesionButton.setOnClickListener(v -> mostrarDialogoCerrarSesion());
     }
 
+
     private void mostrarDialogoDeTema() {
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.menu_opcion_tema, null);
         RadioButton rbClaro = view.findViewById(R.id.rbClaro);
@@ -77,8 +73,7 @@ public class CuentaFragment extends Fragment {
         Button btnOK = view.findViewById(R.id.btnOK);
         Button btnCancelar = view.findViewById(R.id.btnCancelar);
 
-        SharedPreferences prefs = requireContext().getSharedPreferences("ajustes", 0);
-        boolean esOscuro = prefs.getBoolean("modo_oscuro", false);
+        boolean esOscuro = ThemeManager.isDarkModeEnabled(requireContext());
         rbClaro.setChecked(!esOscuro);
         rbOscuro.setChecked(esOscuro);
 
@@ -90,15 +85,10 @@ public class CuentaFragment extends Fragment {
         btnCancelar.setOnClickListener(v -> dialog.dismiss());
         btnOK.setOnClickListener(v -> {
             boolean modoOscuroSeleccionado = rbOscuro.isChecked();
-            prefs.edit().putBoolean("modo_oscuro", modoOscuroSeleccionado).apply();
-            AppCompatDelegate.setDefaultNightMode(
-                    modoOscuroSeleccionado ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
-            );
+            // Usa el ThemeManager para cambiar el tema
+            ThemeManager.setDarkMode(requireContext(), modoOscuroSeleccionado);
             dialog.dismiss();
-            Log.d("FragmentInfo", "Este fragment pertenece a: " + requireActivity().getClass().getSimpleName());
-            requireActivity().recreate(); // recarga el fragmento desde la actividad
-            Log.d("FragmentInfo", "Este fragment pertenece a: " + requireActivity().getClass().getSimpleName());
-
+            requireActivity().recreate();
         });
 
         dialog.show();

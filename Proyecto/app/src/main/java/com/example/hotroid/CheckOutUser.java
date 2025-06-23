@@ -67,7 +67,7 @@ public class CheckOutUser extends AppCompatActivity {
                     dialog.dismiss();
 
                     // Redirigir a otra actividad (por ejemplo, pantalla de inicio o resumen)
-                    Intent intent = new Intent(CheckOutUser.this, ReservasFragment.class);
+                    Intent intent = new Intent(CheckOutUser.this, MisReservasUser.class);
                     startActivity(intent);
                     finish();
                 }

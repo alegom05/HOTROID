@@ -18,11 +18,36 @@ public class ClienteActivity extends AppCompatActivity {
         binding = ClienteMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Cargar fragmento por defecto
-        loadFragment(new HotelesFragment());
+        // Obtener el fragmento de destino si existe en el intent
+        String fragmentDestino = getIntent().getStringExtra("fragment_destino");
+
+        if (fragmentDestino != null) {
+            // Cargar el fragmento según el parámetro recibido
+            switch (fragmentDestino) {
+                case "hoteles":
+                    loadFragment(new HotelesFragment());
+                    binding.bottomNavigation.setSelectedItemId(R.id.nav_hoteles_user);
+                    break;
+                case "chat":
+                    loadFragment(new ChatFragment());
+                    binding.bottomNavigation.setSelectedItemId(R.id.nav_chat_user);
+                    break;
+                case "cuenta":
+                    loadFragment(new CuentaFragment());
+                    binding.bottomNavigation.setSelectedItemId(R.id.nav_cuenta);
+                    break;
+                default:
+                    loadFragment(new HotelesFragment());
+                    binding.bottomNavigation.setSelectedItemId(R.id.nav_hoteles_user);
+                    break;
+            }
+        } else {
+            // Cargar fragmento por defecto si no hay parámetro
+            loadFragment(new HotelesFragment());
+            binding.bottomNavigation.setSelectedItemId(R.id.nav_hoteles_user);
+        }
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            //Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
             if (itemId == R.id.nav_hoteles_user) {
@@ -32,7 +57,8 @@ public class ClienteActivity extends AppCompatActivity {
                 // Redirigir a otra actividad en lugar de un fragment
                 Intent intent = new Intent(this, MisReservasUser.class);
                 startActivity(intent);
-                return false; // O true, depende si quieres que el botón quede resaltado o no
+                finish(); // Añadido finish() para no acumular activities
+                return true; // Cambié a true para mantener seleccionado
             } else if (itemId == R.id.nav_chat_user) {
                 loadFragment(new ChatFragment());
                 return true;
@@ -40,11 +66,6 @@ public class ClienteActivity extends AppCompatActivity {
                 loadFragment(new CuentaFragment());
                 return true;
             }
-
-//            if (selectedFragment != null) {
-//                loadFragment(selectedFragment);
-//                return true;
-//            }
             return false;
         });
     }

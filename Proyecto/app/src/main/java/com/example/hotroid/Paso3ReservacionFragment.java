@@ -86,12 +86,9 @@ public class Paso3ReservacionFragment extends Fragment {
         mostrarNotificacionReserva();
 
         // Navegar a ReservasFragment (tu lógica original)
-        Fragment reservasFragment = new ReservasFragment();
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, reservasFragment)
-                .commit();
+        Intent intent = new Intent(requireContext(), MisReservasUser.class);
+        startActivity(intent);
+
 
         // Mostrar mensaje de confirmación
         Toast.makeText(requireContext(), "Reserva completada con éxito", Toast.LENGTH_SHORT).show();
