@@ -109,4 +109,5 @@ dependencies {
     // Si persisten problemas, añade también:
     implementation 'com.itextpdf:layout:7.2.5'
     implementation 'com.itextpdf:kernel:7.2.5'
+    implementation 'com.cloudinary:cloudinary-android:2.3.1'
 }

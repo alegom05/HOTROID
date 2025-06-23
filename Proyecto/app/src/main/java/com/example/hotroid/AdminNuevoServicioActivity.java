@@ -16,12 +16,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.example.hotroid.bean.Servicios; // Make sure this bean is updated to use double for precio
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton; // Import MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AdminNuevoServicioActivity extends AppCompatActivity {
     private EditText etNombreServicio, etDescripcion, etPrecio, etHorario; // Added etHorario
@@ -42,6 +50,7 @@ public class AdminNuevoServicioActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        CloudinaryManager.init(getApplicationContext());
 
         // Initialize UI components
         etNombreServicio = findViewById(R.id.etNombreServicio);
@@ -189,36 +198,84 @@ public class AdminNuevoServicioActivity extends AppCompatActivity {
             Toast.makeText(AdminNuevoServicioActivity.this, "El precio debe ser un número válido (ej. 35.50).", Toast.LENGTH_SHORT).show();
             return;
         }
+        subirImagenesACloudinary(nombreServicio, descripcion, precio, horario);
+    }
+    private void subirImagenesACloudinary(String nombre, String descripcion, double precio, String horario) {
+        ArrayList<String> urlsFinales = new ArrayList<>();
 
-        // Create a new Servicios object (assuming your bean is named Servicios and uses double for price)
-        Servicios nuevoServicio = new Servicios(
-                nombreServicio,
-                descripcion,
-                precio, // Pass double price
-                horario, // Pass horario
-                imagenesSeleccionadasUris // Pass list of URI strings
-        );
+        for (String localUri : imagenesSeleccionadasUris) {
+            try {
+                // Convertir URI -> File temporal
+                Uri uri = Uri.parse(localUri);
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+                File tempFile = File.createTempFile("upload_", ".jpg", getCacheDir());
+                OutputStream outputStream = new FileOutputStream(tempFile);
 
-        // Save to Firestore
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+
+                inputStream.close();
+                outputStream.close();
+
+                MediaManager.get().upload(tempFile.getAbsolutePath())
+                        .option("folder", "Servicios") // Asegura que suba a la carpeta "Servicios"
+                        .callback(new UploadCallback() {
+                            @Override
+                            public void onStart(String requestId) {}
+
+                            @Override
+                            public void onProgress(String requestId, long bytes, long totalBytes) {}
+
+                            @Override
+                            public void onSuccess(String requestId, Map resultData) {
+                                String url = (String) resultData.get("secure_url");
+                                urlsFinales.add(url);
+
+                                if (urlsFinales.size() == imagenesSeleccionadasUris.size()) {
+                                    guardarEnFirestore(nombre, descripcion, precio, horario, urlsFinales);
+                                }
+                            }
+
+                            @Override
+                            public void onError(String requestId, ErrorInfo error) {
+                                Toast.makeText(AdminNuevoServicioActivity.this, "Error al subir imagen: " + error.getDescription(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onReschedule(String requestId, ErrorInfo error) {}
+                        }).dispatch();
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Error al preparar imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    private void guardarEnFirestore(String nombre, String descripcion, double precio, String horario, ArrayList<String> urlsFinales) {
+        Servicios nuevoServicio = new Servicios(nombre, descripcion, precio, horario, urlsFinales);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         db.collection("servicios")
                 .add(nuevoServicio)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(AdminNuevoServicioActivity.this, "Servicio guardado con éxito.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Servicio guardado con éxito.", Toast.LENGTH_SHORT).show();
 
-                    // Return result to previous activity (AdminServiciosActivity)
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("nombre", nombreServicio);
+                    resultIntent.putExtra("nombre", nombre);
                     resultIntent.putExtra("descripcion", descripcion);
-                    resultIntent.putExtra("precio", precio); // Pass double price
-                    resultIntent.putExtra("horario", horario); // Pass horario
-                    resultIntent.putStringArrayListExtra("imagenes", imagenesSeleccionadasUris);
+                    resultIntent.putExtra("precio", precio);
+                    resultIntent.putExtra("horario", horario);
+                    resultIntent.putStringArrayListExtra("imagenes", urlsFinales);
 
                     setResult(RESULT_OK, resultIntent);
-                    finish(); // Close this activity
+                    finish();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(AdminNuevoServicioActivity.this, "Error al guardar servicio: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Error al guardar servicio: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 }

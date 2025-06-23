@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton; // Import MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -107,7 +109,23 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
             Toast.makeText(this, "Imágenes limpiadas.", Toast.LENGTH_SHORT).show();
         });
 
-        btnGuardarCambios.setOnClickListener(v -> saveChanges());
+        btnGuardarCambios.setOnClickListener(v -> {
+            // Verificar si hay imágenes nuevas (que no sean ya URLs de Cloudinary)
+            boolean hayImagenNueva = false;
+            for (String uriStr : currentImageUris) {
+                if (!uriStr.startsWith("http")) {
+                    hayImagenNueva = true;
+                    break;
+                }
+            }
+
+            if (hayImagenNueva) {
+                subirImagenesANubeYGuardar();
+            } else {
+                guardarEnFirestore(currentImageUris); // Las imágenes ya son URLs válidas
+            }
+        });
+
 
         // Bottom Navigation (existing logic, no changes)
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -167,45 +185,57 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
         if (uriStrings != null && !uriStrings.isEmpty()) {
             for (String uriStr : uriStrings) {
                 try {
-                    Uri uri = Uri.parse(uriStr);
                     ImageView imageView = new ImageView(this);
-                    imageView.setImageURI(uri);
-                    imageView.setPadding(8, 0, 8, 0); // Add horizontal padding for spacing between images
-                    imageView.setContentDescription("Service Image"); // For accessibility
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 300); // Fixed size for consistency
+                    // Glide carga la imagen correctamente desde URL (Cloudinary)
+                    Glide.with(this)
+                            .load(uriStr)
+                            .into(imageView);
+
+                    imageView.setPadding(8, 0, 8, 0); // Espaciado entre imágenes
+                    imageView.setContentDescription("Service Image");
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 300);
                     imageView.setLayoutParams(params);
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP); // Scale image to fill bounds
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
                     contenedorImagenes.addView(imageView);
                 } catch (Exception e) {
-                    // Log the error or show a toast if a URI string is invalid
                     Toast.makeText(this, "Error al cargar una imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            currentImageUris.clear(); // Clear old images before adding new ones
 
-            if (data.getClipData() != null) { // Multiple images selected
+            if (data.getClipData() != null) { // Selección múltiple
                 int count = data.getClipData().getItemCount();
-                for (int i = 0; i < count; i++) {
+                int espacioDisponible = 4 - currentImageUris.size();
+
+                for (int i = 0; i < count && i < espacioDisponible; i++) {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    // Take persistent URI permissions
                     getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    currentImageUris.add(imageUri.toString()); // Store as String
+                    currentImageUris.add(imageUri.toString());
                 }
-            } else if (data.getData() != null) { // Single image selected
-                Uri imageUri = data.getData();
-                // Take persistent URI permissions
-                getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                currentImageUris.add(imageUri.toString()); // Store as String
+
+                if (count > espacioDisponible) {
+                    Toast.makeText(this, "Solo se pueden agregar hasta 4 imágenes.", Toast.LENGTH_SHORT).show();
+                }
+
+            } else if (data.getData() != null) { // Selección única
+                if (currentImageUris.size() < 4) {
+                    Uri imageUri = data.getData();
+                    getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    currentImageUris.add(imageUri.toString());
+                } else {
+                    Toast.makeText(this, "Máximo 4 imágenes permitidas.", Toast.LENGTH_SHORT).show();
+                }
             }
             displayImages(currentImageUris); // Re-display all images, including newly selected ones
         }
@@ -273,4 +303,79 @@ public class AdminEditarServicioActivity extends AppCompatActivity {
             Toast.makeText(this, "Error: ID de documento de servicio no encontrado.", Toast.LENGTH_SHORT).show();
         }
     }
+    private void subirImagenesANubeYGuardar() {
+        ArrayList<String> nuevasUrls = new ArrayList<>();
+        for (String uriStr : currentImageUris) {
+            if (uriStr.startsWith("http")) {
+                nuevasUrls.add(uriStr); // Ya es URL válida
+            } else {
+                Uri localUri = Uri.parse(uriStr);
+                CloudinaryManager.init(getApplicationContext());
+                MediaManager.get().upload(localUri)
+                        .option("folder", "Servicios")
+                        .callback(new com.cloudinary.android.callback.UploadCallback() {
+                            @Override
+                            public void onStart(String requestId) {}
+                            @Override
+                            public void onProgress(String requestId, long bytes, long totalBytes) {}
+                            @Override
+                            public void onSuccess(String requestId, Map resultData) {
+                                String url = (String) resultData.get("secure_url");
+                                nuevasUrls.add(url);
+                                if (nuevasUrls.size() == currentImageUris.size()) {
+                                    guardarEnFirestore(nuevasUrls);
+                                }
+                            }
+                            @Override
+                            public void onError(String requestId, com.cloudinary.android.callback.ErrorInfo error) {
+                                Toast.makeText(AdminEditarServicioActivity.this, "Error al subir imagen: " + error.getDescription(), Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void onReschedule(String requestId, com.cloudinary.android.callback.ErrorInfo error) {}
+                        })
+                        .dispatch();
+            }
+        }
+    }
+
+    private void guardarEnFirestore(ArrayList<String> urlsFinales) {
+        String nombre = etNombreServicio.getText().toString().trim();
+        String descripcion = etDescripcion.getText().toString().trim();
+        String precioStr = etPrecio.getText().toString().trim();
+        String horario = etHorario.getText().toString().trim();
+
+        double precio;
+        try {
+            precio = Double.parseDouble(precioStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "El precio no es válido.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nombre", nombre);
+        updates.put("descripcion", descripcion);
+        updates.put("precio", precio);
+        updates.put("horario", horario);
+        updates.put("imagenes", urlsFinales);
+        updates.put("habilitado", estadoHabilitado);
+
+        db.collection("servicios").document(documentId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("nombre", nombre);
+                    resultIntent.putExtra("descripcion", descripcion);
+                    resultIntent.putExtra("precio", precio);
+                    resultIntent.putExtra("horario", horario);
+                    resultIntent.putStringArrayListExtra("imagenes", urlsFinales);
+                    resultIntent.putExtra("habilitado", estadoHabilitado);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al guardar cambios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }

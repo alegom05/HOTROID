@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DecimalFormat; // Import for formatting
@@ -64,7 +65,9 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
             for (String uriStr : uriStrings) {
                 Uri uri = Uri.parse(uriStr);
                 ImageView imageView = new ImageView(this);
-                imageView.setImageURI(uri);
+                Glide.with(this)
+                        .load(uriStr)
+                        .into(imageView);
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 300);
                 params.setMargins(8, 8, 8, 8);
@@ -142,7 +145,9 @@ public class AdminServiciosDetallesActivity extends AppCompatActivity {
                 for (String uriStr : nuevasImagenes) {
                     Uri uri = Uri.parse(uriStr);
                     ImageView imageView = new ImageView(this);
-                    imageView.setImageURI(uri);
+                    Glide.with(this)
+                            .load(uriStr)
+                            .into(imageView);
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 300);
                     params.setMargins(8, 8, 8, 8);

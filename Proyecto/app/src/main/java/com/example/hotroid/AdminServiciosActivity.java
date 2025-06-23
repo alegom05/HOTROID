@@ -237,17 +237,8 @@ public class AdminServiciosActivity extends AppCompatActivity {
             }
             // -------------------------------------------------------------------
 
-            Servicios nuevoServicio = new Servicios(nombre, descripcion, precio, horario, uriStrings);
-
-            db.collection("servicios").add(nuevoServicio)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(this, "Servicio registrado en Firestore.", Toast.LENGTH_SHORT).show();
-                        recargarServicios();
-                        showNotification("Servicio creado", "El servicio \"" + nombre + "\" fue registrado con éxito.");
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Error al registrar servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
+            recargarServicios();
+            showNotification("Servicio creado", "El servicio \"" + nombre + "\" fue registrado con éxito.");
         }
     }
 
