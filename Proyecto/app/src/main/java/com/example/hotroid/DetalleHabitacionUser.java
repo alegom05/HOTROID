@@ -9,12 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
@@ -36,13 +32,18 @@ public class DetalleHabitacionUser extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        // Se comenta esta línea para corregir el problema
+        // EdgeToEdge.enable(this);
         setContentView(R.layout.user_detalle_habitacion);
+
+        // Se comenta este bloque que puede estar causando problemas
+        /*
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        */
 
         // Obtener los datos de la habitación desde el Intent
         obtenerDatosHabitacion();
@@ -88,7 +89,7 @@ public class DetalleHabitacionUser extends AppCompatActivity {
     }
 
     private void inicializarVistas() {
-        tvTipoHabitacion = findViewById(R.id.tvTipoHabitacion);
+        tvTipoHabitacion = findViewById(R.id.tvNombreHabitacion); // Corregido para usar la referencia correcta del XML
         tvNumHabitacion = findViewById(R.id.tvNumHabitacion);
         tvArea = findViewById(R.id.tvArea);
         tvCapacidad = findViewById(R.id.tvCapacidad);
@@ -97,7 +98,7 @@ public class DetalleHabitacionUser extends AppCompatActivity {
     }
 
     private void cargarDatosHabitacion() {
-        // Obtener los datos del Intent
+        // Usar las variables de clase en lugar de obtener los datos del Intent nuevamente
         String roomType = getIntent().getStringExtra("ROOM_TYPE");
         String roomNumber = getIntent().getStringExtra("ROOM_NUMBER");
         double area = getIntent().getDoubleExtra("ROOM_AREA", 0);
@@ -106,6 +107,13 @@ public class DetalleHabitacionUser extends AppCompatActivity {
 
         // Mostrar los datos en la UI
         tvTipoHabitacion.setText(roomType);
+
+        // Actualizar también el título de la toolbar
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(roomType);
+        }
+
         tvNumHabitacion.setText("Habitación " + roomNumber);
         tvArea.setText(String.format(Locale.getDefault(), "%.2f m²", area));
 

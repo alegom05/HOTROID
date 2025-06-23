@@ -2,12 +2,14 @@ package com.example.hotroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,18 +60,27 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         // Establecer imagen
         setRoomImage(holder.roomImage, room.getRoomType());
 
-        // Configurar botón "Ver más"
+        // Configurar botón "Ver más" con manejo de errores
         holder.viewMoreButton.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DetalleHabitacionUser.class);
-            intent.putExtra("ROOM_ID", room.getId());
-            intent.putExtra("ROOM_TYPE", room.getRoomType());
-            intent.putExtra("ROOM_NUMBER", room.getRoomNumber());
-            intent.putExtra("ROOM_AREA", room.getArea());
-            intent.putExtra("ROOM_CAPACITY_ADULTS", room.getCapacityAdults());
-            intent.putExtra("ROOM_CAPACITY_CHILDREN", room.getCapacityChildren());
-            intent.putExtra("ROOM_PRICE", room.getPrice());
-            intent.putExtra("HOTEL_ID", room.getHotelId());
-            context.startActivity(intent);
+            try {
+                Intent intent = new Intent(context, DetalleHabitacionUser.class);
+                intent.putExtra("ROOM_ID", room.getId());
+                intent.putExtra("ROOM_TYPE", room.getRoomType());
+                intent.putExtra("ROOM_NUMBER", room.getRoomNumber());
+                intent.putExtra("ROOM_AREA", room.getArea());
+                intent.putExtra("ROOM_CAPACITY_ADULTS", room.getCapacityAdults());
+                intent.putExtra("ROOM_CAPACITY_CHILDREN", room.getCapacityChildren());
+                intent.putExtra("ROOM_PRICE", room.getPrice());
+                intent.putExtra("HOTEL_ID", room.getHotelId());
+
+                // Añadir log para debuguear
+                Log.d("RoomAdapter", "Iniciando DetalleHabitacionUser con roomId: " + room.getId());
+
+                context.startActivity(intent);
+            } catch (Exception e) {
+                Log.e("RoomAdapter", "Error al iniciar DetalleHabitacionUser: " + e.getMessage(), e);
+                Toast.makeText(context, "Error al abrir detalles: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
