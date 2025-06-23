@@ -1,79 +1,43 @@
 package com.example.hotroid;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import android.widget.TextView;
 
+import com.example.hotroid.util.ReservacionTempData;
 import com.google.android.material.button.MaterialButton;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 
-/*
- * A simple {@link Fragment} subclass.
- * Use the {@link Paso2ReservacionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Paso2ReservacionFragment extends Fragment {
-    private SwitchMaterial  switchGimnasio, switchDesayuno, switchPiscina, switchParqueo;
+    private SwitchMaterial switchGimnasio, switchDesayuno, switchPiscina, switchParqueo;
     private TextView tvTotal;
     private MaterialButton btnSiguiente;
-
-    // TODO: Rename and change types of parameters
-    //private String mParam1;
-    //private String mParam2;
+    private double precioBase = 200; // Precio base por habitación
 
     public Paso2ReservacionFragment() {
-        // Required empty public constructor
+        // Constructor vacío requerido
     }
-
-    /*
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Paso2ReservacionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    /*public static Paso2ReservacionFragment newInstance(String param1, String param2) {
-        Paso2ReservacionFragment fragment = new Paso2ReservacionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
-
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }*/
 
     @Override
     @Nullable
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflar el layout para este fragmento
         return inflater.inflate(R.layout.fragment_paso2_reservacion, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Inicializar componentes
         switchGimnasio = view.findViewById(R.id.switchGimnasio);
         switchDesayuno = view.findViewById(R.id.switchDesayuno);
         switchPiscina = view.findViewById(R.id.switchPiscina);
@@ -81,13 +45,21 @@ public class Paso2ReservacionFragment extends Fragment {
         tvTotal = view.findViewById(R.id.tvTotal);
         btnSiguiente = view.findViewById(R.id.btnSiguientePaso2);
 
+        // Calcular el precio base según el número de habitaciones
+        precioBase = 200 * ReservacionTempData.habitaciones;
+
+        // Configurar listeners para los switches
         View.OnClickListener actualizarTotalListener = v -> actualizarTotal();
         switchGimnasio.setOnClickListener(actualizarTotalListener);
         switchDesayuno.setOnClickListener(actualizarTotalListener);
         switchPiscina.setOnClickListener(actualizarTotalListener);
         switchParqueo.setOnClickListener(actualizarTotalListener);
 
+        // Configurar listener para el botón siguiente
         btnSiguiente.setOnClickListener(v -> {
+            guardarDatosAdicionales();
+
+            // Ir al paso 3
             Fragment paso3 = new Paso3ReservacionFragment();
             FragmentTransaction transaction = requireActivity()
                     .getSupportFragmentManager()
@@ -101,13 +73,40 @@ public class Paso2ReservacionFragment extends Fragment {
     }
 
     private void actualizarTotal() {
-        int total = 200; // Precio base
-        if (switchGimnasio.isChecked()) total += 100;
-        if (switchDesayuno.isChecked()) total += 80;
-        if (switchPiscina.isChecked()) total += 100;
-        if (switchParqueo.isChecked()) total += 100;
+        double total = precioBase; // Precio base * número de habitaciones
+        double adicionales = 0;
+
+        // Sumar los servicios adicionales
+        if (switchGimnasio.isChecked()) {
+            total += 100;
+            adicionales += 100;
+        }
+        if (switchDesayuno.isChecked()) {
+            total += 80;
+            adicionales += 80;
+        }
+        if (switchPiscina.isChecked()) {
+            total += 100;
+            adicionales += 100;
+        }
+        if (switchParqueo.isChecked()) {
+            total += 100;
+            adicionales += 100;
+        }
 
         tvTotal.setText("TOTAL\nPEN " + total);
+
+        // Actualizar datos temporales
+        ReservacionTempData.precioBase = precioBase;
+        ReservacionTempData.cobrosAdicionales = adicionales;
+        ReservacionTempData.precioTotal = total;
     }
 
+    private void guardarDatosAdicionales() {
+        // Guardar selección de servicios adicionales
+        ReservacionTempData.gimnasio = switchGimnasio.isChecked();
+        ReservacionTempData.desayuno = switchDesayuno.isChecked();
+        ReservacionTempData.piscina = switchPiscina.isChecked();
+        ReservacionTempData.parqueo = switchParqueo.isChecked();
+    }
 }

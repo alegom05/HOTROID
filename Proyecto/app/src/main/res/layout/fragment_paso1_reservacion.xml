@@ -27,28 +27,16 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:layout_gravity="center_horizontal" />
-            <!--android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"--><!--estilo de texto-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Datos personales"
+                android:text="Datos de reserva"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"
                 android:layout_gravity="center_horizontal"
                 android:alpha="0.7" />
-            <!-- Imagen de perfil con forma de círculo -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:background="@android:color/darker_gray"
-                android:src="@drawable/baseline_account"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                app:strokeWidth="2dp"
-                app:strokeColor="?attr/colorPrimary"/>
 
             <!-- Datos personales con MaterialTextView y estilo mejorado -->
             <com.google.android.material.textfield.TextInputLayout
@@ -60,40 +48,10 @@
                 android:hint="Nombre">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nombreEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Juan Marquinez"
-                    android:enabled="false"
-                    android:textColor="?attr/colorOnSurface" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:startIconDrawable="@drawable/outline_email_24"
-                app:startIconTint="@color/material_dynamic_primary10"
-                android:hint="Correo">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="nmontes@gmail.com"
-                    android:enabled="false"
-                    android:textColor="?attr/colorOnSurface" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:startIconDrawable="@drawable/outline_contact_emergency_24"
-                app:startIconTint="@color/material_dynamic_primary10"
-                android:hint="DNI">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="88888888"
-                    android:enabled="false"
                     android:textColor="?attr/colorOnSurface" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,33 +59,125 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:startIconDrawable="@drawable/baseline_call_24"
+                app:startIconDrawable="@drawable/ic_person"
                 app:startIconTint="@color/material_dynamic_primary10"
-                android:hint="Teléfono">
+                android:hint="Apellidos">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/apellidoEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="999 999 999"
-                    android:enabled="false"
+                    android:text="Díaz Pinto"
                     android:textColor="?attr/colorOnSurface" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+
+            <!-- Sección de fechas -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:startIconDrawable="@drawable/ic_calendar"
-                app:startIconTint="@color/material_dynamic_primary10"
-                android:hint="Nacimiento">
-                <!--app:startIconTint="?attr/colorPrimary"-->
+                android:text="Fechas de la reserva"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha de entrada:"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"/>
+
+            <DatePicker
+                android:id="@+id/fechaInicioPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha de salida:"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"/>
+
+            <DatePicker
+                android:id="@+id/fechaFinPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Sección de huéspedes -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Detalles de la estancia"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="1 de enero del 2000"
-                    android:enabled="false"
-                    android:textColor="?attr/colorOnSurface" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:text="Número de habitaciones:"
+                    android:textStyle="bold"/>
+
+                <NumberPicker
+                    android:id="@+id/habitacionesPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Adultos:"
+                    android:textStyle="bold"/>
+
+                <NumberPicker
+                    android:id="@+id/adultosPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Niños:"
+                    android:textStyle="bold"/>
+
+                <NumberPicker
+                    android:id="@+id/ninosPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"/>
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSiguientePaso1"
@@ -143,74 +193,4 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Proceso de reserva"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_gravity="center_horizontal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Datos personales"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_marginBottom="12dp"
-            android:layout_gravity="center_horizontal" />
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
-            android:src="@drawable/ic_person" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="👤 Nombre\nNicol Montes"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📧 Correo\nnmontes@gmail.com"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🆔 DNI\n88888888"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📞 Teléfono\n999 999 999"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🎂 Nacimiento\n1 de enero del 2000"
-            android:layout_marginBottom="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSiguientePaso1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Siguiente" />
-    </LinearLayout>-->
-
-
 </androidx.cardview.widget.CardView>

@@ -187,7 +187,7 @@ public class AdminCheckout extends AppCompatActivity {
                     randomReserva.getRoomNumber(),
                     clientFullName,
                     randomReserva.getPrecioTotal(),
-                    randomReserva.getCobros_adicionales(),
+                    randomReserva.getCobrosAdicionales(),
                     randomReserva.getFechaInicio(),
                     randomReserva.getFechaFin()
             );

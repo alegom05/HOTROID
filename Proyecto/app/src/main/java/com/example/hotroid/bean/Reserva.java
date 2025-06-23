@@ -1,46 +1,52 @@
 package com.example.hotroid.bean;
 
-import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
 public class Reserva {
-
-    @DocumentId // Esta anotación le dice a Firestore que este campo debe usarse como el ID del documento
     private String idReserva;
     private String idPersona;
-    private String nombresCliente; // Campo desnormalizado
-    private String apellidosCliente; // Campo desnormalizado
+    private String nombresCliente;
+    private String apellidosCliente;
     private String idHotel;
-    private String nombreHotel; // Campo desnormalizado
+    private String nombreHotel;
     private int habitaciones;
     private int adultos;
     private int ninos;
     private Date fechaInicio;
     private Date fechaFin;
-    private String estado;
+    private String estado; // "activo", "pasado", "cancelado"
     private double precioTotal;
     private boolean checkInRealizado;
     private boolean checkOutRealizado;
-    private double cobros_adicionales;
-    private boolean estaCancelado;
+    private double cobrosAdicionales;
+    private boolean cancelada;
     private Date fechaCancelacion;
     private String idValoracion;
     private String roomNumber;
     private boolean tieneValoracion;
 
-    // Constructor vacío requerido por Firestore
+    // Servicios adicionales
+    private boolean gimnasio;
+    private boolean desayuno;
+    private boolean piscina;
+    private boolean parqueo;
+
+    @ServerTimestamp
+    private Date fechaCreacion;
+
+    // Constructor vacío requerido para Firestore
     public Reserva() {
-        // Constructor vacío
     }
 
-    // Constructor completo para cuando creas una nueva reserva en tu código
     public Reserva(String idReserva, String idPersona, String nombresCliente, String apellidosCliente,
                    String idHotel, String nombreHotel, int habitaciones, int adultos, int ninos,
                    Date fechaInicio, Date fechaFin, String estado, double precioTotal,
-                   boolean checkInRealizado, boolean checkOutRealizado, double cobros_adicionales,
-                   boolean estaCancelado, Date fechaCancelacion, String idValoracion,
-                   String roomNumber, boolean tieneValoracion) {
+                   boolean checkInRealizado, boolean checkOutRealizado, double cobrosAdicionales,
+                   boolean cancelada, Date fechaCancelacion, String idValoracion, String roomNumber,
+                   boolean tieneValoracion) {
         this.idReserva = idReserva;
         this.idPersona = idPersona;
         this.nombresCliente = nombresCliente;
@@ -56,16 +62,15 @@ public class Reserva {
         this.precioTotal = precioTotal;
         this.checkInRealizado = checkInRealizado;
         this.checkOutRealizado = checkOutRealizado;
-        this.cobros_adicionales = cobros_adicionales;
-        this.estaCancelado = estaCancelado;
+        this.cobrosAdicionales = cobrosAdicionales;
+        this.cancelada = cancelada;
         this.fechaCancelacion = fechaCancelacion;
         this.idValoracion = idValoracion;
         this.roomNumber = roomNumber;
         this.tieneValoracion = tieneValoracion;
     }
 
-    // --- Getters y Setters ---
-
+    // Getters y setters
     public String getIdReserva() {
         return idReserva;
     }
@@ -186,20 +191,20 @@ public class Reserva {
         this.checkOutRealizado = checkOutRealizado;
     }
 
-    public double getCobros_adicionales() {
-        return cobros_adicionales;
+    public double getCobrosAdicionales() {
+        return cobrosAdicionales;
     }
 
-    public void setCobros_adicionales(double cobros_adicionales) {
-        this.cobros_adicionales = cobros_adicionales;
+    public void setCobrosAdicionales(double cobrosAdicionales) {
+        this.cobrosAdicionales = cobrosAdicionales;
     }
 
-    public boolean isEstaCancelado() {
-        return estaCancelado;
+    public boolean isCancelada() {
+        return cancelada;
     }
 
-    public void setEstaCancelado(boolean estaCancelado) {
-        this.estaCancelado = estaCancelado;
+    public void setCancelada(boolean cancelada) {
+        this.cancelada = cancelada;
     }
 
     public Date getFechaCancelacion() {
@@ -232,5 +237,63 @@ public class Reserva {
 
     public void setTieneValoracion(boolean tieneValoracion) {
         this.tieneValoracion = tieneValoracion;
+    }
+
+    public boolean isGimnasio() {
+        return gimnasio;
+    }
+
+    public void setGimnasio(boolean gimnasio) {
+        this.gimnasio = gimnasio;
+    }
+
+    public boolean isDesayuno() {
+        return desayuno;
+    }
+
+    public void setDesayuno(boolean desayuno) {
+        this.desayuno = desayuno;
+    }
+
+    public boolean isPiscina() {
+        return piscina;
+    }
+
+    public void setPiscina(boolean piscina) {
+        this.piscina = piscina;
+    }
+
+    public boolean isParqueo() {
+        return parqueo;
+    }
+
+    public void setParqueo(boolean parqueo) {
+        this.parqueo = parqueo;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    @Override
+    public String toString() {
+        return "Reserva{" +
+                "idReserva='" + idReserva + '\'' +
+                ", idPersona='" + idPersona + '\'' +
+                ", nombresCliente='" + nombresCliente + '\'' +
+                ", idHotel='" + idHotel + '\'' +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFin=" + fechaFin +
+                ", estado='" + estado + '\'' +
+                '}';
+    }
+
+    @Exclude
+    public String getNombreCompleto() {
+        return nombresCliente + " " + apellidosCliente;
     }
 }

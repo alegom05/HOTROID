@@ -15,9 +15,13 @@ import com.example.hotroid.bean.Hotel;
 import com.example.hotroid.bean.Reserva;
 import com.example.hotroid.bean.ReservaConHotel;
 import com.example.hotroid.repository.ReservaRepository;
+import com.example.hotroid.ReservaService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,8 +34,16 @@ import java.util.UUID;
 
 public class MisReservasUser extends AppCompatActivity {
 
-    // SimpleDateFormat es estático y final porque no cambia y es eficiente
+    private static final String TAG = "MisReservasUser";
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private List<Reserva> listaReservas = new ArrayList<>();
+    private List<Hotel> listaHoteles = new ArrayList<>();
+    private ReservaService reservaService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +51,107 @@ public class MisReservasUser extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.user_mis_reservas);
 
-        ViewPager2 viewPager = findViewById(R.id.viewPager);
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        // Inicializar Firebase
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        reservaService = new ReservaService();
+
+        // Inicializar vistas
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         setupBottomNavigation();
 
-        // Obtener datos estáticos de ejemplo
-        List<Reserva> reservas = obtenerReservas();
-        List<Hotel> hoteles = obtenerHoteles();
+        // Cargar datos
+        cargarHoteles();
+        cargarReservasDesdeFirebase();
 
+        // Ajustar insets para barras del sistema si EdgeToEdge está habilitado
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    private void cargarReservasDesdeFirebase() {
+        // Verificar si el usuario está autenticado
+        if (auth.getCurrentUser() == null) {
+            Log.w(TAG, "Usuario no autenticado");
+            // Usar datos estáticos como fallback
+            mostrarReservasEstaticas();
+            return;
+        }
+
+        // Obtener el ID del usuario actual
+        String userId = auth.getCurrentUser().getUid();
+
+        // Consultar las reservas del usuario en Firestore
+        reservaService.obtenerReservasUsuario(
+                // Callback de éxito
+                reservas -> {
+                    listaReservas = reservas;
+
+                    if (listaReservas.isEmpty()) {
+                        Log.d(TAG, "No se encontraron reservas para el usuario actual");
+                        // Si no hay reservas, usar datos estáticos de ejemplo
+                        mostrarReservasEstaticas();
+                    } else {
+                        Log.d(TAG, "Reservas cargadas desde Firestore: " + listaReservas.size());
+                        mostrarReservasDinamicas();
+                    }
+                },
+                // Callback de error
+                e -> {
+                    Log.e(TAG, "Error al cargar reservas: " + e.getMessage());
+                    // En caso de error, usar datos estáticos
+                    mostrarReservasEstaticas();
+                }
+        );
+    }
+
+    private void cargarHoteles() {
+        // Cargar hoteles desde Firestore o usar datos estáticos
+        // Por simplicidad, usamos los datos estáticos
+        listaHoteles = obtenerHoteles();
+
+        // En una implementación real, podríamos cargar los hoteles desde Firestore:
+        /*
+        db.collection("hoteles")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    listaHoteles.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Hotel hotel = document.toObject(Hotel.class);
+                        listaHoteles.add(hotel);
+                    }
+                    // Si ya tenemos las reservas, mostrarlas
+                    if (!listaReservas.isEmpty()) {
+                        mostrarReservasDinamicas();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al cargar hoteles: " + e.getMessage());
+                    // Usar datos estáticos como fallback
+                    listaHoteles = obtenerHoteles();
+                });
+        */
+    }
+
+    private void mostrarReservasDinamicas() {
         // Usar ReservaRepository para combinar Reservas y Hoteles
         ReservaRepository reservaRepository = new ReservaRepository();
-        List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(reservas, hoteles);
+        List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(
+                listaReservas, listaHoteles);
 
         // Filtrar las reservas por estado
         List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel, "activo");
-        Log.d("MisReservasUser", "Cantidad de reservas activas: " + activos.size());
         List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel, "pasado");
-        Log.d("MisReservasUser", "Cantidad de reservas pasadas: " + pasados.size());
         List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel, "cancelado");
-        Log.d("MisReservasUser", "Cantidad de reservas canceladas: " + cancelados.size());
+
+        Log.d(TAG, "Cantidad de reservas activas: " + activos.size());
+        Log.d(TAG, "Cantidad de reservas pasadas: " + pasados.size());
+        Log.d(TAG, "Cantidad de reservas canceladas: " + cancelados.size());
 
         // Agrupar las listas filtradas para el PagerAdapter
         List<List<ReservaConHotel>> listasParaPagerAdapter = Arrays.asList(activos, pasados, cancelados);
@@ -68,6 +161,39 @@ public class MisReservasUser extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
         // Conectar el TabLayout con el ViewPager2
+        conectarTabsConViewPager();
+    }
+
+    private void mostrarReservasEstaticas() {
+        // Obtener datos estáticos de ejemplo
+        List<Reserva> reservas = obtenerReservas();
+
+        // Usar ReservaRepository para combinar Reservas y Hoteles
+        ReservaRepository reservaRepository = new ReservaRepository();
+        List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(
+                reservas, listaHoteles);
+
+        // Filtrar las reservas por estado
+        List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel, "activo");
+        List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel, "pasado");
+        List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel, "cancelado");
+
+        Log.d(TAG, "Cantidad de reservas activas (estáticas): " + activos.size());
+        Log.d(TAG, "Cantidad de reservas pasadas (estáticas): " + pasados.size());
+        Log.d(TAG, "Cantidad de reservas canceladas (estáticas): " + cancelados.size());
+
+        // Agrupar las listas filtradas para el PagerAdapter
+        List<List<ReservaConHotel>> listasParaPagerAdapter = Arrays.asList(activos, pasados, cancelados);
+
+        // Crear e inicializar el ViewPager con el adaptador
+        ReservasPagerAdapterUser adapter = new ReservasPagerAdapterUser(this, listasParaPagerAdapter);
+        viewPager.setAdapter(adapter);
+
+        // Conectar el TabLayout con el ViewPager2
+        conectarTabsConViewPager();
+    }
+
+    private void conectarTabsConViewPager() {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0: tab.setText("Activos"); break;
@@ -75,13 +201,6 @@ public class MisReservasUser extends AppCompatActivity {
                 case 2: tab.setText("Cancelados"); break;
             }
         }).attach();
-
-        // Ajustar insets para barras del sistema si EdgeToEdge está habilitado
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 
     /**
@@ -230,7 +349,7 @@ public class MisReservasUser extends AppCompatActivity {
             ));
 
         } catch (ParseException e) {
-            Log.e("MisReservasUser", "Error al parsear la fecha en obtenerReservas(): " + e.getMessage());
+            Log.e(TAG, "Error al parsear la fecha en obtenerReservas(): " + e.getMessage());
         }
         return reservas;
     }
@@ -272,5 +391,31 @@ public class MisReservasUser extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    /**
+     * Método para manejar la cancelación de reservas
+     * Este método se llamaría desde el ReservaItemAdapter cuando se presiona el botón Cancelar
+     */
+    public void cancelarReserva(String idReserva) {
+        reservaService.cancelarReserva(
+                idReserva,
+                // Éxito
+                () -> {
+                    // Mostrar mensaje de éxito
+                    android.widget.Toast.makeText(this,
+                            "Reserva cancelada con éxito",
+                            android.widget.Toast.LENGTH_SHORT).show();
+
+                    // Recargar las reservas
+                    cargarReservasDesdeFirebase();
+                },
+                // Error
+                e -> {
+                    android.widget.Toast.makeText(this,
+                            "Error al cancelar la reserva: " + e.getMessage(),
+                            android.widget.Toast.LENGTH_LONG).show();
+                }
+        );
     }
 }

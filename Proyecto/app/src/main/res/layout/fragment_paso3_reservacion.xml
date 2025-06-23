@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="24dp"
-    android:padding="16dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
     app:strokeWidth="1dp"
     app:strokeColor="?attr/colorOutline">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,227 +25,142 @@
                 android:layout_height="wrap_content"
                 android:text="Proceso de reserva"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Datos de pago"
+                android:text="Confirmación"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:layout_gravity="center_horizontal"
                 android:alpha="0.7" />
 
+            <!-- Icono de confirmación -->
             <ImageView
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/credit_card_24"
-                app:tint="@color/black"
-                android:contentDescription="Credit card icon" />
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_check_double"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                app:tint="@color/material_dynamic_primary30"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cardNumberLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <!-- Resumen de la reserva -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="Número de tarjeta"
-                app:startIconDrawable="@drawable/credit_card_24">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cardNumberEditText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="16" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/expiryDateLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:hint="Fecha de vencimiento"
-                    app:startIconDrawable="@drawable/ic_calendar">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/expiryDateEditText"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="date" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Resumen de la reserva"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_marginBottom="16dp"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cvvLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="CVV"
-                    app:startIconDrawable="@drawable/pin_24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cvvEditText"
+                    <TextView
+                        android:id="@+id/tvResumenHotel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberPassword"
-                        android:maxLength="3" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:text="Hotel: Hotel D'Cameron"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_marginBottom="8dp"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cardHolderLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvResumenFechas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Check-in: 24/06/2025\nCheck-out: 26/06/2025"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvResumenHuespedes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Habitaciones: 1\nAdultos: 2\nNiños: 0"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvResumenServicios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Servicios adicionales:\n- Gimnasio\n- Desayuno"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvResumenPrecio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Precio base: PEN 200.00\nAdicionales: PEN 180.00\nTOTAL: PEN 380.00"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Política de cancelación -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Nombre del titular"
-                app:startIconDrawable="@drawable/ic_person">
+                android:text="Política de cancelación:"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textStyle="bold"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cardHolderEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#F5F5F5"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:text="Cancelación gratuita hasta 48 horas antes de tu llegada. Después, se cobrará la primera noche."
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:layout_marginBottom="24dp"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Resumen"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Habitación estándar" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 200" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Servicios adicionales" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 380" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="#DDDDDD" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="TOTAL"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 580"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
+            <!-- Botón de reserva -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReservar"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="16dp"
+                android:text="Confirmar y Reservar"
+                android:paddingVertical="12dp"
+                app:cornerRadius="20dp"
                 android:backgroundTint="#009688"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:text="Reservar"
-                android:textColor="#FFFFFF"
-                app:cornerRadius="24dp" />
+                style="@style/Widget.Material3.Button"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Proceso de reserva - Pago"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nº de tarjeta">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTarjeta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <EditText
-            android:id="@+id/etCVV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingrese CVV"
-            android:inputType="numberPassword" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnReservar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Reservar" />
-    </LinearLayout>-->
 </androidx.cardview.widget.CardView>
