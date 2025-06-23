@@ -90,6 +90,34 @@
                 android:layout_marginTop="12dp"
                 android:textColor="@color/cliente2" />
 
+            <TextView
+                android:id="@+id/tvNumHabitacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habitación 101"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/tvArea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25 m²"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/tvCapacidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 adultos, 1 niño"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/darker_gray" />
+
             <!-- Servicios -->
             <TextView
                 android:layout_width="wrap_content"
