@@ -241,7 +241,6 @@ public class SuperListaAdminActivity extends AppCompatActivity {
 
             // Mensaje para la notificación
             final String notificationMessage = "Administrador de prueba " + admin.getNombres() + " " + admin.getApellidos() + " registrado.";
-            uploadImageAndSaveAdmin(admin, imageData, notificationMessage);
         }
     }
 
@@ -389,36 +388,14 @@ public class SuperListaAdminActivity extends AppCompatActivity {
     private void handleFormResult(Intent data) {
         String action = data.getStringExtra("action");
         if ("registrado".equals(action)) {
-            String adminNombres = data.getStringExtra("admin_nombres");
-            String adminApellidos = data.getStringExtra("admin_apellidos");
-            // CAMBIOS AQUÍ: Obtener tipoDocumento y numeroDocumento del Intent
-            String tipoDocumento = data.getStringExtra("admin_tipo_documento");
-            String numeroDocumento = data.getStringExtra("admin_numero_documento");
-            String estado = data.getStringExtra("admin_estado");
-            String nacimiento = data.getStringExtra("admin_nacimiento");
-            String correo = data.getStringExtra("admin_correo");
-            String telefono = data.getStringExtra("admin_telefono");
-            String direccion = data.getStringExtra("admin_direccion");
-            String hotelAsignado = data.getStringExtra("admin_hotelAsignado");
-            byte[] adminFotoPerfilBytes = data.getByteArrayExtra("admin_fotoPerfilBytes");
+            String nombre = data.getStringExtra("admin_nombres");
+            String apellido = data.getStringExtra("admin_apellidos");
 
-            Admin nuevoAdmin = new Admin(
-                    adminNombres,
-                    adminApellidos,
-                    estado,
-                    tipoDocumento, // Pasar tipoDocumento
-                    numeroDocumento, // Pasar numeroDocumento
-                    nacimiento,
-                    correo,
-                    telefono,
-                    direccion,
-                    hotelAsignado
-            );
-
-            final String finalStatusMessage = "El administrador de hotel " + adminNombres + " " + adminApellidos + " ha sido registrado correctamente.";
-            uploadImageAndSaveAdmin(nuevoAdmin, adminFotoPerfilBytes, finalStatusMessage);
+            showNotification("Administrador Registrado", "Se registró a " + nombre + " " + apellido);
+            loadAdminsFromFirestore();
         }
     }
+
 
     private void handleDetailsResult(Intent data) {
         String action = data.getStringExtra("action");

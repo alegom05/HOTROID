@@ -24,15 +24,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
 
@@ -231,46 +237,60 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
     }
 
     private void registrarAdministrador() {
-        // At this point, fields have been validated by mostrarDialogoConfirmacion()
         String nombre = etNombre.getText().toString().trim();
         String apellido = etApellido.getText().toString().trim();
-        String tipoDocumento = spTipoDocumento.getSelectedItem().toString(); // Obtener el tipo de documento
-        String numeroDocumento = etNumDocumento.getText().toString().trim(); // Obtener el número de documento
+        String tipoDocumento = spTipoDocumento.getSelectedItem().toString();
+        String numeroDocumento = etNumDocumento.getText().toString().trim();
         String fechaNacimiento = etFechaNacimiento.getText().toString().trim();
         String correo = etCorreo.getText().toString().trim();
         String telefono = etTelefono.getText().toString().trim();
         String direccion = etDireccion.getText().toString().trim();
         String hotelAsignado = spHotel.getSelectedItem().toString();
 
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("action", "registrado");
-        resultIntent.putExtra("admin_nombres", nombre);
-        resultIntent.putExtra("admin_apellidos", apellido);
-        resultIntent.putExtra("admin_tipo_documento", tipoDocumento); // <--- CAMBIO CLAVE: Pasar tipoDocumento
-        resultIntent.putExtra("admin_numero_documento", numeroDocumento); // <--- CAMBIO CLAVE: Pasar numeroDocumento
-        resultIntent.putExtra("admin_nacimiento", fechaNacimiento);
-        resultIntent.putExtra("admin_correo", correo);
-        resultIntent.putExtra("admin_telefono", telefono);
-        resultIntent.putExtra("admin_direccion", direccion);
-        resultIntent.putExtra("admin_hotelAsignado", hotelAsignado);
-        resultIntent.putExtra("admin_estado", "true"); // Default to active upon registration
+        CloudinaryManager.init(this); // Asegurar inicialización
 
-        // Get the image from ImageView and convert to byte[]
         if (ivFotoPerfil.getDrawable() != null && ivFotoPerfil.getDrawable() instanceof BitmapDrawable) {
             Bitmap bitmap = ((BitmapDrawable) ivFotoPerfil.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // Compress to 80% quality
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
             byte[] imageData = baos.toByteArray();
-            resultIntent.putExtra("admin_fotoPerfilBytes", imageData);
-        } else {
-            // If no photo selected, send null or an indicator. SuperListaAdminActivity handles null.
-            resultIntent.putExtra("admin_fotoPerfilBytes", (byte[]) null);
-            Log.d(TAG, "No profile photo selected.");
-        }
 
-        setResult(RESULT_OK, resultIntent);
-        finish(); // Close this activity and return to SuperListaAdminActivity
+            MediaManager.get().upload(imageData)
+                    .option("resource_type", "image")
+                    .option("folder", "Administradores")
+                    .callback(new UploadCallback() {
+                        @Override
+                        public void onStart(String requestId) {}
+
+                        @Override
+                        public void onProgress(String requestId, long bytes, long totalBytes) {}
+
+                        @Override
+                        public void onSuccess(String requestId, Map resultData) {
+                            String imageUrl = resultData.get("secure_url").toString();
+                            guardarAdministradorEnFirestore(nombre, apellido, tipoDocumento, numeroDocumento,
+                                    fechaNacimiento, correo, telefono, direccion,
+                                    hotelAsignado, imageUrl);
+                        }
+
+                        @Override
+                        public void onError(String requestId, ErrorInfo error) {
+                            Log.e(TAG, "Error al subir imagen: " + error.getDescription());
+                            Toast.makeText(SuperDetallesAdminFormularioActivity.this, "Error al subir imagen", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onReschedule(String requestId, ErrorInfo error) {}
+                    })
+                    .dispatch();
+        } else {
+            guardarAdministradorEnFirestore(nombre, apellido, tipoDocumento, numeroDocumento,
+                    fechaNacimiento, correo, telefono, direccion,
+                    hotelAsignado, ""); // Sin imagen
+        }
     }
+
+
 
     private boolean validarCampos() {
         boolean isValid = true;
@@ -344,15 +364,45 @@ public class SuperDetallesAdminFormularioActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Optional: Make photo selection mandatory
-        // if (ivFotoPerfil.getDrawable() == null || !(ivFotoPerfil.getDrawable() instanceof BitmapDrawable)) {
-        //     Toast.makeText(this, "Debe seleccionar una foto de perfil.", Toast.LENGTH_SHORT).show();
-        //     isValid = false;
-        // }
 
         if (!isValid) {
             Toast.makeText(this, "Por favor, complete todos los campos obligatorios y válidos.", Toast.LENGTH_LONG).show();
         }
         return isValid;
     }
+    private void guardarAdministradorEnFirestore(String nombre, String apellido, String tipoDocumento, String numeroDocumento,
+                                                 String fechaNacimiento, String correo, String telefono, String direccion,
+                                                 String hotelAsignado, String fotoPerfilUrl) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> admin = new HashMap<>();
+        admin.put("nombres", nombre);
+        admin.put("apellidos", apellido);
+        admin.put("tipoDocumento", tipoDocumento);
+        admin.put("numeroDocumento", numeroDocumento);
+        admin.put("nacimiento", fechaNacimiento);
+        admin.put("correo", correo);
+        admin.put("telefono", telefono);
+        admin.put("direccion", direccion);
+        admin.put("hotelAsignado", hotelAsignado);
+        admin.put("fotoPerfilUrl", fotoPerfilUrl);
+        admin.put("estado", "true");
+
+        db.collection("admins")
+                .add(admin)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Administrador registrado correctamente", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra("action", "registrado");
+                    intent.putExtra("admin_nombres", nombre);
+                    intent.putExtra("admin_apellidos", apellido);
+                    setResult(RESULT_OK, intent); // <-- DEBES incluir el intent aquí
+
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al registrar administrador: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
 }
