@@ -26,6 +26,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class HotelDetalladoUser extends AppCompatActivity {
 
@@ -87,17 +88,32 @@ public class HotelDetalladoUser extends AppCompatActivity {
         });
     }
 
-    private void cargarDatosHotel() {
-        // En una implementación real, estos datos vendrían de la base de datos o de un intent
-        String hotelId = getIntent().getStringExtra("HOTEL_ID");
+    // En el método cargarDatosHotel() dentro de la clase HotelDetalladoUser.java
 
-        // Por ahora, usamos datos estáticos
-        binding.hotelName.setText("Grand Hotel Madrid");
-        binding.hotelRating.setRating(4.5f);
-        binding.ratingText.setText("4.5");
-        binding.hotelLocation.setText("Calle Gran Vía 23, Madrid, España");
-        binding.hotelPrice.setText("S/.145 por noche");
-        binding.hotelDescription.setText("El Grand Hotel Madrid es un impresionante hotel de 5 estrellas ubicado en el corazón de Madrid. Con vistas panorámicas a la ciudad, ofrece habitaciones espaciosas y elegantes, varios restaurantes gourmet, un spa de lujo y una piscina en la azotea. Ideal para viajeros de negocios y turistas que buscan una experiencia excepcional en la capital española.");
+    private void cargarDatosHotel() {
+        // Obtener datos del intent
+        String hotelId = getIntent().getStringExtra("HOTEL_ID");
+        String nombre = getIntent().getStringExtra("nombre");
+        float rating = getIntent().getFloatExtra("rating", 0f);
+        double precio = getIntent().getDoubleExtra("precio", 0.0);
+        String direccion = getIntent().getStringExtra("direccion");
+        String direccionDetallada = getIntent().getStringExtra("direccionDetallada");
+        String descripcion = getIntent().getStringExtra("descripcion");
+        int imagenId = getIntent().getIntExtra("imagen", R.drawable.hotel_decameron); // imagen por defecto
+
+        // Mostrar datos en la UI
+        binding.hotelName.setText(nombre);
+        binding.hotelRating.setRating(rating);
+        binding.ratingText.setText(String.valueOf(rating));
+        binding.hotelLocation.setText(direccionDetallada != null ? direccionDetallada : direccion);
+        binding.hotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f por noche", precio));
+        binding.hotelDescription.setText(descripcion);
+
+        // Si tienes una sola imagen principal, puedes añadirla a la galería
+        if (hotelImages != null && !hotelImages.isEmpty()) {
+            // Si ya hay imágenes cargadas, asegúrate de que la primera sea la imagen principal
+            hotelImages.set(0, imagenId);
+        }
     }
 
     private void configurarGaleriaImagenes() {
