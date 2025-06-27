@@ -63,4 +63,8 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <string name="reservas">Reservas</string>
     <string name="chat">Chat</string>
     <string name="cuenta">Cuenta</string>
+
+    <!--CODIGO DE DEFAULT CLIENT WEB ID -->
+    <string name="default_web_client_id">579625493928-f1sjbm65haj83pdtr0p11rum7re1kons.apps.googleusercontent.com</string>
+
 </resources>

@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -24,68 +26,162 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher_hotroid"
         android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true" android:roundIcon="@mipmap/ic_launcher_hotroid_round"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_hotroid_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hotroid"
         tools:targetApi="31">
+        <activity
+            android:name=".authentication.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="TU_API_KEY_REAL_AQUÍ" />
 
-        <activity android:name=".AdminActivity" android:exported="false" />
-        <activity android:name=".AdminCheckout" android:exported="false" />
-        <activity android:name=".AdminCheckoutCompletado" android:exported="false" />
-        <activity android:name=".AdminCheckoutDetalles" android:exported="false" />
-        <activity android:name=".AdminCuentaActivity" android:exported="false" />
-        <activity android:name=".AdminEditarHabitacionActivity" android:exported="false" />
-        <activity android:name=".AdminEditarServicioActivity" android:exported="false" />
-        <activity android:name=".AdminFotosActivity" android:exported="false" />
-        <activity android:name=".AdminHabitacionDetallesActivity" android:exported="false" />
-        <activity android:name=".AdminHabitacionesActivity" android:exported="false" />
-        <activity android:name=".AdminMontoCobrar" android:exported="false" />
-        <activity android:name=".AdminNuevaHabitacionActivity" android:exported="false" />
-        <activity android:name=".AdminNuevoServicioActivity" android:exported="false" />
-        <activity android:name=".AdminReportes" android:exported="false" />
-        <activity android:name=".AdminServiciosActivity" android:exported="false" />
-        <activity android:name=".AdminServiciosDetallesActivity" android:exported="false" />
-        <activity android:name=".AdminTaxistaDetalles" android:exported="false" />
-        <activity android:name=".AdminTaxistas" android:exported="false" />
-        <activity android:name=".AdminVentasServicio" android:exported="false" />
-        <activity android:name=".AdminVentasUsuario" android:exported="false" />
-        <activity android:name=".ChatDetalladoUser" android:exported="false" />
-        <activity android:name=".ChatUser" android:exported="false" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckout"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckoutCompletado"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCheckoutDetalles"
+            android:exported="false" />
+        <activity
+            android:name=".AdminCuentaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEditarHabitacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEditarServicioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminFotosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHabitacionDetallesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHabitacionesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminMontoCobrar"
+            android:exported="false" />
+        <activity
+            android:name=".AdminNuevaHabitacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminNuevoServicioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminReportes"
+            android:exported="false" />
+        <activity
+            android:name=".AdminServiciosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminServiciosDetallesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminTaxistaDetalles"
+            android:exported="false" />
+        <activity
+            android:name=".AdminTaxistas"
+            android:exported="false" />
+        <activity
+            android:name=".AdminVentasServicio"
+            android:exported="false" />
+        <activity
+            android:name=".AdminVentasUsuario"
+            android:exported="false" />
+        <activity
+            android:name=".ChatDetalladoUser"
+            android:exported="false" />
+        <activity
+            android:name=".ChatUser"
+            android:exported="false" />
         <activity android:name=".CheckOutUser" />
-        <activity android:name=".ClienteActivity" android:theme="@style/Theme.Hotroid.User" />
-        <activity android:name=".ConfirmationActivity" android:exported="false" />
-        <activity android:name=".DetalleHabitacionUser" android:exported="false" />
-        <activity android:name=".DetalleReservaActivo" android:label="Detalle de Reserva" />
-        <activity android:name=".EditAccountUser" android:exported="false" />
-        <activity android:name=".FavoriteHotelsUser" android:exported="false" android:theme="@style/Theme.Hotroid.User" />
-        <activity android:name=".FragmentReservaActivos" android:exported="false" />
-        <activity android:name=".FragmentReservaCancelados" android:exported="false" />
-        <activity android:name=".FragmentReservaPasados" android:exported="false" />
+        <activity
+            android:name=".ClienteActivity"
+            android:theme="@style/Theme.Hotroid.User" />
+        <activity
+            android:name=".ConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetalleHabitacionUser"
+            android:exported="false" />
+        <activity
+            android:name=".DetalleReservaActivo"
+            android:label="Detalle de Reserva" />
+        <activity
+            android:name=".EditAccountUser"
+            android:exported="false" />
+        <activity
+            android:name=".FavoriteHotelsUser"
+            android:exported="false"
+            android:theme="@style/Theme.Hotroid.User" />
+        <activity
+            android:name=".FragmentReservaActivos"
+            android:exported="false" />
+        <activity
+            android:name=".FragmentReservaCancelados"
+            android:exported="false" />
+        <activity
+            android:name=".FragmentReservaPasados"
+            android:exported="false" />
         <activity android:name=".HotelDetalladoUser" />
-        <activity android:name=".HotelesUser" android:exported="false" />
-        <activity android:name=".InfoAccountUser" android:exported="false" android:theme="@style/Theme.Hotroid.User" />
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity
+            android:name=".HotelesUser"
+            android:exported="false" />
+        <activity
+            android:name=".InfoAccountUser"
+            android:exported="false"
+            android:theme="@style/Theme.Hotroid.User" />
+        <!--<activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".MisReservasUser" android:exported="false" />
-        <activity android:name=".NotificacionesUser" android:exported="false" android:theme="@style/Theme.Hotroid.User" />
-        <activity android:name=".OpcionesHabitacionUser"
+        </activity>-->
+        <activity
+            android:name=".MisReservasUser"
+            android:exported="false" />
+        <activity
+            android:name=".NotificacionesUser"
+            android:exported="false"
+            android:theme="@style/Theme.Hotroid.User" />
+        <activity
+            android:name=".OpcionesHabitacionUser"
             android:label="Opciones de Habitación"
             android:parentActivityName=".HotelDetalladoUser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HotelDetalladoUser" />
         </activity>
-        <activity android:name=".ProcesoReservaUser" android:exported="false" />
-        <activity android:name=".ReservaUser" android:exported="false" />
-        <activity android:name=".SecurityPoliticsUser" android:exported="false" android:theme="@style/Theme.Hotroid.User" />
+        <activity
+            android:name=".ProcesoReservaUser"
+            android:exported="false" />
+        <activity
+            android:name=".ReservaUser"
+            android:exported="false" />
+        <activity
+            android:name=".SecurityPoliticsUser"
+            android:exported="false"
+            android:theme="@style/Theme.Hotroid.User" />
         <activity android:name=".SuperActivity" />
         <activity android:name=".SuperCuentaActivity" />
         <activity android:name=".SuperDetallesActivity" />
@@ -95,12 +191,14 @@
         <activity android:name=".SuperDetallesEventosActivity" />
         <activity android:name=".SuperDetallesTaxiActivity" />
         <activity android:name=".SuperEventosActivity" />
-        <activity android:name=".SuperListaAdminActivity"/>
+        <activity android:name=".SuperListaAdminActivity" />
         <activity android:name=".SuperListaClientesActivity" />
         <activity android:name=".SuperListaTaxisActivity" />
         <activity android:name=".SuperReservasActivity" />
         <activity android:name=".SuperUsuariosActivity" />
-        <activity android:name=".TaxiActivity" android:theme="@style/Theme.Hotroid" />
+        <activity
+            android:name=".TaxiActivity"
+            android:theme="@style/Theme.Hotroid" />
         <activity android:name=".TaxiCuenta" />
         <activity android:name=".TaxiDashboardActivity" />
         <activity android:name=".TaxiFin" />
@@ -108,7 +206,9 @@
         <activity android:name=".TaxiUsuario" />
         <activity android:name=".TaxiVehiculo" />
         <activity android:name=".TaxiViaje" />
-        <activity android:name=".UbicacionActivity" android:exported="false" />
+        <activity
+            android:name=".UbicacionActivity"
+            android:exported="false" />
         <activity android:name=".UserDetalleTaxista" />
         <activity android:name=".UserServTaxi" />
 
@@ -121,7 +221,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
