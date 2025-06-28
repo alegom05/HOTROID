@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.example.hotroid.databinding.UserAccountOptionBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CuentaFragment extends Fragment {
 
@@ -61,6 +64,37 @@ public class CuentaFragment extends Fragment {
             startActivity(new Intent(requireContext(), EditAccountUser.class));
         });
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid(); // clave del documento en Firestore
+
+            FirebaseFirestore.getInstance()
+                    .collection("usuarios") // o "persona", según tu colección
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String nombre = documentSnapshot.getString("nombre");
+                            String apellido = documentSnapshot.getString("apellido");
+
+                            // Validar nulos o vacíos
+                            if (nombre == null || nombre.trim().isEmpty()) nombre = "";
+                            if (apellido == null || apellido.trim().isEmpty()) apellido = "";
+
+                            String nombreCompleto = (nombre + " " + apellido).trim();
+                            if (nombreCompleto.isEmpty()) {
+                                binding.nameProfileUser.setText("-");
+                            } else {
+                                binding.nameProfileUser.setText(nombreCompleto);
+                            }
+                        } else {
+                            binding.nameProfileUser.setText("-");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        binding.nameProfileUser.setText("-");
+                    });
+        }
         // Agregar OnClickListener al botón de cerrar sesión
         binding.cerrarSesionButton.setOnClickListener(v -> mostrarDialogoCerrarSesion());
     }
