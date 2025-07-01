@@ -49,7 +49,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="TU_API_KEY_REAL_AQUÍ" />
+            android:value="AIzaSyAZhcFAFHhCeFsgIDJ715dy0Z6mygNyqXA" />
 
         <activity
             android:name=".AdminActivity"
@@ -210,7 +210,7 @@
         <activity android:name=".TaxiCuenta" />
         <activity android:name=".TaxiDashboardActivity" />
         <activity android:name=".TaxiFin" />
-        <activity android:name=".TaxiLocation" />
+        <activity android:name=".TaxiLocation" android:exported="false" />
         <activity android:name=".TaxiUsuario" />
         <activity android:name=".TaxiVehiculo" />
         <activity android:name=".TaxiViaje" />

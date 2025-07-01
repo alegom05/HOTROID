@@ -1,5 +1,4 @@
 package com.example.hotroid;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -7,7 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
-import android.widget.TextView;
+import android.widget.TextView; // This import is not used in the code you provided, you might want to remove it
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +38,7 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient fusedLocationClient;
     private FirebaseFirestore db; // Agregado para la verificación de viaje
 
-    private ListenerRegistration currentTripCheckListener; // NUEVO: Listener para verificar viaje en curso y redirigir
+    private ListenerRegistration currentTripCheckListener; // Listener para verificar viaje en curso y redirigir
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +50,18 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.verdejade));
 
+        // Inicializa el cliente de ubicación.
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // Obtiene el SupportMapFragment y notifica cuando el mapa está listo.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
+        } else {
+            // Manejo de error si el fragmento del mapa no se encuentra
+            Log.e(TAG, "Error: SupportMapFragment no encontrado.");
+            Toast.makeText(this, "Error al cargar el mapa.", Toast.LENGTH_SHORT).show();
         }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -121,31 +126,41 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         Log.d(TAG, "Mapa listo.");
+        // Una vez que el mapa está listo, habilita la ubicación.
         enableMyLocation();
     }
 
     private void enableMyLocation() {
+        // Verifica si los permisos ya han sido concedidos.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
+            // Habilita la capa de "Mi Ubicación" en el mapa.
             mMap.setMyLocationEnabled(true);
             Log.d(TAG, "Mi ubicación habilitada en el mapa.");
 
+            // Obtiene la última ubicación conocida del dispositivo.
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, location -> {
                         if (location != null) {
+                            // Si la ubicación no es nula, crea un objeto LatLng y lo muestra en el mapa.
                             LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
+                            // Agrega un marcador en la ubicación actual.
                             mMap.addMarker(new MarkerOptions().position(miPosicion).title("Mi posición actual"));
+                            // Mueve la cámara del mapa a la ubicación actual con un zoom específico.
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, 15));
                             Log.d(TAG, "Ubicación actual obtenida y marcada: " + miPosicion.latitude + ", " + miPosicion.longitude);
                         } else {
-                            Log.w(TAG, "Ubicación actual es null.");
+                            Log.w(TAG, "Ubicación actual es null. No se pudo obtener la última ubicación conocida.");
+                            Toast.makeText(this, "No se pudo obtener la ubicación actual. Inténtelo de nuevo.", Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Error al obtener la última ubicación: " + e.getMessage());
+                        Toast.makeText(this, "Error al obtener la ubicación: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         } else {
+            // Si los permisos no han sido concedidos, los solicita al usuario.
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -158,6 +173,7 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Si el permiso es concedido, vuelve a intentar habilitar la ubicación.
                 enableMyLocation();
                 Toast.makeText(this, "Permiso de ubicación concedido", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Permiso de ubicación concedido.");
@@ -171,7 +187,8 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (currentTripCheckListener != null) { // Desregistrar el nuevo listener de redirección
+        // Desregistra el listener de Firestore para evitar fugas de memoria.
+        if (currentTripCheckListener != null) {
             currentTripCheckListener.remove();
             Log.d(TAG, "Listener de verificación de viaje actual (TaxiLocation) desregistrado.");
         }
