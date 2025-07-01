@@ -63,6 +63,20 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Ya logueado → Redirige según el rol en Firestore
+            db.collection("usuarios").document(user.getUid()).get()
+                    .addOnSuccessListener(snapshot -> {
+                        if (snapshot.exists()) {
+                            String rol = snapshot.getString("idRol");
+                            redirectToRoleActivity(rol);
+                        } else {
+                            Toast.makeText(this, "Usuario sin datos registrados", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
         setupGoogleSignIn();
 
         // Login con correo y contraseña
@@ -88,25 +102,9 @@ public class LoginActivity extends AppCompatActivity {
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        Log.e("REDIRECCION", "Estoy redirigiendo a un activity por logueo", new Exception());
+
     }
-
-    /*private void loginWithEmail() {
-        String email = binding.etEmail.getText().toString().trim();
-        String password = binding.etPassword.getText().toString().trim();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
-            Log.d("Proceso de Logueo","Debe completar todos los campos de forma obligatoria");
-            return;
-        }
-
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(authResult -> {
-            checkIfUserExists();
-        }).addOnFailureListener(e -> {
-            Log.d("Proceso de Logueo","Se ingreso datos erroneos, verifique correo y/o contrasenia");
-            Toast.makeText(this, "Error al iniciar sesión: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }*/
 
     private void loginWithEmail() {
         String email = binding.etEmail.getText().toString().trim();
@@ -138,24 +136,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /*private void checkIfUserExists() {
-        String uid = mAuth.getCurrentUser().getUid();
-        db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
-            if (snapshot.exists()) {
-                goToMain();
-            } else {
-                mostrarFormularioRegistro(); // Muestra campos como nombre, teléfono, etc.
-            }
-        });
-    }*/
-
-    /*private void mostrarFormularioRegistro() {
-        binding.registrationFields.setVisibility(View.VISIBLE);
-        binding.btnLogin.setText("Registrar");
-        binding.confirmPasswordLayout.setVisibility(View.GONE);
-
-        binding.btnLogin.setOnClickListener(v -> askForAdditionalInfo());
-    }*/
 
     /*private void askForAdditionalInfo() {
         //binding.registrationFields.setVisibility(View.VISIBLE);
@@ -194,59 +174,6 @@ public class LoginActivity extends AppCompatActivity {
         //};
     }*/
 
-    /*private void showDatePicker() {
-        final Calendar calendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    calendar.set(year, month, dayOfMonth);
-                    fechaNacimiento = calendar.getTime();
-                    SimpleDateFormat sdf = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-                    binding.etBirthDate.setText(sdf.format(fechaNacimiento));
-                },
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
-    }*/
-
-    private void goToMain() {
-        String uid = mAuth.getCurrentUser().getUid();
-
-        db.collection("usuarios").document(uid).get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                String rol = documentSnapshot.getString("idRol");
-                Intent intent;
-
-                if (rol == null) {
-                    Toast.makeText(this, "Rol no definido", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                switch (rol) {
-                    case "Cliente": // por si usas un formato de ID como este
-                        intent = new Intent(this, ClienteActivity.class);
-                        break;
-                    case "Taxista":
-                        intent = new Intent(this, TaxiActivity.class);
-                        break;
-                    case "Admin":
-                        intent = new Intent(this, AdminActivity.class);
-                        break;
-                    case "Superadmin":
-                        intent = new Intent(this, SuperActivity.class);
-                        break;
-                    default:
-                        Toast.makeText(this, "Rol desconocido: " + rol, Toast.LENGTH_SHORT).show();
-                        return;
-                }
-
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "Usuario no encontrado en Firestore", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show();
-        });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -257,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
                 mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        checkIfGoogleUserExistsOrRegister();
+                        checkIfGoogleUserExistsOrRegister(account);
                     } else {
                         Toast.makeText(this, "Error con Google Sign-In", Toast.LENGTH_SHORT).show();
                     }
@@ -268,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void checkIfGoogleUserExistsOrRegister() {
+    private void checkIfGoogleUserExistsOrRegister(GoogleSignInAccount account) {
         String uid = mAuth.getCurrentUser().getUid();
         db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
             if (snapshot.exists()) {
@@ -278,7 +205,10 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 // Nuevo usuario Google → Guardar en Firestore como "Cliente"
                 FirebaseUser user = mAuth.getCurrentUser();
-                Persona persona = new Persona(user.getEmail(), user.getDisplayName());
+                String correo = user.getEmail();
+                String nombre = account.getDisplayName();
+
+                Persona persona = new Persona(correo, nombre);
                 persona.setIdRol("Cliente");
                 persona.setNacimiento(new Date()); // puedes dejar en null o solicitar después
 
