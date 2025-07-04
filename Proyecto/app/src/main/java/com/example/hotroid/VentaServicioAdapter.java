@@ -1,8 +1,10 @@
-package com.example.hotroid; // Make sure this package matches your project
+package com.example.hotroid;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,59 +13,100 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hotroid.bean.VentaServicioConsolidado;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class VentaServicioAdapter extends RecyclerView.Adapter<VentaServicioAdapter.VentaServicioViewHolder> {
+public class VentaServicioAdapter extends RecyclerView.Adapter<VentaServicioAdapter.VentaServicioViewHolder> implements Filterable {
 
-    private List<VentaServicioConsolidado> ventasList;
+    private List<VentaServicioConsolidado> listaVentas;
+    private List<VentaServicioConsolidado> listaVentasFull; // Lista completa para el filtrado
 
-    public VentaServicioAdapter(List<VentaServicioConsolidado> ventasList) {
-        this.ventasList = ventasList;
+    public VentaServicioAdapter(List<VentaServicioConsolidado> listaVentas) {
+        this.listaVentas = listaVentas;
+        // Inicializa listaVentasFull con una copia profunda para evitar modificar la original
+        this.listaVentasFull = new ArrayList<>(listaVentas);
     }
 
-    public void updateData(List<VentaServicioConsolidado> newList) {
-        this.ventasList.clear();
-        this.ventasList.addAll(newList);
+    // Método para actualizar la lista completa cuando los datos cambian desde Firestore
+    public void setListaVentas(List<VentaServicioConsolidado> nuevasVentas) {
+        this.listaVentas.clear();
+        this.listaVentas.addAll(nuevasVentas);
+        this.listaVentasFull = new ArrayList<>(nuevasVentas); // Actualiza la lista full también
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public VentaServicioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // *** IMPORTANT: INFLATE THE CORRECT LAYOUT FOR THE TABLE ROW ***
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_venta_servicio, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_venta_servicio_card, parent, false);
         return new VentaServicioViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VentaServicioViewHolder holder, int position) {
-        VentaServicioConsolidado venta = ventasList.get(position);
+        VentaServicioConsolidado venta = listaVentas.get(position);
         holder.bind(venta);
     }
 
     @Override
     public int getItemCount() {
-        return ventasList.size();
+        return listaVentas.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return ventasFilter;
+    }
+
+    private Filter ventasFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<VentaServicioConsolidado> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(listaVentasFull); // Si el filtro está vacío, muestra la lista completa
+            } else {
+                String filterPattern = constraint.toString().toLowerCase(Locale.getDefault()).trim();
+
+                for (VentaServicioConsolidado item : listaVentasFull) {
+                    if (item.getNombreServicio().toLowerCase(Locale.getDefault()).contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            // Asegúrate de que 'results.values' sea casteado correctamente
+            listaVentas.clear();
+            listaVentas.addAll((List<VentaServicioConsolidado>) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
     public static class VentaServicioViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvServiceNombre;
-        private TextView tvCantidadTotal;
-        private TextView tvMontoTotal;
-        private DecimalFormat df = new DecimalFormat("0.00"); // For formatting currency
+        TextView tvNombreServicioCard;
+        TextView tvCantidadCard;
+        TextView tvMontoCard;
 
         public VentaServicioViewHolder(@NonNull View itemView) {
             super(itemView);
-            // *** IMPORTANT: FIND THE CORRECT VIEWS BY THEIR IDS IN item_venta_servicio_row.xml ***
-            tvServiceNombre = itemView.findViewById(R.id.tvServiceNombre);
-            tvCantidadTotal = itemView.findViewById(R.id.tvCantidadTotal);
-            tvMontoTotal = itemView.findViewById(R.id.tvMontoTotal);
+            tvNombreServicioCard = itemView.findViewById(R.id.tvNombreServicioCard);
+            tvCantidadCard = itemView.findViewById(R.id.tvCantidadCard);
+            tvMontoCard = itemView.findViewById(R.id.tvMontoCard);
         }
 
         public void bind(VentaServicioConsolidado venta) {
-            tvServiceNombre.setText(venta.getNombreServicio());
-            tvCantidadTotal.setText(String.valueOf(venta.getCantidadTotal()));
-            tvMontoTotal.setText(df.format(venta.getMontoTotal())); // Format the amount
+            DecimalFormat df = new DecimalFormat("0.00");
+            tvNombreServicioCard.setText(venta.getNombreServicio());
+            tvCantidadCard.setText("Cantidad: " + venta.getCantidadTotal());
+            tvMontoCard.setText("Monto: S/. " + df.format(venta.getMontoTotal()));
         }
     }
 }

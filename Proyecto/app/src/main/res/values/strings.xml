@@ -67,4 +67,16 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <!--CODIGO DE DEFAULT CLIENT WEB ID -->
     <string name="default_web_client_id">579625493928-f1sjbm65haj83pdtr0p11rum7re1kons.apps.googleusercontent.com</string>
 
+    <string name="reportes_title">Reportes</string>
+    <string name="admin_name">Christopher Terrones</string>
+    <string name="admin_role">Administrador de Hotel</string>
+    <string name="profile_picture_description">Foto de perfil del administrador</string>
+    <string name="sales_by_user_title">Venta por Usuarios</string>
+    <string name="current_month_placeholder">Mes Actual</string>
+    <string name="select_month_description">Seleccionar Mes</string>
+    <string name="search_user_hint">Buscar usuario...</string>
+    <string name="clear_button">Limpiar</string>
+    <string name="services_quantity_description">Cantidad de Servicios</string>
+    <string name="total_amount_spent_description">Monto Total Gastado</string>
+    <string name="generate_pdf_button">Generar Reporte PDF</string>
 </resources>

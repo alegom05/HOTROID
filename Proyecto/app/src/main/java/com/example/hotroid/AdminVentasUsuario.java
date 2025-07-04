@@ -5,18 +5,21 @@ import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver; // Importar ContentResolver
-import android.content.ContentValues; // Importar ContentValues
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager; // Importar PackageManager
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore; // Importar MediaStore
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText; // Importar EditText
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +28,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat; // Importar ActivityCompat
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat; // Importar ContextCompat
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -36,10 +39,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotroid.VentaClienteAdapter;
-import com.example.hotroid.bean.Cliente;
-import com.example.hotroid.bean.VentaServicio;
-import com.example.hotroid.bean.VentaClienteConsolidado;
+import com.example.hotroid.VentaClienteAdapter; // Usar VentaClienteAdapter
+import com.example.hotroid.bean.Cliente; // Asegúrate de que esta clase exista y tenga los campos correctos (nombres, apellidos)
+import com.example.hotroid.bean.VentaServicio; // Asegúrate de que esta clase exista y tenga los campos correctos (idCliente, totalVenta)
+import com.example.hotroid.bean.VentaClienteConsolidado; // Asegúrate de que esta clase exista y tenga los métodos correctos (addMonto, getMontoTotal)
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -55,13 +58,15 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.util.List; // Importar java.util.List explícitamente
+import com.itextpdf.text.ListItem; // Importar ListItem de iText
+// No se necesita importar com.itextpdf.text.List con alias, se usará el nombre completo
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream; // Importar OutputStream
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +75,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -79,7 +83,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AdminVentasUsuario extends AppCompatActivity {
 
     private static final String TAG = "AdminVentasUsuario";
-    private static final int STORAGE_PERMISSION_CODE = 1; // Código para solicitar permiso de almacenamiento
+    private static final int STORAGE_PERMISSION_CODE = 1;
 
     private FirebaseFirestore db;
     private CollectionReference ventasServiciosRef;
@@ -90,6 +94,8 @@ public class AdminVentasUsuario extends AppCompatActivity {
     private List<VentaClienteConsolidado> ventasConsolidadas;
     private TextView tvMesSeleccionado;
     private ImageView ivMonthPicker;
+    private EditText etBuscador; // Declaración del EditText para el buscador
+    private Button btnLimpiar; // Declaración del Button para limpiar
 
     private Calendar selectedCalendar;
 
@@ -117,21 +123,42 @@ public class AdminVentasUsuario extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerVentasUsuario);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ventasConsolidadas = new ArrayList<>();
-        adapter = new VentaClienteAdapter(ventasConsolidadas);
+        adapter = new VentaClienteAdapter(ventasConsolidadas); // Usar el nuevo adaptador
         recyclerView.setAdapter(adapter);
 
         tvMesSeleccionado = findViewById(R.id.tvMesSeleccionado);
         ivMonthPicker = findViewById(R.id.ivMonthPicker);
+        etBuscador = findViewById(R.id.etBuscador); // Vinculamos el EditText
+        btnLimpiar = findViewById(R.id.btnLimpiar); // Vinculamos el Button
 
         selectedCalendar = Calendar.getInstance();
         updateMonthDisplay();
 
         ivMonthPicker.setOnClickListener(v -> showMonthYearPicker());
 
+        // Lógica del buscador
+        etBuscador.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+                btnLimpiar.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        btnLimpiar.setOnClickListener(v -> {
+            etBuscador.setText(""); // Limpia el texto del buscador
+            // El TextWatcher se encargará de volver a filtrar y ocultar el botón
+        });
+
+
         // --- INICIO: SOLICITUD DE PERMISO DE ALMACENAMIENTO ---
-        // Se requiere solo para Android 9 (API 28) y versiones anteriores para WRITE_EXTERNAL_STORAGE
-        // Para Android 10 (API 29) y superiores, se usa MediaStore y no requiere este permiso explícito.
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // P es API 28
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
@@ -188,6 +215,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
     }
 
     private void loadFirebaseDataAndThenProceed() {
+        // Carga clientes y servicios en paralelo
         Task<QuerySnapshot> loadClientsTask = clientesRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 allClientIds.clear();
@@ -199,6 +227,8 @@ public class AdminVentasUsuario extends AppCompatActivity {
                     String apellidos = document.getString("apellidos");
                     if (nombres != null && apellidos != null) {
                         clientNamesById.put(clientId, nombres + " " + apellidos);
+                    } else {
+                        clientNamesById.put(clientId, "Cliente ID: " + clientId);
                     }
                 }
                 Log.d(TAG, "Clientes cargados: " + allClientIds.size());
@@ -222,13 +252,14 @@ public class AdminVentasUsuario extends AppCompatActivity {
             }
         });
 
+        // Espera a que ambas tareas de carga de IDs se completen
         Tasks.whenAll(loadClientsTask, loadServicesTask)
                 .addOnCompleteListener(allTasks -> {
                     if (allTasks.isSuccessful()) {
                         Log.d(TAG, "Todos los IDs de Firebase (clientes y servicios) cargados con éxito.");
                         // *** DESCOMENTA LA SIGUIENTE LÍNEA SOLO UNA VEZ PARA AÑADIR DATOS DE PRUEBA ***
-                        // addSampleVentasServicioData();
-                        loadVentasUsuarioData();
+                        // addSampleVentasServicioData(); // Llamar solo para poblar datos de prueba
+                        loadVentasUsuarioData(); // Cargar los datos de ventas una vez que los IDs estén disponibles
                     } else {
                         Log.e(TAG, "Falló la carga de algunos IDs de Firebase. La aplicación podría no funcionar correctamente.", allTasks.getException());
                         Toast.makeText(this, "No se pudieron cargar todos los datos iniciales.", Toast.LENGTH_LONG).show();
@@ -250,12 +281,13 @@ public class AdminVentasUsuario extends AppCompatActivity {
                 (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
                     selectedCalendar.set(Calendar.YEAR, selectedYear);
                     selectedCalendar.set(Calendar.MONTH, selectedMonth);
-                    selectedCalendar.set(Calendar.DAY_OF_MONTH, 1);
+                    selectedCalendar.set(Calendar.DAY_OF_MONTH, 1); // Establecer al primer día del mes
 
                     updateMonthDisplay();
                     loadVentasUsuarioData();
                 }, year, month, 1);
 
+        // Ocultar el selector de día
         if (picker.getDatePicker() != null) {
             int dayId = getResources().getIdentifier("day", "id", "android");
             if (dayId != 0) {
@@ -330,7 +362,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
 
     private void sortAndDisplayVentas() {
         Collections.sort(ventasConsolidadas, (v1, v2) -> Double.compare(v2.getMontoTotal(), v1.getMontoTotal()));
-        adapter.notifyDataSetChanged();
+        adapter.setListaVentasCliente(new ArrayList<>(ventasConsolidadas)); // Usar setListaVentasCliente del adaptador
         Log.d(TAG, "Ventas consolidadas y actualizadas en UI. Cantidad: " + ventasConsolidadas.size());
     }
 
@@ -345,10 +377,10 @@ public class AdminVentasUsuario extends AppCompatActivity {
         Uri pdfUri = null;
 
         try {
-            SimpleDateFormat sdfFileName = new SimpleDateFormat("yyyyMM_MMMM", new Locale("es", "ES"));
+            SimpleDateFormat sdfFileName = new SimpleDateFormat("yyyyMM_MMMM yyyy", new Locale("es", "ES"));
             String fileName = "Reporte_Ventas_Usuarios_" + sdfFileName.format(selectedCalendar.getTime()) + ".pdf";
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 (API 29) y superior
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ContentResolver resolver = getContentResolver();
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
@@ -361,7 +393,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
                 }
                 outputStream = resolver.openOutputStream(pdfUri);
 
-            } else { // Android 9 (API 28) y anteriores
+            } else {
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permiso de almacenamiento denegado. No se puede generar PDF.", Toast.LENGTH_LONG).show();
@@ -394,41 +426,45 @@ public class AdminVentasUsuario extends AppCompatActivity {
 
             Font titleFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
             Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
-            Font headerFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
-            Font cellFont = new Font(Font.FontFamily.HELVETICA, 12);
+            Font itemHeaderFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font itemFont = new Font(Font.FontFamily.HELVETICA, 12);
 
+            // Título principal
             Paragraph title = new Paragraph("Reporte de Venta por Usuarios", titleFont);
             title.setAlignment(Paragraph.ALIGN_CENTER);
             document.add(title);
 
+            // Subtítulo con el mes del reporte
             SimpleDateFormat sdfReportMonth = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
             Paragraph subtitle = new Paragraph("Mes: " + sdfReportMonth.format(selectedCalendar.getTime()), subtitleFont);
             subtitle.setAlignment(Paragraph.ALIGN_CENTER);
             subtitle.setSpacingAfter(20f);
             document.add(subtitle);
 
-            PdfPTable table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.setWidths(new float[]{4f, 2f});
-            table.setSpacingBefore(10f);
-
-            table.addCell(createCenteredCell("Cliente", headerFont));
-            table.addCell(createCenteredCell("Monto Total (S/.)", headerFont));
-
+            // Generar PDF como una lista de ítems (como cards)
             DecimalFormat df = new DecimalFormat("0.00");
 
-            for (VentaClienteConsolidado venta : ventasConsolidadas) {
-                table.addCell(createCenteredCell(venta.getNombreCompletoCliente(), cellFont));
-                table.addCell(createCenteredCell(df.format(venta.getMontoTotal()), cellFont));
-            }
+            // Usamos el nombre completo para evitar conflictos: com.itextpdf.text.List
+            com.itextpdf.text.List pdfList = new com.itextpdf.text.List(false, 15);
 
-            document.add(table);
+            for (VentaClienteConsolidado venta : ventasConsolidadas) {
+                // Cada usuario es un ListItem
+                ListItem userItem = new ListItem();
+                userItem.add(new Paragraph("Cliente: " + venta.getNombreCompletoCliente(), itemHeaderFont));
+                userItem.add(new Paragraph("  Servicios Comprados: " + venta.getCantidadTotalServicios(), itemFont));
+                userItem.add(new Paragraph("  Monto Total Gastado (S/.): " + df.format(venta.getMontoTotal()), itemFont));
+
+                pdfList.add(userItem);
+            }
+            document.add(pdfList);
+
+
             document.close();
-            outputStream.close(); // Cierra el OutputStream
+            outputStream.close();
 
             if (pdfUri != null) {
                 abrirPdf(pdfUri);
-                mostrarNotificacion(pdfUri, fileName); // Pasa el URI y el nombre del archivo
+                mostrarNotificacion(pdfUri, fileName);
                 Toast.makeText(this, "PDF generado con éxito en la carpeta de Descargas.", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "No se pudo obtener la URI del PDF.", Toast.LENGTH_LONG).show();
@@ -447,7 +483,6 @@ public class AdminVentasUsuario extends AppCompatActivity {
         return cell;
     }
 
-    // Modificado para aceptar Uri directamente
     private void abrirPdf(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(uri, "application/pdf");
@@ -461,7 +496,6 @@ public class AdminVentasUsuario extends AppCompatActivity {
         }
     }
 
-    // Modificado para aceptar Uri y fileName directamente
     private void mostrarNotificacion(Uri uri, String fileName) {
         String CHANNEL_ID = "pdf_user_channel";
 
@@ -496,19 +530,15 @@ public class AdminVentasUsuario extends AppCompatActivity {
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // No se puede mostrar la notificación sin este permiso en Android 13+
-            Toast.makeText(this, "Permiso de notificaciones denegado. No se puede mostrar la notificación.", Toast.LENGTH_SHORT).show();
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permiso de notificaciones denegado. No se puede mostrar la notificación.", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         notificationManagerCompat.notify(101, builder.build());
     }
 
-    /**
-     * Añade datos de ventas de servicio de ejemplo a Firestore utilizando IDs
-     * de clientes y servicios existentes y aleatorios de las listas previamente cargadas.
-     * Este método solo debe llamarse una vez para poblar la base de datos de prueba.
-     */
     private void addSampleVentasServicioData() {
         if (allClientIds.isEmpty() || allServiceIds.isEmpty()) {
             Log.e(TAG, "No se pueden añadir ventas de ejemplo: Faltan IDs de clientes o servicios. " +
@@ -538,7 +568,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
             cal.set(Calendar.MINUTE, random.nextInt(60));
             cal.set(Calendar.SECOND, random.nextInt(60));
 
-            sampleVentas.add(new VentaServicio(null, randomServiceId, randomClientId, cantidad, precioUnitario, totalVenta, cal.getTime()));
+            sampleVentas.add(new VentaServicio(randomServiceId, randomClientId, cantidad, precioUnitario, totalVenta, cal.getTime()));
         }
 
         AtomicInteger successCount = new AtomicInteger(0);

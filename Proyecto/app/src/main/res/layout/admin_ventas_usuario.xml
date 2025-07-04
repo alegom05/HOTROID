@@ -7,11 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".AdminVentasUsuario">
 
+    <!-- Sección del Título y Perfil - SIN CAMBIOS -->
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reportes"
+        android:text="@string/reportes_title"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
@@ -47,13 +48,14 @@
                 android:background="@drawable/border_circle"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@string/profile_picture_description"/>
 
             <TextView
                 android:id="@+id/tvNombre"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Christopher Terrones"
+                android:text="@string/admin_name"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -66,7 +68,7 @@
                 android:id="@+id/tvRol"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Administrador de Hotel"
+                android:text="@string/admin_role"
                 android:textStyle="italic"
                 app:layout_constraintTop_toBottomOf="@id/tvNombre"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +79,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Contenido principal: Selector de Mes, Botón PDF, Buscador, y RecyclerView -->
     <androidx.cardview.widget.CardView
         android:id="@+id/seccionesCard"
         android:layout_width="0dp"
@@ -86,7 +89,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
-        android:background="@drawable/border_black"
         app:cardElevation="3dp"
         app:cardCornerRadius="4dp">
 
@@ -100,12 +102,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Venta por Usuarios"
+                android:text="@string/sales_by_user_title"
                 android:textStyle="bold"
                 android:textSize="24sp"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- Controles de Mes y Año -->
             <LinearLayout
+                android:id="@+id/layoutMesSeleccionado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -118,7 +122,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Mes Actual"
+                    android:text="@string/current_month_placeholder"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
@@ -129,62 +133,69 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_calendar"
-                    android:contentDescription="Seleccionar Mes"/>
+                    android:contentDescription="@string/select_month_description"/>
             </LinearLayout>
 
+            <!-- Botón Generar PDF - MOVEMOS AQUÍ -->
+            <Button
+                android:id="@+id/btnGenerarPdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/generate_pdf_button"
+                android:backgroundTint="#D32F2F"
+                android:textColor="@color/white"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center"/>
 
+            <!-- Layout para el buscador y botón Limpiar -->
             <LinearLayout
+                android:id="@+id/layoutBuscador"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="@color/purple_200"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical">
 
-                <TextView
+                <EditText
+                    android:id="@+id/etBuscador"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cliente"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"/>
+                    android:hint="@string/search_user_hint"
+                    android:padding="12dp"
+                    android:background="@drawable/edittext_background"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="8dp"
+                    android:singleLine="true"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:layout_marginEnd="8dp"/>
 
-                <TextView
-                    android:layout_width="0dp"
+                <Button
+                    android:id="@+id/btnLimpiar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Monto (S/.)"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:gravity="center"
-                    android:textColor="@color/white"/>
+                    android:text="@string/clear_button"
+                    android:backgroundTint="#009688"
+                    android:textColor="@color/white"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
             </LinearLayout>
 
+            <!-- RecyclerView para las ventas por usuario -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerVentasUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_venta_cliente"/>
-
-            <Button
-                android:id="@+id/btnGenerarPdf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Generar PDF"
-                android:textColor="#ffffff"
-                android:backgroundTint="#D32F2F"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center"/>
-
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_venta_usuario_card"/> <!-- Usamos item_venta_usuario_card -->
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
+    <!-- Barra de navegación inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"

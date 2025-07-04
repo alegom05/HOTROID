@@ -1,13 +1,13 @@
 package com.example.hotroid.bean;
 
-import com.google.firebase.firestore.DocumentId; // Import for mapping Firestore document ID
+import com.google.firebase.firestore.DocumentId;
 import java.util.Date;
 
 public class VentaServicio {
-    @DocumentId // This annotation maps the Firestore document ID to this field
+    @DocumentId
     private String id; // Represents the Firestore document ID
     private String idServicio;
-    private String idCliente; // Added client ID
+    private String idCliente;
     private int cantidad;
     private double precioUnitario;
     private double totalVenta;
@@ -15,9 +15,8 @@ public class VentaServicio {
 
     public VentaServicio() {} // Required no-argument constructor for Firestore
 
-    // Full constructor including idCliente
-    public VentaServicio(String id, String idServicio, String idCliente, int cantidad, double precioUnitario, double totalVenta, Date fechaVenta) {
-        this.id = id; // Can be null when creating a new object
+    // Constructor completo que coincide con todos los campos de Firestore
+    public VentaServicio(String idServicio, String idCliente, int cantidad, double precioUnitario, double totalVenta, Date fechaVenta) {
         this.idServicio = idServicio;
         this.idCliente = idCliente;
         this.cantidad = cantidad;

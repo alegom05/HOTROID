@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvNombreServicioCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Servicio de Limpieza General"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_quantity"
+                android:contentDescription="Cantidad"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvCantidadCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Cantidad: 5"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_money"
+                android:contentDescription="Monto"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvMontoCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Monto: S/. 250.00"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/verdejade"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
