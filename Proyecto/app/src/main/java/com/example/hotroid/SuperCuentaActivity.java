@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.authentication.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class SuperCuentaActivity extends AppCompatActivity {
 
         // Configurar listeners
         btnCerrarSesion.setOnClickListener(v -> {
-            Intent intent = new Intent(SuperCuentaActivity.this, MainActivity.class);
+            Intent intent = new Intent(SuperCuentaActivity.this, LoginActivity.class);
             startActivity(intent);
         });
 

@@ -63,6 +63,20 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Ya logueado → Redirige según el rol en Firestore
+            db.collection("usuarios").document(user.getUid()).get()
+                    .addOnSuccessListener(snapshot -> {
+                        if (snapshot.exists()) {
+                            String rol = snapshot.getString("idRol");
+                            redirectToRoleActivity(rol);
+                        } else {
+                            Toast.makeText(this, "Usuario sin datos registrados", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
         setupGoogleSignIn();
 
         // Login con correo y contraseña
@@ -88,6 +102,8 @@ public class LoginActivity extends AppCompatActivity {
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        Log.e("REDIRECCION", "Estoy redirigiendo a un activity por logueo", new Exception());
+
     }
 
     /*private void loginWithEmail() {
@@ -137,75 +153,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    /*private void checkIfUserExists() {
-        String uid = mAuth.getCurrentUser().getUid();
-        db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
-            if (snapshot.exists()) {
-                goToMain();
-            } else {
-                mostrarFormularioRegistro(); // Muestra campos como nombre, teléfono, etc.
-            }
-        });
-    }*/
-
-    /*private void mostrarFormularioRegistro() {
-        binding.registrationFields.setVisibility(View.VISIBLE);
-        binding.btnLogin.setText("Registrar");
-        binding.confirmPasswordLayout.setVisibility(View.GONE);
-
-        binding.btnLogin.setOnClickListener(v -> askForAdditionalInfo());
-    }*/
-
-    /*private void askForAdditionalInfo() {
-        //binding.registrationFields.setVisibility(View.VISIBLE);
-        //binding.confirmPasswordLayout.setVisibility(View.GONE); // Ocultar si no aplica
-        //binding.btnLogin.setText("Registrar");
-
-        //binding.btnLogin.setOnClickListener(v -> {
-            String nombre = binding.etFullName.getText().toString().trim();
-            String telefono = binding.etPhone.getText().toString().trim();
-            String dni = binding.etDni.getText().toString().trim(); // campo oculto reutilizado
-            String correo = mAuth.getCurrentUser().getEmail();
-
-
-            if (nombre.isEmpty() || telefono.isEmpty() || dni.isEmpty() || fechaNacimiento == null) {
-                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Persona nuevaPersona = new Persona(correo, nombre);
-            nuevaPersona.setTelefono(telefono);
-            nuevaPersona.setDni(dni);
-            nuevaPersona.setNacimiento(fechaNacimiento);
-            nuevaPersona.setIdRol("Cliente");
-
-            String uid = mAuth.getCurrentUser().getUid();
-            //DocumentReference ref = db.collection("usuarios").document(uid);
-
-            db.collection("usuarios").document(uid)
-                    .set(nuevaPersona)
-                    .addOnSuccessListener(unused -> {
-                        Toast.makeText(this, "Bienvenido " + nombre, Toast.LENGTH_SHORT).show();
-                        goToMain();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Error al registrar usuario", Toast.LENGTH_SHORT).show();
-                    });
-        //};
-    }*/
-
-    /*private void showDatePicker() {
-        final Calendar calendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    calendar.set(year, month, dayOfMonth);
-                    fechaNacimiento = calendar.getTime();
-                    SimpleDateFormat sdf = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-                    binding.etBirthDate.setText(sdf.format(fechaNacimiento));
-                },
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
-    }*/
 
     private void goToMain() {
         String uid = mAuth.getCurrentUser().getUid();
@@ -257,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
                 mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        checkIfGoogleUserExistsOrRegister();
+                        checkIfGoogleUserExistsOrRegister(account);
                     } else {
                         Toast.makeText(this, "Error con Google Sign-In", Toast.LENGTH_SHORT).show();
                     }
@@ -268,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void checkIfGoogleUserExistsOrRegister() {
+    private void checkIfGoogleUserExistsOrRegister(GoogleSignInAccount account) {
         String uid = mAuth.getCurrentUser().getUid();
         db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
             if (snapshot.exists()) {
@@ -278,7 +225,25 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 // Nuevo usuario Google → Guardar en Firestore como "Cliente"
                 FirebaseUser user = mAuth.getCurrentUser();
-                Persona persona = new Persona(user.getEmail(), user.getDisplayName());
+
+                String displayName = account.getDisplayName();
+                String correo = user.getEmail();
+                String nombre = "", apellido = "";
+                if (displayName != null && !displayName.contains("@")) {
+                    String[] partes = displayName.trim().split("\\s+");
+                    nombre = partes[0];
+                    if (partes.length > 1) {
+                        apellido = partes[1];
+                    }
+                } else if (correo != null && correo.contains("@")) {
+                    nombre = correo.substring(0, correo.indexOf("@"));
+                    apellido = "";
+                }
+
+                Persona persona = new Persona();
+                persona.setCorreo(correo);
+                persona.setNombre(nombre);
+                persona.setApellido(apellido);
                 persona.setIdRol("Cliente");
                 persona.setNacimiento(new Date()); // puedes dejar en null o solicitar después
 

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.authentication.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class TaxiCuenta extends AppCompatActivity {
         Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
         btnCerrarSesion.setOnClickListener(v -> {
-            Intent intent = new Intent(TaxiCuenta.this, MainActivity.class);
+            Intent intent = new Intent(TaxiCuenta.this, LoginActivity.class);
             startActivity(intent);
         });
 

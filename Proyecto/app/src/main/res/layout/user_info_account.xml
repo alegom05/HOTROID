@@ -5,304 +5,461 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorOnBackground"
+    android:background="?attr/colorSurface"
     tools:context=".InfoAccountUser">
 
+    <!-- Header con botón de regreso -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FF9800"
+        android:elevation="4dp"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <com.google.android.material.card.MaterialCardView
-        style="@style/CardView.Light.style"
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Información Personal"
+            android:background="@color/cliente1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- ScrollView para contenido desplazable -->
+    <ScrollView
+        android:id="@+id/scrollviewpage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="10dp"
-        app:cardCornerRadius="16dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"><!--invoca al color de estilo de borde en themes-->
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/cardview_default_elevation">
+            android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/user_profile_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="30dp"
-                android:src="@drawable/baseline_account" />
-
+            <!-- Foto de perfil con botón de editar -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/CardView.Light.style"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/user_profile_image">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:gravity="start|center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-                    <!--icono de nombre-->
-                    <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/baseline_account" />
-                    <!--datos de nombre-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/user_profile_image"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_centerInParent="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_account"
+                            app:shapeAppearanceOverlay="@style/CircleImageView"
+                            app:strokeColor="@color/naranjaTransparen"
+                            app:strokeWidth="3dp" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/fab_edit_photo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/user_profile_image"
+                            android:layout_alignBottom="@+id/user_profile_image"
+                            android:layout_marginEnd="-8dp"
+                            android:layout_marginBottom="-8dp"
+                            android:src="@drawable/photo_camera_24px"
+                            app:backgroundTint="@color/naranjaTransparen"
+                            app:fabSize="mini"
+                            app:tint="?attr/colorOnSecondary" />
+
+                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_user_name"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Jean Paul Quispe"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_user_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="jpaul@gmail.com"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+            <!-- Información Personal -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Información Personal"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <!-- Card de Nombre Completo -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:id="@+id/card_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/baseline_account"
+                        app:tint="@color/naranjaTransparen" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nombre Completo"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="15dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_full_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginTop="4dp"
                             android:text="Jean Paul Quispe"
-                            android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="12dp" />
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_edit"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Card de Teléfono -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/CardView.Light.style"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:id="@+id/card_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp">
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp">
 
-                <!--info de telefono-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:gravity="start|center_vertical"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
-                    <!--icono de telefono-->
+                    android:padding="16dp">
+
                     <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/baseline_call_24" />
-                    <!--datos de nombre-->
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/baseline_call_24"
+                        app:tint="@color/naranjaTransparen" />
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Teléfono"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="15dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_phone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginTop="4dp"
                             android:text="999 999 999"
-                            android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="12dp" />
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_edit"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Card de Correo Electrónico -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/CardView.Light.style"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:id="@+id/card_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp">
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp">
 
-                <!--info de telefono-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:gravity="start|center_vertical"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
-                    <!--icono de telefono-->
+                    android:padding="16dp">
+
                     <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/outline_email_24" />
-                    <!--datos de nombre-->
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/outline_email_24"
+                        app:tint="@color/naranjaTransparen" />
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
                             android:text="Correo Electrónico"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="15dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginTop="4dp"
                             android:text="jpaul@gmail.com"
-                            android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="12dp" />
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_edit"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+            <!-- Card de Fecha de Nacimiento -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/CardView.Light.style"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:id="@+id/card_birth_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp">
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp">
 
-                <!--info de nacimiento-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:gravity="start|center_vertical"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
-                    <!--icono de namcimiento-->
+                    android:padding="16dp">
+
                     <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_event" />
-                    <!--datos de nacimiento-->
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_event"
+                        app:tint="@color/naranjaTransparen" />
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Nacimiento"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="15dp"
+                            android:text="Fecha de Nacimiento"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_birth_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="12/07/2000"
-                            android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="12dp" />
+                            android:layout_marginTop="4dp"
+                            android:text="12 de Julio, 2000"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="24 años"
+                            android:textColor="?attr/colorSecondary"
+                            android:textSize="12sp"
+                            android:textStyle="italic" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_edit"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Card de DNI -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/CardView.Light.style"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:id="@+id/card_dni"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp">
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp">
 
-                <!--info de dni-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:gravity="start|center_vertical"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
-                    <!--icono de dni-->
+                    android:padding="16dp">
+
                     <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/outline_contact_emergency_24" />
-                    <!--datos de dni-->
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/outline_contact_emergency_24"
+                        app:tint="@color/naranjaTransparen" />
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
                             android:text="DNI"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="15dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_dni"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginTop="4dp"
                             android:text="45612545"
-                            android:textColor="@color/material_dynamic_neutral_variant40"
-                            android:textSize="12dp" />
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_edit"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Botón de Guardar Cambios -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_changes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="16dp"
+                android:text="Guardar Cambios"
+                android:textSize="16sp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_check_double" />
 
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu_user"
-        app:labelVisibilityMode="labeled">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:layout_constraintTop_toBottomOf="@+id/scrollviewpage"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu_user" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

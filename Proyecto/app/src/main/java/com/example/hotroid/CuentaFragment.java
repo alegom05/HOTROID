@@ -16,7 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
+import com.example.hotroid.authentication.LoginActivity;
 import com.example.hotroid.databinding.UserAccountOptionBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class CuentaFragment extends Fragment {
 
     private UserAccountOptionBinding binding;
+    private GoogleSignInClient googleSignInClient;
 
     public CuentaFragment() {
         // Constructor vacío obligatorio
@@ -95,6 +100,12 @@ public class CuentaFragment extends Fragment {
                         binding.nameProfileUser.setText("-");
                     });
         }
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id)) //
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
         // Agregar OnClickListener al botón de cerrar sesión
         binding.cerrarSesionButton.setOnClickListener(v -> mostrarDialogoCerrarSesion());
     }
@@ -133,17 +144,23 @@ public class CuentaFragment extends Fragment {
                 .setTitle("Cerrar Sesión")
                 .setMessage("¿Estás seguro de que deseas cerrar sesión?")
                 .setPositiveButton("Sí", (dialog, which) -> {
-                    // Limpiar datos de sesión si es necesario
-                    SharedPreferences prefs = requireContext().getSharedPreferences("sesion_usuario", 0);
-                    prefs.edit().clear().apply();
+                    // Cerrar sesión en Firebase
+                    FirebaseAuth.getInstance().signOut();
+                    // Cerrar sesión Google si aplica
+                    googleSignInClient.signOut().addOnCompleteListener(task -> {
+                        // Limpiar preferencias
+                        SharedPreferences prefs = requireContext().getSharedPreferences("sesion_usuario", 0);
+                        prefs.edit().clear().apply();
 
-                    // Crear Intent para ir a MainActivity
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                        // Redirigir a LoginActivity
+                        Intent intent = new Intent(requireContext(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        Log.e("REDIRECCION", "Estoy redirigiendo a un activity", new Exception());
+                        startActivity(intent);
+                        // Finalizar la actividad actual
+                        requireActivity().finish();
+                    });
 
-                    // Finalizar la actividad actual
-                    requireActivity().finish();
                 })
                 .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
                 .setCancelable(true)

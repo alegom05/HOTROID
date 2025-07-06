@@ -30,7 +30,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String TAG = "MAINACTDEBUG";
+    /*public static String TAG = "MAINACTDEBUG";
 
     private ActivityMainBinding binding;
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         contador++;
         Log.d ("contador", "" +  String.valueOf(contador));
         textView.setText(String.valueOf(contador));
-    }*/
+    }****
 
     List<AuthUI.IdpConfig> providers = Arrays.asList(
             new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /**** App Bar - Start ****/
+    /**** App Bar - Start ****
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_act,menu);
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d ("msgOptAppBar", "App Bar onclik");
             View menuItemView = findViewById(R.id.notify);
 
-            /**** Popup Menu - Start ****/
+            /**** Popup Menu - Start ****
             PopupMenu popupMenu =  new PopupMenu(this, menuItemView);
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             popupMenu.show();
-            /**** Popup Menu - End ****/
+            /**** Popup Menu - End ****
 
         }
 
@@ -217,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void notifyBtn(MenuItem menuItem){
         Toast.makeText(this, "btn notify presionado", Toast.LENGTH_SHORT).show();
-    }*/
+    }****
 
-    /**** App Bar - End ****/
+    /**** App Bar - End ****
 
     @Override
     protected void onStart() {
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onresumed");
     }
 
-    /**** Context Menu - Start ****/
+    /**** Context Menu - Start ****
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
         El callback (lo que ejecutará al regreso)
-     */
+     ***
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -276,6 +276,6 @@ public class MainActivity extends AppCompatActivity {
     public void irAAdmin(View view) {
         Intent intent = new Intent(this, AdminActivity.class);
         startActivity(intent);
-    }
+    }****/
 
 }

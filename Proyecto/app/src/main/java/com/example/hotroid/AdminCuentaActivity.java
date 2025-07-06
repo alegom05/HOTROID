@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hotroid.authentication.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AdminCuentaActivity extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class AdminCuentaActivity extends AppCompatActivity {
         Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
         btnCerrarSesion.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminCuentaActivity.this, MainActivity.class);
+            Intent intent = new Intent(AdminCuentaActivity.this, LoginActivity.class);
             startActivity(intent);
         });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
