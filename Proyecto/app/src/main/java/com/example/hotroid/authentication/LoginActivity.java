@@ -34,6 +34,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -226,17 +227,26 @@ public class LoginActivity extends AppCompatActivity {
                 // Nuevo usuario Google → Guardar en Firestore como "Cliente"
                 FirebaseUser user = mAuth.getCurrentUser();
 
-                String displayName = account.getDisplayName();
+                String nombreCompleto = account.getDisplayName();
                 String correo = user.getEmail();
-                String nombre = "", apellido = "";
-                if (displayName != null && !displayName.contains("@")) {
-                    String[] partes = displayName.trim().split("\\s+");
+                String nombre = "";
+                String apellido = "";
+                if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
+                    String[] partes = nombreCompleto.trim().split("\\s+");
                     nombre = partes[0];
-                    if (partes.length > 1) {
+                    if (partes.length == 1) {
+                        nombre = partes[0];
+                        apellido = "";
+                    } else if (partes.length == 2) {
+                        nombre = partes[0];
                         apellido = partes[1];
+                    } else if (partes.length >= 3) {
+                        // Asumiendo el primero como nombre y último(s) como apellido
+                        nombre = partes[0];
+                        apellido = String.join(" ", Arrays.copyOfRange(partes, 1, partes.length));
                     }
-                } else if (correo != null && correo.contains("@")) {
-                    nombre = correo.substring(0, correo.indexOf("@"));
+                } else {
+                    nombre = correo != null ? correo.split("@")[0] : "Usuario";
                     apellido = "";
                 }
 
