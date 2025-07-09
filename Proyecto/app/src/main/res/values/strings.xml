@@ -32,14 +32,14 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
 
     <string-array name="hotel_options">
         <item>Seleccionar Hotel</item>
-        <item>Hotel Oro Verde</item>
-        <item>Hotel Decameron</item>
-        <item>Hotel Libertador</item>
-        <item>Hotel Costa del Sol</item>
-        <item>Hotel Sonesta</item>
-        <item>Sauce Resort</item>
+        <item>Oro Verde</item>
+        <item>Decameron</item>
+        <item>Libertador</item>
+        <item>Costa del Sol</item>
+        <item>Sonesta</item>
+        <item>Resort</item>
         <item>Boca Ratón</item>
-        <item>Aranwa Paracas</item>
+        <item>Aranwa</item>
     </string-array>
 
     <string-array name="estados_taxistas">

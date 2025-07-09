@@ -46,15 +46,8 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
         holder.tvEventoTituloCard.setText(currentEvento.getEvento());
         holder.tvHotelCard.setText("Hotel: " + currentEvento.getHotel());
 
-        // Para la descripción, puedes mostrarla completa o truncarla si es muy larga
-        String descripcion = currentEvento.getDescripcion();
-        if (descripcion != null && descripcion.length() > 100) { // Ejemplo: truncar si es mayor a 100 caracteres
-            descripcion = descripcion.substring(0, 97) + "...";
-        } else if (descripcion == null) {
-            descripcion = ""; // Asegurarse de que no sea null
-        }
-        holder.tvDescripcionCard.setText(descripcion);
-
+        // REMOVED: No more setting of tvDescripcionCard.
+        // The description should be handled in the SuperDetallesEventosActivity.
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -78,7 +71,7 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
         TextView tvFechaCard;
         TextView tvEventoTituloCard;
         TextView tvHotelCard;
-        TextView tvDescripcionCard;
+        // REMOVED: No more tvDescripcionCard declaration here.
 
         public EventoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,7 +79,7 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
             tvFechaCard = itemView.findViewById(R.id.tvFechaCard);
             tvEventoTituloCard = itemView.findViewById(R.id.tvEventoTituloCard);
             tvHotelCard = itemView.findViewById(R.id.tvHotelCard);
-            tvDescripcionCard = itemView.findViewById(R.id.tvDescripcionCard);
+            // REMOVED: No more finding tvDescripcionCard here.
         }
     }
 }
