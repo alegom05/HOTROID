@@ -58,6 +58,11 @@ public class SuperListaClientesActivity extends AppCompatActivity {
     private LinearLayout linearLayoutClientesContainer;
     private EditText etBuscador;
     private Button btnLimpiar;
+    private Button btnFilterActive; // New filter button
+    private Button btnFilterInactive; // New filter button
+
+    // Track the currently selected filter status
+    private String currentFilterStatus = "all"; // "all", "true", or "false"
 
     private static final String CHANNEL_ID = "client_notifications_channel";
     private static final int NOTIFICATION_ID = 2;
@@ -108,10 +113,14 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         linearLayoutClientesContainer = findViewById(R.id.linearLayoutClientesContainer);
         etBuscador = findViewById(R.id.etBuscador);
         btnLimpiar = findViewById(R.id.btnLimpiar);
+        btnFilterActive = findViewById(R.id.btnFilterActive); // Initialize new button
+        btnFilterInactive = findViewById(R.id.btnFilterInactive); // Initialize new button
+
 
         loadClientsFromFirestore();
 
         setupSearchFunctionality();
+        setupFilterFunctionality(); // Setup filter for clients
 
         // Top bar elements from your super_lista_clientes.xml
         TextView tvTitulo = findViewById(R.id.tvTitulo);
@@ -184,8 +193,8 @@ public class SuperListaClientesActivity extends AppCompatActivity {
                                 clientDataList.add(cliente);
                                 Log.d(TAG, "Cliente cargado: " + document.getId() + " => " + document.getData());
                             }
-                            filteredClientList.addAll(clientDataList); // Populate filtered list initially
-                            renderClientList(); // Display the list
+                            // After loading, apply the current filter status and search text
+                            filterClientList(etBuscador.getText().toString(), currentFilterStatus);
                             Log.d(TAG, "Clientes cargados desde Firestore: " + clientDataList.size());
 
                             // --- DESCOMENTAR ESTE BLOQUE LA PRIMERA VEZ PARA AÑADIR CLIENTES DE EJEMPLO ---
@@ -265,7 +274,8 @@ public class SuperListaClientesActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterClientList(s.toString());
+                // When typing in search, apply current status filter (or all if none selected)
+                filterClientList(s.toString(), currentFilterStatus);
             }
 
             @Override
@@ -281,29 +291,79 @@ public class SuperListaClientesActivity extends AppCompatActivity {
         });
     }
 
-    private void filterClientList(String searchText) {
+    private void setupFilterFunctionality() {
+        btnFilterActive.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search when filtering by status
+            if (currentFilterStatus.equals("true")) {
+                currentFilterStatus = "all"; // If already active, toggle to all
+            } else {
+                currentFilterStatus = "true";
+            }
+            updateFilterButtonsUI(); // Update button colors
+            filterClientList("", currentFilterStatus);
+        });
+
+        btnFilterInactive.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search when filtering by status
+            if (currentFilterStatus.equals("false")) {
+                currentFilterStatus = "all"; // If already inactive, toggle to all
+            } else {
+                currentFilterStatus = "false";
+            }
+            updateFilterButtonsUI(); // Update button colors
+            filterClientList("", currentFilterStatus);
+        });
+
+        // Initialize button colors when the activity starts
+        updateFilterButtonsUI();
+    }
+
+    private void updateFilterButtonsUI() {
+        if (currentFilterStatus.equals("true")) {
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_selected_green));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_red));
+        } else if (currentFilterStatus.equals("false")) {
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_green));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_selected_red));
+        } else { // "all"
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_green));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_red));
+        }
+    }
+
+    private void filterClientList(String searchText, String statusFilter) {
         filteredClientList.clear();
 
-        if (searchText.isEmpty()) {
-            filteredClientList.addAll(clientDataList);
-        } else {
-            String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
-            for (Cliente cliente : clientDataList) {
-                // Search by name, surname, numeroDocumento, or email
-                // Concatenamos nombres y apellidos para la búsqueda en un solo bloque
-                String nombreCompleto = (cliente.getNombres() + " " + cliente.getApellidos()).toLowerCase(Locale.getDefault());
+        String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
 
-                if (nombreCompleto.contains(searchLower) ||
+        for (Cliente cliente : clientDataList) {
+            boolean matchesSearch = true;
+            boolean matchesStatus = true;
+
+            // Check search text
+            if (!searchText.isEmpty()) {
+                // Search by name, surname, numeroDocumento, or email
+                String nombreCompleto = (cliente.getNombres() + " " + cliente.getApellidos()).toLowerCase(Locale.getDefault());
+                matchesSearch = nombreCompleto.contains(searchLower) ||
                         cliente.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        cliente.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower)) {
-                    filteredClientList.add(cliente);
-                }
+                        cliente.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower);
+            }
+
+            // Check status filter
+            if (!statusFilter.equals("all")) {
+                matchesStatus = cliente.getEstado().equals(statusFilter);
+            }
+
+            if (matchesSearch && matchesStatus) {
+                filteredClientList.add(cliente);
             }
         }
         renderClientList();
     }
 
     private void resetClientList() {
+        currentFilterStatus = "all"; // Reset status filter to show all
+        updateFilterButtonsUI(); // Update button colors to reflect "all" state
         filteredClientList.clear();
         filteredClientList.addAll(clientDataList);
         renderClientList();

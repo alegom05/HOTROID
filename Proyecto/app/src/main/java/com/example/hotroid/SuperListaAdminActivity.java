@@ -63,6 +63,11 @@ public class SuperListaAdminActivity extends AppCompatActivity {
     private LinearLayout linearLayoutAdminsContainer;
     private EditText etBuscador;
     private Button btnLimpiar;
+    private Button btnFilterActive;
+    private Button btnFilterInactive;
+
+    // Track the currently selected filter status
+    private String currentFilterStatus = "all"; // "all", "true", or "false"
 
     private static final String CHANNEL_ID = "admin_notifications_channel";
     private static final int NOTIFICATION_ID = 1;
@@ -123,10 +128,13 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         linearLayoutAdminsContainer = findViewById(R.id.linearLayoutAdminsContainer);
         etBuscador = findViewById(R.id.etBuscador);
         btnLimpiar = findViewById(R.id.btnLimpiar);
+        btnFilterActive = findViewById(R.id.btnFilterActive);
+        btnFilterInactive = findViewById(R.id.btnFilterInactive);
 
         loadAdminsFromFirestore();
 
         setupSearchFunctionality();
+        setupFilterFunctionality(); // Method for filter buttons
 
         TextView tvTitulo = findViewById(R.id.tvTitulo);
         TextView tvNombre = findViewById(R.id.tvNombre);
@@ -201,8 +209,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                             adminDataList.add(admin);
                             Log.d(TAG, "Admin cargado: " + document.getId() + " => " + document.getData());
                         }
-                        filteredAdminList.addAll(adminDataList);
-                        renderAdminList();
+                        // After loading, apply the current filter status
+                        filterAdminList(etBuscador.getText().toString(), currentFilterStatus);
                         Log.d(TAG, "Admins cargados desde Firestore: " + adminDataList.size());
 
                         // --- ADICIÓN DE ADMINISTRADORES DE PRUEBA ---
@@ -212,9 +220,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                         if (adminDataList.isEmpty()) {
                             addInitialAdminsToFirestore();
                         }
+                        */
                         // ------------------------------------------
-
-                         */
 
                     } else {
                         Log.w(TAG, "Error al obtener documentos: ", task.getException());
@@ -241,6 +248,9 @@ public class SuperListaAdminActivity extends AppCompatActivity {
 
             // Mensaje para la notificación
             final String notificationMessage = "Administrador de prueba " + admin.getNombres() + " " + admin.getApellidos() + " registrado.";
+
+            // Save admin to Firestore (without image upload for now)
+            saveAdminToFirestore(admin, notificationMessage);
         }
     }
 
@@ -254,7 +264,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterAdminList(s.toString());
+                // When typing in search, apply current status filter (or all if none selected)
+                filterAdminList(s.toString(), currentFilterStatus);
             }
 
             @Override
@@ -266,31 +277,84 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         btnLimpiar.setOnClickListener(v -> {
             etBuscador.setText("");
             etBuscador.clearFocus();
-            resetAdminList();
+            resetAdminList(); // Resets both search and status filter
         });
     }
 
-    private void filterAdminList(String searchText) {
+    private void setupFilterFunctionality() {
+        btnFilterActive.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search when filtering by status
+            if (currentFilterStatus.equals("true")) {
+                currentFilterStatus = "all"; // If already active, toggle to all
+            } else {
+                currentFilterStatus = "true";
+            }
+            updateFilterButtonsUI(); // Update button colors
+            filterAdminList("", currentFilterStatus);
+        });
+
+        btnFilterInactive.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search when filtering by status
+            if (currentFilterStatus.equals("false")) {
+                currentFilterStatus = "all"; // If already inactive, toggle to all
+            } else {
+                currentFilterStatus = "false";
+            }
+            updateFilterButtonsUI(); // Update button colors
+            filterAdminList("", currentFilterStatus);
+        });
+
+        // Initialize button colors
+        updateFilterButtonsUI();
+    }
+
+    private void updateFilterButtonsUI() {
+        if (currentFilterStatus.equals("true")) {
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_selected_green));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_red));
+        } else if (currentFilterStatus.equals("false")) {
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_green));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_selected_red));
+        } else { // "all"
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_green));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_red));
+        }
+    }
+
+    private void filterAdminList(String searchText, String statusFilter) {
         filteredAdminList.clear();
 
-        if (searchText.isEmpty()) {
-            filteredAdminList.addAll(adminDataList);
-        } else {
-            String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
-            for (Admin admin : adminDataList) {
-                if ((admin.getNombres() + " " + admin.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
+        String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
+
+        for (Admin admin : adminDataList) {
+            boolean matchesSearch = true;
+            boolean matchesStatus = true;
+
+            // Check search text
+            if (!searchText.isEmpty()) {
+                matchesSearch = (admin.getNombres() + " " + admin.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
                         admin.getHotelAsignado().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        admin.getTipoDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) || // Buscar por tipo de documento
-                        admin.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) || // Buscar por número de documento
-                        admin.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower)) {
-                    filteredAdminList.add(admin);
-                }
+                        admin.getTipoDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) ||
+                        admin.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) ||
+                        admin.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower);
+            }
+
+            // Check status filter
+            if (!statusFilter.equals("all")) {
+                matchesStatus = admin.getEstado().equals(statusFilter);
+            }
+
+            if (matchesSearch && matchesStatus) {
+                filteredAdminList.add(admin);
             }
         }
         renderAdminList();
     }
 
+
     private void resetAdminList() {
+        currentFilterStatus = "all"; // Reset status filter
+        updateFilterButtonsUI(); // Update button colors
         filteredAdminList.clear();
         filteredAdminList.addAll(adminDataList);
         renderAdminList();
@@ -404,11 +468,6 @@ public class SuperListaAdminActivity extends AppCompatActivity {
         String adminApellidos = data.getStringExtra("admin_apellidos");
         String nuevoHotelAsignado = data.getStringExtra("nuevo_hotel_asignado");
 
-        // Aquí también podrías recibir tipoDocumento y numeroDocumento si la vista de detalles los modifica,
-        // pero por ahora solo se usará para mostrar, no para modificar desde esta actividad de lista.
-        // String tipoDocumento = data.getStringExtra("admin_tipo_documento");
-        // String numeroDocumento = data.getStringExtra("admin_numero_documento");
-
         final String[] statusMessage = {""};
 
         Admin adminToUpdate = null;
@@ -439,10 +498,6 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                 case "actualizado":
                     Log.d(TAG, "Admin updated from details screen. Reloading data.");
                     statusMessage[0] = "El administrador " + adminNombres + " " + adminApellidos + " ha sido actualizado.";
-                    // Si la vista de detalles permite la edición de tipoDocumento y numeroDocumento,
-                    // deberías incluirlos en el Intent de regreso y actualizar `updates` aquí.
-                    // updates.put("tipoDocumento", tipoDocumento);
-                    // updates.put("numeroDocumento", numeroDocumento);
                     break;
             }
 
@@ -461,8 +516,6 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                             showNotification("Error de Actualización", "Falló la actualización del administrador " + adminNombres + " " + adminApellidos + ".");
                         });
             } else if ("actualizado".equals(action)) {
-                // This block is for general updates where the entire admin object might have changed in the details form.
-                // We just rely on a reload and show a general notification/toast.
                 Toast.makeText(SuperListaAdminActivity.this, statusMessage[0], Toast.LENGTH_SHORT).show();
                 showNotification("Actualización de Administrador", statusMessage[0]);
                 loadAdminsFromFirestore();
@@ -472,41 +525,6 @@ public class SuperListaAdminActivity extends AppCompatActivity {
             statusMessage[0] = "Error al actualizar administrador: Administrador no encontrado.";
             Toast.makeText(this, statusMessage[0], Toast.LENGTH_SHORT).show();
             showNotification("Error de Actualización", statusMessage[0]);
-        }
-    }
-
-
-    private void uploadImageAndSaveAdmin(Admin admin, @Nullable byte[] imageData, final String notificationMessage) {
-        if (imageData != null && imageData.length > 0) {
-            // CAMBIO AQUÍ: Usar numeroDocumento en el nombre del archivo si quieres que sea más descriptivo
-            String fileName = "admin_photos/" + admin.getNumeroDocumento() + "_" + System.currentTimeMillis() + ".jpg";
-            StorageReference imageRef = storage.getReference().child(fileName);
-
-            UploadTask uploadTask = imageRef.putBytes(imageData);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    String imageUrl = uri.toString();
-                    admin.setFotoPerfilUrl(imageUrl);
-                    saveAdminToFirestore(admin, notificationMessage);
-                    Log.d(TAG, "Imagen subida a Storage. URL: " + imageUrl);
-                }).addOnFailureListener(e -> {
-                    Log.w(TAG, "Error al obtener la URL de descarga de la imagen", e);
-                    Toast.makeText(this, "Error al obtener URL de imagen. Guardando admin sin foto.", Toast.LENGTH_SHORT).show();
-                    showNotification("Error de Imagen", "No se pudo obtener la URL de la imagen de perfil.");
-                    admin.setFotoPerfilUrl("");
-                    saveAdminToFirestore(admin, notificationMessage);
-                });
-            }).addOnFailureListener(e -> {
-                Log.w(TAG, "Error al subir la imagen a Storage", e);
-                Toast.makeText(this, "Error al subir la imagen. Guardando admin sin foto.", Toast.LENGTH_SHORT).show();
-                showNotification("Error de Imagen", "No se pudo subir la imagen de perfil.");
-                admin.setFotoPerfilUrl("");
-                saveAdminToFirestore(admin, notificationMessage);
-            });
-        } else {
-            Log.d(TAG, "No hay imagen para subir o la imagen es nula/vacía. Guardando admin sin foto.");
-            admin.setFotoPerfilUrl("");
-            saveAdminToFirestore(admin, notificationMessage);
         }
     }
 
@@ -521,27 +539,8 @@ public class SuperListaAdminActivity extends AppCompatActivity {
                     loadAdminsFromFirestore();
                 })
                 .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error al guardar admin en Firestore", e);
                     Toast.makeText(this, "Error al guardar admin en la base de datos.", Toast.LENGTH_SHORT).show();
                     showNotification("Error de Registro", "Falló el registro del administrador.");
                 });
-    }
-
-    private void updateAdminInFirestore(Admin admin) {
-        if (admin.getFirestoreId() != null && !admin.getFirestoreId().isEmpty()) {
-            db.collection("admins").document(admin.getFirestoreId())
-                    .set(admin)
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "Admin actualizado en Firestore: " + admin.getNombres() + " " + admin.getApellidos());
-                        loadAdminsFromFirestore();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w(TAG, "Error al actualizar admin en Firestore", e);
-                        Toast.makeText(SuperListaAdminActivity.this, "Error al actualizar admin.", Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            Log.w(TAG, "No se puede actualizar Admin sin un ID de Firestore (firestoreId nulo o vacío).");
-            Toast.makeText(this, "Error: Admin no tiene ID para actualizar.", Toast.LENGTH_SHORT).show();
-        }
     }
 }

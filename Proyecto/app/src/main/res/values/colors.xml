@@ -30,4 +30,6 @@
     <color name="green_status">#4CAF50</color>
     <color name="gray">#888888</color>
 
+    <color name="button_selected_green">#388E3C</color> <color name="button_unselected_green">#8BC34A</color> <color name="button_selected_red">#D32F2F</color> <color name="button_unselected_red">#FF5252</color> <color name="button_default_tint">#009688</color>
+
 </resources>

@@ -119,7 +119,22 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
 
-                    <!-- BUSCADOR AGREGADO AQUÍ -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end"
+                        android:layout_marginBottom="16dp">
+
+                        <Button
+                            android:id="@+id/button_regist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Registrar"
+                            android:backgroundTint="#009688"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -132,7 +147,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="Buscar administrador..."
+                            android:hint="Buscar administrador"
                             android:padding="12dp"
                             android:background="@drawable/edittext_background"
                             android:drawableStart="@drawable/ic_search"
@@ -150,7 +165,32 @@
                             android:paddingEnd="16dp"/>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="16dp">
 
+                        <Button
+                            android:id="@+id/btnFilterActive"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Activado"
+                            android:backgroundTint="#4CAF50"
+                            android:textColor="@android:color/white"
+                            android:layout_marginEnd="8dp"/>
+
+                        <Button
+                            android:id="@+id/btnFilterInactive"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Desactivado"
+                            android:backgroundTint="#F44336"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/linearLayoutAdminsContainer"
@@ -159,24 +199,6 @@
                         android:orientation="vertical"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="80dp">
-
-                <Button
-                    android:id="@+id/button_regist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Registrar"
-                    android:backgroundTint="#009688"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
