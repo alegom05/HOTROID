@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,13 +8,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -24,6 +27,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,12 +38,20 @@ public class SuperReservasActivity extends AppCompatActivity {
     private LinearLayout llReservasContainer;
     private EditText etSearchUser;
     private Button btnLimpiar;
+    private Spinner spinnerAdults, spinnerChildren, spinnerRooms;
+    private Button btnPickStartDate, btnPickEndDate;
 
     private List<Reserva> allReservas; // Todas las reservas del hotel
     private List<Reserva> filteredReservas; // Reservas filtradas por búsqueda
     private FirebaseFirestore db;
     private String selectedHotelId;
     private String selectedHotelName;
+
+    private Date selectedStartDate;
+    private Date selectedEndDate;
+    private int selectedAdults = 0; // 0 for "Any"
+    private int selectedChildren = 0; // 0 for "Any"
+    private int selectedRooms = 0; // 0 for "Any"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +79,18 @@ public class SuperReservasActivity extends AppCompatActivity {
         llReservasContainer = findViewById(R.id.llReservasContainer);
         etSearchUser = findViewById(R.id.etSearchUser);
         btnLimpiar = findViewById(R.id.btnClearSearch);
+        spinnerAdults = findViewById(R.id.spinnerAdults);
+        spinnerChildren = findViewById(R.id.spinnerChildren);
+        spinnerRooms = findViewById(R.id.spinnerRooms);
+        btnPickStartDate = findViewById(R.id.btnPickStartDate);
+        btnPickEndDate = findViewById(R.id.btnPickEndDate);
 
         tvHotelNombre.setText("Reservas para " + selectedHotelName);
 
+        // Configurar Spinners
+        setupSpinners();
+        // Configurar Date Pickers
+        setupDatePickers();
         // Configurar buscador
         setupSearch();
 
@@ -92,8 +114,8 @@ public class SuperReservasActivity extends AppCompatActivity {
                             reserva.setIdReserva(document.getId());
                             allReservas.add(reserva);
                         }
-                        filteredReservas = new ArrayList<>(allReservas);
-                        displayReservas(filteredReservas);
+                        // Apply filters after loading all reservations
+                        applyAllFilters();
                     } else {
                         Log.e("SuperReservas", "Error al cargar reservas", task.getException());
                         Toast.makeText(this, "Error al cargar reservas", Toast.LENGTH_SHORT).show();
@@ -108,7 +130,7 @@ public class SuperReservasActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterReservas(s.toString());
+                applyAllFilters();
             }
 
             @Override
@@ -117,34 +139,162 @@ public class SuperReservasActivity extends AppCompatActivity {
 
         btnLimpiar.setOnClickListener(v -> {
             etSearchUser.setText("");
-            filterReservas("");
+            spinnerAdults.setSelection(0);
+            spinnerChildren.setSelection(0);
+            spinnerRooms.setSelection(0);
+            selectedStartDate = null;
+            selectedEndDate = null;
+            btnPickStartDate.setText("Fecha Inicio");
+            btnPickEndDate.setText("Fecha Fin");
+            applyAllFilters();
         });
     }
 
-    private void filterReservas(String searchText) {
-        filteredReservas.clear();
+    private void setupSpinners() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.number_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        if (searchText.isEmpty()) {
-            filteredReservas.addAll(allReservas);
-        } else {
-            String searchLower = searchText.toLowerCase(Locale.getDefault());
-            for (Reserva reserva : allReservas) {
-                if (reserva.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        reserva.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        reserva.getRoomNumber().toLowerCase(Locale.getDefault()).contains(searchLower)) {
-                    filteredReservas.add(reserva);
-                }
+        spinnerAdults.setAdapter(adapter);
+        spinnerChildren.setAdapter(adapter);
+        spinnerRooms.setAdapter(adapter);
+
+        spinnerAdults.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedAdults = position; // 0 for "Any", 1-10 for numbers
+                applyAllFilters();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        spinnerChildren.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedChildren = position; // 0 for "Any", 1-10 for numbers
+                applyAllFilters();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        spinnerRooms.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedRooms = position; // 0 for "Any", 1-10 for numbers
+                applyAllFilters();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private void setupDatePickers() {
+        Calendar calendar = Calendar.getInstance();
+
+        btnPickStartDate.setOnClickListener(v -> {
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(SuperReservasActivity.this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        Calendar selectedCal = Calendar.getInstance();
+                        selectedCal.set(year1, monthOfYear, dayOfMonth);
+                        selectedCal.set(Calendar.HOUR_OF_DAY, 0);
+                        selectedCal.set(Calendar.MINUTE, 0);
+                        selectedCal.set(Calendar.SECOND, 0);
+                        selectedCal.set(Calendar.MILLISECOND, 0);
+                        selectedStartDate = selectedCal.getTime();
+                        btnPickStartDate.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedStartDate));
+                        applyAllFilters();
+                    }, year, month, day);
+            datePickerDialog.show();
+        });
+
+        btnPickEndDate.setOnClickListener(v -> {
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(SuperReservasActivity.this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        Calendar selectedCal = Calendar.getInstance();
+                        selectedCal.set(year1, monthOfYear, dayOfMonth);
+                        selectedCal.set(Calendar.HOUR_OF_DAY, 23);
+                        selectedCal.set(Calendar.MINUTE, 59);
+                        selectedCal.set(Calendar.SECOND, 59);
+                        selectedCal.set(Calendar.MILLISECOND, 999);
+                        selectedEndDate = selectedCal.getTime();
+                        btnPickEndDate.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedEndDate));
+                        applyAllFilters();
+                    }, year, month, day);
+            datePickerDialog.show();
+        });
+    }
+
+    private void applyAllFilters() {
+        filteredReservas.clear();
+        String searchText = etSearchUser.getText().toString().toLowerCase(Locale.getDefault());
+
+        for (Reserva reserva : allReservas) {
+            boolean matchesSearch = true;
+            boolean matchesAdults = true;
+            boolean matchesChildren = true;
+            boolean matchesRooms = true;
+            boolean matchesDateRange = true;
+
+            // Search by name or room number
+            if (!searchText.isEmpty()) {
+                matchesSearch = reserva.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                        reserva.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                        reserva.getRoomNumber().toLowerCase(Locale.getDefault()).contains(searchText);
+            }
+
+            // Filter by adults
+            if (selectedAdults > 0) {
+                matchesAdults = reserva.getAdultos() == selectedAdults;
+            }
+
+            // Filter by children
+            if (selectedChildren > 0) {
+                matchesChildren = reserva.getNinos() == selectedChildren;
+            }
+
+            // Filter by rooms
+            if (selectedRooms > 0) {
+                matchesRooms = reserva.getHabitaciones() == selectedRooms;
+            }
+
+            // Filter by date range
+            if (selectedStartDate != null && selectedEndDate != null) {
+                matchesDateRange = !reserva.getFechaInicio().after(selectedEndDate) &&
+                        !reserva.getFechaFin().before(selectedStartDate);
+            } else if (selectedStartDate != null) {
+                matchesDateRange = !reserva.getFechaFin().before(selectedStartDate);
+            } else if (selectedEndDate != null) {
+                matchesDateRange = !reserva.getFechaInicio().after(selectedEndDate);
+            }
+
+
+            if (matchesSearch && matchesAdults && matchesChildren && matchesRooms && matchesDateRange) {
+                filteredReservas.add(reserva);
             }
         }
         displayReservas(filteredReservas);
     }
+
 
     private void displayReservas(List<Reserva> reservas) {
         llReservasContainer.removeAllViews();
 
         if (reservas.isEmpty()) {
             TextView noResults = new TextView(this);
-            noResults.setText("No se encontraron reservas");
+            noResults.setText("No se encontraron reservas con los filtros aplicados.");
             noResults.setTextSize(16);
             noResults.setGravity(android.view.Gravity.CENTER);
             llReservasContainer.addView(noResults);
@@ -176,6 +326,7 @@ public class SuperReservasActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_hoteles);
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
