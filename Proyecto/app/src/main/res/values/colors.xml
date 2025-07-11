@@ -3,33 +3,39 @@
     <color name="purple_200">#0f4fa2</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="azulNoti">#B1BCD8</color>
     <color name="moradoNoti">#ABABBB</color>
     <color name="plomoTransparen">#A2A2AC</color>
     <color name="naranjaTransparen">#6DFF9800</color>
     <color name="colorBackground">#A5A8A5</color>
     <color name="bordergreen">#CDDBD5</color>
-    <color name="cliente1">#FF9800</color>
-    <color name="cliente2">#3F51B5</color>
-    <color name="verdejade">#009688</color>
+    <color name="background_gradient">#F8F9FA</color>
+
+    <color name="colorPrimary">#00A86B</color>
+    <color name="colorPrimaryVariant">#007A4D</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
     <color name="color_activo_celeste">#1F66B6</color>
     <color name="color_activo_claro_celeste">#2A75CA</color>
-    <color name="colorPrimary">#00A86B</color> <!-- Jade -->
-    <color name="colorPrimaryVariant">#007A4D</color> <!-- Variante más oscura -->
-    <color name="colorOnPrimary">#FFFFFF</color> <!-- Texto sobre fondo jade -->
-    <color name="color_estado_habilitado">#009688</color>
-    <color name="gray_tone">#B0B0B0</color> <!-- Gris tenue -->
+    <color name="verdejade">#009688</color>
     <color name="verde_jade_claro">#D9EFE9</color>
-    <color name="red">#E53935</color>
-    <color name="naranja">#FF9800</color>
-    <color name="naranja_claro">#FFCC80</color>
-    <color name="green_500">#4CAF50</color>
-    <color name="red_500">#F44336</color>
-    <color name="background_gradient">#F8F9FA</color>
-    <color name="red_status">#F44336</color>
-    <color name="green_status">#4CAF50</color>
+
+    <color name="gray_tone">#B0B0B0</color>
+    <color name="gray_tone_dark">#616161</color>
     <color name="gray">#888888</color>
 
-    <color name="button_selected_green">#388E3C</color> <color name="button_unselected_green">#8BC34A</color> <color name="button_selected_red">#D32F2F</color> <color name="button_unselected_red">#FF5252</color> <color name="button_default_tint">#009688</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="red_500">#F44336</color>
+    <color name="cliente1">#FF9800</color>
+    <color name="cliente2">#3F51B5</color>
+    <color name="color_estado_habilitado">#009688</color>
 
+    <color name="green_status">#4CAF50</color>
+    <color name="red_status">#F44336</color>
+    <color name="naranja">#FF9800</color>
+    <color name="naranja_claro">#FFCC80</color>
+    <color name="blue_status">#2196F3</color>
+    <color name="red">#E53935</color> <color name="selected_filter_background">#BBDEFB</color>
+    <color name="pressed_overlay">#33000000</color>
+    <color name="gray_default_button">#E0E0E0</color>
 </resources>

@@ -17,10 +17,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView; // Import for Spinner
+import android.widget.ArrayAdapter; // Import for Spinner
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner; // Import for Spinner
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +65,14 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
     private LinearLayout linearLayoutTaxisContainer;
     private EditText etBuscador;
     private Button btnLimpiar;
+    private Button btnFilterStatusActive;
+    private Button btnFilterStatusInactive;
+    private Button btnFilterStatusPending;
+    private Spinner spinnerTripStatus; // Changed from individual buttons to Spinner
+
+    // Filter states
+    private String currentFilterStatus = "all"; // "all", "activado", "desactivado", "pendiente"
+    private String currentFilterTripStatus = "Todos"; // "Todos", "En Camino", "Llegó a Destino", "Asignado", "No Asignado"
 
     private static final String CHANNEL_ID = "taxi_management_channel";
     private static final int NOTIFICATION_ID = 1001;
@@ -165,11 +176,16 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
         linearLayoutTaxisContainer = findViewById(R.id.linearLayoutTaxisContainer);
         etBuscador = findViewById(R.id.etBuscador);
         btnLimpiar = findViewById(R.id.btnLimpiar);
+        btnFilterStatusActive = findViewById(R.id.btnFilterStatusActive);
+        btnFilterStatusInactive = findViewById(R.id.btnFilterStatusInactive);
+        btnFilterStatusPending = findViewById(R.id.btnFilterStatusPending);
+        spinnerTripStatus = findViewById(R.id.spinnerTripStatus); // Initialize Spinner
 
         // Do NOT call loadTaxisFromFirestore() here. It will be called in onResume().
         // loadTaxisFromFirestore();
 
         setupSearchFunctionality();
+        setupFilterFunctionality(); // Setup new filter buttons and spinner
 
         TextView tvTitulo = findViewById(R.id.tvTitulo);
         TextView tvNombre = findViewById(R.id.tvNombre);
@@ -252,7 +268,8 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                             Log.d(TAG, "Taxista cargado: " + document.getId() + " => " + document.getData());
                         }
 
-                        filterTaxiList(etBuscador.getText().toString());
+                        // Apply current filters after loading data
+                        filterTaxiList(etBuscador.getText().toString(), currentFilterStatus, currentFilterTripStatus);
                         Log.d(TAG, "Taxistas cargados desde Firestore: " + taxiDataList.size());
                     } else {
                         Log.w(TAG, "Error al obtener documentos de taxistas: ", task.getException());
@@ -274,13 +291,13 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                         "ABC-123", null, // Placeholder, will use default image bytes
                         "activado", "En Camino"
                 ),
-                /*new Taxista(
+                new Taxista(
                         "Alex David", "Russo Muro", "DNI", "87654321", "1988-05-20",
                         "alex@example.com", "912345678", "Calle Falsa 456",
                         null,
                         "DEF-456", null,
                         "activado", "Asignado"
-                ),*/
+                ),
                 new Taxista(
                         "Marcelo Juan", "Vilca Lora", "DNI", "11223344", "1992-11-01",
                         "marcelo@example.com", "934567890", "Jr. Luna 789",
@@ -301,6 +318,13 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                         null,
                         "PQR-303", null,
                         "pendiente", "No Asignado"
+                ),
+                new Taxista(
+                        "Sofia Elizabeth", "Ramirez Soto", "DNI", "99887766", "1993-03-10",
+                        "sofia@example.com", "965432109", "Av. Primavera 500",
+                        null,
+                        "XYZ-101", null,
+                        "desactivado", "No Asignado"
                 )
         );
 
@@ -328,6 +352,10 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
                 case "44332211": // Farid Antony
                     profileBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.taxista6);
                     vehicleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.carrito);
+                    break;
+                case "99887766": // Sofia Elizabeth (new example for 'desactivado')
+                    profileBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.taxista4); // Assuming you have taxista4.png
+                    vehicleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car_taxi_driver);
                     break;
                 default:
                     profileBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.taxista1);
@@ -360,7 +388,7 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterTaxiList(s.toString());
+                filterTaxiList(s.toString(), currentFilterStatus, currentFilterTripStatus);
             }
 
             @Override
@@ -370,41 +398,141 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
         btnLimpiar.setOnClickListener(v -> {
             etBuscador.setText("");
             etBuscador.clearFocus();
-            resetTaxiList();
+            resetAllFilters(); // Reset all filters
         });
     }
 
+    private void setupFilterFunctionality() {
+        // Status filters
+        btnFilterStatusActive.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search
+            if (currentFilterStatus.equals("activado")) {
+                currentFilterStatus = "all"; // Toggle off
+            } else {
+                currentFilterStatus = "activado"; // Select
+            }
+            updateFilterButtonsUI();
+            filterTaxiList("", currentFilterStatus, currentFilterTripStatus);
+        });
+
+        btnFilterStatusInactive.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search
+            if (currentFilterStatus.equals("desactivado")) {
+                currentFilterStatus = "all"; // Toggle off
+            } else {
+                currentFilterStatus = "desactivado"; // Select
+            }
+            updateFilterButtonsUI();
+            filterTaxiList("", currentFilterStatus, currentFilterTripStatus);
+        });
+
+        btnFilterStatusPending.setOnClickListener(v -> {
+            etBuscador.setText(""); // Clear search
+            if (currentFilterStatus.equals("pendiente")) {
+                currentFilterStatus = "all"; // Toggle off
+            } else {
+                currentFilterStatus = "pendiente"; // Select
+            }
+            updateFilterButtonsUI();
+            filterTaxiList("", currentFilterStatus, currentFilterTripStatus);
+        });
+
+        // Trip status Spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.trip_status_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTripStatus.setAdapter(adapter);
+
+        spinnerTripStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                etBuscador.setText(""); // Clear search
+                currentFilterTripStatus = parent.getItemAtPosition(position).toString();
+                filterTaxiList("", currentFilterStatus, currentFilterTripStatus);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        // Initial UI update for buttons (spinner is handled by its adapter/listener)
+        updateFilterButtonsUI();
+    }
+
+    private void updateFilterButtonsUI() {
+        // Reset all status buttons to their unselected/default state first
+        btnFilterStatusActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green_status));
+        btnFilterStatusInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.red_status));
+        btnFilterStatusPending.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.naranja));
+
+        // Apply selected state for status buttons
+        if (currentFilterStatus.equals("activado")) {
+            btnFilterStatusActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green_status));
+        } else if (currentFilterStatus.equals("desactivado")) {
+            btnFilterStatusInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.red_status));
+        } else if (currentFilterStatus.equals("pendiente")) {
+            btnFilterStatusPending.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.naranja));
+        }
+
+        // For Spinner, its selected item already reflects currentFilterTripStatus
+        // We just need to ensure its selection is consistent with `currentFilterTripStatus`
+        ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) spinnerTripStatus.getAdapter();
+        if (adapter != null) {
+            int spinnerPosition = adapter.getPosition(currentFilterTripStatus);
+            spinnerTripStatus.setSelection(spinnerPosition, false); // false to prevent callback on programatic set
+        }
+    }
+
+
     /**
-     * Filtra la lista de taxistas basándose en el texto de búsqueda.
+     * Filtra la lista de taxistas basándose en el texto de búsqueda y los estados de filtro.
      */
-    private void filterTaxiList(String searchText) {
+    private void filterTaxiList(String searchText, String statusFilter, String tripStatusFilter) {
         filteredTaxiList.clear();
 
-        if (searchText.isEmpty()) {
-            filteredTaxiList.addAll(taxiDataList);
-        } else {
-            String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
-            for (Taxista taxi : taxiDataList) {
-                if ((taxi.getNombres() + " " + taxi.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
+        String searchLower = searchText.toLowerCase(Locale.getDefault()).trim();
+
+        for (Taxista taxi : taxiDataList) {
+            boolean matchesSearch = true;
+            boolean matchesStatus = true;
+            boolean matchesTripStatus = true;
+
+            // Check search text
+            if (!searchText.isEmpty()) {
+                matchesSearch = (taxi.getNombres() + " " + taxi.getApellidos()).toLowerCase(Locale.getDefault()).contains(searchLower) ||
                         taxi.getPlaca().toLowerCase(Locale.getDefault()).contains(searchLower) ||
                         taxi.getNumeroDocumento().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        taxi.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower) ||
-                        (taxi.getEstado() != null && taxi.getEstado().toLowerCase(Locale.getDefault()).contains(searchLower)) ||
-                        (taxi.getEstadoDeViaje() != null && taxi.getEstadoDeViaje().toLowerCase(Locale.getDefault()).contains(searchLower))) {
-                    filteredTaxiList.add(taxi);
-                }
+                        taxi.getCorreo().toLowerCase(Locale.getDefault()).contains(searchLower);
+            }
+
+            // Check activation status filter
+            if (!statusFilter.equals("all")) {
+                matchesStatus = taxi.getEstado() != null && taxi.getEstado().toLowerCase(Locale.getDefault()).equals(statusFilter);
+            }
+
+            // Check trip status filter (from Spinner)
+            if (!tripStatusFilter.equals("Todos")) {
+                matchesTripStatus = taxi.getEstadoDeViaje() != null && taxi.getEstadoDeViaje().equals(tripStatusFilter);
+            }
+
+            if (matchesSearch && matchesStatus && matchesTripStatus) {
+                filteredTaxiList.add(taxi);
             }
         }
         renderTaxiList();
     }
 
     /**
-     * Resetea la lista filtrada para mostrar todos los taxistas.
+     * Resetea todos los filtros y el campo de búsqueda.
      */
-    private void resetTaxiList() {
-        filteredTaxiList.clear();
-        filteredTaxiList.addAll(taxiDataList);
-        renderTaxiList();
+    private void resetAllFilters() {
+        currentFilterStatus = "all";
+        currentFilterTripStatus = "Todos";
+        etBuscador.setText(""); // Clear search field
+        updateFilterButtonsUI(); // Update status buttons and spinner to reflect "all" states
+        filterTaxiList("", currentFilterStatus, currentFilterTripStatus); // Re-filter with empty search and all statuses
     }
 
     /**

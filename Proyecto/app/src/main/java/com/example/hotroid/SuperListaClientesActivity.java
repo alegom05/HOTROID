@@ -320,14 +320,14 @@ public class SuperListaClientesActivity extends AppCompatActivity {
 
     private void updateFilterButtonsUI() {
         if (currentFilterStatus.equals("true")) {
-            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_selected_green));
-            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_red));
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green_status));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.red_status));
         } else if (currentFilterStatus.equals("false")) {
-            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_green));
-            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_selected_red));
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green_status));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.red_status));
         } else { // "all"
-            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_green));
-            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.button_unselected_red));
+            btnFilterActive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green_status));
+            btnFilterInactive.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.red_status));
         }
     }
 

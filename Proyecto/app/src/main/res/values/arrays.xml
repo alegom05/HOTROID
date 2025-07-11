@@ -17,4 +17,13 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+
+    <string-array name="trip_status_options">
+        <item>Todos</item>
+        <item>En camino</item>
+        <item>Asignado</item>
+        <item>No asignado</item>
+        <item>Llegó a destino</item>
+    </string-array>
+
 </resources>

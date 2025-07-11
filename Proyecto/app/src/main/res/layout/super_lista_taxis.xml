@@ -151,6 +151,75 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <Button
+                            android:id="@+id/btnFilterStatusActive"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Activado"
+                            android:backgroundTint="@color/green_status"
+                            android:textColor="@android:color/white"
+                            android:layout_marginEnd="4dp"
+                            android:textSize="12sp"
+                            android:paddingVertical="8dp"/>
+
+                        <Button
+                            android:id="@+id/btnFilterStatusInactive"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Desactivado"
+                            android:backgroundTint="@color/red_status"
+                            android:textColor="@android:color/white"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="10sp"
+                            android:paddingVertical="8dp"/>
+
+                        <Button
+                            android:id="@+id/btnFilterStatusPending"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Pendiente"
+                            android:backgroundTint="@color/naranja"
+                            android:textColor="@android:color/white"
+                            android:layout_marginStart="4dp"
+                            android:textSize="11sp"
+                            android:paddingVertical="8dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Filtrar por estado de viaje:"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginEnd="8dp"/>
+
+                        <Spinner
+                            android:id="@+id/spinnerTripStatus"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:entries="@array/trip_status_options"
+                            android:background="@drawable/spinner_background"
+                            android:padding="8dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/linearLayoutTaxisContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

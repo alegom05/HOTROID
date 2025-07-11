@@ -50,6 +50,14 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
         <item>Llegó a destino</item>
     </string-array>
 
+    <string-array name="estado_viaje_filter_options">
+        <item>Todos </item>
+        <item>En camino</item>
+        <item>Asignado</item>
+        <item>No asignado</item>
+        <item>Llego a Destino</item>
+    </string-array>
+
     <string name="profile_image">Imagen de perfil</string>
     <string name="nombre_completo">Nombre Completo</string>
     <string name="telefono">Teléfono</string>
