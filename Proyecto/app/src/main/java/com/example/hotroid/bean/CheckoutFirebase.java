@@ -1,28 +1,26 @@
 package com.example.hotroid.bean;
+
 import com.google.firebase.firestore.DocumentId;
-import java.util.Date; // ¡Importante para fechas!
+import java.util.Date;
 
 public class CheckoutFirebase {
-    @DocumentId // Esto mapea el ID del documento de Firestore a esta propiedad
-    private String idCheckout; // Para almacenar el ID del documento de Firestore
+    @DocumentId
+    private String idCheckout;
 
-    private String roomNumber;
+    private int roomNumber; // CHANGE THIS FROM String TO int
     private String clientName;
-    private double baseRate; // Precio total de la reserva
-    private double additionalCharges; // Cobros adicionales de la reserva
-    private Date checkinDate; // Fecha de inicio de la reserva
-    private Date checkoutDate; // Fecha de fin de la reserva
+    private double baseRate;
+    private double additionalCharges;
+    private Date checkinDate;
+    private Date checkoutDate;
 
-    // Constructor vacío requerido por Firestore para deserialización
     public CheckoutFirebase() {
         // Constructor sin argumentos
     }
 
-    // Constructor para cuando creas un objeto en Java antes de guardarlo en Firestore
-    // idCheckout puede ser null si usas .add()
-    public CheckoutFirebase(String idCheckout, String roomNumber, String clientName, double baseRate, double additionalCharges, Date checkinDate, Date checkoutDate) {
+    public CheckoutFirebase(String idCheckout, int roomNumber, String clientName, double baseRate, double additionalCharges, Date checkinDate, Date checkoutDate) { // Update constructor parameter
         this.idCheckout = idCheckout;
-        this.roomNumber = roomNumber;
+        this.roomNumber = roomNumber; // Assign int
         this.clientName = clientName;
         this.baseRate = baseRate;
         this.additionalCharges = additionalCharges;
@@ -35,7 +33,7 @@ public class CheckoutFirebase {
         return idCheckout;
     }
 
-    public String getRoomNumber() {
+    public int getRoomNumber() { // CHANGE THIS RETURN TYPE FROM String TO int
         return roomNumber;
     }
 
@@ -65,7 +63,7 @@ public class CheckoutFirebase {
         this.idCheckout = idCheckout;
     }
 
-    public void setRoomNumber(String roomNumber) {
+    public void setRoomNumber(int roomNumber) { // CHANGE THIS PARAMETER TYPE FROM String TO int
         this.roomNumber = roomNumber;
     }
 

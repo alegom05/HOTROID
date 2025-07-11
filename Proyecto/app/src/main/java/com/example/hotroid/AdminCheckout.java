@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotroid.bean.CheckoutFirebase;
+import com.example.hotroid.bean.CheckoutFirebase; // Ensure this class is updated
 import com.example.hotroid.bean.Reserva;
 import com.example.hotroid.bean.Cliente;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,24 +29,36 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
-import java.util.Date; // Asegúrate de que Date esté importado
 
 public class AdminCheckout extends AppCompatActivity {
 
     private RecyclerView rvCheckouts;
     private CheckoutAdapter adapter;
-    private List<CheckoutFirebase> checkoutList; // Esta lista ahora será la que se muestra y se filtra
-    private List<CheckoutFirebase> originalCheckoutList; // Esta lista mantendrá todos los checkouts sin filtrar
+    private List<CheckoutFirebase> checkoutList;
+    private List<CheckoutFirebase> originalCheckoutList;
     private FirebaseFirestore db;
     private List<Reserva> reservasList;
     private List<Cliente> clientesList;
 
     // Elementos del buscador
-    private EditText etBuscador;
+    private EditText etBuscadorCliente;
+    private EditText etBuscadorDepartamento;
     private Button btnLimpiar;
+    private Button btnFechaInicio;
+    private Button btnFechaFin;
+
+    private Calendar calendarFechaInicio;
+    private Calendar calendarFechaFin;
+
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,56 +73,82 @@ public class AdminCheckout extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         checkoutList = new ArrayList<>();
-        originalCheckoutList = new ArrayList<>(); // Inicializar la lista original
+        originalCheckoutList = new ArrayList<>();
         reservasList = new ArrayList<>();
         clientesList = new ArrayList<>();
 
         rvCheckouts = findViewById(R.id.rvCheckouts);
         rvCheckouts.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new CheckoutAdapter(checkoutList); // Pasar la lista que se usará para mostrar
+        adapter = new CheckoutAdapter(checkoutList);
         rvCheckouts.setAdapter(adapter);
 
-        // Inicializar elementos del buscador
-        etBuscador = findViewById(R.id.etBuscador);
+        // Inicializar elementos del buscador y botones de fecha
+        etBuscadorCliente = findViewById(R.id.etBuscadorCliente);
+        etBuscadorDepartamento = findViewById(R.id.etBuscadorDepartamento);
         btnLimpiar = findViewById(R.id.btnLimpiar);
+        btnFechaInicio = findViewById(R.id.btnFechaInicio);
+        btnFechaFin = findViewById(R.id.btnFechaFin);
 
-        // Listener para el campo de búsqueda
-        etBuscador.addTextChangedListener(new TextWatcher() {
+        calendarFechaInicio = Calendar.getInstance();
+        calendarFechaFin = Calendar.getInstance();
+
+        // Listener para el campo de búsqueda de cliente
+        etBuscadorCliente.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No se necesita implementación
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Filtrar la lista cada vez que el texto cambia
-                filter(s.toString());
+                applyFilters();
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                // No se necesita implementación
+            public void afterTextChanged(Editable s) { }
+        });
+
+        // Listener para el campo de búsqueda de departamento
+        etBuscadorDepartamento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyFilters();
             }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
         });
 
         // Listener para el botón "Limpiar"
         btnLimpiar.setOnClickListener(v -> {
-            etBuscador.setText(""); // Limpiar el texto del buscador
-            adapter.filterList(originalCheckoutList); // Restaurar la lista original sin filtrar
-            checkoutList.clear(); // Limpiar la lista visible
-            checkoutList.addAll(originalCheckoutList); // Añadir todos los elementos de la lista original
+            etBuscadorCliente.setText("");
+            etBuscadorDepartamento.setText("");
+            // Reset calendar to current date, then update button text
+            calendarFechaInicio = Calendar.getInstance();
+            btnFechaInicio.setText("Fecha Inicio");
+            calendarFechaFin = Calendar.getInstance();
+            btnFechaFin.setText("Fecha Fin");
+            applyFilters();
         });
 
+        // Listener para el botón "Fecha Inicio"
+        btnFechaInicio.setOnClickListener(v -> {
+            showDatePickerDialog(calendarFechaInicio, btnFechaInicio, true);
+        });
 
-        // Primero, carga reservas y clientes, luego genera y carga checkouts
+        // Listener para el botón "Fecha Fin"
+        btnFechaFin.setOnClickListener(v -> {
+            showDatePickerDialog(calendarFechaFin, btnFechaFin, false);
+        });
+
         loadReservasAndClientesThenGenerateCheckouts();
-
 
         adapter.setOnItemClickListener(new CheckoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                CheckoutFirebase seleccionado = checkoutList.get(position); // Obtener de la lista actual/filtrada
+                CheckoutFirebase seleccionado = checkoutList.get(position);
 
                 Intent intent = new Intent(AdminCheckout.this, AdminCheckoutDetalles.class);
                 intent.putExtra("ID_CHECKOUT", seleccionado.getIdCheckout());
@@ -132,20 +171,19 @@ public class AdminCheckout extends AppCompatActivity {
                 if (itemId == R.id.nav_registros) {
                     Intent intentInicio = new Intent(AdminCheckout.this, AdminActivity.class);
                     startActivity(intentInicio);
-                    finish(); // Añadir finish()
+                    finish();
                     return true;
                 } else if (itemId == R.id.nav_taxistas) {
                     Intent intentUbicacion = new Intent(AdminCheckout.this, AdminTaxistas.class);
                     startActivity(intentUbicacion);
-                    finish(); // Añadir finish()
+                    finish();
                     return true;
                 } else if (itemId == R.id.nav_checkout) {
-                    // Si ya estamos en checkout, no hacer nada o recargar la vista si es necesario
                     return true;
                 } else if (itemId == R.id.nav_reportes) {
                     Intent intentAlertas = new Intent(AdminCheckout.this, AdminReportes.class);
                     startActivity(intentAlertas);
-                    finish(); // Añadir finish()
+                    finish();
                     return true;
                 }
                 return false;
@@ -153,6 +191,22 @@ public class AdminCheckout extends AppCompatActivity {
         } else {
             Log.e("AdminCheckout", "BottomNavigationView con ID R.id.bottom_navigation no encontrada.");
         }
+    }
+
+    private void showDatePickerDialog(Calendar calendar, Button button, boolean isStartDate) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                AdminCheckout.this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    calendar.set(selectedYear, selectedMonth, selectedDay);
+                    button.setText(dateFormatter.format(calendar.getTime()));
+                    applyFilters();
+                },
+                year, month, day);
+        datePickerDialog.show();
     }
 
     private void loadReservasAndClientesThenGenerateCheckouts() {
@@ -191,8 +245,7 @@ public class AdminCheckout extends AppCompatActivity {
                                 clientesList.add(cliente);
                             }
                             Log.d("AdminCheckout", "Clientes cargados exitosamente: " + clientesList.size());
-                            // Solo se debe descomentar esta línea para la primera ejecución si quieres generar nuevos checkouts
-                            // generateAndSaveRandomCheckouts(); // Asegúrate de que este método exista y sea seguro contra duplicados
+                            // generateAndSaveRandomCheckouts(); // Uncomment this line ONCE to populate your DB for testing
                             loadCheckoutsFromFirestore();
                         } else {
                             Log.w("AdminCheckout", "Error al obtener documentos de clientes: ", task.getException());
@@ -202,7 +255,6 @@ public class AdminCheckout extends AppCompatActivity {
                 });
     }
 
-    // Método para generar y guardar checkouts aleatorios
     private void generateAndSaveRandomCheckouts() {
         if (reservasList.isEmpty() || clientesList.isEmpty()) {
             Log.w("AdminCheckout", "No hay suficientes reservas o clientes para generar checkouts aleatorios.");
@@ -219,9 +271,20 @@ public class AdminCheckout extends AppCompatActivity {
 
             String clientFullName = randomCliente.getNombres() + " " + randomCliente.getApellidos();
 
+            int roomNumInt = 0; // Default value in case of parsing error
+            try {
+                // Parse the room number string from Reserva to an int
+                roomNumInt = Integer.parseInt(randomReserva.getRoomNumber());
+            } catch (NumberFormatException e) {
+                Log.e("AdminCheckout", "Error parsing room number from Reserva: " + randomReserva.getRoomNumber(), e);
+                // Handle error, maybe skip this checkout or use a default value
+                Toast.makeText(AdminCheckout.this, "Error de formato de número de habitación en reserva.", Toast.LENGTH_SHORT).show();
+                continue; // Skip this iteration if parsing fails
+            }
+
             CheckoutFirebase newCheckout = new CheckoutFirebase(
-                    null, // El ID se generará automáticamente por Firestore
-                    randomReserva.getRoomNumber(),
+                    null,
+                    roomNumInt, // Pass the parsed int here
                     clientFullName,
                     randomReserva.getPrecioTotal(),
                     randomReserva.getCobrosAdicionales(),
@@ -229,12 +292,10 @@ public class AdminCheckout extends AppCompatActivity {
                     randomReserva.getFechaFin()
             );
 
-            // Guardar el checkout en Firestore
             db.collection("checkouts")
                     .add(newCheckout)
                     .addOnSuccessListener(documentReference -> {
                         Log.d("AdminCheckout", "Checkout generado y guardado con ID: " + documentReference.getId());
-                        // No necesitas añadirlo a checkoutList aquí, ya que loadCheckoutsFromFirestore() lo hará.
                     })
                     .addOnFailureListener(e -> {
                         Log.w("AdminCheckout", "Error al añadir checkout", e);
@@ -243,7 +304,6 @@ public class AdminCheckout extends AppCompatActivity {
         }
     }
 
-    // Método para cargar checkouts existentes desde Firestore
     private void loadCheckoutsFromFirestore() {
         db.collection("checkouts")
                 .get()
@@ -251,17 +311,15 @@ public class AdminCheckout extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            originalCheckoutList.clear(); // Limpiar la lista original
+                            originalCheckoutList.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                // Ensure CheckoutFirebase class properly deserializes roomNumber as an int/long
                                 CheckoutFirebase checkout = document.toObject(CheckoutFirebase.class);
                                 originalCheckoutList.add(checkout);
                             }
-                            // Después de cargar, inicializa ambas listas y notifica al adaptador
-                            checkoutList.clear();
-                            checkoutList.addAll(originalCheckoutList); // Copiar todos a la lista visible
-                            adapter.filterList(checkoutList); // Pasar la lista ya copiada al adaptador
+                            applyFilters();
                             Log.d("AdminCheckout", "Checkouts cargados: " + checkoutList.size());
-                            if (checkoutList.isEmpty()) {
+                            if (checkoutList.isEmpty() && originalCheckoutList.isEmpty()) {
                                 Toast.makeText(AdminCheckout.this, "No hay checkouts pendientes.", Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -272,17 +330,63 @@ public class AdminCheckout extends AppCompatActivity {
                 });
     }
 
-    // Método de filtrado
-    private void filter(String text) {
+    private void applyFilters() {
         List<CheckoutFirebase> filteredList = new ArrayList<>();
-        for (CheckoutFirebase item : originalCheckoutList) { // Filtrar desde la lista original
-            if (item.getClientName().toLowerCase().contains(text.toLowerCase())) {
+        String clientSearchText = etBuscadorCliente.getText().toString().toLowerCase(Locale.getDefault()).trim();
+        String departmentSearchText = etBuscadorDepartamento.getText().toString().trim();
+
+        Date startDate = (btnFechaInicio.getText().toString().equals("Fecha Inicio")) ? null : calendarFechaInicio.getTime();
+        Date endDate = (btnFechaFin.getText().toString().equals("Fecha Fin")) ? null : calendarFechaFin.getTime();
+
+        if (endDate != null) {
+            Calendar endCal = Calendar.getInstance();
+            endCal.setTime(endDate);
+            endCal.set(Calendar.HOUR_OF_DAY, 23);
+            endCal.set(Calendar.MINUTE, 59);
+            endCal.set(Calendar.SECOND, 59);
+            endCal.set(Calendar.MILLISECOND, 999);
+            endDate = endCal.getTime();
+        }
+
+        for (CheckoutFirebase item : originalCheckoutList) {
+            boolean matchesClient = true;
+            boolean matchesDepartment = true;
+            boolean matchesDateRange = true;
+
+            // Filter by client name
+            if (!clientSearchText.isEmpty()) {
+                matchesClient = item.getClientName().toLowerCase(Locale.getDefault()).contains(clientSearchText);
+            }
+
+            // Filter by department number
+            if (!departmentSearchText.isEmpty()) {
+                try {
+                    int roomNumberFromInput = Integer.parseInt(departmentSearchText);
+                    // This comparison now directly uses the int from Firebase with the int from input
+                    matchesDepartment = item.getRoomNumber() == roomNumberFromInput;
+                } catch (NumberFormatException e) {
+                    matchesDepartment = false; // Invalid number input, no match
+                }
+            }
+
+            // Filter by date range (checkout date)
+            if (startDate != null) {
+                // Ensure the checkout date is on or after the start date
+                matchesDateRange = !item.getCheckoutDate().before(startDate); // Equivalent to item.getCheckoutDate().after(startDate) || item.getCheckoutDate().equals(startDate)
+            }
+            if (endDate != null) {
+                // Ensure the checkout date is on or before the end date (end of day)
+                matchesDateRange = matchesDateRange && !item.getCheckoutDate().after(endDate); // Equivalent to item.getCheckoutDate().before(endDate) || item.getCheckoutDate().equals(endDate)
+            }
+
+
+            if (matchesClient && matchesDepartment && matchesDateRange) {
                 filteredList.add(item);
             }
         }
-        checkoutList.clear(); // Limpiar la lista visible
-        checkoutList.addAll(filteredList); // Añadir los elementos filtrados
-        adapter.filterList(filteredList); // Notificar al adaptador con la lista filtrada
+        checkoutList.clear();
+        checkoutList.addAll(filteredList);
+        adapter.filterList(filteredList);
     }
 
 
@@ -290,8 +394,14 @@ public class AdminCheckout extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Recargar los checkouts cada vez que la actividad vuelve a estar en primer plano
-        // Esto es crucial para ver la lista actualizada después de una eliminación
+        // Esto es crucial para ver la lista actualizada después de una eliminación o edición
         loadCheckoutsFromFirestore();
-        etBuscador.setText(""); // Asegurarse de que el buscador esté limpio al regresar
+        // Clear search fields and reset date pickers
+        etBuscadorCliente.setText("");
+        etBuscadorDepartamento.setText("");
+        calendarFechaInicio = Calendar.getInstance();
+        btnFechaInicio.setText("Fecha Inicio");
+        calendarFechaFin = Calendar.getInstance();
+        btnFechaFin.setText("Fecha Fin");
     }
 }
