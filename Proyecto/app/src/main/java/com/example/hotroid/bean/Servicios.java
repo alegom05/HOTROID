@@ -6,30 +6,32 @@ public class Servicios {
     private String nombre;
     private String descripcion;
     private double precio;
-    private String horario;
+    private String horaInicio; // Changed from horario
+    private String horaFin;    // New field
     private ArrayList<String> imagenes;
     private boolean habilitado = true;
-    private String documentId; // Campo para almacenar el ID de Firestore
+    private String documentId;
 
     // Constructor vacío requerido por Firestore
     public Servicios() {}
 
-    // Constructores con parámetros
-    public Servicios(String nombre, String descripcion, double precio, String horario, ArrayList<String> imagenes) {
+    // Constructor con parámetros actualizado
+    public Servicios(String nombre, String descripcion, double precio, String horaInicio, String horaFin, ArrayList<String> imagenes) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-        this.horario = horario;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
         this.imagenes = imagenes;
     }
 
-    // Getters y setters (asegúrate de tener todos)
+    // Getters y setters
     public String getDocumentId() {
         return documentId;
     }
 
     public void setDocumentId(String documentId) {
-        this.documentId = documentId; // Setter crítico para el ID
+        this.documentId = documentId;
     }
 
     public String getNombre() {
@@ -56,12 +58,22 @@ public class Servicios {
         this.precio = precio;
     }
 
-    public String getHorario() {
-        return horario;
+    // Updated getter/setter for horaInicio
+    public String getHoraInicio() {
+        return horaInicio;
     }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    // New getter/setter for horaFin
+    public String getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
     }
 
     public ArrayList<String> getImagenes() {

@@ -7,201 +7,268 @@
     android:layout_height="match_parent"
     tools:context=".AdminEditarServicioActivity">
 
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Editar Servicio"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+<TextView
+android:id="@+id/tvTitulo"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Editar Servicio"
+android:textSize="36sp"
+android:textStyle="bold"
+android:layout_marginTop="16dp"
+android:layout_marginStart="16dp"
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardAdmin"
+<androidx.cardview.widget.CardView
+android:id="@+id/cardAdmin"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+app:cardCornerRadius="4dp"
+app:cardElevation="2dp"
+android:layout_marginStart="16dp"
+android:layout_marginEnd="16dp"
+android:layout_marginTop="6dp"
+app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imagenPerfil"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/foto_admin"
+        android:scaleType="centerCrop"
+        android:background="@drawable/border_circle"
+        android:contentDescription="Profile Picture of Administrator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="6dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+        android:text="Christopher Terrones"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
+        app:layout_constraintBottom_toTopOf="@id/tvRol"
+        android:layout_marginEnd="8dp"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tvRol"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Administrador de Hotel"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/tvNombre"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
+
+<androidx.cardview.widget.CardView
+android:id="@+id/seccionesCard"
+android:layout_width="0dp"
+android:layout_height="0dp"
+app:layout_constraintTop_toBottomOf="@id/cardAdmin"
+app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_margin="16dp"
+app:cardElevation="3dp"
+app:cardCornerRadius="4dp">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/seccionesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detalles del Servicio"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/imagenPerfil"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/foto_admin"
-                android:scaleType="centerCrop"
-                android:background="@drawable/border_circle"
-                android:contentDescription="Profile Picture of Administrator"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
             <TextView
-                android:id="@+id/tvNombre"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Christopher Terrones"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
-                app:layout_constraintBottom_toTopOf="@id/tvRol"
-                android:layout_marginEnd="8dp"/>
+                android:layout_weight="1"
+                android:text="Estado del servicio:"
+                android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvRol"
-                android:layout_width="0dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToggleHabilitado"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Administrador de Hotel"
-                android:textStyle="italic"
-                app:layout_constraintTop_toBottomOf="@id/tvNombre"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="8dp"/>
+                android:text="Deshabilitar"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/red" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/seccionesCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/cardAdmin"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"
-        android:background="@drawable/border_black"
-        app:cardElevation="3dp"
-        app:cardCornerRadius="4dp">
-
-        <ScrollView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del servicio"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/etNombreServicio"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:hint="Ej. Wi-fi Premium"
+            android:maxLength="50"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/etDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:hint="Detalles sobre el servicio"
+            android:minLines="3"
+            android:gravity="top|start"
+            android:maxLines="5"
+            android:scrollbars="vertical"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio (S/.)"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/etPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Ej. 35.50"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Horario de Inicio"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etHoraInicio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:hint="Seleccionar hora de inicio"
+                android:maxLines="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHoraInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar"
+                android:textColor="@android:color/white"
+                app:backgroundTint="#009688"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Horario de Fin"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etHoraFin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:hint="Seleccionar hora de fin"
+                android:maxLines="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHoraFin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar"
+                android:textColor="@android:color/white"
+                app:backgroundTint="#009688"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Imágenes del servicio"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="16dp">
+
             <LinearLayout
-                android:id="@+id/seccionesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Detalles del Servicio"
-                    android:textStyle="bold"
-                    android:textSize="24sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Estado del servicio:"
-                        android:textSize="16sp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnToggleHabilitado"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Deshabilitar"
-                        android:textColor="@android:color/white"
-                        app:backgroundTint="@color/red" /> </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre del servicio"
-                    android:textStyle="bold" />
-                <EditText
-                    android:id="@+id/etNombreServicio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:hint="Ej. Wi-fi Premium"
-                    android:maxLength="50"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Descripción"
-                    android:textStyle="bold" />
-                <EditText
-                    android:id="@+id/etDescripcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:hint="Detalles sobre el servicio"
-                    android:minLines="3"
-                    android:gravity="top|start"
-                    android:maxLines="5"
-                    android:scrollbars="vertical"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio (S/.)"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
-                <EditText
-                    android:id="@+id/etPrecio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Ej. 35.50"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Horario"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
-                <EditText
-                    android:id="@+id/etHorario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="Ej. 9:00 AM - 8:00 PM"
-                    android:maxLength="50"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Imágenes del servicio"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                android:padding="12dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="8dp">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSeleccionarImagenes"
@@ -231,29 +298,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="16dp"/>
+                    android:gravity="center"
+                    android:background="@drawable/image_container_border" android:padding="8dp"
+                    android:minHeight="100dp" /> </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarCambios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar Cambios"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#009688" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGuardarCambios"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Guardar Cambios"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="#009688" />
+    </LinearLayout>
+</ScrollView>
+</androidx.cardview.widget.CardView>
 
-            </LinearLayout>
-        </ScrollView>
-    </androidx.cardview.widget.CardView>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/menu_admin"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+<com.google.android.material.bottomnavigation.BottomNavigationView
+android:id="@+id/bottom_navigation"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:background="?android:attr/windowBackground"
+app:menu="@menu/menu_admin"
+app:labelVisibilityMode="labeled"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>

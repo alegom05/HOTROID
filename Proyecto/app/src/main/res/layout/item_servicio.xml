@@ -31,15 +31,22 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvHorarioServicio"
+                android:id="@+id/tvHoraInicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Horario: 8:00 AM - 5:00 PM"
+                android:text="Hora Inicio: --:-- --"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginTop="4dp"/>
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tvHoraFin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora Fin: --:-- --"
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginTop="2dp"/> </LinearLayout>
 
 
         <ImageView
@@ -47,6 +54,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/baseline_keyboard_arrow_right_24"
+            android:contentDescription="Ir a detalles"
             android:layout_gravity="center_vertical" />
 
     </LinearLayout>

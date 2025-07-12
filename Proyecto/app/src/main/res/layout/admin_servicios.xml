@@ -5,30 +5,29 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminServiciosActivity">
-
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registros"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    tools:context=".AdminServiciosActivity"
+    android:background="#F5F5F5"> <TextView
+    android:id="@+id/tvTitulo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/registros_main_title"
+    android:textSize="36sp"
+    android:textStyle="bold"
+    android:textColor="@color/black"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardAdmin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="6dp"
-
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -36,27 +35,29 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="12dp">
 
             <ImageView
                 android:id="@+id/imagenPerfil"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/foto_admin"
                 android:scaleType="centerCrop"
                 android:background="@drawable/border_circle"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@string/profile_picture_description"/>
 
             <TextView
                 android:id="@+id/tvNombre"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Christopher Terrones"
+                android:text="@string/admin_name"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
@@ -67,8 +68,10 @@
                 android:id="@+id/tvRol"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Administrador de Hotel"
+                android:text="@string/admin_role"
                 android:textStyle="italic"
+                android:textSize="16sp"
+                android:textColor="#555555"
                 app:layout_constraintTop_toBottomOf="@id/tvNombre"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/imagenPerfil"
@@ -87,9 +90,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
-        android:background="@drawable/border_black"
-        app:cardElevation="3dp"
-        app:cardCornerRadius="4dp">
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -104,40 +106,100 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Servicios"
+                    android:text="@string/services_section_title"
                     android:textStyle="bold"
                     android:textSize="24sp"
+                    android:textColor="@color/black"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lista de servicios"
-                    android:layout_marginBottom="8dp"/> <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                    android:text="@string/services_list_description"
+                    android:layout_marginBottom="16dp"/>
 
-                <EditText
-                    android:id="@+id/etSearchServicio"
-                    android:layout_width="0dp"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Buscar servicio..."
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:text="@string/register_new_service_button"
+                    android:backgroundTint="#009688"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="16dp"
+                  />
 
-                <Button
-                    android:id="@+id/btnClearSearch"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Limpiar"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/rounded_border_background" android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="4dp"> <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginStart="8dp"
-                    android:backgroundTint="#FF5722"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
+                    android:src="@drawable/ic_search" android:contentDescription="@string/search_icon_description"
+                    app:tint="@color/black"/>
+
+                    <EditText
+                        android:id="@+id/etSearchServicio"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent" android:hint="@string/search_service_hint"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="8dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="12dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="#888888" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnClearSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="#FF5722"
+                        android:text="@string/clear_button"
+                        android:textColor="@android:color/white"
+                        android:minWidth="0dp" android:minHeight="0dp" android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:weightSum="2">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSelectHoraInicio"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/start_time_button"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="#2196F3"
+                        android:textColor="@android:color/white"
+                         />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSelectHoraFin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/end_time_button"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="#2196F3"
+                        android:textColor="@android:color/white"
+                         />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvServicios"
@@ -145,18 +207,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp" />
 
-                <Button
-                    android:id="@+id/btnRegistrar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Registrar"
-                    android:backgroundTint="#009688"
-                    android:textColor="@android:color/white" />
-
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
