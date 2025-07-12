@@ -72,7 +72,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/applyFiltersButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -117,7 +117,7 @@ public class Paso3ReservacionFragment extends Fragment {
     private void guardarReservaEnFirebase() {
         // Generar número aleatorio para la habitación (esto sería reemplazado por lógica real)
         Random random = new Random();
-        String roomNumber = String.valueOf(100 + random.nextInt(900));
+        int roomNumber = 100 + random.nextInt(900);
 
         // Crear objeto Reserva con datos completos
         Reserva nuevaReserva = new Reserva(
