@@ -15,6 +15,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotroid.bean.Hotel;
+import com.example.hotroid.bean.ChatBotResponse;
+import com.example.hotroid.chatbot.ChatBotManager;
+import com.example.hotroid.chatbot.HotelChatBot;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,9 +46,14 @@ public class ChatDetalladoUser extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private List<Message> messageList;
 
+    // ChatBot
+    private HotelChatBot chatBot;
+    private Hotel hotel;
+
     // Datos del chat
     private String chatId;
     private String hotelName;
+    private String hotelId;
     private int profileImageRes;
 
     @Override
@@ -74,14 +84,27 @@ public class ChatDetalladoUser extends AppCompatActivity {
         // Configurar datos del toolbar
         setupToolbarData();
 
-        // Cargar mensajes de ejemplo
-        loadSampleMessages();
+        // Inicializar ChatBot
+        initializeChatBot();
+
+        // Iniciar conversación con mensaje de bienvenida
+        startChatBotConversation();
     }
 
     private void getIntentData() {
         chatId = getIntent().getStringExtra("chat_id");
         hotelName = getIntent().getStringExtra("hotel_name");
+        hotelId = getIntent().getStringExtra("hotel_id");
         profileImageRes = getIntent().getIntExtra("profile_image", R.drawable.hotel_decameron);
+
+        // Crear objeto Hotel desde los datos del intent
+        hotel = new Hotel();
+        hotel.setIdHotel(hotelId);
+        hotel.setName(hotelName);
+        hotel.setRating(getIntent().getFloatExtra("hotel_rating", 4.5f));
+        hotel.setPrice(getIntent().getDoubleExtra("hotel_price", 0.0));
+        hotel.setDireccion(getIntent().getStringExtra("hotel_direccion"));
+        hotel.setDescription(getIntent().getStringExtra("hotel_description"));
 
         // Valores por defecto si no se reciben datos
         if (hotelName == null) {
@@ -89,6 +112,9 @@ public class ChatDetalladoUser extends AppCompatActivity {
         }
         if (chatId == null) {
             chatId = "default_chat";
+        }
+        if (hotelId == null) {
+            hotelId = "default_hotel";
         }
     }
 
@@ -120,11 +146,8 @@ public class ChatDetalladoUser extends AppCompatActivity {
 
         // Enter en el EditText para enviar mensaje
         messageEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
-                sendMessage();
-                return true;
-            }
-            return false;
+            sendMessage();
+            return true;
         });
     }
 
@@ -133,7 +156,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messageList);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true); // Mostrar mensajes desde abajo
+        layoutManager.setStackFromEnd(true); // Para mostrar mensajes desde abajo
 
         messagesRecyclerView.setLayoutManager(layoutManager);
         messagesRecyclerView.setAdapter(messageAdapter);
@@ -141,117 +164,126 @@ public class ChatDetalladoUser extends AppCompatActivity {
 
     private void setupToolbarData() {
         chatNameToolbar.setText(hotelName);
-        chatStatusToolbar.setText("En línea");
+        chatStatusToolbar.setText("Asistente Virtual • En línea");
         chatAvatarToolbar.setImageResource(profileImageRes);
     }
 
-    private void loadSampleMessages() {
-        // Mensajes de ejemplo - reemplaza con datos reales
-        List<Message> sampleMessages = new ArrayList<>();
+    private void initializeChatBot() {
+        chatBot = ChatBotManager.getInstance().getChatBot(hotel);
+    }
 
-        sampleMessages.add(new Message(
-                "1",
-                "Hola, espero que esté bien. Quería confirmar los detalles de mi reserva.",
-                getCurrentTimestamp(),
-                true, // es del usuario
-                Message.MessageType.TEXT
-        ));
-
-        sampleMessages.add(new Message(
-                "2",
-                "¡Hola! Claro, estaré encantado de ayudarle con su reserva. ¿Podría proporcionarme su número de confirmación?",
-                getCurrentTimestamp(),
-                false, // es del hotel
-                Message.MessageType.TEXT
-        ));
-
-        sampleMessages.add(new Message(
-                "3",
-                "Sí, claro. El número de confirmación es HTL-2024-001234",
-                getCurrentTimestamp(),
-                true,
-                Message.MessageType.TEXT
-        ));
-
-        sampleMessages.add(new Message(
-                "4",
-                "Perfecto, encontré su reserva. Está confirmada para el 15-17 de junio, habitación doble con vista al mar. ¿Hay algo específico que necesite saber?",
-                getCurrentTimestamp(),
-                false,
-                Message.MessageType.TEXT
-        ));
-
-        updateMessagesList(sampleMessages);
+    private void startChatBotConversation() {
+        // Agregar mensaje de bienvenida del chatbot
+        ChatBotResponse welcomeResponse = chatBot.getWelcomeMessage();
+        addBotMessage(welcomeResponse.getContent());
     }
 
     private void sendMessage() {
         String messageText = messageEditText.getText().toString().trim();
 
-        if (!messageText.isEmpty()) {
-            // Crear nuevo mensaje
-            Message newMessage = new Message(
-                    String.valueOf(System.currentTimeMillis()),
-                    messageText,
-                    getCurrentTimestamp(),
-                    true, // es del usuario
-                    Message.MessageType.TEXT
-            );
+        if (messageText.isEmpty()) {
+            return;
+        }
 
-            // Agregar a la lista
-            messageList.add(newMessage);
-            messageAdapter.notifyItemInserted(messageList.size() - 1);
+        // Agregar mensaje del usuario
+        addUserMessage(messageText);
 
-            // Scroll al último mensaje
-            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
+        // Limpiar el EditText
+        messageEditText.setText("");
 
-            // Limpiar el EditText
-            messageEditText.setText("");
+        // Procesar respuesta del chatbot
+        processChatBotResponse(messageText);
+    }
 
-            // Simular respuesta del hotel después de 2 segundos
-            simulateHotelResponse();
+    private void processChatBotResponse(String userInput) {
+        // Mostrar indicador de "escribiendo..."
+        showTypingIndicator();
+
+        // Simular delay de respuesta del bot (más realista)
+        messagesRecyclerView.postDelayed(() -> {
+            hideTypingIndicator();
+
+            chatBot.processUserInput(userInput, new HotelChatBot.ChatBotCallback() {
+                @Override
+                public void onResponse(ChatBotResponse response) {
+                    runOnUiThread(() -> {
+                        addBotMessage(response.getContent());
+                    });
+                }
+
+                @Override
+                public void onError(String error) {
+                    runOnUiThread(() -> {
+                        addBotMessage("❌ Lo siento, ocurrió un error al procesar tu solicitud. " +
+                                "Por favor intenta nuevamente o contacta atención al cliente.");
+                        Toast.makeText(ChatDetalladoUser.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+        }, 1500); // 1.5 segundos de delay
+    }
+
+    private void addUserMessage(String message) {
+        Message userMessage = new Message();
+        userMessage.setContent(message);
+        userMessage.setFromCurrentUser(true);
+        userMessage.setTimestamp(getCurrentTimestamp());
+
+        messageList.add(userMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        scrollToBottom();
+    }
+
+    private void addBotMessage(String message) {
+        Message botMessage = new Message();
+        botMessage.setContent(message);
+        botMessage.setFromCurrentUser(false);
+        botMessage.setTimestamp(getCurrentTimestamp());
+        botMessage.setSenderName("Asistente " + hotelName);
+
+        messageList.add(botMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        scrollToBottom();
+    }
+
+    private void showTypingIndicator() {
+        Message typingMessage = new Message();
+        typingMessage.setContent("Escribiendo...");
+        typingMessage.setFromCurrentUser(false);
+        typingMessage.setTimestamp(getCurrentTimestamp());
+        typingMessage.setSenderName("Asistente " + hotelName);
+        typingMessage.setTyping(true); // Necesitarás agregar este campo a la clase Message
+
+        messageList.add(typingMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        scrollToBottom();
+    }
+
+    private void hideTypingIndicator() {
+        // Remover el último mensaje si es un indicador de "escribiendo"
+        if (!messageList.isEmpty()) {
+            Message lastMessage = messageList.get(messageList.size() - 1);
+            if (lastMessage.isTyping()) {
+                messageList.remove(messageList.size() - 1);
+                messageAdapter.notifyItemRemoved(messageList.size());
+            }
         }
     }
 
-    private void simulateHotelResponse() {
-        // Simular respuesta automática del hotel
-        messagesRecyclerView.postDelayed(() -> {
-            String[] responses = {
-                    "Gracias por su mensaje. Un representante le responderá pronto.",
-                    "Entendido. ¿Hay algo más en lo que pueda ayudarle?",
-                    "Perfecto. Hemos tomado nota de su solicitud.",
-                    "Muchas gracias. Esperamos verle pronto en nuestro hotel."
-            };
-
-            String randomResponse = responses[(int) (Math.random() * responses.length)];
-
-            Message hotelResponse = new Message(
-                    String.valueOf(System.currentTimeMillis()),
-                    randomResponse,
-                    getCurrentTimestamp(),
-                    false, // es del hotel
-                    Message.MessageType.TEXT
-            );
-
-            messageList.add(hotelResponse);
-            messageAdapter.notifyItemInserted(messageList.size() - 1);
-            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
-
-        }, 2000); // 2 segundos de delay
-    }
-
-    private void updateMessagesList(List<Message> messages) {
-        messageList.clear();
-        messageList.addAll(messages);
-        messageAdapter.notifyDataSetChanged();
-
-        // Scroll al último mensaje
-        if (!messageList.isEmpty()) {
-            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
+    private void scrollToBottom() {
+        if (messageList.size() > 0) {
+            messagesRecyclerView.smoothScrollToPosition(messageList.size() - 1);
         }
     }
 
     private String getCurrentTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdf.format(new Date());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Opcional: Limpiar recursos del chatbot si es necesario
     }
 }

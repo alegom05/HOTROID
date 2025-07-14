@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.hotroid.HotelImageAdapter;
+import com.example.hotroid.bean.ChatHotelItem;
 import com.example.hotroid.databinding.UserHotelDetalladoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -25,6 +26,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -243,20 +245,51 @@ public class HotelDetalladoUser extends AppCompatActivity {
         startActivity(intent);
     }
 
-    
+
+    // Agregar este método actualizado a la clase HotelDetalladoUser.java
+
     private void iniciarChat() {
-        // En una implementación real, esto abriría una actividad de chat con el hotel
-        Intent chatIntent = new Intent(this, ChatDetalladoUser.class);
-        chatIntent.putExtra("HOTEL_ID", getIntent().getStringExtra("HOTEL_ID"));
-        chatIntent.putExtra("HOTEL_NAME", binding.hotelName.getText().toString());
+        Intent intent = new Intent(this, ChatDetalladoUser.class);
 
-        // Por ahora, mostramos un mensaje de que esta característica estará disponible pronto
-        Toast.makeText(this, "Próximamente: Chat con " + binding.hotelName.getText(), Toast.LENGTH_LONG).show();
+        // Pasar todos los datos necesarios del hotel
+        intent.putExtra("chat_id", "chat_" + getIntent().getStringExtra("HOTEL_ID"));
+        intent.putExtra("hotel_name", getIntent().getStringExtra("nombre"));
+        intent.putExtra("hotel_id", getIntent().getStringExtra("HOTEL_ID"));
+        intent.putExtra("hotel_rating", getIntent().getFloatExtra("rating", 0f));
+        intent.putExtra("hotel_price", getIntent().getDoubleExtra("precio", 0.0));
+        intent.putExtra("hotel_direccion", getIntent().getStringExtra("direccion"));
+        intent.putExtra("hotel_description", getIntent().getStringExtra("descripcion"));
+        intent.putExtra("profile_image", getIntent().getIntExtra("imagen", R.drawable.hotel_decameron));
 
-        // En una implementación real, iniciaríamos la actividad
-        // startActivity(chatIntent);
+        startActivity(intent);
+
+        // Registrar este chat en la lista de chats del fragment principal
+        registrarChatEnFragment();
     }
 
+    private void registrarChatEnFragment() {
+        // Este método registrará el chat para que aparezca en ChatFragment
+        // Podrías usar SharedPreferences, base de datos local, o un evento
+        // Para simplificar, usaremos una clase singleton para manejar los chats activos
+
+        String hotelId = getIntent().getStringExtra("HOTEL_ID");
+        String hotelName = getIntent().getStringExtra("nombre");
+        int profileImage = getIntent().getIntExtra("imagen", R.drawable.hotel_decameron);
+
+        if (hotelId != null && hotelName != null) {
+            ChatHotelItem chatItem = new ChatHotelItem();
+            chatItem.setHotelId(hotelId);
+            chatItem.setHotelName(hotelName);
+            chatItem.setLastMessage("¡Hola! Bienvenido al asistente virtual...");
+            chatItem.setLastMessageTime(new Date());
+            chatItem.setProfileImageRes(profileImage);
+            chatItem.setHasUnreadMessages(false);
+            chatItem.setUnreadCount(0);
+
+            // Agregar a la lista de chats activos
+            ChatListManager.getInstance().addOrUpdateChat(chatItem);
+        }
+    }
     private void configurarTerminosYCondiciones() {
         binding.termsAndConditionsLink.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
