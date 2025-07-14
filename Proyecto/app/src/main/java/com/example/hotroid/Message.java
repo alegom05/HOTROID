@@ -5,7 +5,9 @@ public class Message {
     public enum MessageType {
         TEXT,
         IMAGE,
-        FILE
+        FILE,
+        CHATBOT_OPTIONS,
+        CHATBOT_RESPONSE
     }
 
     private String id;

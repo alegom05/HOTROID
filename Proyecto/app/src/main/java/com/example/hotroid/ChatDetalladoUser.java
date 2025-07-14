@@ -45,6 +45,10 @@ public class ChatDetalladoUser extends AppCompatActivity {
     private String chatId;
     private String hotelName;
     private int profileImageRes;
+    private boolean isChatbot;
+
+    // Chatbot
+    private ChatbotManager chatbotManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
         chatId = getIntent().getStringExtra("chat_id");
         hotelName = getIntent().getStringExtra("hotel_name");
         profileImageRes = getIntent().getIntExtra("profile_image", R.drawable.hotel_decameron);
+        isChatbot = getIntent().getBooleanExtra("is_chatbot", false);
 
         // Valores por defecto si no se reciben datos
         if (hotelName == null) {
@@ -89,6 +94,11 @@ public class ChatDetalladoUser extends AppCompatActivity {
         }
         if (chatId == null) {
             chatId = "default_chat";
+        }
+
+        // Inicializar chatbot si es necesario
+        if (isChatbot) {
+            chatbotManager = ChatbotManager.getInstance();
         }
     }
 
@@ -141,7 +151,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
 
     private void setupToolbarData() {
         chatNameToolbar.setText(hotelName);
-        chatStatusToolbar.setText("En línea");
+        chatStatusToolbar.setText(isChatbot ? "Asistente Virtual - En línea" : "En línea");
         chatAvatarToolbar.setImageResource(profileImageRes);
     }
 
@@ -149,37 +159,49 @@ public class ChatDetalladoUser extends AppCompatActivity {
         // Mensajes de ejemplo - reemplaza con datos reales
         List<Message> sampleMessages = new ArrayList<>();
 
-        sampleMessages.add(new Message(
-                "1",
-                "Hola, espero que esté bien. Quería confirmar los detalles de mi reserva.",
-                getCurrentTimestamp(),
-                true, // es del usuario
-                Message.MessageType.TEXT
-        ));
+        if (isChatbot) {
+            // Mensaje de bienvenida del chatbot
+            sampleMessages.add(new Message(
+                    "welcome",
+                    chatbotManager.getWelcomeMessage(),
+                    getCurrentTimestamp(),
+                    false, // es del chatbot
+                    Message.MessageType.CHATBOT_OPTIONS
+            ));
+        } else {
+            // Mensajes normales de ejemplo
+            sampleMessages.add(new Message(
+                    "1",
+                    "Hola, espero que esté bien. Quería confirmar los detalles de mi reserva.",
+                    getCurrentTimestamp(),
+                    true, // es del usuario
+                    Message.MessageType.TEXT
+            ));
 
-        sampleMessages.add(new Message(
-                "2",
-                "¡Hola! Claro, estaré encantado de ayudarle con su reserva. ¿Podría proporcionarme su número de confirmación?",
-                getCurrentTimestamp(),
-                false, // es del hotel
-                Message.MessageType.TEXT
-        ));
+            sampleMessages.add(new Message(
+                    "2",
+                    "¡Hola! Claro, estaré encantado de ayudarle con su reserva. ¿Podría proporcionarme su número de confirmación?",
+                    getCurrentTimestamp(),
+                    false, // es del hotel
+                    Message.MessageType.TEXT
+            ));
 
-        sampleMessages.add(new Message(
-                "3",
-                "Sí, claro. El número de confirmación es HTL-2024-001234",
-                getCurrentTimestamp(),
-                true,
-                Message.MessageType.TEXT
-        ));
+            sampleMessages.add(new Message(
+                    "3",
+                    "Sí, claro. El número de confirmación es HTL-2024-001234",
+                    getCurrentTimestamp(),
+                    true,
+                    Message.MessageType.TEXT
+            ));
 
-        sampleMessages.add(new Message(
-                "4",
-                "Perfecto, encontré su reserva. Está confirmada para el 15-17 de junio, habitación doble con vista al mar. ¿Hay algo específico que necesite saber?",
-                getCurrentTimestamp(),
-                false,
-                Message.MessageType.TEXT
-        ));
+            sampleMessages.add(new Message(
+                    "4",
+                    "Perfecto, encontré su reserva. Está confirmada para el 15-17 de junio, habitación doble con vista al mar. ¿Hay algo específico que necesite saber?",
+                    getCurrentTimestamp(),
+                    false,
+                    Message.MessageType.TEXT
+            ));
+        }
 
         updateMessagesList(sampleMessages);
     }
@@ -207,8 +229,13 @@ public class ChatDetalladoUser extends AppCompatActivity {
             // Limpiar el EditText
             messageEditText.setText("");
 
-            // Simular respuesta del hotel después de 2 segundos
-            simulateHotelResponse();
+            // Procesar respuesta según el tipo de chat
+            if (isChatbot) {
+                processChatbotResponse(messageText);
+            } else {
+                // Simular respuesta del hotel después de 2 segundos
+                simulateHotelResponse();
+            }
         }
     }
 
@@ -237,6 +264,71 @@ public class ChatDetalladoUser extends AppCompatActivity {
             messagesRecyclerView.scrollToPosition(messageList.size() - 1);
 
         }, 2000); // 2 segundos de delay
+    }
+
+    private void processChatbotResponse(String userInput) {
+        // Procesar la entrada del usuario con el chatbot
+        if (chatbotManager != null) {
+            // Simular un hotelId y userId - en una implementación real estos vendrían del contexto de la aplicación
+            String hotelId = chatId.replace("chatbot_", ""); // Extraer hotelId del chatId
+            String userId = "current_user_id"; // Esto debería venir del usuario autenticado
+
+            chatbotManager.processUserInput(userInput, hotelId, userId, new ChatbotManager.ChatbotCallback() {
+                @Override
+                public void onResponse(String response) {
+                    // Mostrar respuesta del chatbot
+                    runOnUiThread(() -> {
+                        Message botResponse = new Message(
+                                String.valueOf(System.currentTimeMillis()),
+                                response,
+                                getCurrentTimestamp(),
+                                false, // es del chatbot
+                                Message.MessageType.CHATBOT_RESPONSE
+                        );
+
+                        messageList.add(botResponse);
+                        messageAdapter.notifyItemInserted(messageList.size() - 1);
+                        messagesRecyclerView.scrollToPosition(messageList.size() - 1);
+                    });
+                }
+
+                @Override
+                public void onError(String error) {
+                    // Mostrar mensaje de error
+                    runOnUiThread(() -> {
+                        Message errorResponse = new Message(
+                                String.valueOf(System.currentTimeMillis()),
+                                "❌ " + error,
+                                getCurrentTimestamp(),
+                                false, // es del chatbot
+                                Message.MessageType.CHATBOT_RESPONSE
+                        );
+
+                        messageList.add(errorResponse);
+                        messageAdapter.notifyItemInserted(messageList.size() - 1);
+                        messagesRecyclerView.scrollToPosition(messageList.size() - 1);
+                    });
+                }
+
+                @Override
+                public void onShowOptions(List<ChatbotOption> options) {
+                    // Mostrar opciones del menú principal
+                    runOnUiThread(() -> {
+                        Message optionsResponse = new Message(
+                                String.valueOf(System.currentTimeMillis()),
+                                chatbotManager.getWelcomeMessage(),
+                                getCurrentTimestamp(),
+                                false, // es del chatbot
+                                Message.MessageType.CHATBOT_OPTIONS
+                        );
+
+                        messageList.add(optionsResponse);
+                        messageAdapter.notifyItemInserted(messageList.size() - 1);
+                        messagesRecyclerView.scrollToPosition(messageList.size() - 1);
+                    });
+                }
+            });
+        }
     }
 
     private void updateMessagesList(List<Message> messages) {
