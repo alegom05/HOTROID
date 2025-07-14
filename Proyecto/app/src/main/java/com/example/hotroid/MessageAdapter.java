@@ -12,6 +12,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_HOTEL = 2;
+    private static final int VIEW_TYPE_CHATBOT = 3;
 
     private List<Message> messageList;
 
@@ -22,7 +23,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemViewType(int position) {
         Message message = messageList.get(position);
-        return message.isFromUser() ? VIEW_TYPE_USER : VIEW_TYPE_HOTEL;
+        if (message.isFromUser()) {
+            return VIEW_TYPE_USER;
+        } else if (message.getMessageType() == Message.MessageType.CHATBOT_OPTIONS || 
+                   message.getMessageType() == Message.MessageType.CHATBOT_RESPONSE) {
+            return VIEW_TYPE_CHATBOT;
+        } else {
+            return VIEW_TYPE_HOTEL;
+        }
     }
 
     @NonNull
@@ -32,6 +40,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (viewType == VIEW_TYPE_USER) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_message_user, parent, false);
+        } else if (viewType == VIEW_TYPE_CHATBOT) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_message_chatbot, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_message_hotel, parent, false);

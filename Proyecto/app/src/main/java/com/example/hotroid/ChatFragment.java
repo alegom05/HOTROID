@@ -66,7 +66,8 @@ public class ChatFragment extends Fragment implements ChatAdapter.OnChatClickLis
                 "Hola, quería confirmar los detalles de mi reserva para el fin de semana. ¿Podría ayudarme con la hora del check-in?",
                 "10:35",
                 true,
-                R.drawable.hotel_decameron
+                R.drawable.hotel_decameron,
+                false
         ));
 
         sampleChats.add(new ChatItem(
@@ -75,7 +76,19 @@ public class ChatFragment extends Fragment implements ChatAdapter.OnChatClickLis
                 "Gracias por su reserva. Su habitación estará lista a partir de las 3:00 PM",
                 "09:20",
                 false,
-                R.drawable.hotel_decameron
+                R.drawable.hotel_decameron,
+                false
+        ));
+
+        // Agregar un chatbot de ejemplo
+        sampleChats.add(new ChatItem(
+                "chatbot_1",
+                "🤖 Asistente Virtual - Resort Paradise",
+                "¡Bienvenido! Estoy aquí para ayudarle. Digite 1-5 para opciones o 0 para el menú.",
+                "Ayer",
+                true,
+                R.drawable.hotel_decameron,
+                true
         ));
 
         sampleChats.add(new ChatItem(
@@ -84,7 +97,8 @@ public class ChatFragment extends Fragment implements ChatAdapter.OnChatClickLis
                 "Bienvenido a Paradise Resort. ¿En qué podemos ayudarle?",
                 "Ayer",
                 true,
-                R.drawable.hotel_decameron
+                R.drawable.hotel_decameron,
+                false
         ));
 
         sampleChats.add(new ChatItem(
@@ -93,7 +107,8 @@ public class ChatFragment extends Fragment implements ChatAdapter.OnChatClickLis
                 "Su reserva ha sido confirmada para el 15 de junio",
                 "Lun",
                 false,
-                R.drawable.hotel_decameron
+                R.drawable.hotel_decameron,
+                false
         ));
 
         updateChatList(sampleChats);
@@ -127,6 +142,7 @@ public class ChatFragment extends Fragment implements ChatAdapter.OnChatClickLis
             intent.putExtra("hotel_name", chat.getHotelName());
             intent.putExtra("profile_image", chat.getProfileImageRes());
             intent.putExtra("last_message", chat.getLastMessage());
+            intent.putExtra("is_chatbot", chat.isChatbot());
             startActivity(intent);
         }
     }

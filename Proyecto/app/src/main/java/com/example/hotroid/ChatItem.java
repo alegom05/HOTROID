@@ -7,6 +7,7 @@ public class ChatItem {
     private boolean isUnread;
     private int profileImageRes;
     private String chatId;
+    private boolean isChatbot;
 
     public ChatItem() {
         // Constructor vacío
@@ -27,6 +28,17 @@ public class ChatItem {
         this.timestamp = timestamp;
         this.isUnread = isUnread;
         this.profileImageRes = profileImageRes;
+        this.isChatbot = false; // Default to false
+    }
+
+    public ChatItem(String chatId, String hotelName, String lastMessage, String timestamp, boolean isUnread, int profileImageRes, boolean isChatbot) {
+        this.chatId = chatId;
+        this.hotelName = hotelName;
+        this.lastMessage = lastMessage;
+        this.timestamp = timestamp;
+        this.isUnread = isUnread;
+        this.profileImageRes = profileImageRes;
+        this.isChatbot = isChatbot;
     }
 
     // Getters y Setters
@@ -76,5 +88,13 @@ public class ChatItem {
 
     public void setChatId(String chatId) {
         this.chatId = chatId;
+    }
+
+    public boolean isChatbot() {
+        return isChatbot;
+    }
+
+    public void setChatbot(boolean chatbot) {
+        isChatbot = chatbot;
     }
 }
