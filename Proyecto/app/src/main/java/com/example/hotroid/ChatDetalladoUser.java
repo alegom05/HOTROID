@@ -1,7 +1,13 @@
 package com.example.hotroid;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,7 +46,6 @@ public class ChatDetalladoUser extends AppCompatActivity {
     private RecyclerView messagesRecyclerView;
     private EditText messageEditText;
     private ImageView sendButton;
-    private ImageView attachButton;
 
     // Adaptador y datos
     private MessageAdapter messageAdapter;
@@ -56,10 +61,17 @@ public class ChatDetalladoUser extends AppCompatActivity {
     private String hotelId;
     private int profileImageRes;
 
+    // Para gestión del teclado
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Configurar la ventana para ajustarse al teclado
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         setContentView(R.layout.user_chat_detallado);
 
         // Configurar window insets
@@ -77,6 +89,9 @@ public class ChatDetalladoUser extends AppCompatActivity {
 
         // Configurar listeners
         setupListeners();
+
+        // Configurar detección del teclado
+        setupKeyboardDetection();
 
         // Configurar RecyclerView de mensajes
         setupMessagesRecyclerView();
@@ -129,7 +144,6 @@ public class ChatDetalladoUser extends AppCompatActivity {
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
         messageEditText = findViewById(R.id.messageEditText);
         sendButton = findViewById(R.id.sendButton);
-        attachButton = findViewById(R.id.attachButton);
     }
 
     private void setupListeners() {
@@ -139,16 +153,50 @@ public class ChatDetalladoUser extends AppCompatActivity {
         // Botón de enviar mensaje
         sendButton.setOnClickListener(v -> sendMessage());
 
-        // Botón de adjuntar (placeholder)
-        attachButton.setOnClickListener(v -> {
-            Toast.makeText(this, "Función de adjuntar próximamente", Toast.LENGTH_SHORT).show();
+
+        // Click en el EditText para mostrar teclado
+        messageEditText.setOnClickListener(v -> {
+            showKeyboard(messageEditText);
+            scrollToBottomDelayed();
+        });
+
+        // Focus listener para mostrar teclado automáticamente
+        messageEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                showKeyboard(messageEditText);
+                scrollToBottomDelayed();
+            }
         });
 
         // Enter en el EditText para enviar mensaje
         messageEditText.setOnEditorActionListener((v, actionId, event) -> {
-            sendMessage();
-            return true;
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendMessage();
+                return true;
+            }
+            return false;
         });
+    }
+
+    private void setupKeyboardDetection() {
+        final View rootView = findViewById(android.R.id.content);
+        keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootView.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootView.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.05) {
+                    // Teclado visible
+                    scrollToBottomDelayed();
+                } else {
+                    // Teclado oculto
+                }
+            }
+        };
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
     }
 
     private void setupMessagesRecyclerView() {
@@ -270,10 +318,26 @@ public class ChatDetalladoUser extends AppCompatActivity {
         }
     }
 
+    private void showKeyboard(EditText editText) {
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
     private void scrollToBottom() {
         if (messageList.size() > 0) {
             messagesRecyclerView.smoothScrollToPosition(messageList.size() - 1);
         }
+    }
+
+    private void scrollToBottomDelayed() {
+        messagesRecyclerView.postDelayed(() -> {
+            if (messageList.size() > 0) {
+                messagesRecyclerView.smoothScrollToPosition(messageList.size() - 1);
+            }
+        }, 300);
     }
 
     private String getCurrentTimestamp() {
@@ -284,6 +348,13 @@ public class ChatDetalladoUser extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Opcional: Limpiar recursos del chatbot si es necesario
+
+        // Limpiar el listener del teclado
+        if (keyboardLayoutListener != null) {
+            View rootView = findViewById(android.R.id.content);
+            if (rootView != null) {
+                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+            }
+        }
     }
 }
