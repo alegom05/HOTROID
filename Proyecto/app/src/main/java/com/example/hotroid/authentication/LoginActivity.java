@@ -21,6 +21,7 @@ import com.example.hotroid.CloudinaryManager; // <-- AÑADE ESTA LÍNEA
 import com.example.hotroid.R;
 import com.example.hotroid.SuperActivity;
 import com.example.hotroid.TaxiActivity;
+import com.example.hotroid.ThemeManager;
 import com.example.hotroid.bean.Persona;
 import com.example.hotroid.databinding.LoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeManager.applyTheme(this);
         EdgeToEdge.enable(this);
         //setContentView(R.layout.login);
         binding = LoginBinding.inflate(getLayoutInflater());
