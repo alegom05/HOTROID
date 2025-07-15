@@ -136,9 +136,9 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         trip.setDocumentId(snapshot.getId());
                     }
 
-                    tvClienteInfo.setText("Cliente: " + trip.getNombresCliente() + " " + trip.getApellidosCliente());
-                    tvOrigenInfo.setText("Origen: " + trip.getOrigen());
-                    tvDestinoInfo.setText("Destino: " + trip.getDestino());
+                    tvClienteInfo.setText("" + trip.getNombresCliente() + " " + trip.getApellidosCliente());
+                    tvOrigenInfo.setText("" + trip.getOrigen());
+                    tvDestinoInfo.setText("" + trip.getDestino());
                     tvEstadoViaje.setText("Estado: " + trip.getEstadoViaje());
 
                     if (trip.getTimestamp() != null &&
