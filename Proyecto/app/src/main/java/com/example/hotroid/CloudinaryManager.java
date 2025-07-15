@@ -1,4 +1,5 @@
-package com.example.hotroid;
+// src/main/java/com/example/hotroid/CloudinaryManager.java
+package com.example.hotroid; // Asegúrate que el paquete sea correcto
 
 import android.content.Context;
 import com.cloudinary.android.MediaManager;
@@ -15,10 +16,14 @@ public class CloudinaryManager {
             config.put("cloud_name", "dssoxggz3");
             config.put("api_key", "996445227885663");
             config.put("api_secret", "2WqO6YaSuZyO0WXc8cxj4JkArxU"); // ⚠️ Solo para pruebas
-            MediaManager.init(context, config);
-            isInitialized = true;
+            try {
+                MediaManager.init(context, config);
+                isInitialized = true;
+                android.util.Log.d("CloudinaryManager", "Cloudinary inicializado con éxito.");
+            } catch (IllegalStateException e) {
+                android.util.Log.e("CloudinaryManager", "Fallo la inicialización de Cloudinary: " + e.getMessage());
+                // Considera manejar este error, quizás mostrando un Toast si es crítico para el inicio.
+            }
         }
     }
 }
-
-

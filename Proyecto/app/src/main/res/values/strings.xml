@@ -87,4 +87,19 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <string name="services_quantity_description">Cantidad de Servicios</string>
     <string name="total_amount_spent_description">Monto Total Gastado</string>
     <string name="generate_pdf_button">Generar Reporte PDF</string>
+
+
+    <string name="registros_main_title">Registros</string>
+    <string name="services_section_title">Servicios</string>
+    <string name="services_list_description">Lista de servicios</string>
+    <string name="register_new_service_button">Registrar Nuevo Servicio</string>
+    <string name="search_service_hint">Buscar servicio</string>
+    <string name="start_time_button">Hora Inicio</string>
+    <string name="end_time_button">Hora Fin</string>
+    <string name="search_icon_description">Icono de búsqueda</string>
+
+    <string name="nav_registros">Registros</string>
+    <string name="nav_taxistas">Taxistas</string>
+    <string name="nav_checkout">Checkout</string>
+    <string name="nav_reportes">Reportes</string>
 </resources>

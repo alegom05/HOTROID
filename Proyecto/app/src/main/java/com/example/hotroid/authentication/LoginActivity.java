@@ -16,9 +16,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hotroid.AdminActivity;
 import com.example.hotroid.ClienteActivity;
+// ¡IMPORTA TU CLASE CLOUDINARYMANAGER!
+import com.example.hotroid.CloudinaryManager; // <-- AÑADE ESTA LÍNEA
 import com.example.hotroid.R;
 import com.example.hotroid.SuperActivity;
 import com.example.hotroid.TaxiActivity;
+import com.example.hotroid.ThemeManager;
 import com.example.hotroid.bean.Persona;
 import com.example.hotroid.databinding.LoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -51,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeManager.applyTheme(this);
         EdgeToEdge.enable(this);
         //setContentView(R.layout.login);
         binding = LoginBinding.inflate(getLayoutInflater());
@@ -61,6 +65,13 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // ¡AÑADE ESTA LÍNEA AQUÍ, AL PRINCIPIO DEL onCreate()!
+        // Esto inicializará Cloudinary tan pronto como la Activity principal de la app se cargue.
+        CloudinaryManager.init(getApplicationContext());
+        Log.d("LoginActivity", "CloudinaryManager.init() llamado desde LoginActivity onCreate.");
+
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -91,6 +102,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // ... el resto de tu código de LoginActivity permanece igual ...
+
     private void setupGoogleSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // tu client ID
@@ -107,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    /*private void loginWithEmail() {
+        /*private void loginWithEmail() {
         String email = binding.etEmail.getText().toString().trim();
         String password = binding.etPassword.getText().toString().trim();
 
@@ -291,5 +304,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 }

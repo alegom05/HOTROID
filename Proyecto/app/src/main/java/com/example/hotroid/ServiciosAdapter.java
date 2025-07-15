@@ -6,24 +6,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull; // Added for clarity
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotroid.bean.Servicios;
+import com.example.hotroid.bean.Servicios; // Make sure this import is correct
 
 import java.util.ArrayList;
 
 public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.ServiciosViewHolder>{
 
     private ArrayList<Servicios> serviciosList;
-    private OnItemClickListener listener; // Changed to the inner interface type directly
+    private OnItemClickListener listener;
 
-    // Constructor to initialize the list of services
     public ServiciosAdapter(ArrayList<Servicios> serviciosList) {
         this.serviciosList = serviciosList;
     }
 
-    // Interface for click events
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -32,52 +30,50 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.Serv
         this.listener = listener;
     }
 
-    @NonNull // Added for clarity
+    @NonNull
     @Override
     public ServiciosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout for each service item
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_servicio, parent, false); // Make sure this points to your updated XML
+                .inflate(R.layout.item_servicio, parent, false);
         return new ServiciosViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ServiciosViewHolder holder, int position) {
-        // Get the current service
         Servicios currentServicio = serviciosList.get(position);
 
-        // Set the data for the current service
         holder.tvNombreServicio.setText(currentServicio.getNombre());
-        // Set the schedule. Provide a default text if the schedule is null or empty.
-        holder.tvHorarioServicio.setText("Horario: " +
-                (currentServicio.getHorario() != null && !currentServicio.getHorario().isEmpty() ?
-                        currentServicio.getHorario() : "No especificado"));
 
-        // Handle click on each service item
+        // Now directly use getHoraInicio() and getHoraFin()
+        String horaInicio = currentServicio.getHoraInicio();
+        String horaFin = currentServicio.getHoraFin();
+
+        holder.tvHoraInicio.setText("Hora Inicio: " + (horaInicio != null && !horaInicio.isEmpty() ? horaInicio : "--:-- --"));
+        holder.tvHoraFin.setText("Hora Fin: " + (horaFin != null && !horaFin.isEmpty() ? horaFin : "--:-- --"));
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onItemClick(position); // Pass the clicked position
+                listener.onItemClick(position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        // Return the size of the service list
         return serviciosList.size();
     }
 
-    // ViewHolder class to hold the views for each service item
     public class ServiciosViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvNombreServicio; // Changed ID to match item_servicio.xml
-        public TextView tvHorarioServicio; // New TextView for schedule
+        public TextView tvNombreServicio;
+        public TextView tvHoraInicio;
+        public TextView tvHoraFin;
         public ImageView arrowIcon;
 
-        public ServiciosViewHolder(@NonNull View itemView) { // Added for clarity
+        public ServiciosViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Initialize the views, ensuring they match item_servicio.xml
-            tvNombreServicio = itemView.findViewById(R.id.tvNombreServicio); // Corrected ID
-            tvHorarioServicio = itemView.findViewById(R.id.tvHorarioServicio); // New
+            tvNombreServicio = itemView.findViewById(R.id.tvNombreServicio);
+            tvHoraInicio = itemView.findViewById(R.id.tvHoraInicio);
+            tvHoraFin = itemView.findViewById(R.id.tvHoraFin);
             arrowIcon = itemView.findViewById(R.id.arrowIcon);
         }
     }

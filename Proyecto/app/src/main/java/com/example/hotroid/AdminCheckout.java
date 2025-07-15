@@ -255,7 +255,7 @@ public class AdminCheckout extends AppCompatActivity {
                 });
     }
 
-    private void generateAndSaveRandomCheckouts() {
+    /*private void generateAndSaveRandomCheckouts() {
         if (reservasList.isEmpty() || clientesList.isEmpty()) {
             Log.w("AdminCheckout", "No hay suficientes reservas o clientes para generar checkouts aleatorios.");
             Toast.makeText(AdminCheckout.this, "No hay reservas o clientes para generar checkouts.", Toast.LENGTH_SHORT).show();
@@ -270,11 +270,10 @@ public class AdminCheckout extends AppCompatActivity {
             Cliente randomCliente = clientesList.get(random.nextInt(clientesList.size()));
 
             String clientFullName = randomCliente.getNombres() + " " + randomCliente.getApellidos();
-
-            int roomNumInt = 0; // Default value in case of parsing error
+            int roomNumInt = 0;
             try {
                 // Parse the room number string from Reserva to an int
-                roomNumInt = Integer.parseInt(randomReserva.getRoomNumber());
+                roomNumInt = randomReserva.getRoomNumber()
             } catch (NumberFormatException e) {
                 Log.e("AdminCheckout", "Error parsing room number from Reserva: " + randomReserva.getRoomNumber(), e);
                 // Handle error, maybe skip this checkout or use a default value
@@ -302,7 +301,7 @@ public class AdminCheckout extends AppCompatActivity {
                         Toast.makeText(AdminCheckout.this, "Error al generar checkout: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
-    }
+    }*/
 
     private void loadCheckoutsFromFirestore() {
         db.collection("checkouts")

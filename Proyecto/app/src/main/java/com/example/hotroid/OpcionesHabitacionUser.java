@@ -111,7 +111,24 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
                                 // Convertir el documento a un objeto Room
                                 Room room = new Room();
                                 room.setId(document.getId());
-                                room.setRoomNumber(document.getString("roomNumber"));
+
+                                // Manejar roomNumber (puede venir como String, Long o Integer)
+                                Object roomNumberObj = document.get("roomNumber");
+                                if (roomNumberObj != null) {
+                                    if (roomNumberObj instanceof String) {
+                                        try {
+                                            room.setRoomNumber(Integer.parseInt((String) roomNumberObj));
+                                        } catch (NumberFormatException e) {
+                                            Log.e(TAG, "Error al convertir roomNumber a int: " + roomNumberObj, e);
+                                            room.setRoomNumber(0); // Valor por defecto
+                                        }
+                                    } else if (roomNumberObj instanceof Long) {
+                                        room.setRoomNumber(((Long) roomNumberObj).intValue());
+                                    } else if (roomNumberObj instanceof Integer) {
+                                        room.setRoomNumber((Integer) roomNumberObj);
+                                    }
+                                }
+
                                 room.setRoomType(document.getString("roomType"));
 
                                 // Obtener campos numéricos
@@ -133,8 +150,7 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
 
                                 room.setStatus(document.getString("status"));
 
-                                // Si el documento no tiene hotelId, pero estamos filtrando por hotel,
-                                // asumimos que todas las habitaciones son de este hotel
+                                // Asignar hotelId
                                 room.setHotelId(hotelId);
 
                                 // Asignar un precio dependiendo del tipo de habitación
@@ -148,7 +164,7 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
                             }
                         }
 
-                        // Si hay un hotel específico para filtrar las habitaciones
+                        // Filtrar por hotel si es necesario
                         if (hotelId != null && !hotelId.isEmpty()) {
                             List<Room> filteredRooms = new ArrayList<>();
                             for (Room room : roomList) {
@@ -175,7 +191,7 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
     }
 
     private void assignRoomPrice(Room room) {
-        // Asignar precio según el tipo de habitación (esto puede venir de Firestore en el futuro)
+        // Asignar precio según el tipo de habitación
         String roomType = room.getRoomType() != null ? room.getRoomType().toLowerCase() : "";
 
         switch (roomType) {
@@ -290,7 +306,6 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Manejar el clic en la flecha de retroceso
         if (item.getItemId() == android.R.id.home) {
-            // Simplemente finaliza esta actividad para volver a la anterior
             finish();
             return true;
         }

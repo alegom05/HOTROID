@@ -1,7 +1,13 @@
 package com.example.hotroid;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +20,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotroid.bean.Hotel;
+import com.example.hotroid.bean.ChatBotResponse;
+import com.example.hotroid.chatbot.ChatBotManager;
+import com.example.hotroid.chatbot.HotelChatBot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,21 +46,32 @@ public class ChatDetalladoUser extends AppCompatActivity {
     private RecyclerView messagesRecyclerView;
     private EditText messageEditText;
     private ImageView sendButton;
-    private ImageView attachButton;
 
     // Adaptador y datos
     private MessageAdapter messageAdapter;
     private List<Message> messageList;
 
+    // ChatBot
+    private HotelChatBot chatBot;
+    private Hotel hotel;
+
     // Datos del chat
     private String chatId;
     private String hotelName;
+    private String hotelId;
     private int profileImageRes;
+
+    // Para gestión del teclado
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Configurar la ventana para ajustarse al teclado
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         setContentView(R.layout.user_chat_detallado);
 
         // Configurar window insets
@@ -68,20 +90,36 @@ public class ChatDetalladoUser extends AppCompatActivity {
         // Configurar listeners
         setupListeners();
 
+        // Configurar detección del teclado
+        setupKeyboardDetection();
+
         // Configurar RecyclerView de mensajes
         setupMessagesRecyclerView();
 
         // Configurar datos del toolbar
         setupToolbarData();
 
-        // Cargar mensajes de ejemplo
-        loadSampleMessages();
+        // Inicializar ChatBot
+        initializeChatBot();
+
+        // Iniciar conversación con mensaje de bienvenida
+        startChatBotConversation();
     }
 
     private void getIntentData() {
         chatId = getIntent().getStringExtra("chat_id");
         hotelName = getIntent().getStringExtra("hotel_name");
+        hotelId = getIntent().getStringExtra("hotel_id");
         profileImageRes = getIntent().getIntExtra("profile_image", R.drawable.hotel_decameron);
+
+        // Crear objeto Hotel desde los datos del intent
+        hotel = new Hotel();
+        hotel.setIdHotel(hotelId);
+        hotel.setName(hotelName);
+        hotel.setRating(getIntent().getFloatExtra("hotel_rating", 4.5f));
+        hotel.setPrice(getIntent().getDoubleExtra("hotel_price", 0.0));
+        hotel.setDireccion(getIntent().getStringExtra("hotel_direccion"));
+        hotel.setDescription(getIntent().getStringExtra("hotel_description"));
 
         // Valores por defecto si no se reciben datos
         if (hotelName == null) {
@@ -89,6 +127,9 @@ public class ChatDetalladoUser extends AppCompatActivity {
         }
         if (chatId == null) {
             chatId = "default_chat";
+        }
+        if (hotelId == null) {
+            hotelId = "default_hotel";
         }
     }
 
@@ -103,7 +144,6 @@ public class ChatDetalladoUser extends AppCompatActivity {
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
         messageEditText = findViewById(R.id.messageEditText);
         sendButton = findViewById(R.id.sendButton);
-        attachButton = findViewById(R.id.attachButton);
     }
 
     private void setupListeners() {
@@ -113,14 +153,24 @@ public class ChatDetalladoUser extends AppCompatActivity {
         // Botón de enviar mensaje
         sendButton.setOnClickListener(v -> sendMessage());
 
-        // Botón de adjuntar (placeholder)
-        attachButton.setOnClickListener(v -> {
-            Toast.makeText(this, "Función de adjuntar próximamente", Toast.LENGTH_SHORT).show();
+
+        // Click en el EditText para mostrar teclado
+        messageEditText.setOnClickListener(v -> {
+            showKeyboard(messageEditText);
+            scrollToBottomDelayed();
+        });
+
+        // Focus listener para mostrar teclado automáticamente
+        messageEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                showKeyboard(messageEditText);
+                scrollToBottomDelayed();
+            }
         });
 
         // Enter en el EditText para enviar mensaje
         messageEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
                 sendMessage();
                 return true;
             }
@@ -128,12 +178,33 @@ public class ChatDetalladoUser extends AppCompatActivity {
         });
     }
 
+    private void setupKeyboardDetection() {
+        final View rootView = findViewById(android.R.id.content);
+        keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootView.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootView.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.05) {
+                    // Teclado visible
+                    scrollToBottomDelayed();
+                } else {
+                    // Teclado oculto
+                }
+            }
+        };
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+    }
+
     private void setupMessagesRecyclerView() {
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true); // Mostrar mensajes desde abajo
+        layoutManager.setStackFromEnd(true); // Para mostrar mensajes desde abajo
 
         messagesRecyclerView.setLayoutManager(layoutManager);
         messagesRecyclerView.setAdapter(messageAdapter);
@@ -141,117 +212,149 @@ public class ChatDetalladoUser extends AppCompatActivity {
 
     private void setupToolbarData() {
         chatNameToolbar.setText(hotelName);
-        chatStatusToolbar.setText("En línea");
+        chatStatusToolbar.setText("Asistente Virtual • En línea");
         chatAvatarToolbar.setImageResource(profileImageRes);
     }
 
-    private void loadSampleMessages() {
-        // Mensajes de ejemplo - reemplaza con datos reales
-        List<Message> sampleMessages = new ArrayList<>();
+    private void initializeChatBot() {
+        chatBot = ChatBotManager.getInstance().getChatBot(hotel);
+    }
 
-        sampleMessages.add(new Message(
-                "1",
-                "Hola, espero que esté bien. Quería confirmar los detalles de mi reserva.",
-                getCurrentTimestamp(),
-                true, // es del usuario
-                Message.MessageType.TEXT
-        ));
-
-        sampleMessages.add(new Message(
-                "2",
-                "¡Hola! Claro, estaré encantado de ayudarle con su reserva. ¿Podría proporcionarme su número de confirmación?",
-                getCurrentTimestamp(),
-                false, // es del hotel
-                Message.MessageType.TEXT
-        ));
-
-        sampleMessages.add(new Message(
-                "3",
-                "Sí, claro. El número de confirmación es HTL-2024-001234",
-                getCurrentTimestamp(),
-                true,
-                Message.MessageType.TEXT
-        ));
-
-        sampleMessages.add(new Message(
-                "4",
-                "Perfecto, encontré su reserva. Está confirmada para el 15-17 de junio, habitación doble con vista al mar. ¿Hay algo específico que necesite saber?",
-                getCurrentTimestamp(),
-                false,
-                Message.MessageType.TEXT
-        ));
-
-        updateMessagesList(sampleMessages);
+    private void startChatBotConversation() {
+        // Agregar mensaje de bienvenida del chatbot
+        ChatBotResponse welcomeResponse = chatBot.getWelcomeMessage();
+        addBotMessage(welcomeResponse.getContent());
     }
 
     private void sendMessage() {
         String messageText = messageEditText.getText().toString().trim();
 
-        if (!messageText.isEmpty()) {
-            // Crear nuevo mensaje
-            Message newMessage = new Message(
-                    String.valueOf(System.currentTimeMillis()),
-                    messageText,
-                    getCurrentTimestamp(),
-                    true, // es del usuario
-                    Message.MessageType.TEXT
-            );
-
-            // Agregar a la lista
-            messageList.add(newMessage);
-            messageAdapter.notifyItemInserted(messageList.size() - 1);
-
-            // Scroll al último mensaje
-            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
-
-            // Limpiar el EditText
-            messageEditText.setText("");
-
-            // Simular respuesta del hotel después de 2 segundos
-            simulateHotelResponse();
+        if (messageText.isEmpty()) {
+            return;
         }
+
+        // Agregar mensaje del usuario
+        addUserMessage(messageText);
+
+        // Limpiar el EditText
+        messageEditText.setText("");
+
+        // Procesar respuesta del chatbot
+        processChatBotResponse(messageText);
     }
 
-    private void simulateHotelResponse() {
-        // Simular respuesta automática del hotel
+    private void processChatBotResponse(String userInput) {
+        // Mostrar indicador de "escribiendo..."
+        showTypingIndicator();
+
+        // Simular delay de respuesta del bot (más realista)
         messagesRecyclerView.postDelayed(() -> {
-            String[] responses = {
-                    "Gracias por su mensaje. Un representante le responderá pronto.",
-                    "Entendido. ¿Hay algo más en lo que pueda ayudarle?",
-                    "Perfecto. Hemos tomado nota de su solicitud.",
-                    "Muchas gracias. Esperamos verle pronto en nuestro hotel."
-            };
+            hideTypingIndicator();
 
-            String randomResponse = responses[(int) (Math.random() * responses.length)];
+            chatBot.processUserInput(userInput, new HotelChatBot.ChatBotCallback() {
+                @Override
+                public void onResponse(ChatBotResponse response) {
+                    runOnUiThread(() -> {
+                        addBotMessage(response.getContent());
+                    });
+                }
 
-            Message hotelResponse = new Message(
-                    String.valueOf(System.currentTimeMillis()),
-                    randomResponse,
-                    getCurrentTimestamp(),
-                    false, // es del hotel
-                    Message.MessageType.TEXT
-            );
-
-            messageList.add(hotelResponse);
-            messageAdapter.notifyItemInserted(messageList.size() - 1);
-            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
-
-        }, 2000); // 2 segundos de delay
+                @Override
+                public void onError(String error) {
+                    runOnUiThread(() -> {
+                        addBotMessage("❌ Lo siento, ocurrió un error al procesar tu solicitud. " +
+                                "Por favor intenta nuevamente o contacta atención al cliente.");
+                        Toast.makeText(ChatDetalladoUser.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+        }, 1500); // 1.5 segundos de delay
     }
 
-    private void updateMessagesList(List<Message> messages) {
-        messageList.clear();
-        messageList.addAll(messages);
-        messageAdapter.notifyDataSetChanged();
+    private void addUserMessage(String message) {
+        Message userMessage = new Message();
+        userMessage.setContent(message);
+        userMessage.setFromCurrentUser(true);
+        userMessage.setTimestamp(getCurrentTimestamp());
 
-        // Scroll al último mensaje
+        messageList.add(userMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        scrollToBottom();
+    }
+
+    private void addBotMessage(String message) {
+        Message botMessage = new Message();
+        botMessage.setContent(message);
+        botMessage.setFromCurrentUser(false);
+        botMessage.setTimestamp(getCurrentTimestamp());
+        botMessage.setSenderName("Asistente " + hotelName);
+
+        messageList.add(botMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        scrollToBottom();
+    }
+
+    private void showTypingIndicator() {
+        Message typingMessage = new Message();
+        typingMessage.setContent("Escribiendo...");
+        typingMessage.setFromCurrentUser(false);
+        typingMessage.setTimestamp(getCurrentTimestamp());
+        typingMessage.setSenderName("Asistente " + hotelName);
+        typingMessage.setTyping(true); // Necesitarás agregar este campo a la clase Message
+
+        messageList.add(typingMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        scrollToBottom();
+    }
+
+    private void hideTypingIndicator() {
+        // Remover el último mensaje si es un indicador de "escribiendo"
         if (!messageList.isEmpty()) {
-            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
+            Message lastMessage = messageList.get(messageList.size() - 1);
+            if (lastMessage.isTyping()) {
+                messageList.remove(messageList.size() - 1);
+                messageAdapter.notifyItemRemoved(messageList.size());
+            }
         }
+    }
+
+    private void showKeyboard(EditText editText) {
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    private void scrollToBottom() {
+        if (messageList.size() > 0) {
+            messagesRecyclerView.smoothScrollToPosition(messageList.size() - 1);
+        }
+    }
+
+    private void scrollToBottomDelayed() {
+        messagesRecyclerView.postDelayed(() -> {
+            if (messageList.size() > 0) {
+                messagesRecyclerView.smoothScrollToPosition(messageList.size() - 1);
+            }
+        }, 300);
     }
 
     private String getCurrentTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdf.format(new Date());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Limpiar el listener del teclado
+        if (keyboardLayoutListener != null) {
+            View rootView = findViewById(android.R.id.content);
+            if (rootView != null) {
+                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+            }
+        }
     }
 }

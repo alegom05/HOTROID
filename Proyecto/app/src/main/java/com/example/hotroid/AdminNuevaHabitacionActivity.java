@@ -55,14 +55,14 @@ public class AdminNuevaHabitacionActivity extends AppCompatActivity {
         btnGuardarHabitacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String numeroHabitacion = etNumeroHabitacion.getText().toString().trim();
-                String tipoHabitacion = tvTipoHabitacion.getText().toString().trim(); // Obtener del TextView
+                String numeroHabitacionStr = etNumeroHabitacion.getText().toString().trim();
+                String tipoHabitacion = tvTipoHabitacion.getText().toString().trim();
                 String adultosStr = etAdultos.getText().toString().trim();
                 String ninosStr = etNinos.getText().toString().trim();
                 String areaStr = etArea.getText().toString().trim();
 
                 // Validaciones
-                if (numeroHabitacion.isEmpty() || adultosStr.isEmpty() || ninosStr.isEmpty() || areaStr.isEmpty()) {
+                if (numeroHabitacionStr.isEmpty() || adultosStr.isEmpty() || ninosStr.isEmpty() || areaStr.isEmpty()) {
                     Toast.makeText(AdminNuevaHabitacionActivity.this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -72,13 +72,14 @@ public class AdminNuevaHabitacionActivity extends AppCompatActivity {
                 }
 
                 try {
+                    // Convertir a int y double
+                    int numeroHabitacion = Integer.parseInt(numeroHabitacionStr); // Convertir a int
                     int adultos = Integer.parseInt(adultosStr);
                     int ninos = Integer.parseInt(ninosStr);
                     double area = Double.parseDouble(areaStr);
 
                     // Creamos la nueva habitación con estado "Available" por defecto
-                    // El primer argumento es null porque Firestore generará el ID automáticamente
-                    Room newRoom = new Room(null, numeroHabitacion, tipoHabitacion, adultos, ninos, area);
+                    Room newRoom = new Room(null, numeroHabitacion, tipoHabitacion, adultos, ninos, area); // Ahora se pasa como int
                     newRoom.setStatus("Available"); // Estado inicial
 
                     db.collection("habitaciones")
@@ -96,7 +97,7 @@ public class AdminNuevaHabitacionActivity extends AppCompatActivity {
                             });
 
                 } catch (NumberFormatException e) {
-                    Toast.makeText(AdminNuevaHabitacionActivity.this, "Por favor, ingrese números válidos para capacidad y área.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminNuevaHabitacionActivity.this, "Por favor, ingrese números válidos en todos los campos numéricos.", Toast.LENGTH_SHORT).show();
                     Log.e("AdminNuevaHabitacion", "Error parsing number", e);
                 }
             }

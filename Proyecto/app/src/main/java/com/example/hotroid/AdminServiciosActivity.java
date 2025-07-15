@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -31,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class AdminServiciosActivity extends AppCompatActivity {
@@ -40,7 +43,16 @@ public class AdminServiciosActivity extends AppCompatActivity {
     private ArrayList<Servicios> originalServiciosList;
     private EditText etSearchServicio;
     private Button btnClearSearch;
+    private Button btnSelectHoraInicio;
+    private Button btnSelectHoraFin;
+    // Removí los TextViews ya que no están en tu layout actual de AdminServicios
+    // private TextView tvSelectedHoraInicio;
+    // private TextView tvSelectedHoraFin;
     private FirebaseFirestore db;
+
+    private String selectedHoraInicio = "";
+    private String selectedHoraFin = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +72,15 @@ public class AdminServiciosActivity extends AppCompatActivity {
 
         etSearchServicio = findViewById(R.id.etSearchServicio);
         btnClearSearch = findViewById(R.id.btnClearSearch);
+        btnSelectHoraInicio = findViewById(R.id.btnSelectHoraInicio);
+        btnSelectHoraFin = findViewById(R.id.btnSelectHoraFin);
 
         originalServiciosList = new ArrayList<>();
         serviciosList = new ArrayList<>();
         adapter = new ServiciosAdapter(serviciosList);
         recyclerView.setAdapter(adapter);
 
+        // Puedes descomentar esto si necesitas añadir los servicios iniciales solo una vez.
         // addInitialServicesToFirestore();
 
         etSearchServicio.addTextChangedListener(new TextWatcher() {
@@ -82,12 +97,25 @@ public class AdminServiciosActivity extends AppCompatActivity {
         btnClearSearch.setOnClickListener(v -> {
             etSearchServicio.setText("");
             filterServicios("");
+            // Clear selected times when clearing search
+            selectedHoraInicio = "";
+            selectedHoraFin = "";
+            btnSelectHoraInicio.setText("Hora Inicio");
+            btnSelectHoraFin.setText("Hora Fin");
         });
 
         findViewById(R.id.btnRegistrar).setOnClickListener(v -> {
             Intent intent = new Intent(AdminServiciosActivity.this, AdminNuevoServicioActivity.class);
+            // Si necesitas pasar las horas seleccionadas en esta actividad para prellenar
+            // el formulario de nuevo servicio, las pasas aquí.
+            intent.putExtra("horaInicio", selectedHoraInicio);
+            intent.putExtra("horaFin", selectedHoraFin);
             startActivityForResult(intent, 100);
         });
+
+        // Set listeners for new time selection buttons
+        btnSelectHoraInicio.setOnClickListener(v -> showTimePickerDialog(true));
+        btnSelectHoraFin.setOnClickListener(v -> showTimePickerDialog(false));
 
         adapter.setOnItemClickListener((position) -> {
             Servicios selectedServicio = serviciosList.get(position);
@@ -95,30 +123,32 @@ public class AdminServiciosActivity extends AppCompatActivity {
             Intent intent = new Intent(AdminServiciosActivity.this, AdminServiciosDetallesActivity.class);
             intent.putExtra("Service_name", selectedServicio.getNombre());
             intent.putExtra("Service_description", selectedServicio.getDescripcion());
-            // --- FIX: Pass price as double ---
             intent.putExtra("price", selectedServicio.getPrecio());
-            // ---------------------------------
-            intent.putExtra("schedule", selectedServicio.getHorario());
+            // CORRECCIÓN: Usar las claves correctas para pasar los datos
+            intent.putExtra("hora_inicio", selectedServicio.getHoraInicio()); // Clave corregida
+            intent.putExtra("hora_fin", selectedServicio.getHoraFin());       // Clave corregida
             intent.putExtra("documentId", selectedServicio.getDocumentId());
             intent.putStringArrayListExtra("imagenes", selectedServicio.getImagenes());
+            intent.putExtra("habilitado", selectedServicio.isHabilitado()); // Asegurarse de pasar el estado habilitado
             startActivity(intent);
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_registros) {
-                Intent intentInicio = new Intent(AdminServiciosActivity.this, AdminActivity.class);
+            int itemId = item.getItemId(); // Obtener el ID del elemento seleccionado
+            if (itemId == R.id.nav_registros) {
+                Intent intentInicio = new Intent(AdminServiciosActivity.this, AdminActivity.class); // Asumo que AdminActivity es tu pantalla principal
                 startActivity(intentInicio);
                 return true;
-            } else if (item.getItemId() == R.id.nav_taxistas) {
+            } else if (itemId == R.id.nav_taxistas) {
                 Intent intentUbicacion = new Intent(AdminServiciosActivity.this, AdminTaxistas.class);
                 startActivity(intentUbicacion);
                 return true;
-            } else if (item.getItemId() == R.id.nav_checkout) {
+            } else if (itemId == R.id.nav_checkout) {
                 Intent intentAlertas = new Intent(AdminServiciosActivity.this, AdminCheckout.class);
                 startActivity(intentAlertas);
                 return true;
-            } else if (item.getItemId() == R.id.nav_reportes) {
+            } else if (itemId == R.id.nav_reportes) {
                 Intent intentAlertas = new Intent(AdminServiciosActivity.this, AdminReportes.class);
                 startActivity(intentAlertas);
                 return true;
@@ -128,21 +158,40 @@ public class AdminServiciosActivity extends AppCompatActivity {
         });
     }
 
+    private void showTimePickerDialog(boolean isStartTime) {
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, hourOfDay, minuteOfHour) -> {
+                    String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minuteOfHour);
+                    if (isStartTime) {
+                        selectedHoraInicio = formattedTime;
+                        btnSelectHoraInicio.setText("Inicio: " + formattedTime);
+                    } else {
+                        selectedHoraFin = formattedTime;
+                        btnSelectHoraFin.setText("Fin: " + formattedTime);
+                    }
+                    // Opcional: podrías aplicar un filtro aquí si el usuario selecciona una hora para buscar
+                }, hour, minute, true); // true for 24-hour format
+        timePickerDialog.show();
+    }
+
+
     private void addInitialServicesToFirestore() {
         db.collection("servicios").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
-                        ArrayList<String> noImages = new ArrayList<>();
-
-                        // --- FIX: Use double for price ---
-                        Servicios wifi = new Servicios("Wi-fi Premium", "Acceso a internet de alta velocidad en todo el hotel.", 0.00, "24/7", getUriStringsFromDrawable(R.drawable.wifi));
-                        Servicios buffet = new Servicios("Desayuno Buffet", "Variedad de opciones de desayuno continental y local.", 35.00, "6:00 AM - 10:00 AM", getUriStringsFromDrawable(R.drawable.buffet));
-                        Servicios gimnasio = new Servicios("Gimnasio", "Acceso a equipos de cardio y pesas.", 0.00, "5:00 AM - 11:00 PM", getUriStringsFromDrawable(R.drawable.gimnasio));
-                        Servicios piscina = new Servicios("Piscina Climatizada", "Piscina cubierta con temperatura controlada.", 0.00, "7:00 AM - 10:00 PM", getUriStringsFromDrawable(R.drawable.piscina));
-                        Servicios karaoke = new Servicios("Sala de Karaoke", "Disfruta de una noche de diversión con amigos y familia.", 50.00, "7:00 PM - 2:00 AM", getUriStringsFromDrawable(R.drawable.karaoke));
-                        Servicios lavanderia = new Servicios("Servicio de Lavandería", "Lavado y planchado de ropa personal.", 15.50, "8:00 AM - 6:00 PM", getUriStringsFromDrawable(R.drawable.lavanderia)); // Example decimal price
-                        Servicios spa = new Servicios("Spa y Masajes", "Relájate con nuestros tratamientos y masajes profesionales.", 80.00, "9:00 AM - 8:00 PM", getUriStringsFromDrawable(R.drawable.spa));
-                        // ---------------------------------
+                        // Asegúrate de que el constructor de Servicios acepte horaInicio y horaFin
+                        // Servicios(String nombre, String descripcion, double precio, String horaInicio, String horaFin, ArrayList<String> imagenes)
+                        Servicios wifi = new Servicios("Wi-fi Premium", "Acceso a internet de alta velocidad en todo el hotel.", 0.00, "00:00", "23:59", getUriStringsFromDrawable(R.drawable.wifi));
+                        Servicios buffet = new Servicios("Desayuno Buffet", "Variedad de opciones de desayuno continental y local.", 35.00, "06:00", "10:00", getUriStringsFromDrawable(R.drawable.buffet));
+                        Servicios gimnasio = new Servicios("Gimnasio", "Acceso a equipos de cardio y pesas.", 0.00, "05:00", "23:00", getUriStringsFromDrawable(R.drawable.gimnasio));
+                        Servicios piscina = new Servicios("Piscina Climatizada", "Piscina cubierta con temperatura controlada.", 0.00, "07:00", "22:00", getUriStringsFromDrawable(R.drawable.piscina));
+                        Servicios karaoke = new Servicios("Sala de Karaoke", "Disfruta de una noche de diversión con amigos y familia.", 50.00, "19:00", "02:00", getUriStringsFromDrawable(R.drawable.karaoke));
+                        Servicios lavanderia = new Servicios("Servicio de Lavandería", "Lavado y planchado de ropa personal.", 15.50, "08:00", "18:00", getUriStringsFromDrawable(R.drawable.lavanderia));
+                        Servicios spa = new Servicios("Spa y Masajes", "Relájate con nuestros tratamientos y masajes profesionales.", 80.00, "09:00", "20:00", getUriStringsFromDrawable(R.drawable.spa));
 
                         addServiceToFirestore(wifi);
                         addServiceToFirestore(buffet);
@@ -174,6 +223,7 @@ public class AdminServiciosActivity extends AppCompatActivity {
 
     private ArrayList<String> getUriStringsFromDrawable(int drawableId) {
         ArrayList<String> uriStrings = new ArrayList<>();
+        // Asegúrate de que esta URL sea cargable por Glide o que tus imágenes estén en Cloudinary/Firebase Storage
         uriStrings.add(Uri.parse("android.resource://" + getPackageName() + "/" + drawableId).toString());
         return uriStrings;
     }
@@ -185,8 +235,10 @@ public class AdminServiciosActivity extends AppCompatActivity {
         } else {
             text = text.toLowerCase(Locale.getDefault());
             for (Servicios servicio : originalServiciosList) {
+                // Ahora busca también por horaInicio y horaFin
                 if (servicio.getNombre().toLowerCase(Locale.getDefault()).contains(text) ||
-                        (servicio.getHorario() != null && servicio.getHorario().toLowerCase(Locale.getDefault()).contains(text))) {
+                        (servicio.getHoraInicio() != null && servicio.getHoraInicio().toLowerCase(Locale.getDefault()).contains(text)) ||
+                        (servicio.getHoraFin() != null && servicio.getHoraFin().toLowerCase(Locale.getDefault()).contains(text))) {
                     serviciosList.add(servicio);
                 }
             }
@@ -224,22 +276,25 @@ public class AdminServiciosActivity extends AppCompatActivity {
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             String nombre = data.getStringExtra("nombre");
             String descripcion = data.getStringExtra("descripcion");
-            String horario = data.getStringExtra("horario");
+            // Asegúrate de que las claves aquí coincidan con lo que AdminNuevoServicioActivity devuelve
+            String horaInicio = data.getStringExtra("hora_inicio"); // POSIBLE CAMBIO AQUÍ si NuevoServicio devuelve "hora_inicio"
+            String horaFin = data.getStringExtra("hora_fin");       // POSIBLE CAMBIO AQUÍ si NuevoServicio devuelve "hora_fin"
             ArrayList<String> uriStrings = data.getStringArrayListExtra("imagenes");
 
-            // --- FIX: Parse price String to double and handle potential errors ---
-            double precio = 0.0; // Default value
+            double precio = 0.0;
+            // Si AdminNuevoServicioActivity devuelve el precio como double directamente, usa getDoubleExtra
+            precio = data.getDoubleExtra("precio", 0.0); // OJO: Si AdminNuevoServicioActivity devuelve como String, mantén el parseo
+            /*
             String precioStr = data.getStringExtra("precio");
             if (precioStr != null && !precioStr.isEmpty()) {
                 try {
                     precio = Double.parseDouble(precioStr);
                 } catch (NumberFormatException e) {
                     Toast.makeText(this, "Error: El precio no es un número válido.", Toast.LENGTH_SHORT).show();
-                    return; // Stop if price is invalid
+                    return;
                 }
             }
-            // -------------------------------------------------------------------
-
+            */
             recargarServicios();
             showNotification("Servicio creado", "El servicio \"" + nombre + "\" fue registrado con éxito.");
         }

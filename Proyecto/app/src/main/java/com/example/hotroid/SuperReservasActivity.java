@@ -252,7 +252,7 @@ public class SuperReservasActivity extends AppCompatActivity {
             if (!searchText.isEmpty()) {
                 matchesSearch = reserva.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchText) ||
                         reserva.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchText) ||
-                        reserva.getRoomNumber().toLowerCase(Locale.getDefault()).contains(searchText);
+                        String.valueOf(reserva.getRoomNumber()).toLowerCase(Locale.getDefault()).contains(searchText);
             }
 
             // Filter by adults

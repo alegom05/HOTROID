@@ -56,9 +56,8 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.util.List; // Importar java.util.List explícitamente y sin alias
-import com.itextpdf.text.ListItem; // Importar ListItem de iText
-// No se necesita importar com.itextpdf.text.List con alias, se usará el nombre completo
+import java.util.List;
+import com.itextpdf.text.ListItem;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -481,12 +480,13 @@ public class AdminVentasServicio extends AppCompatActivity {
     private void addSampleServicesToFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<Servicios> sampleServices = new ArrayList<>();
-        sampleServices.add(new Servicios("Servicio de Limpieza General", "Limpieza completa de interiores.", 50.0, "9:00 AM - 5:00 PM", new ArrayList<>()));
-        sampleServices.add(new Servicios("Servicio de Jardinería", "Mantenimiento y cuidado de jardines.", 75.0, "8:00 AM - 4:00 PM", new ArrayList<>()));
-        sampleServices.add(new Servicios("Servicio de Electricidad", "Reparaciones e instalaciones eléctricas.", 120.0, "24 Horas", new ArrayList<>()));
-        sampleServices.add(new Servicios("Servicio de Fontanería", "Reparación de tuberías y grifos.", 90.0, "24 Horas", new ArrayList<>()));
-        sampleServices.add(new Servicios("Servicio de Pintura", "Pintura de paredes y techos.", 200.0, "9:00 AM - 6:00 PM", new ArrayList<>()));
-        sampleServices.add(new Servicios("Sala de Karaoke", "Disfruta de una noche de diversión con amigos y familia.", 50.5, "11:00 PM - 2:00 AM", new ArrayList<>()));
+        // Updated constructors to use horaInicio and horaFin
+        sampleServices.add(new Servicios("Servicio de Limpieza General", "Limpieza completa de interiores.", 50.0, "9:00 AM", "5:00 PM", new ArrayList<>()));
+        sampleServices.add(new Servicios("Servicio de Jardinería", "Mantenimiento y cuidado de jardines.", 75.0, "8:00 AM", "4:00 PM", new ArrayList<>()));
+        sampleServices.add(new Servicios("Servicio de Electricidad", "Reparaciones e instalaciones eléctricas.", 120.0, "12:00 AM", "11:59 PM", new ArrayList<>())); // Assuming 24 Horas means whole day
+        sampleServices.add(new Servicios("Servicio de Fontanería", "Reparación de tuberías y grifos.", 90.0, "12:00 AM", "11:59 PM", new ArrayList<>())); // Assuming 24 Horas means whole day
+        sampleServices.add(new Servicios("Servicio de Pintura", "Pintura de paredes y techos.", 200.0, "9:00 AM", "6:00 PM", new ArrayList<>()));
+        sampleServices.add(new Servicios("Sala de Karaoke", "Disfruta de una noche de diversión con amigos y familia.", 50.5, "11:00 PM", "2:00 AM", new ArrayList<>()));
 
         for (Servicios servicio : sampleServices) {
             db.collection("servicios").add(servicio)
@@ -512,14 +512,16 @@ public class AdminVentasServicio extends AppCompatActivity {
         // Para "servicios" necesitarías ver los IDs generados cuando los añades o si ya los tienes.
         // Voy a usar los que parecen ser IDs válidos de tu Firestore para el ejemplo.
 
-        String idServicioEjemplo1 = "TAiV2R8xqogP8WF0KUN8"; // Este parece ser un ID real de servicio de tu venta de ejemplo
-        String idServicioEjemplo2 = "OTRO_ID_SERVICIO_PARA_JARDINERIA"; // Reemplaza con un ID real
-        String idServicioEjemplo3 = "OTRO_ID_SERVICIO_PARA_ELECTRICIDAD"; // Reemplaza con un ID real
-        String idServicioEjemplo4 = "OTRO_ID_SERVICIO_PARA_FONTANERIA"; // Reemplaza con un ID real
-        String idServicioEjemplo5 = "OTRO_ID_SERVICIO_PARA_PINTURA"; // Reemplaza con un ID real
-        String idServicioEjemplo6 = "OTRO_ID_SERVICIO_PARA_KARAOKE"; // Reemplaza con un ID real
+        // YOU MUST REPLACE THESE WITH ACTUAL SERVICE IDs FROM YOUR FIRESTORE DATABASE
+        // AFTER RUNNING addSampleServicesToFirestore() and checking your console.
+        String idServicioEjemplo1 = "ID_SERVICIO_LIMPIEZA"; // Replace with actual ID for "Servicio de Limpieza General"
+        String idServicioEjemplo2 = "ID_SERVICIO_JARDINERIA"; // Replace with actual ID for "Servicio de Jardinería"
+        String idServicioEjemplo3 = "ID_SERVICIO_ELECTRICIDAD"; // Replace with actual ID for "Servicio de Electricidad"
+        String idServicioEjemplo4 = "ID_SERVICIO_FONTANERIA"; // Replace with actual ID for "Servicio de Fontanería"
+        String idServicioEjemplo5 = "ID_SERVICIO_PINTURA"; // Replace with actual ID for "Servicio de Pintura"
+        String idServicioEjemplo6 = "ID_SERVICIO_KARAOKE"; // Replace with actual ID for "Sala de Karaoke"
 
-        String idClienteEjemplo = "VswY6QDHjyCuEITLIDv"; // Este parece ser un ID real de cliente
+        String idClienteEjemplo = "VswY6QDHjyCuEITLIDv"; // This seems to be a real client ID from your example
 
         List<VentaServicio> sampleVentas = new ArrayList<>();
 

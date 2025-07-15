@@ -118,6 +118,10 @@
   <component name="ChangeListManager">
     <list default="true" id="beaa9226-b7e8-462c-9c69-f696ea289baa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../Proyecto/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Proyecto/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Proyecto/app/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Proyecto/app/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Proyecto/app/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Proyecto/app/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Proyecto/app/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Proyecto/app/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Proyecto/app/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +131,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=RFCW71D1A9K)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -166,7 +170,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Users/carlo/OneDrive/Documentos/Github/HOTROID/HOTROID/Proyecto/app/src/main/res/mipmap-hdpi",
-    "last_opened_file_path": "C:/Users/usuario/AndroidStudioProjects/HOTROID/HOTROID"
+    "last_opened_file_path": "C:/Users/usuario/AndroidStudioProjects/HOTROID/Proyecto"
   }
 }]]></component>
   <component name="RecentsManager">

@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentId;
 public class Room {
     @DocumentId
     private String id;
-    private String roomNumber;
+    private int roomNumber;
     private String roomType;
     private int capacityAdults;
     private int capacityChildren;
@@ -20,12 +20,12 @@ public class Room {
     public Room() {}
 
     // Constructor original para mantener compatibilidad
-    public Room(String id, String roomNumber, String roomType, int capacityAdults, int capacityChildren, double area) {
+    public Room(String id, int roomNumber, String roomType, int capacityAdults, int capacityChildren, double area) {
         this(id, roomNumber, roomType, capacityAdults, capacityChildren, area, "HOTEL-DEFAULT", determinarPrecioPorTipo(roomType));
     }
 
     // Constructor completo
-    public Room(String id, String roomNumber, String roomType, int capacityAdults, int capacityChildren,
+    public Room(String id, int roomNumber, String roomType, int capacityAdults, int capacityChildren,
                 double area, String hotelId, double price) {
         this.id = id;
         this.roomNumber = roomNumber;
@@ -59,7 +59,7 @@ public class Room {
 
     // --- Getters ---
     public String getId() { return id; }
-    public String getRoomNumber() { return roomNumber; }
+    public int getRoomNumber() { return roomNumber; }
     public String getRoomType() { return roomType; }
     public int getCapacityAdults() { return capacityAdults; }
     public int getCapacityChildren() { return capacityChildren; }
@@ -72,7 +72,7 @@ public class Room {
 
     // --- Setters ---
     public void setId(String id) { this.id = id; }
-    public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
+    public void setRoomNumber(int roomNumber) { this.roomNumber = roomNumber; }
     public void setRoomType(String roomType) { this.roomType = roomType; }
     public void setCapacityAdults(int capacityAdults) { this.capacityAdults = capacityAdults; }
     public void setCapacityChildren(int capacityChildren) { this.capacityChildren = capacityChildren; }

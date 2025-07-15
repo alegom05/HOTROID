@@ -6,7 +6,7 @@
     android:padding="8dp"
     android:gravity="start">
 
-    <!-- Avatar del hotel/bot (opcional) -->
+    <!-- Avatar del bot (opcional) -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -25,27 +25,30 @@
         android:layout_marginEnd="64dp"
         android:maxWidth="280dp">
 
-        <!-- Nombre del remitente (solo para bots) -->
-        <TextView
-            android:id="@+id/senderNameText"
+        <!-- Contenido del mensaje con indicador de typing -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Asistente Hotel"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="2dp"
-            android:visibility="gone" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!-- Contenido del mensaje -->
-        <TextView
-            android:id="@+id/messageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mensaje del hotel"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:lineSpacingExtra="2dp" />
+            <TextView
+                android:id="@+id/messageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Escribiendo..."
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp" />
+
+            <ProgressBar
+                android:id="@+id/typingIndicator"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:indeterminate="true" />
+
+        </LinearLayout>
 
         <!-- Timestamp -->
         <TextView
@@ -54,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="15:30"
             android:textSize="10sp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/cliente2"
             android:layout_marginTop="4dp"
             android:layout_gravity="end" />
 
