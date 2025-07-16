@@ -2,13 +2,12 @@ package com.example.hotroid;
 
 import com.example.hotroid.bean.ChatHotelItem;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ChatListManager {
 
     private static ChatListManager instance;
-    private List<ChatHotelItem> activeChats;
+    private List<ChatHotelItem> activeChats; // Variable correcta
     private List<ChatListUpdateListener> listeners;
 
     public interface ChatListUpdateListener {
@@ -61,7 +60,7 @@ public class ChatListManager {
         for (ChatHotelItem chat : activeChats) {
             if (chat.getHotelId().equals(hotelId)) {
                 chat.setLastMessage(lastMessage);
-                chat.setLastMessageTime(new Date());
+                chat.setLastMessageTime(System.currentTimeMillis()); // CORREGIDO: usar long en lugar de Date
                 // Mover al principio
                 activeChats.remove(chat);
                 activeChats.add(0, chat);

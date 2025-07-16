@@ -15,6 +15,7 @@ import com.example.hotroid.R;
 import com.example.hotroid.bean.ChatHotelItem;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,10 +46,13 @@ public class ChatHotelAdapter extends RecyclerView.Adapter<ChatHotelAdapter.Chat
         holder.lastMessage.setText(chatItem.getLastMessage());
         holder.profileImage.setImageResource(chatItem.getProfileImageRes());
 
-        // Formatear timestamp
-        if (chatItem.getLastMessageTime() != null) {
+        // Formatear timestamp - CORREGIDO
+        if (chatItem.getLastMessageTime() > 0) {
+            Date date = new Date(chatItem.getLastMessageTime());
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            holder.timestamp.setText(sdf.format(chatItem.getLastMessageTime()));
+            holder.timestamp.setText(sdf.format(date));
+        } else {
+            holder.timestamp.setText("");
         }
 
         // Mostrar indicador de mensajes no leídos
@@ -64,15 +68,15 @@ public class ChatHotelAdapter extends RecyclerView.Adapter<ChatHotelAdapter.Chat
         // Click listener para abrir el chat detallado
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatDetalladoUser.class);
-            intent.putExtra("chat_id", chatItem.getHotelId());
+            intent.putExtra("chat_id", chatItem.getChatId()); // Usar getChatId()
             intent.putExtra("hotel_name", chatItem.getHotelName());
             intent.putExtra("hotel_id", chatItem.getHotelId());
             intent.putExtra("profile_image", chatItem.getProfileImageRes());
 
-            // Marcar mensajes como leídos
-            chatItem.setHasUnreadMessages(false);
-            chatItem.setUnreadCount(0);
-            notifyItemChanged(position);
+            // Marcar mensajes como leídos en Firestore
+            if (chatItem.getChatId() != null) {
+                FirestoreChatManager.getInstance().markAsRead(chatItem.getChatId());
+            }
 
             context.startActivity(intent);
         });

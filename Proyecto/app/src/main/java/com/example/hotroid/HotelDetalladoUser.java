@@ -11,6 +11,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+// Agregar imports necesarios al inicio del archivo:
+import com.example.hotroid.bean.ChatSession;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import android.widget.Toast;
+
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.hotroid.HotelImageAdapter;
 import com.example.hotroid.bean.ChatHotelItem;
+import com.example.hotroid.FirestoreChatManager;
 import com.example.hotroid.databinding.UserHotelDetalladoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -248,23 +256,35 @@ public class HotelDetalladoUser extends AppCompatActivity {
 
     // Agregar este método actualizado a la clase HotelDetalladoUser.java
 
+    // Agregar estos imports y método al archivo existente
+
     private void iniciarChat() {
-        Intent intent = new Intent(this, ChatDetalladoUser.class);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "Debes iniciar sesión para usar el chat", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // Pasar todos los datos necesarios del hotel
-        intent.putExtra("chat_id", "chat_" + getIntent().getStringExtra("HOTEL_ID"));
-        intent.putExtra("hotel_name", getIntent().getStringExtra("nombre"));
-        intent.putExtra("hotel_id", getIntent().getStringExtra("HOTEL_ID"));
-        intent.putExtra("hotel_rating", getIntent().getFloatExtra("rating", 0f));
-        intent.putExtra("hotel_price", getIntent().getDoubleExtra("precio", 0.0));
-        intent.putExtra("hotel_direccion", getIntent().getStringExtra("direccion"));
-        intent.putExtra("hotel_description", getIntent().getStringExtra("descripcion"));
-        intent.putExtra("profile_image", getIntent().getIntExtra("imagen", R.drawable.hotel_decameron));
+        String clientId = currentUser.getUid();
+        String hotelId = getIntent().getStringExtra("hotelId");
+        String hotelName = "Hotel"; // Obtener el nombre real desde tus datos
 
-        startActivity(intent);
+        FirestoreChatManager.getInstance().createOrGetChat(clientId, hotelId, hotelName,
+                new FirestoreChatManager.ChatCreationListener() {
+                    @Override
+                    public void onChatCreated(ChatSession chat) {
+                        Intent intent = new Intent(HotelDetalladoUser.this, ChatDetalladoUser.class);
+                        intent.putExtra("hotelId", chat.getHotelId());
+                        intent.putExtra("hotelName", chat.getHotelName());
+                        intent.putExtra("chatId", chat.getChatId());
+                        startActivity(intent);
+                    }
 
-        // Registrar este chat en la lista de chats del fragment principal
-        registrarChatEnFragment();
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(HotelDetalladoUser.this, "Error al iniciar chat: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void registrarChatEnFragment() {
@@ -281,7 +301,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
             chatItem.setHotelId(hotelId);
             chatItem.setHotelName(hotelName);
             chatItem.setLastMessage("¡Hola! Bienvenido al asistente virtual...");
-            chatItem.setLastMessageTime(new Date());
+            chatItem.setLastMessageTime(System.currentTimeMillis());
             chatItem.setProfileImageRes(profileImage);
             chatItem.setHasUnreadMessages(false);
             chatItem.setUnreadCount(0);
