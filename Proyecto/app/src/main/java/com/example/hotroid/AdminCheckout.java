@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -69,6 +70,13 @@ public class AdminCheckout extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        // Handle clicks for admin profile card
+        CardView cardAdmin = findViewById(R.id.cardAdmin);
+        cardAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminCheckout.this, AdminCuentaActivity.class);
+            startActivity(intent);
         });
 
         db = FirebaseFirestore.getInstance();

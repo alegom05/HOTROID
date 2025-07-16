@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -116,6 +117,13 @@ public class AdminTaxistas extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
                 // No hacer nada si no se selecciona nada
             }
+        });
+
+        // Handle clicks for admin profile card
+        CardView cardAdmin = findViewById(R.id.cardAdmin);
+        cardAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminTaxistas.this, AdminCuentaActivity.class);
+            startActivity(intent);
         });
 
         // Bottom navigation setup

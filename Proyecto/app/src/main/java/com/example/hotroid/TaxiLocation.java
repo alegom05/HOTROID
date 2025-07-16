@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView; // Importar CardView
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -54,10 +55,13 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
     private String destinoDireccion;
     private String region; // Para tener más precisión en la geocodificación
 
+    // Declarar el CardView
+    private CardView cardTaxista; // <-- AÑADIDO
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxi_location);
+        setContentView(R.layout.taxi_location); // Asegúrate de que este sea el layout correcto que contiene el CardView
 
         db = FirebaseFirestore.getInstance();
 
@@ -104,6 +108,16 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
             }
             return false;
         });
+
+        // --- Lógica para el CardView ---
+        cardTaxista = findViewById(R.id.cardTaxista); // Enlazar el CardView por su ID
+        cardTaxista.setOnClickListener(v -> {
+            Log.d(TAG, "CardView 'cardTaxista' clickeado. Redirigiendo a TaxiCuenta.");
+            Intent goToTaxiCuenta = new Intent(TaxiLocation.this, TaxiCuenta.class);
+            startActivity(goToTaxiCuenta);
+        });
+        // --- Fin de la lógica para el CardView ---
+
 
         // Lógica para redirigir a TaxiViaje si hay un viaje "Asignado"
         currentTripCheckListener = db.collection("alertas_taxi")

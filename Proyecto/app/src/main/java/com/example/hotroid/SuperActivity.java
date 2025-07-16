@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,6 +57,13 @@ public class SuperActivity extends AppCompatActivity {
 
         setupSearch();
         setupBottomNavigation();
+
+        CardView cardSuper = findViewById(R.id.cardSuper);
+
+        cardSuper.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperActivity.this, SuperCuentaActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void checkAndLoadHotels() {
@@ -231,6 +239,11 @@ public class SuperActivity extends AppCompatActivity {
             hotelAdapter.clearFilter();
         });
     }
+
+
+
+
+
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
