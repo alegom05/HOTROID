@@ -265,18 +265,36 @@ public class HotelDetalladoUser extends AppCompatActivity {
             return;
         }
 
+        // Obtener datos del hotel desde el Intent
         String clientId = currentUser.getUid();
-        String hotelId = getIntent().getStringExtra("hotelId");
-        String hotelName = "Hotel"; // Obtener el nombre real desde tus datos
+        String hotelId = getIntent().getStringExtra("HOTEL_ID");
+        String hotelName = getIntent().getStringExtra("nombre");
 
+        // Validar que tengamos los datos necesarios
+        if (hotelId == null || hotelName == null) {
+            Toast.makeText(this, "Error: No se pudieron obtener los datos del hotel", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Mostrar loading
+        Toast.makeText(this, "Iniciando chat...", Toast.LENGTH_SHORT).show();
+
+        // Crear o obtener el chat desde Firestore
         FirestoreChatManager.getInstance().createOrGetChat(clientId, hotelId, hotelName,
                 new FirestoreChatManager.ChatCreationListener() {
                     @Override
                     public void onChatCreated(ChatSession chat) {
+                        // Chat creado exitosamente, abrir ChatDetalladoUser
                         Intent intent = new Intent(HotelDetalladoUser.this, ChatDetalladoUser.class);
-                        intent.putExtra("hotelId", chat.getHotelId());
-                        intent.putExtra("hotelName", chat.getHotelName());
-                        intent.putExtra("chatId", chat.getChatId());
+                        intent.putExtra("chat_id", chat.getChatId());
+                        intent.putExtra("hotel_name", chat.getHotelName());
+                        intent.putExtra("hotel_id", chat.getHotelId());
+                        intent.putExtra("hotel_rating", getIntent().getFloatExtra("rating", 0f));
+                        intent.putExtra("hotel_price", getIntent().getDoubleExtra("precio", 0.0));
+                        intent.putExtra("hotel_direccion", getIntent().getStringExtra("direccion"));
+                        intent.putExtra("hotel_description", getIntent().getStringExtra("descripcion"));
+                        intent.putExtra("profile_image", getIntent().getIntExtra("imagen", R.drawable.hotel_decameron));
+
                         startActivity(intent);
                     }
 
@@ -287,29 +305,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
                 });
     }
 
-    private void registrarChatEnFragment() {
-        // Este método registrará el chat para que aparezca en ChatFragment
-        // Podrías usar SharedPreferences, base de datos local, o un evento
-        // Para simplificar, usaremos una clase singleton para manejar los chats activos
 
-        String hotelId = getIntent().getStringExtra("HOTEL_ID");
-        String hotelName = getIntent().getStringExtra("nombre");
-        int profileImage = getIntent().getIntExtra("imagen", R.drawable.hotel_decameron);
-
-        if (hotelId != null && hotelName != null) {
-            ChatHotelItem chatItem = new ChatHotelItem();
-            chatItem.setHotelId(hotelId);
-            chatItem.setHotelName(hotelName);
-            chatItem.setLastMessage("¡Hola! Bienvenido al asistente virtual...");
-            chatItem.setLastMessageTime(System.currentTimeMillis());
-            chatItem.setProfileImageRes(profileImage);
-            chatItem.setHasUnreadMessages(false);
-            chatItem.setUnreadCount(0);
-
-            // Agregar a la lista de chats activos
-            ChatListManager.getInstance().addOrUpdateChat(chatItem);
-        }
-    }
     private void configurarTerminosYCondiciones() {
         binding.termsAndConditionsLink.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
