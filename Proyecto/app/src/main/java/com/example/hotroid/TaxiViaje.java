@@ -107,7 +107,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         origenDireccion = intent.getStringExtra("origen");
         destinoDireccion = intent.getStringExtra("destino");
         region = intent.getStringExtra("region");
-        Log.d(TAG, "Datos recibidos en el Intent: Origen=" + origenDireccion + ", Destino=" + destinoDireccion + ", Region=" + region);
+        Log.d(TAG, "Datos recibidos en el Intent:" + origenDireccion + "," + destinoDireccion + ", Region=" + region);
 
         if (currentTripDocumentId == null || currentTripDocumentId.isEmpty()) {
             Log.e(TAG, "TaxiViaje iniciado sin documentId válido. Redirigiendo a Dashboard.");
@@ -136,9 +136,9 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         trip.setDocumentId(snapshot.getId());
                     }
 
-                    tvClienteInfo.setText("Cliente: " + trip.getNombresCliente() + " " + trip.getApellidosCliente());
-                    tvOrigenInfo.setText("Origen: " + trip.getOrigen());
-                    tvDestinoInfo.setText("Destino: " + trip.getDestino());
+                    tvClienteInfo.setText("" + trip.getNombresCliente() + " " + trip.getApellidosCliente());
+                    tvOrigenInfo.setText("" + trip.getOrigen());
+                    tvDestinoInfo.setText("" + trip.getDestino());
                     tvEstadoViaje.setText("Estado: " + trip.getEstadoViaje());
 
                     if (trip.getTimestamp() != null &&
@@ -147,7 +147,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         startTimer();
                     } else {
                         stopTimer();
-                        tvTiempoEstimado.setText("Tiempo Transcurrido: 00:00:00");
+                        tvTiempoEstimado.setText("00:00:00");
                     }
 
                     updateButtonsAndNavigation(trip.getEstadoViaje());
@@ -492,7 +492,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         long seconds = (elapsedTime / 1000) % 60;
                         long minutes = (elapsedTime / (1000 * 60)) % 60;
                         long hours = (elapsedTime / (1000 * 60 * 60));
-                        tvTiempoEstimado.setText(String.format(Locale.getDefault(), "Tiempo Transcurrido: %02d:%02d:%02d", hours, minutes, seconds));
+                        tvTiempoEstimado.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds));
                     }
                 });
             }

@@ -130,10 +130,14 @@ public class CuentaFragment extends Fragment {
         btnCancelar.setOnClickListener(v -> dialog.dismiss());
         btnOK.setOnClickListener(v -> {
             boolean modoOscuroSeleccionado = rbOscuro.isChecked();
-            // Usa el ThemeManager para cambiar el tema
             ThemeManager.setDarkMode(requireContext(), modoOscuroSeleccionado);
             dialog.dismiss();
-            requireActivity().recreate();
+
+            // En lugar de recreate(), usa esto:
+            Intent intent = new Intent(requireContext(), requireActivity().getClass());
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            requireActivity().finish();
         });
 
         dialog.show();

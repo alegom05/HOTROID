@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,6 +27,13 @@ public class AdminTaxistaDetalles extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        // Handle clicks for admin profile card
+        CardView cardAdmin = findViewById(R.id.cardPerfilAdmin);
+        cardAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminTaxistaDetalles.this, AdminCuentaActivity.class);
+            startActivity(intent);
         });
 
         // Obtener los datos del Intent
