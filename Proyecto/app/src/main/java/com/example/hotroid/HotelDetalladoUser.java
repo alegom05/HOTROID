@@ -521,8 +521,9 @@ public class HotelDetalladoUser extends AppCompatActivity {
 
         // Obtener datos del hotel desde el Intent
         String clientId = currentUser.getUid();
-        String hotelId = getIntent().getStringExtra("HOTEL_ID");
-        String hotelName = getIntent().getStringExtra("nombre");
+        String hotelId = getIntent().getStringExtra("hotelId");
+        String hotelName = getIntent().getStringExtra("hotelName");
+        String hotelImage = getIntent().getStringExtra("hotelImage");
 
         // Validar que tengamos los datos necesarios
         if (hotelId == null || hotelName == null) {
