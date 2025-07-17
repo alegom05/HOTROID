@@ -107,7 +107,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         origenDireccion = intent.getStringExtra("origen");
         destinoDireccion = intent.getStringExtra("destino");
         region = intent.getStringExtra("region");
-        Log.d(TAG, "Datos recibidos en el Intent: Origen=" + origenDireccion + ", Destino=" + destinoDireccion + ", Region=" + region);
+        Log.d(TAG, "Datos recibidos en el Intent:" + origenDireccion + "," + destinoDireccion + ", Region=" + region);
 
         if (currentTripDocumentId == null || currentTripDocumentId.isEmpty()) {
             Log.e(TAG, "TaxiViaje iniciado sin documentId válido. Redirigiendo a Dashboard.");
