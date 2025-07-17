@@ -147,7 +147,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         startTimer();
                     } else {
                         stopTimer();
-                        tvTiempoEstimado.setText("Tiempo Transcurrido: 00:00:00");
+                        tvTiempoEstimado.setText("00:00:00");
                     }
 
                     updateButtonsAndNavigation(trip.getEstadoViaje());
@@ -492,7 +492,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         long seconds = (elapsedTime / 1000) % 60;
                         long minutes = (elapsedTime / (1000 * 60)) % 60;
                         long hours = (elapsedTime / (1000 * 60 * 60));
-                        tvTiempoEstimado.setText(String.format(Locale.getDefault(), "Tiempo Transcurrido: %02d:%02d:%02d", hours, minutes, seconds));
+                        tvTiempoEstimado.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds));
                     }
                 });
             }
