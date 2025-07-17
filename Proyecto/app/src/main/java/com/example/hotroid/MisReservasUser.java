@@ -235,7 +235,7 @@ public class MisReservasUser extends AppCompatActivity {
         hotel1.setIdHotel("H1");
         hotel1.setName("Hotel Central");
         hotel1.setRating(4.5f);
-        hotel1.setPrice(130.00);
+        //hotel1.setPrice(130.00);
         hotel1.setDireccion("Argentina");
         hotel1.setDireccionDetallada("High St 10, Old Town");
         hotel1.setImageResourceId(R.drawable.hotel_decameron);
@@ -246,7 +246,7 @@ public class MisReservasUser extends AppCompatActivity {
         hotel2.setIdHotel("H2");
         hotel2.setName("Hotel D'Cameron");
         hotel2.setRating(4.0f);
-        hotel2.setPrice(123.00);
+        //hotel2.setPrice(123.00);
         hotel2.setDireccion("USA");
         hotel2.setDireccionDetallada("Av. del Prado 123, Centro Histórico");
         hotel2.setImageResourceId(R.drawable.hotel_aranwa);
@@ -257,7 +257,7 @@ public class MisReservasUser extends AppCompatActivity {
         hotel3.setIdHotel("H3");
         hotel3.setName("Hotel Mar Azul");
         hotel3.setRating(3.8f);
-        hotel3.setPrice(230.00);
+        //hotel3.setPrice(230.00);
         hotel3.setDireccion("Perú");
         hotel3.setDireccionDetallada("Paseo Marítimo 78, Playa Norte");
         hotel3.setImageResourceId(R.drawable.hotel_boca_raton);

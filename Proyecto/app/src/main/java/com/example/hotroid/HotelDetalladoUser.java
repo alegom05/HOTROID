@@ -12,70 +12,284 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.hotroid.HotelImageAdapter;
 import com.example.hotroid.bean.ChatHotelItem;
+import com.example.hotroid.bean.Hotel;
+import com.example.hotroid.bean.Valoracion;
 import com.example.hotroid.databinding.UserHotelDetalladoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class HotelDetalladoUser extends AppCompatActivity {
+    private static final String TAG = "HotelDetalladoUser";
 
     private UserHotelDetalladoBinding binding;
+    private String hotelNameStr;
+    private float hotelRatingValue;
+    private String hotelDireccion;
+    private double precioMinimo;
     private boolean isFavorite = false;
-    private int numHabitaciones = 1;
-    private int numPersonas = 2;
+    private int numHabitaciones;
+    private int numPersonas;
+    private int niniosSolicitados = 0;
     private List<Integer> hotelImages;
+    private List<String> imageUrls = new ArrayList<>();
+    private Date fechaInicioSeleccionado;
+    private Date fechaFinSeleccionado;
+    // Adaptador para imágenes
+    private HotelImageAdapter imageAdapter;
+    private String hotelId;
+    private FirebaseFirestore db;
+    private List<Valoracion> comentarios = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = UserHotelDetalladoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        // Inicializar Firebase
+        db = FirebaseFirestore.getInstance();
 
         // Configurar la toolbar
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
+        // Obtener datos del Intent
+        getIntentData();
+
+//        //recibiendo datos de filtros previos
+//        long filtroInicio = getIntent().getLongExtra("fechaInicio",0);
+//        long filtroFin = getIntent().getLongExtra("fechaFin", filtroInicio+86400000);//+1 DÍA
+//
+//        fechaInicioSeleccionado = new Date(filtroInicio);
+//        fechaFinSeleccionado = new Date(filtroFin);
+//
+//        int filtroHabitaciones = getIntent().getIntExtra("habitaciones",1);
+//        int filtroPersonas = getIntent().getIntExtra("personas",2);
+        // Configurar datos del hotel
+        setupHotelData();
+
+        // Configurar listeners
+        setupListeners();
+
+        // Cargar imágenes del hotel
+        loadHotelImages();
+
         // Configurar botón de favoritos
-        configurarBotonFavoritos();
-
+//        configurarBotonFavoritos();
         // Cargar datos del hotel (simulado)
-        cargarDatosHotel();
-
+//        cargarDatosHotel();
         // Configurar galería de imágenes
-        configurarGaleriaImagenes();
-
+        //configurarGaleriaImagenes();
         // Configurar selectores
-        configurarCalendario();
-        configurarSelectorPersonas();
-
+        //configurarCalendario();
+        //configurarSelectorPersonas();
         // Configurar botones de acción
-        configurarBotones();
-
+        //configurarBotones();
         // Configurar términos y condiciones
         configurarTerminosYCondiciones();
     }
+    private void getIntentData(){
+        Intent intent = getIntent();
+        hotelId = intent.getStringExtra("hotelId");
+        hotelNameStr = intent.getStringExtra("hotelName");
+        hotelRatingValue =intent.getFloatExtra("hotelRating", 0.0f);
+        hotelDireccion = intent.getStringExtra("hotelDireccion");
+        precioMinimo = intent.getDoubleExtra("precioMinimo",0.0);
+        // Obtener fechas si existen
+        long fechaInicioLong = intent.getLongExtra("fechaInicio", 0);
+        long fechaFinLong = intent.getLongExtra("fechaFin", 0);
+        if (fechaInicioLong != 0 && fechaFinLong != 0) {
+            fechaInicioSeleccionado = new Date(fechaInicioLong);
+            fechaFinSeleccionado = new Date(fechaFinLong);
+        } else {
+            // Fechas por defecto (hoy y mañana)
+            Calendar cal = Calendar.getInstance();
+            fechaFinSeleccionado = cal.getTime();
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            fechaFinSeleccionado = cal.getTime();
+        }
+        // Obtener datos de búsqueda
+        numHabitaciones = intent.getIntExtra("numHabitaciones", 1);
+        numPersonas = intent.getIntExtra("numPersonas", 1);
+        niniosSolicitados = intent.getIntExtra("niniosSolicitados", 0);
+    }
 
-    private void configurarBotones() {
-        // Configurar botón de opciones de habitación (antes era reservar)
-        binding.roomOptionsButton.setOnClickListener(v -> mostrarOpcionesHabitacion());
+    private void setupHotelData(){
+        // Configurar datos básicos del hotel
+        binding.hotelName.setText(hotelNameStr);
+        binding.hotelRating.setRating(hotelRatingValue);
+        binding.ratingText.setText(String.valueOf(hotelRatingValue));
+        binding.hotelLocation.setText(hotelDireccion);
+        binding.hotelPrice.setText(String.format(Locale.getDefault(), "€%.0f por noche", precioMinimo));
+        // Configurar fechas seleccionadas
+        updateSelectedDatesText();
 
+        // Configurar texto de habitaciones y huéspedes
+        updateRoomGuestsText();
+
+    }
+
+    private void updateSelectedDatesText() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", new Locale("es", "ES"));
+        String fechaInicioStr = dateFormat.format(fechaInicioSeleccionado);
+        String fechaFinStr = dateFormat.format(fechaFinSeleccionado);
+        binding.selectedDatesText.setText(fechaInicioStr + " - " + fechaFinStr);
+    }
+    private void updateRoomGuestsText() {
+        String texto = numHabitaciones + " habitación" + (numHabitaciones > 1 ? "es" : "") +
+                " · " + numPersonas + " adulto" + (numPersonas > 1 ? "s" : "");
+
+        if (niniosSolicitados > 0) {
+            texto += " · " + niniosSolicitados + " niño" + (niniosSolicitados > 1 ? "s" : "");
+        }
+
+        binding.roomGuestsText.setText(texto);
+    }
+
+    private void setupListeners(){
+        // Listener para el icono de favoritos
+        binding.favoriteIcon.setOnClickListener(v -> configurarBotonFavoritos());
+        // Listener para el selector de fechas
+        binding.datePickerLayout.setOnClickListener(v -> showDatePicker());
+        // Listener para el selector de habitaciones/huéspedes
+        binding.roomGuestsLayout.setOnClickListener(v -> showRoomGuestsDialog());
+        binding.roomOptionsButton.setOnClickListener(v -> filtrarHabitacionesDisponibles());
+
+        // Listener para el botón de chat
+//        binding.chatButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, ChatDetalladoUser.class);
+//            intent.putExtra("hotelId", hotelId);
+//            intent.putExtra("hotelName", hotelNameStr);
+//            startActivity(intent);
+//        });
         // Configurar botón de chat
         binding.chatButton.setOnClickListener(v -> iniciarChat());
     }
+
+    private void showDatePicker() {
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
+        builder.setTitleText("Selecciona rango de fechas");
+        // Por defecto, mostrar fechas actuales seleccionadas
+        if (fechaInicioSeleccionado != null && fechaFinSeleccionado != null) {
+            builder.setSelection(new Pair<>(fechaInicioSeleccionado.getTime(), fechaFinSeleccionado.getTime()));
+        }
+        // Restringir fechas pasadas
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointForward.now());
+        builder.setCalendarConstraints(constraintsBuilder.build());
+        //usar en activities
+        MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
+        picker.show(getSupportFragmentManager(), "DATE_PICKER");
+//        MaterialDatePicker<Pair<Long, Long>> picker = builder.build();  <--usar en fragments
+//        picker.show(getParentFragmentManager(), picker.toString());
+        picker.addOnPositiveButtonClickListener(selection -> {
+            long start = selection.first;
+            long end = selection.second;
+            fechaInicioSeleccionado = new Date(start);
+            fechaFinSeleccionado = new Date(end);
+            updateSelectedDatesText();
+        });
+    }
+
+    private void showRoomGuestsDialog() {
+        HabitacionesAdultosNiniosDialogoFragment dialogo = new HabitacionesAdultosNiniosDialogoFragment(
+                numHabitaciones, numPersonas, niniosSolicitados);
+        dialogo.show(getSupportFragmentManager(), "HabitacionesDialog");
+
+    }
+
+    private void filtrarHabitacionesDisponibles() {
+        if (fechaInicioSeleccionado == null || fechaFinSeleccionado == null) {
+            Toast.makeText(this, "Selecciona un rango de fechas válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+    }
+
+    private void loadHotelImages() {
+        // Cargar imágenes del hotel desde Firebase
+        db.collection("hoteles").document(hotelId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> imageUrls = (List<String>) documentSnapshot.get("imageUrls");
+                        String description = documentSnapshot.getString("description");
+                        String pais = documentSnapshot.getString("Pais");
+                        String ciudad = documentSnapshot.getString("direccion");
+                        String avenida = documentSnapshot.getString("direccionDetallada");
+
+                        if (description != null) {
+                            binding.hotelDescription.setText(description);
+                        }else{
+                            binding.hotelDescription.setText("Actualizando la información");
+                        }
+                        if (avenida != null) {
+                            binding.hotelLocation.setText(avenida +" " + ciudad);
+                        }else{
+                            binding.hotelLocation.setText("No encontrado en el mapa,"+ ciudad);
+                        }
+
+                        if (imageUrls != null && !imageUrls.isEmpty()) {
+                            setupImageViewPager(imageUrls);
+                        } else {
+                            // Usar imagen por defecto si no hay imágenes
+                            setupImageViewPager(List.of("default_hotel_image"));
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar detalles del hotel", Toast.LENGTH_SHORT).show();
+                });
+    }
+    private void setupImageViewPager(List<String> imageUrls) {
+        imageAdapter = new HotelImageAdapter(imageUrls);
+        binding.hotelImagesViewPager.setAdapter(imageAdapter);
+
+        // Mostrar un indicador de páginas si hay más de 1 imagen
+        if (imageUrls.size() > 1) {
+            binding.imageIndicator.setVisibility(View.VISIBLE);
+            new TabLayoutMediator(binding.imageIndicator, binding.hotelImagesViewPager,
+                    (tab, position) -> {
+                        // Solo se necesita para sincronización
+                    }
+            ).attach();
+        } else {
+            binding.imageIndicator.setVisibility(View.GONE);
+        }
+    }
+
+
+
+//    private void configurarBotones() {
+//        // Configurar botón de opciones de habitación (antes era reservar)
+//        binding.roomOptionsButton.setOnClickListener(v -> mostrarOpcionesHabitacion());
+//
+//        // Configurar botón de chat
+//        binding.chatButton.setOnClickListener(v -> iniciarChat());
+//    }
 
     private void configurarBotonFavoritos() {
         binding.favoriteIcon.setOnClickListener(v -> {
@@ -90,158 +304,198 @@ public class HotelDetalladoUser extends AppCompatActivity {
         });
     }
 
+    //modificar fechas inicio y fin de reserva
+    private String formatearRangoFechas(Date inicio, Date fin) {
+        SimpleDateFormat formato = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        return formato.format(inicio) + " - " + formato.format(fin);
+    }
+
     // En el método cargarDatosHotel() dentro de la clase HotelDetalladoUser.java
 
-    private void cargarDatosHotel() {
-        // Obtener datos del intent
-        String hotelId = getIntent().getStringExtra("HOTEL_ID");
-        String nombre = getIntent().getStringExtra("nombre");
-        float rating = getIntent().getFloatExtra("rating", 0f);
-        double precio = getIntent().getDoubleExtra("precio", 0.0);
-        String direccion = getIntent().getStringExtra("direccion");
-        String direccionDetallada = getIntent().getStringExtra("direccionDetallada");
-        String descripcion = getIntent().getStringExtra("descripcion");
-        int imagenId = getIntent().getIntExtra("imagen", R.drawable.hotel_decameron); // imagen por defecto
+//    private void cargarDatosHotel() {
+//        // Obtener datos del intent
+//        String idHotelSeleccionado = getIntent().getStringExtra("idHotel");
+//        FirebaseFirestore.getInstance()
+//                .collection("hoteles")
+//                .document(hotelId)
+//                .get()
+//                .addOnSuccessListener(documentSnapshot -> {
+//                    if (documentSnapshot.exists()) {
+//                        Hotel hotel = documentSnapshot.toObject(Hotel.class);
+//                        if (hotel != null) {
+//                            hotel.setIdHotel(hotelId); // redundante si usas @DocumentId
+//                            mostrarDatosEnPantalla(hotel);
+//                        }
+//                    } else {
+//                        Toast.makeText(this, "Hotel no encontrado", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    Toast.makeText(this, "Error al cargar el hotel", Toast.LENGTH_SHORT).show();
+//                    finish();
+//                });
+////
+////        // Si tienes una sola imagen principal, puedes añadirla a la galería
+////        if (hotelImages != null && !hotelImages.isEmpty()) {
+////            // Si ya hay imágenes cargadas, asegúrate de que la primera sea la imagen principal
+////            hotelImages.set(0, imagenId);
+////        }
+//    }
 
-        // Mostrar datos en la UI
-        binding.hotelName.setText(nombre);
-        binding.hotelRating.setRating(rating);
-        binding.ratingText.setText(String.valueOf(rating));
-        binding.hotelLocation.setText(direccionDetallada != null ? direccionDetallada : direccion);
-        binding.hotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f por noche", precio));
-        binding.hotelDescription.setText(descripcion);
+//    private void mostrarDatosEnPantalla(Hotel hotel) {
+//        binding.hotelName.setText(hotel.getName());
+//        binding.hotelRating.setRating(hotel.getRating());
+//        binding.ratingText.setText(String.format(Locale.getDefault(), "%.1f", hotel.getRating()));
+//        binding.hotelLocation.setText(hotel.getDireccionDetallada()!= null ? hotel.getDireccionDetallada() : hotel.getDireccion());
+//        binding.hotelDescription.setText(hotel.getDescription());
+//        binding.hotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f por noche", hotel.getPrice()));
+//
+//        // Cargar imágenes con Glide (si usas Cloudinary URLs)
+//        if (hotel.getImageUrls() != null && !hotel.getImageUrls().isEmpty()) {
+//            Glide.with(this)
+//                    .load(hotel.getImageUrls().get(0)) // solo la principal
+//                    .into(binding.hotelImagesViewPager); // o adaptador de ViewPager
+//        }
+//    }
 
-        // Si tienes una sola imagen principal, puedes añadirla a la galería
-        if (hotelImages != null && !hotelImages.isEmpty()) {
-            // Si ya hay imágenes cargadas, asegúrate de que la primera sea la imagen principal
-            hotelImages.set(0, imagenId);
-        }
+
+//    private void configurarGaleriaImagenes() {
+//        // Simulamos tener varias imágenes del hotel
+//        // En una app real, estas imágenes se cargarían desde una base de datos o API
+//        hotelImages = new ArrayList<>(Arrays.asList(
+//                R.drawable.hotel_room,
+//                R.drawable.hotel_restaurant,
+//                R.drawable.hotel_park,
+//                R.drawable.hotel_pool,
+//                R.drawable.hotel_spa
+//        ));
+//
+//        // Configurar el adaptador
+//        HotelImageAdapter imageAdapter = new HotelImageAdapter(hotelImages);
+//        binding.hotelImagesViewPager.setAdapter(imageAdapter);
+//
+//        // Configurar los indicadores
+//        new TabLayoutMediator(binding.imageIndicator, binding.hotelImagesViewPager,
+//                (tab, position) -> {
+//                    // No necesitamos texto para las pestañas
+//                }).attach();
+//
+//        // Configurar el cambio de página
+//        binding.hotelImagesViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                super.onPageSelected(position);
+//                // Aquí podríamos hacer algo cuando se selecciona una página
+//            }
+//        });
+//    }
+
+//    private void configurarCalendario() {
+//        binding.datePickerLayout.setOnClickListener(v -> {
+//            MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> builder =
+//                    MaterialDatePicker.Builder.dateRangePicker();
+//            builder.setTitleText("Selecciona las fechas");
+//
+//            builder.setSelection(androidx.core.util.Pair.create(
+//                    fechaInicioSeleccionado.getTime(), fechaFinSeleccionado.getTime()
+//            ));
+//
+//            MaterialDatePicker<androidx.core.util.Pair<Long, Long>> picker = builder.build();
+//            picker.show(getSupportFragmentManager(), picker.toString());
+//
+//            picker.addOnPositiveButtonClickListener(selection -> {
+//                long inicio = selection.first;
+//                long fin = selection.second;
+//                if (fin <= inicio){
+//                    Toast.makeText(this, "La fecha de salida debe ser posterior a la fecha de inicio", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                fechaInicioSeleccionado = new Date(inicio);
+//                fechaFinSeleccionado = new Date(fin);
+//
+//                binding.selectedDatesText.setText(formatearRangoFechas(fechaInicioSeleccionado, fechaFinSeleccionado));
+//                // Actualizar el precio según las fechas seleccionadas
+//                actualizarPrecioTotal();
+//            });
+//        });
+//    }
+
+//    private void configurarSelectorPersonas() {
+//        binding.roomGuestsLayout.setOnClickListener(v -> {
+//            View dialogView = getLayoutInflater()
+//                    .inflate(R.layout.dialogo_personas_habitaciones, null);
+//
+//            NumberPicker habitacionesPicker = dialogView.findViewById(R.id.npHabitaciones);
+//            NumberPicker personasPicker = dialogView.findViewById(R.id.npPersonas);
+//
+//            habitacionesPicker.setMinValue(1);
+//            habitacionesPicker.setMaxValue(10);
+//            habitacionesPicker.setValue(numHabitaciones);
+//
+//            personasPicker.setMinValue(1);
+//            personasPicker.setMaxValue(10);
+//            personasPicker.setValue(numPersonas);
+//
+//            new AlertDialog.Builder(this)
+//                    .setTitle("Habitaciones y Huéspedes")
+//                    .setView(dialogView)
+//                    .setPositiveButton("Aceptar", (dialog, which) -> {
+//                        numHabitaciones = habitacionesPicker.getValue();
+//                        numPersonas = personasPicker.getValue();
+//                        actualizarTextoHabitacionesPersonas();
+//                        actualizarPrecioTotal();
+//                    })
+//                    .setNegativeButton("Cancelar", null)
+//                    .show();
+//        });
+//    }
+
+    public void actualizarHuespedes(int habitaciones, int adultos, int ninos) {
+        this.numHabitaciones = habitaciones;
+        this.numPersonas = adultos;
+        this.niniosSolicitados = ninos;
+        updateRoomGuestsText(); // actualiza el texto del botón con los nuevos valores
     }
 
-    private void configurarGaleriaImagenes() {
-        // Simulamos tener varias imágenes del hotel
-        // En una app real, estas imágenes se cargarían desde una base de datos o API
-        hotelImages = new ArrayList<>(Arrays.asList(
-                R.drawable.hotel_room,
-                R.drawable.hotel_restaurant,
-                R.drawable.hotel_park,
-                R.drawable.hotel_pool,
-                R.drawable.hotel_spa
-        ));
 
-        // Configurar el adaptador
-        HotelImageAdapter imageAdapter = new HotelImageAdapter(hotelImages);
-        binding.hotelImagesViewPager.setAdapter(imageAdapter);
-
-        // Configurar los indicadores
-        new TabLayoutMediator(binding.imageIndicator, binding.hotelImagesViewPager,
-                (tab, position) -> {
-                    // No necesitamos texto para las pestañas
-                }).attach();
-
-        // Configurar el cambio de página
-        binding.hotelImagesViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                // Aquí podríamos hacer algo cuando se selecciona una página
-            }
-        });
-    }
-
-    private void configurarCalendario() {
-        binding.datePickerLayout.setOnClickListener(v -> {
-            MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> builder =
-                    MaterialDatePicker.Builder.dateRangePicker();
-            builder.setTitleText("Selecciona las fechas");
-
-            // Establecer fecha predeterminada (inicio: hoy, fin: mañana)
-            long today = System.currentTimeMillis();
-            long tomorrow = today + (24 * 60 * 60 * 1000);
-            androidx.core.util.Pair<Long, Long> defaultDateRange =
-                    new androidx.core.util.Pair<>(today, tomorrow);
-            builder.setSelection(defaultDateRange);
-
-            MaterialDatePicker<?> picker = builder.build();
-            picker.show(getSupportFragmentManager(), picker.toString());
-
-            picker.addOnPositiveButtonClickListener(selection -> {
-                String fecha = picker.getHeaderText(); // ej. "14 abr – 15 abr 2025"
-                binding.selectedDatesText.setText(fecha);
-
-                // Actualizar el precio según las fechas seleccionadas
-                actualizarPrecioTotal();
-            });
-        });
-    }
-
-    private void configurarSelectorPersonas() {
-        binding.roomGuestsLayout.setOnClickListener(v -> {
-            View dialogView = getLayoutInflater()
-                    .inflate(R.layout.dialogo_personas_habitaciones, null);
-
-            NumberPicker habitacionesPicker = dialogView.findViewById(R.id.npHabitaciones);
-            NumberPicker personasPicker = dialogView.findViewById(R.id.npPersonas);
-
-            habitacionesPicker.setMinValue(1);
-            habitacionesPicker.setMaxValue(10);
-            habitacionesPicker.setValue(numHabitaciones);
-
-            personasPicker.setMinValue(1);
-            personasPicker.setMaxValue(10);
-            personasPicker.setValue(numPersonas);
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Habitaciones y Huéspedes")
-                    .setView(dialogView)
-                    .setPositiveButton("Aceptar", (dialog, which) -> {
-                        numHabitaciones = habitacionesPicker.getValue();
-                        numPersonas = personasPicker.getValue();
-                        actualizarTextoHabitacionesPersonas();
-                        actualizarPrecioTotal();
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-        });
-    }
-
-    private void actualizarTextoHabitacionesPersonas() {
-        binding.roomGuestsText.setText(
-                numHabitaciones + " habitación" + (numHabitaciones > 1 ? "es" : "") +
-                        " · " + numPersonas + " adulto" + (numPersonas > 1 ? "s" : ""));
-    }
-
-    private void actualizarPrecioTotal() {
-        // En una app real, calcularíamos el precio total basado en:
-        // - Fechas seleccionadas (número de noches)
-        // - Número de habitaciones
-        // - Número de personas
-        // - Tarifas del hotel
-
-        // Por ahora, simulamos un cálculo simple
-        String fechas = binding.selectedDatesText.getText().toString();
-        int numeroDias = 1; // Por defecto 1 día
-
-        // Parseamos las fechas para calcular los días (simplificado)
-        if (fechas.contains("–")) {
-            // Suponemos que son 2 días por defecto
-            numeroDias = 2;
-        }
-
-        double precioPorNoche = 145;
-        double precioTotal = precioPorNoche * numHabitaciones * numeroDias;
-
-        binding.hotelPrice.setText(String.format("€%.0f por %d %s",
-                precioTotal,
-                numeroDias,
-                numeroDias > 1 ? "noches" : "noche"));
-    }
+//    private void actualizarPrecioTotal() {
+//        // En una app real, calcularíamos el precio total basado en:
+//        // - Fechas seleccionadas (número de noches)
+//        // - Número de habitaciones
+//        // - Número de personas
+//        // - Tarifas del hotel
+//
+//        // Por ahora, simulamos un cálculo simple
+//        String fechas = binding.selectedDatesText.getText().toString();
+//        int numeroDias = 1; // Por defecto 1 día
+//
+//        // Parseamos las fechas para calcular los días (simplificado)
+//        if (fechas.contains("–")) {
+//            // Suponemos que son 2 días por defecto
+//            numeroDias = 2;
+//        }
+//
+//        double precioPorNoche = 145;
+//        double precioTotal = precioPorNoche * numHabitaciones * numeroDias;
+//
+//        binding.hotelPrice.setText(String.format("€%.0f por %d %s",
+//                precioTotal,
+//                numeroDias,
+//                numeroDias > 1 ? "noches" : "noche"));
+//    }
 
     // NUEVOS MÉTODOS PARA LAS FUNCIONALIDADES AÑADIDAS
 
     private void mostrarOpcionesHabitacion() {
         Intent intent = new Intent(this, OpcionesHabitacionUser.class);
-        intent.putExtra("HOTEL_ID", getIntent().getStringExtra("HOTEL_ID"));
+
+        intent.putExtra("HOTEL_ID", hotelId);
+        intent.putExtra("fechaInicio", fechaInicioSeleccionado.getTime());
+        intent.putExtra("fechaFin", fechaFinSeleccionado.getTime());
+        intent.putExtra("habitaciones", numHabitaciones);
+        intent.putExtra("personas", numPersonas);
         startActivity(intent);
     }
 

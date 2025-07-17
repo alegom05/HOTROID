@@ -10,7 +10,7 @@ public class Hotel {
     private String idHotel;
     private String name;
     private float rating;
-    private double price; // <--- CAMBIADO A DOUBLE
+    //private double price; // <--- CAMBIADO A DOUBLE
     private String direccion;
     private String direccionDetallada;
     private String description;
@@ -38,7 +38,7 @@ public class Hotel {
         this.idHotel = idHotel;
         this.name = name;
         this.rating = rating;
-        this.price = price; // <--- Asignación directa
+        //this.price = price; // <--- Asignación directa
         this.direccion = direccion;
         this.direccionDetallada = direccionDetallada;
         this.description = description;
@@ -54,7 +54,7 @@ public class Hotel {
     public String getIdHotel() { return idHotel; }
     public String getName() { return name; }
     public float getRating() { return rating; }
-    public double getPrice() { return price; } // <--- CAMBIADO A DOUBLE
+    //public double getPrice() { return price; } // <--- CAMBIADO A DOUBLE
     public String getDireccion() { return direccion; }
     public String getDireccionDetallada() { return direccionDetallada; }
     public String getDescription() { return description; }
@@ -72,7 +72,7 @@ public class Hotel {
     public void setIdHotel(String idHotel) { this.idHotel = idHotel; }
     public void setName(String name) { this.name = name; }
     public void setRating(float rating) { this.rating = rating; }
-    public void setPrice(double price) { this.price = price; } // <--- CAMBIADO A DOUBLE
+    //public void setPrice(double price) { this.price = price; } // <--- CAMBIADO A DOUBLE
     public void setDireccion(String direccion) { this.direccion = direccion; }
     public void setDireccionDetallada(String direccionDetallada) { this.direccionDetallada = direccionDetallada; }
     public void setDescription(String description) { this.description = description; }

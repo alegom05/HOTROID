@@ -25,8 +25,8 @@
             <!-- Corazón de favoritos -->
             <ImageView
                 android:id="@+id/favoriteIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -137,7 +137,7 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_location"
-                        android:tint="@color/black" />
+                        app:tint="@color/black" />
 
                     <TextView
                         android:id="@+id/hotelLocation"
@@ -159,7 +159,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
-                        android:tint="@color/black" />
+                        app:tint="@color/black" />
 
                     <TextView
                         android:id="@+id/hotelPrice"
@@ -231,7 +231,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_parking"
-                            android:tint="@color/black" />
+                            app:tint="@color/black" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -254,7 +254,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_pool"
-                            android:tint="@color/black" />
+                            app:tint="@color/black" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -392,7 +392,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="12dp"
                         android:src="@drawable/ic_calendar"
-                        android:tint="@color/black"/>
+                        app:tint="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"

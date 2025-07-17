@@ -102,7 +102,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
         hotel.setIdHotel(hotelId);
         hotel.setName(hotelName);
         hotel.setRating(getIntent().getFloatExtra("hotel_rating", 4.5f));
-        hotel.setPrice(getIntent().getDoubleExtra("hotel_price", 0.0));
+        //hotel.setPrice(getIntent().getDoubleExtra("hotel_price", 0.0));
         hotel.setDireccion(getIntent().getStringExtra("hotel_direccion"));
         hotel.setDescription(getIntent().getStringExtra("hotel_description"));
 

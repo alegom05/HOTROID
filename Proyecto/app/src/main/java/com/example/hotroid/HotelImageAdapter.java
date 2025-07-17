@@ -8,15 +8,16 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.hotroid.R;
 
 import java.util.List;
 
 public class HotelImageAdapter extends RecyclerView.Adapter<HotelImageAdapter.ImageViewHolder> {
 
-    private List<Integer> imageResources;
+    private List<String> imageResources;
 
-    public HotelImageAdapter(List<Integer> imageResources) {
+    public HotelImageAdapter(List<String> imageResources) {
         this.imageResources = imageResources;
     }
 
@@ -30,12 +31,19 @@ public class HotelImageAdapter extends RecyclerView.Adapter<HotelImageAdapter.Im
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.imageView.setImageResource(imageResources.get(position));
+        String imageUrl = imageResources.get(position);
+//        holder.imageView.setImageResource(imageResources.get(position));
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.placeholder_hotel)
+                .error(R.drawable.placeholder_hotel)
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return imageResources.size();
+        return imageResources != null ? imageResources.size() : 0;
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {

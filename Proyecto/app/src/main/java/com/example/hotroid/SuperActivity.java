@@ -123,7 +123,7 @@ public class SuperActivity extends AppCompatActivity {
         bocaRaton.setName("Boca Raton");
         bocaRaton.setDireccion("Tarapoto, San Martín");
         bocaRaton.setDireccionDetallada("Jr. San Pablo de la Cruz 273");
-        bocaRaton.setPrice(150.00);
+        //bocaRaton.setPrice(150.00);
         bocaRaton.setRating(3.8f);
         bocaRaton.setDescription("El Hotel Boca Raton te ofrece una experiencia única en Tarapoto, con habitaciones confortables y un ambiente acogedor, ideal para explorar la selva peruana.");
         bocaRaton.setImageName("hotel_boca_raton");
@@ -134,7 +134,7 @@ public class SuperActivity extends AppCompatActivity {
         oroVerde.setName("Oro Verde");
         oroVerde.setDireccion("Iquitos, Loreto");
         oroVerde.setDireccionDetallada("Av. Abelardo Quiñones Km 2.8");
-        oroVerde.setPrice(450.00);
+        //oroVerde.setPrice(450.00);
         oroVerde.setRating(4.2f);
         oroVerde.setDescription("Descubre la Amazonía desde el Hotel Oro Verde en Iquitos. Ofrece comodidades modernas y acceso fácil a las maravillas naturales de la selva.");
         oroVerde.setImageName("hotel_oro_verde");
@@ -145,7 +145,7 @@ public class SuperActivity extends AppCompatActivity {
         libertador.setName("Libertador");
         libertador.setDireccion("Machu Picchu, Cusco");
         libertador.setDireccionDetallada("Jr. Waynapicchu s/n");
-        libertador.setPrice(567.50);
+        //libertador.setPrice(567.50);
         libertador.setRating(4.7f);
         libertador.setDescription("Situado en el corazón de Machu Picchu, el Hotel Libertador ofrece vistas espectaculares y un servicio excepcional, ideal para tu aventura inca.");
         libertador.setImageName("hotel_libertador");
@@ -156,7 +156,7 @@ public class SuperActivity extends AppCompatActivity {
         sonesta.setName("Sonesta");
         sonesta.setDireccion("Arequipa");
         sonesta.setDireccionDetallada("Urb. Santa Rosa G-10");
-        sonesta.setPrice(231.80);
+        //sonesta.setPrice(231.80);
         sonesta.setRating(3.9f);
         sonesta.setDescription("El Hotel Sonesta en Arequipa combina la elegancia colonial con el confort moderno, perfecto para explorar la Ciudad Blanca.");
         sonesta.setImageName("hotel_sonesta");
@@ -167,7 +167,7 @@ public class SuperActivity extends AppCompatActivity {
         decameron.setName("Decameron");
         decameron.setDireccion("Punta Sal, Piura");
         decameron.setDireccionDetallada("Km 1192 Panamericana Norte");
-        decameron.setPrice(989.90);
+        //decameron.setPrice(989.90);
         decameron.setRating(4.0f);
         decameron.setDescription("Disfruta de unas vacaciones todo incluido en el Hotel Decameron Punta Sal. Playas paradisíacas y actividades para toda la familia.");
         decameron.setImageName("hotel_decameron");
@@ -178,7 +178,7 @@ public class SuperActivity extends AppCompatActivity {
         aranwa.setName("Aranwa");
         aranwa.setDireccion("Paracas, Ica");
         aranwa.setDireccionDetallada("Av. Paracas Lote F");
-        aranwa.setPrice(756.40);
+        //aranwa.setPrice(756.40);
         aranwa.setRating(4.5f);
         aranwa.setDescription("El Hotel Aranwa en Paracas ofrece un oasis de tranquilidad con vistas al mar, ideal para relajarse y explorar la Reserva de Paracas.");
         aranwa.setImageName("hotel_aranwa");
@@ -189,7 +189,7 @@ public class SuperActivity extends AppCompatActivity {
         costaDelSol.setName("Costa del Sol");
         costaDelSol.setDireccion("Trujillo, La Libertad");
         costaDelSol.setDireccionDetallada("Av. Mansiche 790");
-        costaDelSol.setPrice(546.80);
+        //costaDelSol.setPrice(546.80);
         costaDelSol.setRating(4.1f);
         costaDelSol.setDescription("El Hotel Costa del Sol en Trujillo es el punto de partida perfecto para descubrir la cultura Moche y Chimú, con confort y excelentes servicios.");
         costaDelSol.setImageName("hotel_costa_sol");

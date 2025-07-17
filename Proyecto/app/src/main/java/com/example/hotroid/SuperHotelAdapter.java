@@ -45,7 +45,7 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
         holder.tvHotelName.setText(hotel.getName());
         holder.tvHotelLocation.setText(hotel.getDireccion());
         holder.tvHotelRating.setText(String.format(Locale.getDefault(), "%.1f", hotel.getRating()));
-        holder.tvHotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", hotel.getPrice()));
+        //holder.tvHotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", hotel.getPrice()));
         holder.ratingBar.setRating(hotel.getRating());
 
         if (hotel.getImageUrls() != null && !hotel.getImageUrls().isEmpty()) {
@@ -65,7 +65,7 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
             intent.putExtra("hotel_location", hotel.getDireccion());
             intent.putExtra("hotel_detailed_address", hotel.getDireccionDetallada());
             intent.putExtra("hotel_rating", hotel.getRating());
-            intent.putExtra("hotel_price", hotel.getPrice());
+            //intent.putExtra("hotel_price", hotel.getPrice());
             intent.putExtra("hotel_description", hotel.getDescription());
             intent.putExtra("hotel_image_urls", new ArrayList<>(hotel.getImageUrls())); // <-- PASA LA LISTA
             context.startActivity(intent);

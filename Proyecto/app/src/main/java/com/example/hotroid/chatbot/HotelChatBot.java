@@ -69,7 +69,7 @@ public class HotelChatBot {
     private ChatBotResponse getHotelInfo() {
         String info = "🏨 *" + hotel.getName() + "*\n\n" +
                 "⭐ Calificación: " + hotel.getRating() + "/5\n" +
-                "💰 Precio desde: S/. " + String.format("%.2f", hotel.getPrice()) + " por noche\n" +
+       //         "💰 Precio desde: S/. " + String.format("%.2f", hotel.getPrice()) + " por noche\n" +
                 "📍 Ubicación: " + hotel.getDireccion() + "\n\n" +
                 "📝 Descripción:\n" + hotel.getDescription() + "\n\n" +
                 "¿Necesitas algo más? Escribe el número de otra opción 😊";
