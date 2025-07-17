@@ -51,6 +51,8 @@ public class FirestoreChatManager {
                         );
                         newChat.addMessage(welcomeMessage);
 
+                        newChat.setLastMessageTime(System.currentTimeMillis());
+
                         db.collection(CHATS_COLLECTION)
                                 .document(chatId)
                                 .set(newChat)
@@ -75,7 +77,9 @@ public class FirestoreChatManager {
 
         db.collection(CHATS_COLLECTION)
                 .whereEqualTo("clientId", clientId)
+
                 .orderBy("lastMessageTime", Query.Direction.DESCENDING)
+
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -125,7 +129,7 @@ public class FirestoreChatManager {
         return instance;
     }
 
-    
+
 
     // Agregar mensaje al chat
     public void addMessageToChat(String chatId, ChatMessage message) {
@@ -137,12 +141,13 @@ public class FirestoreChatManager {
                         ChatSession chat = documentSnapshot.toObject(ChatSession.class);
                         if (chat != null) {
                             chat.addMessage(message);
+                            chat.setLastMessageTime(System.currentTimeMillis()); // Agregar esta línea
 
                             db.collection(CHATS_COLLECTION)
                                     .document(chatId)
                                     .set(chat)
                                     .addOnFailureListener(e -> {
-                                        // Log error
+                                        Log.e("FirestoreChatManager", "Error updating chat", e);
                                     });
                         }
                     }
