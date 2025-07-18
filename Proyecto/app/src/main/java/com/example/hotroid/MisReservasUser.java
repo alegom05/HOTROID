@@ -48,7 +48,7 @@ public class MisReservasUser extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        /*EdgeToEdge.enable(this);*/
         setContentView(R.layout.user_mis_reservas);
 
         // Inicializar Firebase
