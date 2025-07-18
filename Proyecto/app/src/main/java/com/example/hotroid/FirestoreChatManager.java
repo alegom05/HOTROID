@@ -77,9 +77,7 @@ public class FirestoreChatManager {
 
         db.collection(CHATS_COLLECTION)
                 .whereEqualTo("clientId", clientId)
-
                 .orderBy("lastMessageTime", Query.Direction.DESCENDING)
-
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -106,6 +104,23 @@ public class FirestoreChatManager {
                 });
     }
 
+    // NUEVO MÉTODO: Eliminar chat
+    public void deleteChat(String chatId, ChatDeletionListener listener) {
+        Log.d("FirestoreChatManager", "deleteChat called for chatId: " + chatId);
+
+        db.collection(CHATS_COLLECTION)
+                .document(chatId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FirestoreChatManager", "Chat eliminado exitosamente: " + chatId);
+                    listener.onChatDeleted();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreChatManager", "Error al eliminar chat: " + chatId, e);
+                    listener.onError("Error al eliminar chat: " + e.getMessage());
+                });
+    }
+
     public interface ChatListListener {
         void onChatsLoaded(List<ChatSession> chats);
         void onChatAdded(ChatSession chat);
@@ -115,6 +130,12 @@ public class FirestoreChatManager {
 
     public interface ChatCreationListener {
         void onChatCreated(ChatSession chat);
+        void onError(String error);
+    }
+
+    // NUEVA INTERFAZ: Listener para eliminación de chats
+    public interface ChatDeletionListener {
+        void onChatDeleted();
         void onError(String error);
     }
 
@@ -128,8 +149,6 @@ public class FirestoreChatManager {
         }
         return instance;
     }
-
-
 
     // Agregar mensaje al chat
     public void addMessageToChat(String chatId, ChatMessage message) {

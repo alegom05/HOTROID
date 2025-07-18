@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.example.hotroid.bean.ChatSession;
 
-public class ChatFragment extends Fragment implements FirestoreChatManager.ChatListListener {
+public class ChatFragment extends Fragment implements FirestoreChatManager.ChatListListener, ChatHotelAdapter.OnChatDeleteListener {
 
     private static final String TAG = "ChatFragment";
     private RecyclerView recyclerViewChats;
@@ -77,6 +77,7 @@ public class ChatFragment extends Fragment implements FirestoreChatManager.ChatL
 
     private void setupRecyclerView() {
         chatAdapter = new ChatHotelAdapter(getContext(), chatItems);
+        chatAdapter.setOnChatDeleteListener(this); // Configurar listener de eliminación
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewChats.setAdapter(chatAdapter);
 
@@ -165,6 +166,44 @@ public class ChatFragment extends Fragment implements FirestoreChatManager.ChatL
                 Toast.makeText(getContext(), "Error al cargar chats: " + error, Toast.LENGTH_LONG).show();
             });
         }
+    }
+
+    // Implementación de OnChatDeleteListener
+    @Override
+    public void onChatDelete(String chatId, int position) {
+        Log.d(TAG, "onChatDelete: chatId=" + chatId + ", position=" + position);
+
+        // Eliminar del adapter inmediatamente para mejorar UX
+        chatAdapter.removeChat(position);
+
+        // Eliminar de Firestore
+        firestoreChatManager.deleteChat(chatId, new FirestoreChatManager.ChatDeletionListener() {
+            @Override
+            public void onChatDeleted() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Chat eliminado correctamente", Toast.LENGTH_SHORT).show();
+
+                        // Verificar si la lista está vacía después de eliminar
+                        if (chatItems.isEmpty()) {
+                            showEmptyState(true);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Error al eliminar chat: " + error);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error al eliminar chat: " + error, Toast.LENGTH_LONG).show();
+                        // Recargar chats en caso de error
+                        loadUserChats();
+                    });
+                }
+            }
+        });
     }
 
     @Override

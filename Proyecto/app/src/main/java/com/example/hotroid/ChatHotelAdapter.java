@@ -1,11 +1,13 @@
 package com.example.hotroid;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,10 +27,19 @@ public class ChatHotelAdapter extends RecyclerView.Adapter<ChatHotelAdapter.Chat
 
     private Context context;
     private List<ChatHotelItem> chatList;
+    private OnChatDeleteListener deleteListener;
+
+    public interface OnChatDeleteListener {
+        void onChatDelete(String chatId, int position);
+    }
 
     public ChatHotelAdapter(Context context, List<ChatHotelItem> chatList) {
         this.context = context;
         this.chatList = chatList;
+    }
+
+    public void setOnChatDeleteListener(OnChatDeleteListener listener) {
+        this.deleteListener = listener;
     }
 
     @NonNull
@@ -46,7 +57,7 @@ public class ChatHotelAdapter extends RecyclerView.Adapter<ChatHotelAdapter.Chat
         holder.lastMessage.setText(chatItem.getLastMessage());
         holder.profileImage.setImageResource(chatItem.getProfileImageRes());
 
-        // Formatear timestamp - CORREGIDO
+        // Formatear timestamp
         if (chatItem.getLastMessageTime() > 0) {
             Date date = new Date(chatItem.getLastMessageTime());
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -68,7 +79,7 @@ public class ChatHotelAdapter extends RecyclerView.Adapter<ChatHotelAdapter.Chat
         // Click listener para abrir el chat detallado
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatDetalladoUser.class);
-            intent.putExtra("chat_id", chatItem.getChatId()); // Usar getChatId()
+            intent.putExtra("chat_id", chatItem.getChatId());
             intent.putExtra("hotel_name", chatItem.getHotelName());
             intent.putExtra("hotel_id", chatItem.getHotelId());
             intent.putExtra("profile_image", chatItem.getProfileImageRes());
@@ -80,11 +91,38 @@ public class ChatHotelAdapter extends RecyclerView.Adapter<ChatHotelAdapter.Chat
 
             context.startActivity(intent);
         });
+
+        // Long click listener para mostrar opciones de eliminar
+        holder.itemView.setOnLongClickListener(v -> {
+            showDeleteDialog(chatItem, position);
+            return true;
+        });
+    }
+
+    private void showDeleteDialog(ChatHotelItem chatItem, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Eliminar Chat")
+                .setMessage("¿Estás seguro de que quieres eliminar el chat con " + chatItem.getHotelName() + "?")
+                .setPositiveButton("Eliminar", (dialog, which) -> {
+                    if (deleteListener != null) {
+                        deleteListener.onChatDelete(chatItem.getChatId(), position);
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     @Override
     public int getItemCount() {
         return chatList.size();
+    }
+
+    public void removeChat(int position) {
+        if (position >= 0 && position < chatList.size()) {
+            chatList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, chatList.size());
+        }
     }
 
     public void updateChatList(List<ChatHotelItem> newChatList) {

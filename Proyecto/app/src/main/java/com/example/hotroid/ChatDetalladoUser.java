@@ -227,7 +227,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
 
     private void setupToolbarData() {
         chatNameToolbar.setText(hotelName);
-        chatStatusToolbar.setText("Asistente Virtual • En línea");
+        chatStatusToolbar.setText("Asistente Virtual ");
         chatAvatarToolbar.setImageResource(profileImageRes);
     }
 

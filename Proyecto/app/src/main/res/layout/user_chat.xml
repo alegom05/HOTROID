@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/cliente1"
-            android:text="Mensajes"
+            android:text="Chats"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:background="#E7F3FF"
         android:padding="8dp"
-        android:text="Estás conectado"
+        android:text="Conectado"
         android:textAlignment="center"
         android:textColor="#68AF4C"
         android:textSize="14sp"
