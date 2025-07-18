@@ -3,6 +3,7 @@ package com.example.hotroid;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -25,6 +26,7 @@ import com.example.hotroid.bean.Hotel;
 import com.example.hotroid.bean.ChatBotResponse;
 import com.example.hotroid.chatbot.ChatBotManager;
 import com.example.hotroid.chatbot.HotelChatBot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +61,11 @@ public class ChatDetalladoUser extends AppCompatActivity {
     private String chatId;
     private String hotelName;
     private String hotelId;
+
+    private String hotelRating;
+    private String hotelDescription;
+
+    private String hotelDireccion;
     private int profileImageRes;
 
     // Para gestión del teclado
@@ -96,14 +103,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
         // Configurar RecyclerView de mensajes
         setupMessagesRecyclerView();
 
-        // Configurar datos del toolbar
-        setupToolbarData();
 
-        // Inicializar ChatBot
-        initializeChatBot();
-
-        // Iniciar conversación con mensaje de bienvenida
-        startChatBotConversation();
     }
 
     private void getIntentData() {
@@ -112,24 +112,39 @@ public class ChatDetalladoUser extends AppCompatActivity {
         hotelId = getIntent().getStringExtra("hotel_id");
         profileImageRes = getIntent().getIntExtra("profile_image", R.drawable.hotel_decameron);
 
-        // Crear objeto Hotel desde los datos del intent
-        hotel = new Hotel();
-        hotel.setIdHotel(hotelId);
-        hotel.setName(hotelName);
-        hotel.setRating(getIntent().getFloatExtra("hotel_rating", 4.5f));
-        //hotel.setPrice(getIntent().getDoubleExtra("hotel_price", 0.0));
-        hotel.setDireccion(getIntent().getStringExtra("hotel_direccion"));
-        hotel.setDescription(getIntent().getStringExtra("hotel_description"));
+        loadCompleteHotelData();
+    }
 
-        // Valores por defecto si no se reciben datos
-        if (hotelName == null) {
-            hotelName = "Hotel";
-        }
-        if (chatId == null) {
-            chatId = "default_chat";
-        }
-        if (hotelId == null) {
-            hotelId = "default_hotel";
+    private void loadCompleteHotelData() {
+        if (hotelId != null) {
+            FirebaseFirestore.getInstance()
+                    .collection("hoteles")
+                    .document(hotelId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            hotel = documentSnapshot.toObject(Hotel.class);
+                            if (hotel != null) {
+                                hotel.setIdHotel(hotelId);
+
+                                // Configurar datos del toolbar
+                                setupToolbarData();
+
+                                // Inicializar ChatBot con datos completos
+                                initializeChatBot();
+
+                                // Iniciar conversación
+                                startChatBotConversation();
+                            }
+                        } else {
+                            Toast.makeText(this, "Hotel no encontrado", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al cargar datos del hotel", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
         }
     }
 
