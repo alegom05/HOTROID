@@ -175,8 +175,8 @@ public class TaxiDashboardActivity extends AppCompatActivity {
                             currentTrip.setDocumentId(doc.getId());
 
                             tvClienteActual.setText(currentTrip.getNombresCliente() + " " + currentTrip.getApellidosCliente());
-                            tvOrigenActual.setText("Origen: " + currentTrip.getOrigen());
-                            tvDestinoActual.setText("Destino: " + currentTrip.getDestino());
+                            tvOrigenActual.setText("" + currentTrip.getOrigen());
+                            tvDestinoActual.setText("" + currentTrip.getDestino());
                             tvTiempoActual.setText(currentTrip.getTiempoTranscurrido());
 
                             tvEstadoViajeActual.setText("Estado: " + currentTrip.getEstadoViaje());

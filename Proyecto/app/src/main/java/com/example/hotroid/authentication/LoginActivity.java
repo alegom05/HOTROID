@@ -23,6 +23,7 @@ import com.example.hotroid.SuperActivity;
 import com.example.hotroid.TaxiActivity;
 import com.example.hotroid.ThemeManager;
 import com.example.hotroid.bean.Persona;
+import com.example.hotroid.databinding.ActivitySelectorDeRolBinding;
 import com.example.hotroid.databinding.LoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -193,6 +194,9 @@ public class LoginActivity extends AppCompatActivity {
                         break;
                     case "Superadmin":
                         intent = new Intent(this, SuperActivity.class);
+                        break;
+                    case "Superman":
+                        intent = new Intent(this, SelectorDeRolActivity.class);
                         break;
                     default:
                         Toast.makeText(this, "Rol desconocido: " + rol, Toast.LENGTH_SHORT).show();

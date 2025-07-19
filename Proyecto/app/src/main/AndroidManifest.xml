@@ -219,6 +219,7 @@
             android:exported="false" />
         <activity android:name=".UserDetalleTaxista" />
         <activity android:name=".UserServTaxi" />
+        <activity android:name=".SelectorDeRolActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
