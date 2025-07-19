@@ -56,6 +56,22 @@ public class TaxiFin extends AppCompatActivity {
         }
 
         currentTripDocumentId = getIntent().getStringExtra("documentId");
+        if (currentTripDocumentId != null && !currentTripDocumentId.isEmpty()) {
+            db.collection("alertas_taxi").document(currentTripDocumentId).get()
+                    .addOnSuccessListener(snapshot -> {
+                        if (snapshot.exists()) {
+                            String estado = snapshot.getString("estadoViaje");
+                            if ("Completado".equals(estado) || "Cancelado".equals(estado)) {
+                                Toast.makeText(this, "Este viaje ya ha finalizado.", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(this, TaxiDashboardActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
+        }
+
 
         if (currentTripDocumentId == null || currentTripDocumentId.isEmpty()) {
             Log.e(TAG, "TaxiFin iniciado sin documentId válido. Redirigiendo a Dashboard.");

@@ -217,7 +217,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/verdejade"
                         android:textSize="16sp"
-                        android:textStyle="italic" />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/btnFinViaje"
