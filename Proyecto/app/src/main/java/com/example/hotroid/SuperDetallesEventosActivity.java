@@ -6,6 +6,7 @@ import android.widget.TextView; // Import TextView
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.text.HtmlCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -42,7 +43,7 @@ public class SuperDetallesEventosActivity extends AppCompatActivity {
 
             // Set the detailed description
             if (eventDescripcion != null && !eventDescripcion.isEmpty()) {
-                tvDescripcion.setText(eventDescripcion);
+                tvDescripcion.setText(HtmlCompat.fromHtml(eventDescripcion, HtmlCompat.FROM_HTML_MODE_LEGACY));
             } else {
                 tvDescripcion.setText("No hay una descripción detallada disponible para este evento.");
             }
