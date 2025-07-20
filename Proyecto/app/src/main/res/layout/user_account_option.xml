@@ -55,7 +55,7 @@
                             app:cardCornerRadius="90dp"
                             app:cardElevation="10dp"
                             app:strokeWidth="4dp"
-                            app:strokeColor="@color/cliente1">
+                            app:strokeColor="@color/cliente2">
 
                             <ImageView
                                 android:id="@+id/user_profile_image"

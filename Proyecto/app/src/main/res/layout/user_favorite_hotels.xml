@@ -20,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <!-- Botón de retroceso -->
         <ImageButton
             android:id="@+id/back_button"
@@ -31,6 +32,7 @@
             android:contentDescription="Back"
             android:scrollbarSize="4dp"
             android:src="@drawable/baseline_arrow_back_24"/>
+
         <!-- Título -->
         <TextView
             android:id="@+id/title_text"
@@ -47,189 +49,38 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollFavorites"
+    <!-- RecyclerView para mostrar los hoteles favoritos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFavorites"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_margin="10dp"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_and_tittle">
+        app:layout_constraintTop_toBottomOf="@+id/back_and_tittle" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardMainFavorites"
-            android:layout_width="match_parent"
+    <!-- Layout para estado vacío (opcional) -->
+    <LinearLayout
+        android:id="@+id/empty_state_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="1dp"
-            app:cardElevation="5dp">
-
-            <androidx.gridlayout.widget.GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:columnCount="2"
-                app:orientation="horizontal">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardElevation="5dp"
-                    app:layout_column="0"
-                    app:layout_columnSpan="1"
-                    app:layout_columnWeight="1"
-                    app:layout_row="0">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <!-- FrameLayout para superponer la imagen y el icono de check -->
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <!-- Imagen del hotel -->
-                            <ImageView
-                                android:id="@+id/hotel_image_1"
-                                android:layout_width="match_parent"
-                                android:layout_height="150dp"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/hotel_aranwa" />
-
-                            <!-- Check con fondo circular azul y elevación -->
-                            <!--<com.google.android.material.card.MaterialCardView
-                                android:id="@+id/check_container1"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_gravity="end|top"
-                                android:layout_margin="5dp"
-                                app:cardElevation="10dp"
-
-                                android:background="@drawable/shape_circle"
-                                app:cardUseCompatPadding="true"
-                                app:cardPreventCornerOverlap="false"
-                                app:strokeWidth="0dp">
-
-                                <ImageView
-                                    android:id="@+id/checkicon1"
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:padding="1dp"
-                                    android:src="@drawable/check_circle_24"
-                                    android:scaleType="centerInside"
-                                    android:visibility="gone"
-
-                                    app:tint="@android:color/white" />
-
-                            </com.google.android.material.card.MaterialCardView>-->
-
-                            <ImageView
-                                android:id="@+id/checkicon1"
-                                android:layout_width="33dp"
-                                android:layout_height="33dp"
-                                android:layout_gravity="end|top"
-                                android:layout_margin="2dp"
-                                android:src="@drawable/check_circle_24"
-                                android:background="@drawable/shape_circle"
-                                android:scaleType="centerInside"
-                                app:tint="@android:color/white"
-                                android:elevation="15dp"
-                                android:visibility="gone">
-                            </ImageView>
-
-
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="8dp"
-                            android:text="Hotel Riviera"
-                            android:textAlignment="center" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardElevation="5dp"
-                    app:layout_column="1"
-                    app:layout_columnSpan="1"
-                    app:layout_columnWeight="1"
-                    app:layout_row="0">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/hotel_aranwa" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="8dp"
-                            android:text="Spa Palace"
-                            android:textAlignment="center" />
-                        <ImageView
-                            android:id="@+id/checkicon2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@android:drawable/ic_menu_delete"
-                            android:visibility="gone">
-                        </ImageView>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardElevation="5dp"
-                    app:layout_column="0"
-                    app:layout_columnSpan="1"
-                    app:layout_columnWeight="1"
-                    app:layout_row="1">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/hotel_aranwa" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="8dp"
-                            android:text="Spa Palace"
-                            android:textAlignment="center" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-            </androidx.gridlayout.widget.GridLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-    </ScrollView>
-
+            android:text="No tienes hoteles favoritos"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

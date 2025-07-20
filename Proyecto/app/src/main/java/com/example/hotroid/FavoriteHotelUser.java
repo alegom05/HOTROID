@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -20,11 +19,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteHotelsUser extends AppCompatActivity {
+public class FavoriteHotelUser extends AppCompatActivity {
     private static final String TAG = "FavoriteHotelUser";
 
     private RecyclerView recyclerView;
-    private HotelAdapter adapter;
+    private HotelAdapter adapter; // Usando el HotelAdapter existente
     private List<Hotel> favoriteHotels = new ArrayList<>();
     private FirebaseFirestore db;
 
@@ -46,8 +45,8 @@ public class FavoriteHotelsUser extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        // Necesitamos reemplazar el GridLayout existente con un RecyclerView
-        // Por ahora, vamos a usar el ScrollView como contenedor
+        recyclerView = findViewById(R.id.recyclerViewFavorites);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         // Inicializar el adapter con la lista vacía
         adapter = new HotelAdapter(favoriteHotels, this);
@@ -57,14 +56,13 @@ public class FavoriteHotelsUser extends AppCompatActivity {
             @Override
             public void onHotelClick(Hotel hotel, double precio) {
                 // Ir a los detalles del hotel
-                Intent intent = new Intent(FavoriteHotelsUser.this, HotelDetalladoUser.class);
+                Intent intent = new Intent(FavoriteHotelUser.this, HotelDetalladoUser.class);
                 intent.putExtra("hotelId", hotel.getIdHotel());
                 startActivity(intent);
             }
         });
 
-        // Como no hay RecyclerView en el layout actual, vamos a mostrar los datos de otra forma
-        // por ahora, hasta que se actualice el layout
+        recyclerView.setAdapter(adapter);
     }
 
     private void loadFavoriteHotels() {
@@ -76,7 +74,7 @@ public class FavoriteHotelsUser extends AppCompatActivity {
 
         String userId = currentUser.getUid();
 
-        db.collection("clientes").document(userId)
+        db.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -86,8 +84,6 @@ public class FavoriteHotelsUser extends AppCompatActivity {
                         } else {
                             showEmptyState();
                         }
-                    } else {
-                        showEmptyState();
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -117,16 +113,17 @@ public class FavoriteHotelsUser extends AppCompatActivity {
     }
 
     private void updateUI() {
-        // Por ahora solo mostrar un toast con la cantidad de favoritos
-        // hasta que se actualice el layout
-        Toast.makeText(this, "Hoteles favoritos cargados: " + favoriteHotels.size(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Hoteles favoritos cargados: " + favoriteHotels.size());
-
-        // Aquí podrías agregar lógica para poblar el GridLayout actual
-        // o mostrar la información de otra manera
+        if (adapter != null) {
+            // Usar el método del HotelAdapter para actualizar la lista
+            adapter.actualizarLista(favoriteHotels);
+            Log.d(TAG, "Hoteles favoritos cargados: " + favoriteHotels.size());
+        }
     }
 
     private void showEmptyState() {
         Toast.makeText(this, "No tienes hoteles favoritos aún", Toast.LENGTH_SHORT).show();
+        // Opcional: mostrar un layout de estado vacío
+        findViewById(R.id.recyclerViewFavorites).setVisibility(View.GONE);
+        // findViewById(R.id.empty_state_layout).setVisibility(View.VISIBLE); // Si tienes este layout
     }
 }
