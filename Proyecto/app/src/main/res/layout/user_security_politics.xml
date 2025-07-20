@@ -13,7 +13,7 @@
         android:id="@+id/back_and_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorOnBackground"
+        android:background="@color/cliente1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="15dp"
@@ -39,7 +39,7 @@
             android:fontFamily="sans-serif-black"
             android:gravity="center_vertical"
             android:text="Políticas de privacidad"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorOnPrimary"
             android:textSize="20dp"
             android:textStyle="bold" /> <!-- Fondo transparente -->
     </LinearLayout>
