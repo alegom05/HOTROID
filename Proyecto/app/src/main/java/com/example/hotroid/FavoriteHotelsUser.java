@@ -76,7 +76,7 @@ public class FavoriteHotelsUser extends AppCompatActivity {
 
         String userId = currentUser.getUid();
 
-        db.collection("clientes").document(userId)
+        db.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {

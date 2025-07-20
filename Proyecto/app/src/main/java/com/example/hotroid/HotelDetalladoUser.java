@@ -465,7 +465,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
             } else {
                 // Quitar de favoritos
                 quitarDeFavoritos(userId);
-                binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
+                binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
                 Toast.makeText(this, "Eliminado de favoritos", Toast.LENGTH_SHORT).show();
             }
         });
@@ -486,7 +486,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
                             binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_filled);
                         } else {
                             isFavorite = false;
-                            binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
+                            binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
                         }
                     }
                 })
@@ -494,19 +494,19 @@ public class HotelDetalladoUser extends AppCompatActivity {
     }
 
     private void añadirAFavoritos(String userId) {
-        db.collection("clientes").document(userId)
+        db.collection("usuarios").document(userId)
                 .update("hotelesFav", com.google.firebase.firestore.FieldValue.arrayUnion(hotelId))
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al añadir favorito", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error añadiendo favorito", e);
                     // Revertir el estado visual si hay error
                     isFavorite = false;
-                    binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
+                    binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
                 });
     }
 
     private void quitarDeFavoritos(String userId) {
-        db.collection("clientes").document(userId)
+        db.collection("usuarios").document(userId)
                 .update("hotelesFav", com.google.firebase.firestore.FieldValue.arrayRemove(hotelId))
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al quitar favorito", Toast.LENGTH_SHORT).show();
