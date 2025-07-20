@@ -107,8 +107,8 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
         } else {
             text = text.toLowerCase(Locale.getDefault());
             for (Hotel hotel : hotelListFull) {
-                if (hotel.getName().toLowerCase(Locale.getDefault()).contains(text) ||
-                        hotel.getDireccion().toLowerCase(Locale.getDefault()).contains(text)) {
+                // *** CAMBIO AQUI: SOLO COMPRUEBA EL NOMBRE DEL HOTEL ***
+                if (hotel.getName().toLowerCase(Locale.getDefault()).contains(text)) {
                     hotelList.add(hotel);
                 }
             }
