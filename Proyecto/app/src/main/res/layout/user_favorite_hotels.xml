@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorOnBackground"
+    android:background="@android:color/white"
     tools:context=".FavoriteHotelsUser">
 
     <LinearLayout
         android:id="@+id/back_and_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorOnBackground"
+        android:background="@color/cliente1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="5dp"
@@ -21,7 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Botón de retroceso -->
         <ImageButton
             android:id="@+id/back_button"
             android:layout_width="48dp"
@@ -30,10 +29,8 @@
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="Back"
-            android:scrollbarSize="4dp"
             android:src="@drawable/baseline_arrow_back_24"/>
 
-        <!-- Título -->
         <TextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
@@ -44,12 +41,11 @@
             android:fontFamily="sans-serif-black"
             android:gravity="center_vertical"
             android:text="Hoteles Favoritos"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"
+            android:textColor="@color/colorOnPrimary"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- RecyclerView para mostrar los hoteles favoritos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFavorites"
         android:layout_width="match_parent"
@@ -61,7 +57,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_and_tittle" />
 
-    <!-- Layout para estado vacío (opcional) -->
     <LinearLayout
         android:id="@+id/empty_state_layout"
         android:layout_width="wrap_content"

@@ -8,13 +8,12 @@ import android.widget.Toast;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.Hotel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -24,82 +23,96 @@ public class FavoriteHotelsUser extends AppCompatActivity {
     private static final String TAG = "FavoriteHotelUser";
 
     private RecyclerView recyclerView;
-    private HotelAdapter adapter;
+    private LinearLayout emptyStateLayout;
+    private HotelFavoriteAdapter favoriteAdapter;
     private List<Hotel> favoriteHotels = new ArrayList<>();
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_favorite_hotels);
 
-        db = FirebaseFirestore.getInstance();
+        try {
+            setContentView(R.layout.user_favorite_hotels);
 
-        // Configurar botón de retroceso
-        findViewById(R.id.back_button).setOnClickListener(v -> onBackPressed());
+            db = FirebaseFirestore.getInstance();
 
-        // Configurar RecyclerView
-        setupRecyclerView();
+            findViewById(R.id.back_button).setOnClickListener(v -> {
+                // Regresar a la actividad anterior sin ir a HotelesFragment
+                finish();
+            });
 
-        // Cargar hoteles favoritos
-        loadFavoriteHotels();
+            initViews();
+            setupRecyclerView();
+            loadFavoriteHotels();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error en onCreate", e);
+            Toast.makeText(this, "Error al cargar la pantalla", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Solo cerrar esta actividad, no navegar
+        super.onBackPressed();
+    }
+
+    private void initViews() {
+        recyclerView = findViewById(R.id.recyclerViewFavorites);
+        emptyStateLayout = findViewById(R.id.empty_state_layout);
     }
 
     private void setupRecyclerView() {
-        // Necesitamos reemplazar el GridLayout existente con un RecyclerView
-        // Por ahora, vamos a usar el ScrollView como contenedor
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        // Inicializar el adapter con la lista vacía
-        adapter = new HotelAdapter(favoriteHotels, this);
-
-        // Configurar listener de clicks
-        adapter.setOnHotelClickListener(new HotelAdapter.OnHotelClickListener() {
-            @Override
-            public void onHotelClick(Hotel hotel, double precio) {
-                // Ir a los detalles del hotel
-                Intent intent = new Intent(FavoriteHotelsUser.this, HotelDetalladoUser.class);
-                intent.putExtra("hotelId", hotel.getIdHotel());
-                startActivity(intent);
-            }
-        });
-
-        // Como no hay RecyclerView en el layout actual, vamos a mostrar los datos de otra forma
-        // por ahora, hasta que se actualice el layout
+        favoriteAdapter = new HotelFavoriteAdapter(favoriteHotels, this);
+        recyclerView.setAdapter(favoriteAdapter);
     }
 
     private void loadFavoriteHotels() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            Toast.makeText(this, "Debes iniciar sesión", Toast.LENGTH_SHORT).show();
+            showEmptyState();
             return;
         }
 
         String userId = currentUser.getUid();
+        Log.d(TAG, "Cargando favoritos para usuario: " + userId);
 
         db.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         List<String> hotelIds = (List<String>) documentSnapshot.get("hotelesFav");
+                        Log.d(TAG, "Hoteles favoritos encontrados: " + (hotelIds != null ? hotelIds.size() : 0));
+
                         if (hotelIds != null && !hotelIds.isEmpty()) {
                             loadHotelsData(hotelIds);
                         } else {
                             showEmptyState();
                         }
                     } else {
+                        Log.w(TAG, "Documento de usuario no existe");
                         showEmptyState();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error cargando favoritos", e);
-                    Toast.makeText(this, "Error al cargar favoritos", Toast.LENGTH_SHORT).show();
+                    showEmptyState();
                 });
     }
 
     private void loadHotelsData(List<String> hotelIds) {
         favoriteHotels.clear();
+        final int totalHotels = hotelIds.size();
+        final int[] loadedCount = {0};
 
         for (String hotelId : hotelIds) {
+            Log.d(TAG, "Cargando hotel: " + hotelId);
+
             db.collection("hoteles").document(hotelId)
                     .get()
                     .addOnSuccessListener(doc -> {
@@ -108,25 +121,46 @@ public class FavoriteHotelsUser extends AppCompatActivity {
                             if (hotel != null) {
                                 hotel.setIdHotel(doc.getId());
                                 favoriteHotels.add(hotel);
-                                updateUI();
+                                Log.d(TAG, "Hotel cargado: " + hotel.getName());
                             }
                         }
+                        loadedCount[0]++;
+
+                        if (loadedCount[0] == totalHotels) {
+                            updateUI();
+                        }
                     })
-                    .addOnFailureListener(e -> Log.e(TAG, "Error cargando hotel: " + hotelId, e));
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error cargando hotel: " + hotelId, e);
+                        loadedCount[0]++;
+
+                        if (loadedCount[0] == totalHotels) {
+                            updateUI();
+                        }
+                    });
         }
     }
 
     private void updateUI() {
-        // Por ahora solo mostrar un toast con la cantidad de favoritos
-        // hasta que se actualice el layout
-        Toast.makeText(this, "Hoteles favoritos cargados: " + favoriteHotels.size(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Hoteles favoritos cargados: " + favoriteHotels.size());
+        Log.d(TAG, "Actualizando UI con " + favoriteHotels.size() + " hoteles");
 
-        // Aquí podrías agregar lógica para poblar el GridLayout actual
-        // o mostrar la información de otra manera
+        if (favoriteHotels.isEmpty()) {
+            showEmptyState();
+        } else {
+            showHotels();
+        }
     }
 
     private void showEmptyState() {
-        Toast.makeText(this, "No tienes hoteles favoritos aún", Toast.LENGTH_SHORT).show();
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
+        Log.d(TAG, "Mostrando estado vacío");
+    }
+
+    private void showHotels() {
+        emptyStateLayout.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        favoriteAdapter.updateList(favoriteHotels);
+        Log.d(TAG, "Mostrando hoteles");
     }
 }
