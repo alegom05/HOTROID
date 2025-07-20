@@ -168,7 +168,7 @@
                     android:id="@+id/tvForgotPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¿Olvidaste tu contraseña?"
+                    android:text=""
                     android:textColor="#26A69A"
                     android:textSize="14sp"
                     android:textStyle="bold"
