@@ -15,10 +15,18 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
 
     private List<TaxiAlertasBeans> listaAlertas;
     private Context context;
+    private OnItemClickListener listener; // Nuevo: Interfaz para el clic
 
-    public TaxiAlertasAdapter(Context context, List<TaxiAlertasBeans> listaAlertas) {
+    // Interfaz para definir el callback
+    public interface OnItemClickListener {
+        void onItemClick(TaxiAlertasBeans alerta);
+    }
+
+    // Constructor actualizado para aceptar el listener
+    public TaxiAlertasAdapter(Context context, List<TaxiAlertasBeans> listaAlertas, OnItemClickListener listener) {
         this.context = context;
         this.listaAlertas = listaAlertas;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,21 +46,14 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
         holder.tvLugarNoti.setText("Origen: " + alerta.getOrigen());
         holder.tvLugarNoti2.setText("Destino: " + alerta.getDestino());
 
-        holder.tvTiempoNoti.setText(alerta.getTiempoTranscurrido());
+        // Asegúrate de que getTiempoTranscurrido() devuelva un String válido
+        holder.tvTiempoNoti.setText(alerta.getTiempoTranscurrido() != null ? alerta.getTiempoTranscurrido() : "N/A");
+
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, TaxiViaje.class);
-
-            intent.putExtra("documentId", alerta.getDocumentId());
-            intent.putExtra("nombresCliente", alerta.getNombresCliente());
-            intent.putExtra("apellidosCliente", alerta.getApellidosCliente());
-            intent.putExtra("origen", alerta.getOrigen());
-            intent.putExtra("destino", alerta.getDestino());
-            intent.putExtra("timestamp", alerta.getTimestamp() != null ? alerta.getTimestamp().getTime() : 0);
-            intent.putExtra("estadoViaje", alerta.getEstadoViaje());
-            intent.putExtra("region", alerta.getRegion());
-
-            context.startActivity(intent);
+            if (listener != null) {
+                listener.onItemClick(alerta); // Llamar al callback en lugar de iniciar el Intent directamente
+            }
         });
     }
 

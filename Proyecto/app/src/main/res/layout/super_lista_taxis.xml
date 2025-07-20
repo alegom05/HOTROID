@@ -161,12 +161,12 @@
                             android:id="@+id/btnFilterStatusActive"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="0.83"
                             android:text="Activado"
                             android:backgroundTint="@color/green_status"
                             android:textColor="@android:color/white"
                             android:layout_marginEnd="4dp"
-                            android:textSize="12sp"
+                            android:textSize="10sp"
                             android:paddingVertical="8dp"/>
 
                         <Button
@@ -185,12 +185,12 @@
                             android:id="@+id/btnFilterStatusPending"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="0.88"
                             android:text="Pendiente"
                             android:backgroundTint="@color/naranja"
                             android:textColor="@android:color/white"
                             android:layout_marginStart="4dp"
-                            android:textSize="11sp"
+                            android:textSize="10sp"
                             android:paddingVertical="8dp"/>
                     </LinearLayout>
 

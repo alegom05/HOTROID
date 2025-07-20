@@ -220,7 +220,7 @@ public class TaxiDashboardActivity extends AppCompatActivity {
 
         listaViajesTerminadosOriginal = new ArrayList<>();
         listaViajesTerminadosFiltrada = new ArrayList<>();
-        adapterViajesTerminados = new TaxiAlertasAdapter(this, listaViajesTerminadosFiltrada);
+        adapterViajesTerminados = new TaxiAlertasAdapter(this, listaViajesTerminadosFiltrada, alerta -> { /* No hacer nada */ });
         recyclerViajesTerminados.setAdapter(adapterViajesTerminados);
 
         etBuscadorTerminados = findViewById(R.id.etBuscadorTerminados);
