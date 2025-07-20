@@ -1,129 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_marginVertical="8dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeColor="@color/cliente1"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
+    <!-- Contenedor de imagen + botón ojo -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="14dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <!-- Imagen de la habitación -->
         <ImageView
-            android:id="@+id/habitacion_imagen"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:contentDescription="Imagen de habitación"
+            android:id="@+id/roomImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="1dp"
+            android:background="@drawable/rounded_border_background"
             android:scaleType="centerCrop"
-            android:src="@drawable/hotel_room" />
+            android:contentDescription="Imagen de la habitación"
+            android:src="@drawable/placeholder_hotel"
+            tools:src="@drawable/placeholder_hotel" />
+        <ImageButton
+            android:id="@+id/btnVerDetalle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="2dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Ver más detalles"
+            android:src="@drawable/ic_search"
+            app:tint="@color/cliente1" />
+    </LinearLayout>
 
+        <!-- Contenido de la habitación -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <!-- Tipo de habitación -->
             <TextView
-                android:id="@+id/habitacion_tipo"
+                android:id="@+id/roomTypeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Habitación Estándar"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Habitación Estándar" />
 
+            <!-- Capacidad -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/cliente1" />
+
+                <TextView
+                    android:id="@+id/capacityText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    tools:text="2 adultos, 1 niño" />
+            </LinearLayout>
+
+            <!-- Número de habitaciones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/single_bed_24"
+                    app:tint="@color/cliente1" />
+
+                <TextView
+                    android:id="@+id/roomCountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    tools:text="1 habitación disponible" />
+            </LinearLayout>
             <TextView
-                android:id="@+id/habitacion_cama"
+                android:id="@+id/tvHabitaciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Se requieren 2 habitaciones" />
+
+            <!-- Amenidades -->
+            <LinearLayout
+                android:id="@+id/amenitiesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Cama matrimonial"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/habitacion_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="25 m²"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/habitacion_capacity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1 adulto, 1 niño"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_wifi"
-                    android:drawablePadding="8dp"
-                    android:text="WiFi gratis"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:drawableStart="@drawable/ic_tv"
-                    android:drawablePadding="8dp"
-                    android:text="TV pantalla plana"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:drawableStart="@drawable/ic_bathroom"
-                    android:drawablePadding="8dp"
-                    android:text="Baño privado"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="#E0E0E0" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/habitacion_precio"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="S/1,200"
-                    android:textColor="@color/cliente2"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_ver_mas"
+                <!-- WiFi -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/cliente1"
-                    android:text="Ver más"
-                    android:textColor="@android:color/white" />
+                    android:layout_marginEnd="12dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_wifi"
+                        app:tint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WiFi gratis"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- TV -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_tv"
+                        app:tint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TV"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
+
+        <!-- Precio y botón de selección -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/priceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textColor="@color/cliente1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="S/. 4,200" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="por noche"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/selectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:padding="1dp"
+                android:text="Seleccionar"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                app:backgroundTint="@color/cliente1"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+    <!-- Indicador de selección -->
+    <View
+        android:id="@+id/selectionIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_gravity="bottom"
+        android:background="@color/cliente1"
+        android:visibility="gone" />
+
+</com.google.android.material.card.MaterialCardView>

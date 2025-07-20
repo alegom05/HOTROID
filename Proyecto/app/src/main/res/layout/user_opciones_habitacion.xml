@@ -21,7 +21,7 @@
         app:title="Opciones de habitación" />
 
     <!-- Filtros para habitaciones -->
-    <androidx.cardview.widget.CardView
+    <!--<androidx.cardview.widget.CardView
         android:id="@+id/filtersCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,48 +45,27 @@
                 android:text="Filtros de búsqueda"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/capacityLayout"
+            <TextView
+                android:id="@+id/capacityFilterText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/outlined_background"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Capacidad: "
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/capacityFilterText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cualquiera"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                android:text="Capacidad: Cualquiera"
+                android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/applyFiltersButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/cliente1"
+                android:layout_marginTop="10dp"
                 android:text="Aplicar filtros"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/cliente1" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
+    </androidx.cardview.widget.CardView>-->
     <!-- Info de resultados -->
     <TextView
-        android:id="@+id/resultsInfo"
+        android:id="@+id/availableRoomsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -94,7 +73,7 @@
         android:text="Habitaciones disponibles (0)"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/filtersCard" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <!-- Progress Bar -->
     <ProgressBar
@@ -105,20 +84,57 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resultsInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/availableRoomsTitle" />
 
     <!-- RecyclerView para habitaciones -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/roomsRecyclerView"
+        android:id="@+id/roomOptionsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resultsInfo"
+        app:layout_constraintTop_toBottomOf="@id/availableRoomsTitle"
         tools:listitem="@layout/item_habitacion" />
+
+    <!-- Botón flotante para continuar -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Continuar"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/cliente1"
+        app:icon="@drawable/ic_arrow_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone" />
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- TextView para cuando no hay resultados -->
+    <TextView
+        android:id="@+id/noResultsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No se encontraron habitaciones disponibles"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

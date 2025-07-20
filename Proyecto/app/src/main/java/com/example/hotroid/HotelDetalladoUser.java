@@ -3,6 +3,7 @@ package com.example.hotroid;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +14,9 @@ import android.widget.Toast;
 
 // Agregar imports necesarios al inicio del archivo:
 import com.example.hotroid.bean.ChatSession;
+import com.example.hotroid.bean.Reserva;
+import com.example.hotroid.bean.Room;
+import com.example.hotroid.bean.RoomGroupOption;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import android.widget.Toast;
@@ -38,15 +42,21 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+
+import java.io.Serializable;
+
 
 public class HotelDetalladoUser extends AppCompatActivity {
     private static final String TAG = "HotelDetalladoUser";
@@ -70,7 +80,6 @@ public class HotelDetalladoUser extends AppCompatActivity {
     private FirebaseFirestore db;
     private List<Valoracion> comentarios = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,30 +87,16 @@ public class HotelDetalladoUser extends AppCompatActivity {
         setContentView(binding.getRoot());
         // Inicializar Firebase
         db = FirebaseFirestore.getInstance();
-
         // Configurar la toolbar
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
-
         // Obtener datos del Intent
         getIntentData();
-
-//        //recibiendo datos de filtros previos
-//        long filtroInicio = getIntent().getLongExtra("fechaInicio",0);
-//        long filtroFin = getIntent().getLongExtra("fechaFin", filtroInicio+86400000);//+1 DÍA
-//
-//        fechaInicioSeleccionado = new Date(filtroInicio);
-//        fechaFinSeleccionado = new Date(filtroFin);
-//
-//        int filtroHabitaciones = getIntent().getIntExtra("habitaciones",1);
-//        int filtroPersonas = getIntent().getIntExtra("personas",2);
         // Configurar datos del hotel
         setupHotelData();
-
         // Configurar listeners
         setupListeners();
-
         // Cargar imágenes del hotel
         loadHotelImages();
 
@@ -234,6 +229,26 @@ public class HotelDetalladoUser extends AppCompatActivity {
             Toast.makeText(this, "Selecciona un rango de fechas válido", Toast.LENGTH_SHORT).show();
             return;
         }
+        db.collection("habitaciones")
+                .whereEqualTo("hotelId", hotelId)
+                .whereEqualTo("status", "Available")
+                .get()
+                .addOnSuccessListener(habitacionQuery -> {
+                    List<Room> habitacionesDisponibles = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot doc : habitacionQuery) {
+                        Room habitacion = doc.toObject(Room.class);
+                        habitacion.setId(doc.getId());
+                        habitacionesDisponibles.add(habitacion);
+                        Log.d("HABITACION A REVISAR","se añade a lista para posterior analisis de disponibilidad: "+habitacion.getId()+" | con doc id: "+doc.getId());
+                    }
+
+                    verificarDisponibilidadPorFechas(habitacionesDisponibles);
+//                    List<RoomGroupOption> opciones = generarOpcionesPorTipo(habitacionesDisponibles, numPersonas, niniosSolicitados, numHabitaciones);
+//                    mostrarOpciones(opciones);
+
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error al obtener habitaciones", e));
 
     }
 
@@ -289,6 +304,130 @@ public class HotelDetalladoUser extends AppCompatActivity {
         }
     }
 
+    private void verificarDisponibilidadPorFechas(List<Room> habitaciones) {
+        db.collection("reservas")
+                .whereEqualTo("idHotel", hotelId)
+                .whereEqualTo("estaCancelada", false)
+                .get()
+                .addOnSuccessListener(reservaQuery -> {
+                    List<Room> disponibles = new ArrayList<>();
+
+                    for (Room habitacion : habitaciones) {
+                        boolean ocupada = false;
+
+                        for (QueryDocumentSnapshot reservaDoc : reservaQuery) {
+                            Reserva reserva = reservaDoc.toObject(Reserva.class);
+
+                            if (reserva.getRoomNumber().contains(habitacion.getRoomNumber())) {
+                                Date inicio = reserva.getFechaInicio();
+                                Date fin = reserva.getFechaFin();
+
+                                if (fechaInicioSeleccionado.before(fin) && fechaFinSeleccionado.after(inicio)) {
+                                    ocupada = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!ocupada) disponibles.add(habitacion);
+                    }
+
+//                    buscarCombinacionesValidas(disponibles);
+                    List<RoomGroupOption> opciones = generarOpcionesPorTipo(disponibles, numPersonas, niniosSolicitados, numHabitaciones);
+                    mostrarOpciones(opciones);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error al verificar reservas", e));
+    }
+
+    private void buscarCombinacionesValidas(List<Room> habitacionesDisponibles) {
+        List<Room> seleccionadas = new ArrayList<>();
+
+        int adultosRestantes = numPersonas;
+        int niñosRestantes = niniosSolicitados;
+
+        // Ordenar por mayor capacidad (opcional)
+        habitacionesDisponibles.sort((a, b) ->
+                (b.getCapacityAdults() + b.getCapacityChildren()) -
+                        (a.getCapacityAdults() + a.getCapacityChildren()));
+
+        for (Room habitacion : habitacionesDisponibles) {
+            if (seleccionadas.size() >= numHabitaciones) break;
+
+            seleccionadas.add(habitacion);
+            adultosRestantes -= habitacion.getCapacityAdults();
+            niñosRestantes -= habitacion.getCapacityChildren();
+
+            if (adultosRestantes <= 0 && niñosRestantes <= 0) break;
+        }
+
+        if (adultosRestantes <= 0 && niñosRestantes <= 0) {
+            //mostrarHabitacionesSeleccionadas(seleccionadas);
+        } else {
+            Toast.makeText(this, "No hay suficientes habitaciones para cubrir los huéspedes solicitados", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private List<RoomGroupOption> generarOpcionesPorTipo(List<Room> habitacionesDisponibles,
+                                                         int adultosSolicitados, int niñosSolicitados, int habitacionesMax) {
+        Map<String, List<Room>> habitacionesPorTipo = new HashMap<>();
+
+        for (Room room : habitacionesDisponibles) {
+            habitacionesPorTipo.computeIfAbsent(room.getRoomType(), k -> new ArrayList<>()).add(room);
+        }
+
+        List<RoomGroupOption> opciones = new ArrayList<>();
+
+        for (Map.Entry<String, List<Room>> entry : habitacionesPorTipo.entrySet()) {
+            String tipo = entry.getKey();
+            List<Room> rooms = entry.getValue();
+
+            rooms.sort((a, b) -> {
+                int totalA = a.getCapacityAdults() + a.getCapacityChildren();
+                int totalB = b.getCapacityAdults() + b.getCapacityChildren();
+                return Integer.compare(totalB, totalA);
+            });
+
+            int adultsRemaining = adultosSolicitados;
+            int childrenRemaining = niñosSolicitados;
+            List<Room> seleccionadas = new ArrayList<>();
+
+            for (Room room : rooms) {
+                if (seleccionadas.size() >= habitacionesMax) break;
+
+                seleccionadas.add(room);
+                adultsRemaining -= room.getCapacityAdults();
+                childrenRemaining -= room.getCapacityChildren();
+
+                if (adultsRemaining <= 0 && childrenRemaining <= 0) break;
+            }
+
+            if (adultsRemaining <= 0 && childrenRemaining <= 0) {
+                RoomGroupOption option = new RoomGroupOption();
+                option.setRoomType(tipo);
+                option.setHabitacionesSeleccionadas(seleccionadas);
+                option.setHabitacionesNecesarias(seleccionadas.size());
+                option.setDisponibles(rooms.size());
+                option.setTotalAdults(adultosSolicitados);
+                option.setTotalChildren(niñosSolicitados);
+                option.setPrecioPorHabitacion(seleccionadas.get(0).getPrice());
+                opciones.add(option);
+            }
+        }
+
+        return opciones;
+    }
+
+    private void mostrarOpciones(List<RoomGroupOption> opciones) {
+        if (opciones.isEmpty()) {
+            Toast.makeText(this, "No se encontraron opciones con la cantidad de personas y fechas seleccionadas", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Intent intent = new Intent(this, OpcionesHabitacionUser.class);
+        intent.putParcelableArrayListExtra("opciones", new ArrayList<>(opciones));
+//        intent.putExtra("opciones", (Serializable) opciones);
+        startActivity(intent);
+    }
 
 
 //    private void configurarBotones() {
@@ -320,36 +459,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
 
     // En el método cargarDatosHotel() dentro de la clase HotelDetalladoUser.java
 
-//    private void cargarDatosHotel() {
-//        // Obtener datos del intent
-//        String idHotelSeleccionado = getIntent().getStringExtra("idHotel");
-//        FirebaseFirestore.getInstance()
-//                .collection("hoteles")
-//                .document(hotelId)
-//                .get()
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    if (documentSnapshot.exists()) {
-//                        Hotel hotel = documentSnapshot.toObject(Hotel.class);
-//                        if (hotel != null) {
-//                            hotel.setIdHotel(hotelId); // redundante si usas @DocumentId
-//                            mostrarDatosEnPantalla(hotel);
-//                        }
-//                    } else {
-//                        Toast.makeText(this, "Hotel no encontrado", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(this, "Error al cargar el hotel", Toast.LENGTH_SHORT).show();
-//                    finish();
-//                });
-////
-////        // Si tienes una sola imagen principal, puedes añadirla a la galería
-////        if (hotelImages != null && !hotelImages.isEmpty()) {
-////            // Si ya hay imágenes cargadas, asegúrate de que la primera sea la imagen principal
-////            hotelImages.set(0, imagenId);
-////        }
-//    }
+
 
 //    private void mostrarDatosEnPantalla(Hotel hotel) {
 //        binding.hotelName.setText(hotel.getName());
@@ -368,97 +478,6 @@ public class HotelDetalladoUser extends AppCompatActivity {
 //    }
 
 
-//    private void configurarGaleriaImagenes() {
-//        // Simulamos tener varias imágenes del hotel
-//        // En una app real, estas imágenes se cargarían desde una base de datos o API
-//        hotelImages = new ArrayList<>(Arrays.asList(
-//                R.drawable.hotel_room,
-//                R.drawable.hotel_restaurant,
-//                R.drawable.hotel_park,
-//                R.drawable.hotel_pool,
-//                R.drawable.hotel_spa
-//        ));
-//
-//        // Configurar el adaptador
-//        HotelImageAdapter imageAdapter = new HotelImageAdapter(hotelImages);
-//        binding.hotelImagesViewPager.setAdapter(imageAdapter);
-//
-//        // Configurar los indicadores
-//        new TabLayoutMediator(binding.imageIndicator, binding.hotelImagesViewPager,
-//                (tab, position) -> {
-//                    // No necesitamos texto para las pestañas
-//                }).attach();
-//
-//        // Configurar el cambio de página
-//        binding.hotelImagesViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                super.onPageSelected(position);
-//                // Aquí podríamos hacer algo cuando se selecciona una página
-//            }
-//        });
-//    }
-
-//    private void configurarCalendario() {
-//        binding.datePickerLayout.setOnClickListener(v -> {
-//            MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> builder =
-//                    MaterialDatePicker.Builder.dateRangePicker();
-//            builder.setTitleText("Selecciona las fechas");
-//
-//            builder.setSelection(androidx.core.util.Pair.create(
-//                    fechaInicioSeleccionado.getTime(), fechaFinSeleccionado.getTime()
-//            ));
-//
-//            MaterialDatePicker<androidx.core.util.Pair<Long, Long>> picker = builder.build();
-//            picker.show(getSupportFragmentManager(), picker.toString());
-//
-//            picker.addOnPositiveButtonClickListener(selection -> {
-//                long inicio = selection.first;
-//                long fin = selection.second;
-//                if (fin <= inicio){
-//                    Toast.makeText(this, "La fecha de salida debe ser posterior a la fecha de inicio", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                fechaInicioSeleccionado = new Date(inicio);
-//                fechaFinSeleccionado = new Date(fin);
-//
-//                binding.selectedDatesText.setText(formatearRangoFechas(fechaInicioSeleccionado, fechaFinSeleccionado));
-//                // Actualizar el precio según las fechas seleccionadas
-//                actualizarPrecioTotal();
-//            });
-//        });
-//    }
-
-//    private void configurarSelectorPersonas() {
-//        binding.roomGuestsLayout.setOnClickListener(v -> {
-//            View dialogView = getLayoutInflater()
-//                    .inflate(R.layout.dialogo_personas_habitaciones, null);
-//
-//            NumberPicker habitacionesPicker = dialogView.findViewById(R.id.npHabitaciones);
-//            NumberPicker personasPicker = dialogView.findViewById(R.id.npPersonas);
-//
-//            habitacionesPicker.setMinValue(1);
-//            habitacionesPicker.setMaxValue(10);
-//            habitacionesPicker.setValue(numHabitaciones);
-//
-//            personasPicker.setMinValue(1);
-//            personasPicker.setMaxValue(10);
-//            personasPicker.setValue(numPersonas);
-//
-//            new AlertDialog.Builder(this)
-//                    .setTitle("Habitaciones y Huéspedes")
-//                    .setView(dialogView)
-//                    .setPositiveButton("Aceptar", (dialog, which) -> {
-//                        numHabitaciones = habitacionesPicker.getValue();
-//                        numPersonas = personasPicker.getValue();
-//                        actualizarTextoHabitacionesPersonas();
-//                        actualizarPrecioTotal();
-//                    })
-//                    .setNegativeButton("Cancelar", null)
-//                    .show();
-//        });
-//    }
 
     public void actualizarHuespedes(int habitaciones, int adultos, int ninos) {
         this.numHabitaciones = habitaciones;

@@ -19,7 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.Room;
+import com.example.hotroid.bean.RoomGroupOption;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -33,11 +35,14 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
     // UI Components
     private RecyclerView roomsRecyclerView;
     private RoomAdapter roomAdapter;
+    private OpcionesAdapter adapter;
     private ProgressBar progressBar;
+    private ExtendedFloatingActionButton continueButton;
     private TextView resultsInfo;
     private LinearLayout capacityLayout;
     private TextView capacityFilterText;
     private MaterialButton applyFiltersButton;
+    private TextView availableRoomsTitle, noResultsText;
 
     // Data
     private List<Room> roomList;
@@ -45,6 +50,8 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
     private String hotelId;
     private int adultsFilter = 0;
     private int childrenFilter = 0;
+    //List<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
+    private List<RoomGroupOption> listaOpciones = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,44 +61,94 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
         // Inicializar Firestore
         db = FirebaseFirestore.getInstance();
 
+//        ArrayList<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
+//
+//        if (opciones != null) {
+//            // Aquí puedes usar la lista
+//            for (RoomGroupOption opcion : opciones) {
+//                Log.d("OPCION", "Tipo: " + opcion.getRoomType() + ", Precio: " + opcion.getPrecioPorHabitacion());
+//            }
+//        }
         // Obtener el ID del hotel de los extras del Intent
-        hotelId = getIntent().getStringExtra("HOTEL_ID");
+        //hotelId = getIntent().getStringExtra("HOTEL_ID");
 
         // Inicializar UI components
         initUI();
 
         // Cargar habitaciones
-        loadRooms();
+//        loadRooms();
     }
 
     private void initUI() {
         // Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Habilitar el botón de retroceso en la toolbar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        }
 
         // Inicializar componentes
-        roomsRecyclerView = findViewById(R.id.roomsRecyclerView);
-        progressBar = findViewById(R.id.progressBar);
-        resultsInfo = findViewById(R.id.resultsInfo);
-        capacityLayout = findViewById(R.id.capacityLayout);
-        capacityFilterText = findViewById(R.id.capacityFilterText);
-        applyFiltersButton = findViewById(R.id.applyFiltersButton);
+        roomsRecyclerView = findViewById(R.id.roomOptionsRecyclerView);
+        continueButton = findViewById(R.id.continueButton);
+        progressBar = findViewById(R.id.progressBar1);
+        availableRoomsTitle = findViewById(R.id.availableRoomsTitle);
+        noResultsText = findViewById(R.id.noResultsText);
+//        capacityLayout = findViewById(R.id.capacityLayout);
+//        capacityFilterText = findViewById(R.id.capacityFilterText);
+//        applyFiltersButton = findViewById(R.id.applyFiltersButton);
 
         // Configurar RecyclerView
-        roomList = new ArrayList<>();
-        roomAdapter = new RoomAdapter(roomList, this);
-        roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        roomsRecyclerView.setAdapter(roomAdapter);
+        adapter = new OpcionesAdapter(listaOpciones, this, new OpcionesAdapter.OnOpcionClickListener() {
+            @Override
+            public void onVerDetalle(RoomGroupOption opcion) {
+                Intent intent = new Intent(OpcionesHabitacionUser.this, DetalleHabitacionUser.class);
+                intent.putExtra("opcion", opcion);
+                startActivity(intent);
+            }
+            @Override
+            public void onSeleccionar(RoomGroupOption opcion) {
+                continueButton.setVisibility(View.VISIBLE);
+            }
+        });
 
-        // Configurar filtros
-        capacityLayout.setOnClickListener(v -> showCapacityFilterDialog());
-        applyFiltersButton.setOnClickListener(v -> applyFilters());
+        roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        roomsRecyclerView.setAdapter(adapter);
+//        roomList = new ArrayList<>();
+//        roomAdapter = new RoomAdapter(roomList, this);
+//        roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        roomsRecyclerView.setAdapter(roomAdapter);
+
+        // ⬇️ Aquí usas los datos recibidos por Intent
+        ArrayList<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
+
+        if (opciones != null && !opciones.isEmpty()) {
+            listaOpciones.clear();
+            listaOpciones.addAll(opciones);
+            availableRoomsTitle.setText("Habitaciones disponibles (" + listaOpciones.size() + ")");
+            adapter.notifyDataSetChanged();
+        } else {
+            noResultsText.setVisibility(View.VISIBLE);
+        }
+
+        continueButton.setOnClickListener(v -> {
+            RoomGroupOption seleccionada = adapter.getOpcionSeleccionada();
+            if (seleccionada != null) {
+                Intent intent = new Intent(OpcionesHabitacionUser.this, ProcesoReservaUser.class);
+                intent.putExtra("opcionSeleccionada", seleccionada);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Debes seleccionar una habitación", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        // Configurar filtros
+//        capacityLayout.setOnClickListener(v -> showCapacityFilterDialog());
+//        applyFiltersButton.setOnClickListener(v -> applyFilters());
     }
 
     private void loadRooms() {

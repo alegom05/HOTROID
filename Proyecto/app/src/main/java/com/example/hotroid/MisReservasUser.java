@@ -294,7 +294,7 @@ public class MisReservasUser extends AppCompatActivity {
                     false,
                     null,
                     "V1",
-                    101,
+                    Arrays.asList(101,108),
                     true
             ));
 
@@ -319,7 +319,7 @@ public class MisReservasUser extends AppCompatActivity {
                     false,
                     null,
                     null,
-                    205,
+                    Arrays.asList(205),
                     false
             ));
 
@@ -344,7 +344,7 @@ public class MisReservasUser extends AppCompatActivity {
                     true,
                     dateFormatter.parse("2025-06-15"),
                     null,
-                    218,
+                    Arrays.asList(218),
                     false
             ));
 

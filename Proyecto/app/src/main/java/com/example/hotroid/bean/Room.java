@@ -1,14 +1,18 @@
 package com.example.hotroid.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.firestore.DocumentId;
 
-public class Room {
+public class Room implements Parcelable {
     @DocumentId
     private String id;
     private int roomNumber;
     private String roomType;
     private int capacityAdults;
     private int capacityChildren;
+    private int totalCapacity=capacityAdults + capacityChildren;
     private double area;
     private String status;
     private String hotelId;
@@ -95,5 +99,43 @@ public class Room {
             desc += ", " + capacityChildren + " niño" + (capacityChildren > 1 ? "s" : "");
         }
         return desc;
+    }
+
+    // Parcel constructor
+    protected Room(Parcel in) {
+        id = in.readString();
+        roomNumber = in.readInt();
+        roomType = in.readString();
+        capacityAdults = in.readInt();
+        capacityChildren = in.readInt();
+        area = in.readDouble();
+        price = in.readDouble();
+    }
+    public static final Creator<Room> CREATOR = new Creator<Room>() {
+        @Override
+        public Room createFromParcel(Parcel in) {
+            return new Room(in);
+        }
+
+        @Override
+        public Room[] newArray(int size) {
+            return new Room[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(roomNumber);
+        dest.writeString(roomType);
+        dest.writeInt(capacityAdults);
+        dest.writeInt(capacityChildren);
+        dest.writeDouble(area);
+        dest.writeDouble(price);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }

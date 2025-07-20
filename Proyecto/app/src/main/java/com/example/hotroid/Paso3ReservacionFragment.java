@@ -27,6 +27,8 @@ import com.example.hotroid.util.ReservacionTempData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -118,6 +120,8 @@ public class Paso3ReservacionFragment extends Fragment {
         // Generar número aleatorio para la habitación (esto sería reemplazado por lógica real)
         Random random = new Random();
         int roomNumber = 100 + random.nextInt(900);
+        List<Integer> roomNumbers = new ArrayList<>();
+        roomNumbers.add(roomNumber);
 
         // Crear objeto Reserva con datos completos
         Reserva nuevaReserva = new Reserva(
@@ -140,7 +144,7 @@ public class Paso3ReservacionFragment extends Fragment {
                 false, // No está cancelada
                 null, // Fecha de cancelación null
                 null, // Sin valoración aún
-                roomNumber, // Número de habitación asignado
+                roomNumbers, // Número de habitación asignado
                 false // Sin valoración aún
         );
 

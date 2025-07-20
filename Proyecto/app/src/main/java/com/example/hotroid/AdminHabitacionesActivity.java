@@ -202,7 +202,7 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
 
                             Room newRoom = new Room(
                                     null,
-                                    reserva.getRoomNumber(),
+                                    reserva.getRoomNumber().get(0),
                                     roomType,
                                     reserva.getAdultos(),
                                     reserva.getNinos(),

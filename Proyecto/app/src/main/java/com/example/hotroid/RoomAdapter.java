@@ -15,12 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.Room;
+import com.example.hotroid.bean.RoomGroupOption;
 
 import java.util.List;
 import java.util.Locale;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder> {
 
+//    private List<RoomGroupOption> roomOptions;
+//    private RoomGroupOption selectedOption;
+//    private OnRoomSelectListener listener;
     private List<Room> roomList;
     private Context context;
 
@@ -148,13 +152,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
-            roomImage = itemView.findViewById(R.id.habitacion_imagen);
-            roomTypeText = itemView.findViewById(R.id.habitacion_tipo);
-            bedTypeText = itemView.findViewById(R.id.habitacion_cama);
-            areaText = itemView.findViewById(R.id.habitacion_area);
-            capacityText = itemView.findViewById(R.id.habitacion_capacity);
-            priceText = itemView.findViewById(R.id.habitacion_precio);
-            viewMoreButton = itemView.findViewById(R.id.btn_ver_mas);
+            roomImage = itemView.findViewById(R.id.roomImage);
+            roomTypeText = itemView.findViewById(R.id.roomTypeText);
+            bedTypeText = itemView.findViewById(R.id.roomCountText);
+            areaText = itemView.findViewById(R.id.roomTypeText);
+            capacityText = itemView.findViewById(R.id.capacityText);
+            priceText = itemView.findViewById(R.id.priceText);
+            viewMoreButton = itemView.findViewById(R.id.selectButton);
         }
     }
 }

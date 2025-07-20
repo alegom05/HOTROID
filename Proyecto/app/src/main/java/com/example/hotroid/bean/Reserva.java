@@ -4,6 +4,7 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 public class Reserva {
     private String idReserva;
@@ -25,7 +26,7 @@ public class Reserva {
     private boolean cancelada;
     private Date fechaCancelacion;
     private String idValoracion;
-    private int roomNumber;
+    private List<Integer> roomNumber;
     private boolean tieneValoracion;
 
     // Servicios adicionales
@@ -45,7 +46,7 @@ public class Reserva {
                    String idHotel, String nombreHotel, int habitaciones, int adultos, int ninos,
                    Date fechaInicio, Date fechaFin, String estado, double precioTotal,
                    boolean checkInRealizado, boolean checkOutRealizado, double cobrosAdicionales,
-                   boolean cancelada, Date fechaCancelacion, String idValoracion, int roomNumber,
+                   boolean cancelada, Date fechaCancelacion, String idValoracion, List<Integer> roomNumber,
                    boolean tieneValoracion) {
         this.idReserva = idReserva;
         this.idPersona = idPersona;
@@ -223,11 +224,11 @@ public class Reserva {
         this.idValoracion = idValoracion;
     }
 
-    public int getRoomNumber() {
+    public List<Integer> getRoomNumber() {
         return roomNumber;
     }
 
-    public void setRoomNumber(int roomNumber) {
+    public void setRoomNumber(List<Integer> roomNumber) {
         this.roomNumber = roomNumber;
     }
 
