@@ -11,6 +11,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="32dp"
-            android:paddingBottom="32dp">
+            android:paddingBottom="24dp">
 
             <!-- Card de Perfil Mejorado -->
             <com.google.android.material.card.MaterialCardView
@@ -29,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="12dp"
                 app:strokeWidth="0dp"
@@ -54,7 +55,7 @@
                             app:cardCornerRadius="90dp"
                             app:cardElevation="10dp"
                             app:strokeWidth="4dp"
-                            app:strokeColor="@color/naranjaTransparen">
+                            app:strokeColor="@color/cliente2">
 
                             <ImageView
                                 android:id="@+id/user_profile_image"
@@ -64,7 +65,6 @@
                                 android:src="@drawable/baseline_account" />
 
                         </com.google.android.material.card.MaterialCardView>
-
 
                     </RelativeLayout>
 
@@ -90,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="16dp"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
                 app:strokeWidth="0dp"
@@ -118,8 +119,8 @@
                         app:icon="@drawable/outline_account_circle_24"
                         app:iconGravity="textStart"
                         app:iconPadding="20dp"
-                        app:iconTint="@color/naranjaTransparen"
-                        app:rippleColor="@color/naranjaTransparen" />
+                        app:iconTint="@color/cliente1"
+                        app:rippleColor="@color/cliente1" />
 
                     <View
                         android:layout_width="match_parent"
@@ -145,8 +146,8 @@
                         app:icon="@drawable/favorite_24"
                         app:iconGravity="textStart"
                         app:iconPadding="20dp"
-                        app:iconTint="@color/naranjaTransparen"
-                        app:rippleColor="@color/naranjaTransparen" />
+                        app:iconTint="@color/cliente1"
+                        app:rippleColor="@color/cliente1" />
 
                     <View
                         android:layout_width="match_parent"
@@ -172,8 +173,8 @@
                         app:icon="@drawable/baseline_brightness_medium_24"
                         app:iconGravity="textStart"
                         app:iconPadding="20dp"
-                        app:iconTint="@color/naranjaTransparen"
-                        app:rippleColor="@color/naranjaTransparen" />
+                        app:iconTint="@color/cliente1"
+                        app:rippleColor="@color/cliente1" />
 
                     <View
                         android:layout_width="match_parent"
@@ -199,8 +200,8 @@
                         app:icon="@drawable/politicas_priv"
                         app:iconGravity="textStart"
                         app:iconPadding="20dp"
-                        app:iconTint="@color/naranjaTransparen"
-                        app:rippleColor="@color/naranjaTransparen" />
+                        app:iconTint="@color/cliente1"
+                        app:rippleColor="@color/cliente1" />
 
                     <View
                         android:layout_width="match_parent"
