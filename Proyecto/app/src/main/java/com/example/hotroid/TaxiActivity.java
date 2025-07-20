@@ -111,10 +111,12 @@ public class TaxiActivity extends AppCompatActivity {
 
         CollectionReference alertasRef = db.collection("alertas_taxi");
 
+        // <<<<<<<<<<<<<<<<<<<<< CAMBIO IMPORTANTE AQUÍ >>>>>>>>>>>>>>>>>>>>>
+        // La consulta ahora filtra por "No asignado" para que solo aparezcan las alertas pendientes
         Query query = alertasRef
-                .whereEqualTo("estadoViaje", "En camino")
-                .whereEqualTo("region", "Cusco")
-                .orderBy("timestamp", Query.Direction.DESCENDING);
+                .whereEqualTo("estadoViaje", "No asignado") // Solo mostrar si el estado es "No asignado"
+                .whereEqualTo("region", "Cusco") // Mantener el filtro por región
+                .orderBy("timestamp", Query.Direction.DESCENDING); // Ordenar por fecha
 
         firestoreListener = query.addSnapshotListener((snapshots, e) -> {
             if (e != null) {
@@ -131,7 +133,7 @@ public class TaxiActivity extends AppCompatActivity {
                         listaAlertasOriginal.add(alerta);
                     }
                 }
-                Log.d(TAG, "Alertas 'En camino' (Cusco) cargadas desde Firestore: " + listaAlertasOriginal.size());
+                Log.d(TAG, "Alertas 'No asignado' (Cusco) cargadas desde Firestore: " + listaAlertasOriginal.size());
                 filtrarNotificaciones(etBuscador.getText().toString());
             }
         });

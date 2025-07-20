@@ -141,9 +141,9 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                     tvDestinoInfo.setText("" + trip.getDestino());
                     tvEstadoViaje.setText("Estado: " + trip.getEstadoViaje());
 
-                    if (trip.getTimestamp() != null &&
-                            ("Asignado".equals(trip.getEstadoViaje()) || "En viaje".equals(trip.getEstadoViaje()))) {
-                        tripStartTimeMillis = trip.getTimestamp().getTime();
+                    // Iniciar/Detener temporizador basado en el estado
+                    if ("En camino".equals(trip.getEstadoViaje()) || "Asignado".equals(trip.getEstadoViaje())) {
+                        tripStartTimeMillis = trip.getTimestamp() != null ? trip.getTimestamp().getTime() : System.currentTimeMillis();
                         startTimer();
                     } else {
                         stopTimer();
@@ -153,6 +153,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                     updateButtonsAndNavigation(trip.getEstadoViaje());
                     Log.d(TAG, "Estado del viaje actualizado en UI: " + trip.getEstadoViaje());
 
+                    // Redirección a TaxiFin solo si el estado es "Llegó a destino"
                     if ("Llegó a destino".equals(trip.getEstadoViaje())) {
                         Log.d(TAG, "Viaje llegó a destino, redirigiendo a TaxiFin para QR. DocumentId: " + trip.getDocumentId());
                         Intent finIntent = new Intent(TaxiViaje.this, TaxiFin.class);
@@ -162,6 +163,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         finish();
                         return;
                     }
+                    // Redirección al Dashboard si el viaje se completa o cancela (desde TaxiFin o externamente)
                     else if ("Completado".equals(trip.getEstadoViaje()) || "Cancelado".equals(trip.getEstadoViaje())) {
                         Log.d(TAG, "Viaje marcado como finalizado (" + trip.getEstadoViaje() + "). Volviendo al Dashboard.");
                         Toast.makeText(TaxiViaje.this, "El viaje ha finalizado.", Toast.LENGTH_LONG).show();
@@ -183,10 +185,10 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
-        // Los botones cambian el estado en Firestore.
-        btnIniciarViaje.setOnClickListener(v -> updateTripStatus("Asignado"));
-        btnLlegueOrigen.setOnClickListener(v -> updateTripStatus("En viaje"));
-        btnViajeCompletado.setOnClickListener(v -> updateTripStatus("Llegó a destino"));
+        // Los botones ahora reflejan la nueva secuencia de estados.
+        btnIniciarViaje.setOnClickListener(v -> updateTripStatus("En camino")); // No asignado -> En camino
+        btnLlegueOrigen.setOnClickListener(v -> updateTripStatus("Asignado"));  // En camino -> Asignado
+        btnViajeCompletado.setOnClickListener(v -> updateTripStatus("Llegó a destino")); // Asignado -> Llegó a destino
 
         // 2. Obtiene el fragmento del mapa y lo inicializa.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -516,7 +518,8 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         Map<String, Object> updates = new HashMap<>();
         updates.put("estadoViaje", newStatus);
 
-        if ("Asignado".equals(newStatus)) {
+        // Solo actualiza el timestamp cuando el viaje pasa a "En camino"
+        if ("En camino".equals(newStatus)) {
             updates.put("timestamp", new Date());
         }
 
@@ -527,15 +530,15 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                     String notificationText = "";
 
                     switch (newStatus) {
-                        case "Asignado":
+                        case "En camino": // Corresponde al clic de "Iniciar Viaje"
                             notificationTitle = "¡Viaje Iniciado!";
                             notificationText = "En camino a recoger al pasajero.";
                             break;
-                        case "En viaje":
+                        case "Asignado": // Corresponde al clic de "Llegue a origen"
                             notificationTitle = "¡Recogida Exitosa!";
                             notificationText = "En ruta hacia el destino.";
                             break;
-                        case "Llegó a destino":
+                        case "Llegó a destino": // Corresponde al clic de "Llegue a destino"
                             notificationTitle = "¡Llegada a Destino!";
                             notificationText = "El pasajero ha llegado a su destino. Esperando QR.";
                             break;
@@ -551,40 +554,48 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void updateButtonsAndNavigation(String currentStatus) {
+        // Reiniciar visibilidad de todos los botones
+        btnIniciarViaje.setVisibility(View.GONE);
+        btnLlegueOrigen.setVisibility(View.GONE);
+        btnViajeCompletado.setVisibility(View.GONE);
+
+        // Lógica para mostrar el botón adecuado según el estado
         switch (currentStatus) {
-            case "En camino":
+            case "No asignado":
                 btnIniciarViaje.setVisibility(View.VISIBLE);
-                btnLlegueOrigen.setVisibility(View.GONE);
-                btnViajeCompletado.setVisibility(View.GONE);
+                break;
+            case "En camino":
+                btnLlegueOrigen.setVisibility(View.VISIBLE);
                 break;
             case "Asignado":
-                btnIniciarViaje.setVisibility(View.GONE);
-                btnLlegueOrigen.setVisibility(View.VISIBLE);
-                btnViajeCompletado.setVisibility(View.GONE);
-                break;
-            case "En viaje":
-                btnIniciarViaje.setVisibility(View.GONE);
-                btnLlegueOrigen.setVisibility(View.GONE);
                 btnViajeCompletado.setVisibility(View.VISIBLE);
                 break;
+            // Para "Llegó a destino", "Completado" o "Cancelado", todos los botones permanecen ocultos.
             case "Llegó a destino":
-                btnIniciarViaje.setVisibility(View.GONE);
-                btnLlegueOrigen.setVisibility(View.GONE);
-                btnViajeCompletado.setVisibility(View.GONE);
-                break;
             case "Completado":
             case "Cancelado":
-                btnIniciarViaje.setVisibility(View.GONE);
-                btnLlegueOrigen.setVisibility(View.GONE);
-                btnViajeCompletado.setVisibility(View.GONE);
+                // No mostrar ningún botón de acción aquí
+                break;
+            default:
+                Log.w(TAG, "Estado de viaje desconocido o inicial: " + currentStatus);
                 break;
         }
 
+        // Deshabilitar la navegación inferior si el viaje ha llegado a destino, está completado o cancelado.
         boolean enableBottomNav = !("Llegó a destino".equals(currentStatus) || "Completado".equals(currentStatus) || "Cancelado".equals(currentStatus));
 
         for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
             bottomNavigationView.getMenu().getItem(i).setEnabled(enableBottomNav);
         }
     }
-}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tripStatusListener != null) {
+            tripStatusListener.remove();
+            Log.d(TAG, "Listener de estado de viaje (TaxiViaje) desregistrado.");
+        }
+        stopTimer();
+    }
+}

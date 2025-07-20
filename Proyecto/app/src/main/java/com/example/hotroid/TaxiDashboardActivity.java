@@ -99,8 +99,9 @@ public class TaxiDashboardActivity extends AppCompatActivity {
         btnFinViaje = findViewById(R.id.btnFinViaje);
 
         btnFinViaje.setOnClickListener(v -> {
+            // Se actualiza para buscar en los nuevos estados activos
             db.collection("alertas_taxi")
-                    .whereIn("estadoViaje", Arrays.asList("Asignado", "En viaje", "Llegó a origen", "Llegó a destino"))
+                    .whereIn("estadoViaje", Arrays.asList("En camino", "Asignado", "Llegó a destino"))
                     .limit(1)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -122,8 +123,9 @@ public class TaxiDashboardActivity extends AppCompatActivity {
 
         cardViajeActual.setOnClickListener(v -> {
             if (cardViajeActual.getVisibility() == View.VISIBLE && layoutNoViajeActual.getVisibility() == View.GONE) {
+                // Se actualiza para buscar en los nuevos estados activos
                 db.collection("alertas_taxi")
-                        .whereIn("estadoViaje", Arrays.asList("Asignado", "En viaje", "Llegó a origen", "Llegó a destino"))
+                        .whereIn("estadoViaje", Arrays.asList("En camino", "Asignado", "Llegó a destino"))
                         .limit(1)
                         .get()
                         .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -158,9 +160,10 @@ public class TaxiDashboardActivity extends AppCompatActivity {
             }
         });
 
-
+        // <<<<<<<<<<<<<<<<<<<<< CAMBIO IMPORTANTE AQUÍ >>>>>>>>>>>>>>>>>>>>>
+        // La consulta de Firestore ahora incluye "En camino" para el viaje actual
         currentTripListener = db.collection("alertas_taxi")
-                .whereIn("estadoViaje", Arrays.asList("Asignado", "En viaje", "Llegó a origen", "Llegó a destino"))
+                .whereIn("estadoViaje", Arrays.asList("En camino", "Asignado", "Llegó a destino")) // Incluye los nuevos estados activos
                 .limit(1)
                 .addSnapshotListener((snapshots, e) -> {
                     if (e != null) {
@@ -182,13 +185,12 @@ public class TaxiDashboardActivity extends AppCompatActivity {
                             tvEstadoViajeActual.setText("Estado: " + currentTrip.getEstadoViaje());
                             int colorRes;
                             switch (currentTrip.getEstadoViaje()) {
+                                case "En camino": // Nuevo estado activo
                                 case "Asignado":
-                                case "En viaje":
-                                case "Llegó a origen":
-                                    colorRes = android.R.color.holo_blue_dark;
+                                    colorRes = android.R.color.holo_blue_dark; // Azul para viajes en curso
                                     break;
                                 case "Llegó a destino":
-                                    colorRes = R.color.naranja;
+                                    colorRes = R.color.naranja; // Naranja cuando llegó al destino final
                                     break;
                                 default:
                                     colorRes = android.R.color.black;
@@ -209,7 +211,7 @@ public class TaxiDashboardActivity extends AppCompatActivity {
                         cardViajeActual.setVisibility(View.GONE);
                         layoutNoViajeActual.setVisibility(View.VISIBLE);
                         btnFinViaje.setVisibility(View.GONE);
-                        Log.d(TAG, "UI: No hay viajes 'Asignados'/'En viaje'/'Llegó a origen'/'Llegó a destino' actualmente.");
+                        Log.d(TAG, "UI: No hay viajes activos ('En camino', 'Asignado', 'Llegó a destino') actualmente.");
                     }
                 });
 
@@ -360,6 +362,9 @@ public class TaxiDashboardActivity extends AppCompatActivity {
                         }
 
                         if (!fetchedClientes.isEmpty() && hotelLibertadorOrigen != null) {
+                            // CUIDADO: La función generarAlertasEnFirestore crea alertas con estado "En camino"
+                            // Si quieres que aparezcan en TaxiActivity (que ahora filtra por "No asignado"),
+                            // deberías cambiar este estado inicial a "No asignado" aquí.
                             crearNuevasAlertas(alertasRef, fetchedClientes, hotelLibertadorOrigen);
                         } else {
                             Toast.makeText(this, "No se pudieron obtener suficientes datos de clientes o hotel.", Toast.LENGTH_LONG).show();
@@ -395,7 +400,7 @@ public class TaxiDashboardActivity extends AppCompatActivity {
                     hotelLibertadorOrigen,
                     aeropuertoDestinoCusco,
                     null,
-                    "En camino",
+                    "No asignado", // <<<<<<<<<<< CAMBIO AQUI: La alerta inicial debe ser "No asignado"
                     "Cusco"
             );
             guardarAlertaEnFirestore(alertasRef, alerta);
