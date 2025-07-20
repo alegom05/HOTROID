@@ -110,11 +110,19 @@ public class SuperReservasActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         allReservas.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Reserva reserva = document.toObject(Reserva.class);
-                            reserva.setIdReserva(document.getId());
-                            allReservas.add(reserva);
+                            // Intenta convertir el documento a un objeto Reserva
+                            try {
+                                Reserva reserva = document.toObject(Reserva.class);
+                                reserva.setIdReserva(document.getId());
+                                allReservas.add(reserva);
+                            } catch (Exception e) {
+                                // Captura cualquier error de deserialización y loguéalo
+                                Log.e("SuperReservas", "Error al deserializar documento " + document.getId() + ": " + e.getMessage(), e);
+                                // Opcional: muestra un Toast o salta este documento si no se puede parsear
+                                Toast.makeText(this, "Error de datos en una reserva: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        // Apply filters after loading all reservations
+                        // Aplicar filtros después de cargar todas las reservas
                         applyAllFilters();
                     } else {
                         Log.e("SuperReservas", "Error al cargar reservas", task.getException());
@@ -245,14 +253,24 @@ public class SuperReservasActivity extends AppCompatActivity {
             boolean matchesSearch = true;
             boolean matchesAdults = true;
             boolean matchesChildren = true;
-            boolean matchesRooms = true;
+            boolean matchesRooms = true; // Este es para el campo 'habitaciones', no 'roomNumber'
             boolean matchesDateRange = true;
 
             // Search by name or room number
             if (!searchText.isEmpty()) {
+                String roomNumbersStringForSearch = "";
+                if (reserva.getRoomNumber() != null && !reserva.getRoomNumber().isEmpty()) {
+                    // Une los números de habitación en un String para poder buscar en ellos
+                    StringBuilder sb = new StringBuilder();
+                    for (Integer roomNum : reserva.getRoomNumber()) {
+                        sb.append(roomNum).append(" ");
+                    }
+                    roomNumbersStringForSearch = sb.toString().trim();
+                }
+
                 matchesSearch = reserva.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchText) ||
                         reserva.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchText) ||
-                        String.valueOf(reserva.getRoomNumber()).toLowerCase(Locale.getDefault()).contains(searchText);
+                        roomNumbersStringForSearch.toLowerCase(Locale.getDefault()).contains(searchText);
             }
 
             // Filter by adults
@@ -265,7 +283,7 @@ public class SuperReservasActivity extends AppCompatActivity {
                 matchesChildren = reserva.getNinos() == selectedChildren;
             }
 
-            // Filter by rooms
+            // Filter by rooms (Este filtro es para la cantidad de habitaciones, no los números específicos)
             if (selectedRooms > 0) {
                 matchesRooms = reserva.getHabitaciones() == selectedRooms;
             }
@@ -280,14 +298,12 @@ public class SuperReservasActivity extends AppCompatActivity {
                 matchesDateRange = !reserva.getFechaInicio().after(selectedEndDate);
             }
 
-
             if (matchesSearch && matchesAdults && matchesChildren && matchesRooms && matchesDateRange) {
                 filteredReservas.add(reserva);
             }
         }
         displayReservas(filteredReservas);
     }
-
 
     private void displayReservas(List<Reserva> reservas) {
         llReservasContainer.removeAllViews();
@@ -314,9 +330,16 @@ public class SuperReservasActivity extends AppCompatActivity {
 
             tvCliente.setText(reserva.getNombresCliente() + " " + reserva.getApellidosCliente());
             tvFechas.setText("Estancia: " + dateFormat.format(reserva.getFechaInicio()) + " - " + dateFormat.format(reserva.getFechaFin()));
+
+            // Manejar roomNumber como una lista
+            String roomNumbersDisplay = "N/A";
+            if (reserva.getRoomNumber() != null && !reserva.getRoomNumber().isEmpty()) {
+                roomNumbersDisplay = android.text.TextUtils.join(", ", reserva.getRoomNumber());
+            }
+
             tvHabitacion.setText(String.format(Locale.getDefault(),
                     "Habitaciones: %d | Adultos: %d | Niños: %d | Hab. Nro: %s",
-                    reserva.getHabitaciones(), reserva.getAdultos(), reserva.getNinos(), reserva.getRoomNumber()));
+                    reserva.getHabitaciones(), reserva.getAdultos(), reserva.getNinos(), roomNumbersDisplay));
             tvPrecio.setText(String.format(Locale.getDefault(), "Total: S/ %.2f", reserva.getPrecioTotal()));
 
             llReservasContainer.addView(itemView);
@@ -327,19 +350,18 @@ public class SuperReservasActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_hoteles);
 
-
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_hoteles) {
-                finish();
+                finish(); // Simplemente finaliza esta actividad para volver a la anterior (Lista de Hoteles)
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
                 startActivity(new Intent(this, SuperListaClientesActivity.class));
-                finish();
+                finish(); // Finaliza esta actividad para que la nueva sea la única en la pila
                 return true;
             } else if (itemId == R.id.nav_eventos) {
                 startActivity(new Intent(this, SuperEventosActivity.class));
-                finish();
+                finish(); // Finaliza esta actividad
                 return true;
             }
             return false;
@@ -350,6 +372,8 @@ public class SuperReservasActivity extends AppCompatActivity {
         CardView cardSuper = findViewById(R.id.cardSuper);
         cardSuper.setOnClickListener(v -> {
             startActivity(new Intent(this, SuperCuentaActivity.class));
+            // No se llama a finish() aquí si quieres que el usuario pueda volver a esta actividad
+            // después de ver su cuenta. Si quieres que se cierre, añade finish();
         });
     }
 }
