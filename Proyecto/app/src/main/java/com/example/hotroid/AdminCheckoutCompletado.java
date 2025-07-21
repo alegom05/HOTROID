@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.Locale; // <--- Asegúrate de tener esta importación
 
 public class AdminCheckoutCompletado extends AppCompatActivity {
@@ -93,25 +94,43 @@ public class AdminCheckoutCompletado extends AppCompatActivity {
     }
 
     private void eliminarCheckoutDeFirestore(String idCheckout, double monto, String cliente) {
-        db.collection("checkouts").document(idCheckout)
-                .delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("AdminCheckoutCompletado", "Checkout eliminado de Firestore: " + idCheckout);
-                            String mensaje = "Se cobró S/. " + String.format(Locale.getDefault(), "%.2f", monto) + " a " + cliente + " por su estadía.";
-                            showNotification("Checkout completado", mensaje);
-                            Toast.makeText(AdminCheckoutCompletado.this, "Checkout completado y eliminado.", Toast.LENGTH_SHORT).show();
-                            navigateToAdminCheckout();
-                        } else {
-                            Log.w("AdminCheckoutCompletado", "Error al eliminar checkout de Firestore: ", task.getException());
-                            Toast.makeText(AdminCheckoutCompletado.this, "Error al completar checkout: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            navigateToAdminCheckout();
-                        }
-                    }
+        // Primero, actualiza el documento en "reservas"
+        db.collection("reservas").document(idCheckout)
+                .update(
+                        "checkOutRealizado", true,
+                        "fechaCancelacion", new Date(),
+                        "precioTotal", monto,
+                        "estado", "pasado"
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AdminCheckoutCompletado", "Reserva actualizada con éxito.");
+
+                    // Luego, elimina el documento temporal en "checkouts"
+                    db.collection("checkouts").document(idCheckout)
+                            .delete()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Log.d("AdminCheckoutCompletado", "Checkout eliminado de Firestore: " + idCheckout);
+
+                                    String mensaje = "Se cobró S/. " + String.format(Locale.getDefault(), "%.2f", monto) + " a " + cliente + " por su estadía.";
+                                    showNotification("Checkout completado", mensaje);
+                                    Toast.makeText(AdminCheckoutCompletado.this, "Checkout completado correctamente.", Toast.LENGTH_SHORT).show();
+
+                                    navigateToAdminCheckout();
+                                } else {
+                                    Log.w("AdminCheckoutCompletado", "Error al eliminar checkout: ", task.getException());
+                                    Toast.makeText(AdminCheckoutCompletado.this, "Error al eliminar checkout: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    navigateToAdminCheckout();
+                                }
+                            });
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("AdminCheckoutCompletado", "Error al actualizar reserva: ", e);
+                    Toast.makeText(this, "Error al actualizar la reserva: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
+
 
     private void navigateToAdminCheckout() {
         Intent intent = new Intent(AdminCheckoutCompletado.this, AdminCheckout.class);
