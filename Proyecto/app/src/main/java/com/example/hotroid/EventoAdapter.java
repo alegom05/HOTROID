@@ -1,4 +1,4 @@
-package com.example.hotroid; // Make sure this matches your package name
+package com.example.hotroid;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotroid.bean.Evento;
+import com.google.firebase.Timestamp;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoViewHolder> {
 
@@ -32,26 +35,25 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
     @NonNull
     @Override
     public EventoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflar el layout de la tarjeta de evento detallada
         View view = LayoutInflater.from(context).inflate(R.layout.item_evento_card, parent, false);
         return new EventoViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventoViewHolder holder, int position) {
-        Evento currentEvento = eventosList.get(position);
+        Evento evento = eventosList.get(position);
 
-        // Establecer los datos en los TextViews de la tarjeta
-        holder.tvFechaCard.setText("Fecha: " + currentEvento.getFecha());
-        holder.tvEventoTituloCard.setText(currentEvento.getEvento());
-        holder.tvHotelCard.setText("Hotel: " + currentEvento.getHotel());
+        // Formatear la fecha y hora
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        String fechaHora = sdf.format(evento.getFechaHora().toDate());
 
-        // REMOVED: No more setting of tvDescripcionCard.
-        // The description should be handled in the SuperDetallesEventosActivity.
+        holder.tvEventoTituloCard.setText(evento.getEvento());
+        holder.tvFechaCard.setText("Fecha: " + fechaHora);
+        holder.tvHotelCard.setText("Hotel: " + evento.getHotel());
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onEventoClick(currentEvento);
+                listener.onEventoClick(evento);
             }
         });
     }
@@ -67,19 +69,13 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
     }
 
     public static class EventoViewHolder extends RecyclerView.ViewHolder {
-        // Declarar los TextViews que corresponden a item_evento_card.xml
-        TextView tvFechaCard;
-        TextView tvEventoTituloCard;
-        TextView tvHotelCard;
-        // REMOVED: No more tvDescripcionCard declaration here.
+        TextView tvEventoTituloCard, tvFechaCard, tvHotelCard;
 
         public EventoViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Enlazar los TextViews con sus IDs en item_evento_card.xml
-            tvFechaCard = itemView.findViewById(R.id.tvFechaCard);
             tvEventoTituloCard = itemView.findViewById(R.id.tvEventoTituloCard);
+            tvFechaCard = itemView.findViewById(R.id.tvFechaCard);
             tvHotelCard = itemView.findViewById(R.id.tvHotelCard);
-            // REMOVED: No more finding tvDescripcionCard here.
         }
     }
 }

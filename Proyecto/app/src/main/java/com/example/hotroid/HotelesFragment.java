@@ -1,5 +1,8 @@
 package com.example.hotroid;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -72,6 +76,10 @@ public class HotelesFragment extends Fragment {
     private Runnable searchRunnable;
     private static final int SEARCH_DELAY = 500; // 500ms de delay para búsqueda
 
+
+    private String currentUserId;
+    private FirebaseAuth mAuth;
+
     public HotelesFragment() {}
 
     @Override
@@ -86,6 +94,21 @@ public class HotelesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            currentUserId = currentUser.getUid();
+            verificarViajes(); // Verificar si hay viajes para este usuario
+            Log.d(TAG, "Usuario autenticado: " + currentUserId);
+        } else {
+            // Si no hay usuario logueado, ocultar el ícono
+            binding.notificationIcon.setVisibility(View.GONE);
+            Log.d(TAG, "No hay usuario autenticado");
+        }
+
+
+
         hotelList = new ArrayList<>();
         hotelesOriginales = new ArrayList<>();
         hotelAdapter = new HotelAdapter(hotelList, getContext());
@@ -153,6 +176,58 @@ public class HotelesFragment extends Fragment {
 //            }
             mostrarResumenBusqueda();
         });
+    }
+    private void verificarViajes() {
+        if (currentUserId == null) {
+            binding.notificationIcon.setVisibility(View.GONE);
+            return;
+        }
+
+        Log.d(TAG, "Verificando viajes para usuario: " + currentUserId);
+
+        db.collection("viajes")
+                .whereEqualTo("idCliente", currentUserId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Hay viajes para este usuario, mostrar el ícono
+                        binding.notificationIcon.setVisibility(View.VISIBLE);
+                        configurarClickNotificacion();
+                        Log.d(TAG, "Viajes encontrados: " + queryDocumentSnapshots.size());
+                    } else {
+                        // No hay viajes, ocultar el ícono
+                        binding.notificationIcon.setVisibility(View.GONE);
+                        Log.d(TAG, "No hay viajes para este usuario");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error verificando viajes", e);
+                    // En caso de error, ocultar el ícono por seguridad
+                    binding.notificationIcon.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Error al verificar notificaciones", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void configurarClickNotificacion() {
+        binding.notificationIcon.setOnClickListener(v -> {
+            if (currentUserId != null) {
+                Intent intent = new Intent(getContext(), UserServTaxi.class);
+                intent.putExtra("userId", currentUserId);
+                Log.d(TAG, "Navegando a UserServTaxi con userId: " + currentUserId);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Verificar nuevamente los viajes cuando se regrese al fragment
+        if (currentUserId != null) {
+            verificarViajes();
+        }
     }
 
 
@@ -304,7 +379,7 @@ public class HotelesFragment extends Fragment {
         // TODO: Aquí puedes conectar la lógica real de disponibilidad usando Firestore
         db.collection("habitaciones")
                 .whereEqualTo("idHotel", hotel.getIdHotel())
-                .whereEqualTo("estado", "Available")
+                .whereEqualTo("status", "Available")
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     List<String> habitacionesCandidatas = new ArrayList<>();

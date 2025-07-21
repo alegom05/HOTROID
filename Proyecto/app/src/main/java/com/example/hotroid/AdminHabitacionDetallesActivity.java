@@ -27,7 +27,7 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
         setContentView(R.layout.admin_habitacion_detalles);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
@@ -40,7 +40,7 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
         btnEditarHabitacion = findViewById(R.id.btnEditarHabitacion);
 
         roomId = getIntent().getStringExtra("ROOM_ID");
-        String roomNumber = getIntent().getStringExtra("ROOM_NUMBER");
+        int roomNumber = getIntent().getIntExtra("ROOM_NUMBER", 0);
         String roomType = getIntent().getStringExtra("ROOM_TYPE");
         int capacityAdults = getIntent().getIntExtra("CAPACITY_ADULTS", 0);
         int capacityChildren = getIntent().getIntExtra("CAPACITY_CHILDREN", 0);
@@ -52,12 +52,19 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
         tvCapacityAdults.setText("Capacidad Adultos: " + capacityAdults);
         tvCapacityChildren.setText("Capacidad Niños: " + capacityChildren);
         tvArea.setText(String.format(Locale.getDefault(), "Área: %.2f m²", area));
-        tvStatus.setText("Estado: " + status); // Mostrar status
+        String estadoFormateado = "Desconocido";
+        if ("Available".equalsIgnoreCase(status)) {
+            estadoFormateado = "Habilitada";
+        } else if ("Unavailable".equalsIgnoreCase(status)) {
+            estadoFormateado = "Deshabilitada";
+        }
+        tvStatus.setText("Estado: " + estadoFormateado);
+
 
         btnEditarHabitacion.setOnClickListener(v -> {
             Intent intent = new Intent(AdminHabitacionDetallesActivity.this, AdminEditarHabitacionActivity.class);
             intent.putExtra("ROOM_ID", roomId);
-            intent.putExtra("ROOM_NUMBER", roomNumber);
+            intent.putExtra("ROOM_NUMBER", roomNumber); // ya no es String, sino int
             intent.putExtra("ROOM_TYPE", roomType);
             intent.putExtra("CAPACITY_ADULTS", capacityAdults);
             intent.putExtra("CAPACITY_CHILDREN", capacityChildren);
@@ -71,7 +78,7 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_registros) {
-                    Intent intentRegistros = new Intent(AdminHabitacionDetallesActivity.this, AdminHabitacionesActivity.class);
+                    Intent intentRegistros = new Intent(AdminHabitacionDetallesActivity.this, AdminActivity.class);
                     // Para evitar duplicados en la pila y volver al estado correcto
                     intentRegistros.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intentRegistros);

@@ -38,4 +38,6 @@
     <color name="red">#E53935</color> <color name="selected_filter_background">#BBDEFB</color>
     <color name="pressed_overlay">#33000000</color>
     <color name="gray_default_button">#E0E0E0</color>
+    <color name="teal_700">#009688</color>
+    <color name="blue_500">#2196F3</color>
 </resources>

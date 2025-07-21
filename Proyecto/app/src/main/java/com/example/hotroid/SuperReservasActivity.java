@@ -326,6 +326,7 @@ public class SuperReservasActivity extends AppCompatActivity {
             TextView tvCliente = itemView.findViewById(R.id.tvClienteCard);
             TextView tvFechas = itemView.findViewById(R.id.tvFechaReservaCard);
             TextView tvHabitacion = itemView.findViewById(R.id.tvHabitacionCard);
+            TextView tvCobrosAdicionales = itemView.findViewById(R.id.tvCobrosAdicionalesCard); // ¡Nuevo!
             TextView tvPrecio = itemView.findViewById(R.id.tvPrecioTotalCard);
 
             tvCliente.setText(reserva.getNombresCliente() + " " + reserva.getApellidosCliente());
@@ -340,6 +341,10 @@ public class SuperReservasActivity extends AppCompatActivity {
             tvHabitacion.setText(String.format(Locale.getDefault(),
                     "Habitaciones: %d | Adultos: %d | Niños: %d | Hab. Nro: %s",
                     reserva.getHabitaciones(), reserva.getAdultos(), reserva.getNinos(), roomNumbersDisplay));
+
+            // ¡Asignar el valor de cobros adicionales!
+            tvCobrosAdicionales.setText(String.format(Locale.getDefault(), "Cobros Adicionales: S/ %.2f", reserva.getCobrosAdicionales()));
+
             tvPrecio.setText(String.format(Locale.getDefault(), "Total: S/ %.2f", reserva.getPrecioTotal()));
 
             llReservasContainer.addView(itemView);

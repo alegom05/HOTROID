@@ -123,7 +123,7 @@
                     android:id="@+id/btnConfirmar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Simular Pago con Tarjeta" android:layout_marginTop="16dp"
+                    android:text="Realizar cobro" android:layout_marginTop="16dp"
                     android:backgroundTint="#009688"
                     android:textColor="@android:color/white"/>
 

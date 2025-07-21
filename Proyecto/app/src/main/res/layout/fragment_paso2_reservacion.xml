@@ -85,7 +85,7 @@
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
                         <TextView
-                            android:id="@+id/tvHuespedResumen"
+                            android:id="@+id/tvHuesped"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Juan Marquinez Díaz"
@@ -203,7 +203,7 @@
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
                         <TextView
-                            android:id="@+id/tvHabitacionResumen"
+                            android:id="@+id/tvTipoHabitacion"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Suite Lujo"
@@ -297,6 +297,7 @@
                                 android:layout_marginStart="16dp" />
 
                             <TextView
+                                android:id="@+id/tvPrecioGimnasio"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="S/. 100"
