@@ -406,12 +406,12 @@ public class DetalleReservaActivo extends AppCompatActivity {
                         // Crear el documento para alertas_taxi
                         Map<String, Object> alertaTaxi = new HashMap<>();
                         alertaTaxi.put("apellidosCliente", apellidosCliente);
-                        alertaTaxi.put("destino", "Aeropuerto de Chinchero (CUZ)"); // Puedes hacer esto dinámico si es necesario
+                            alertaTaxi.put("destino", "Aeropuerto Internacional Jorge Chávez"); // Puedes hacer esto dinámico si es necesario
                         alertaTaxi.put("documentId", null);
                         alertaTaxi.put("estadoViaje", "No asignado");
                         alertaTaxi.put("nombresCliente", nombresCliente);
                         alertaTaxi.put("origen", "Libertador"); // Puedes hacer esto dinámico basado en el hotel
-                        alertaTaxi.put("region", "Cusco"); // Puedes hacer esto dinámico basado en la ubicación
+                        alertaTaxi.put("region", "Lima"); // Puedes hacer esto dinámico basado en la ubicación
                         alertaTaxi.put("tiempoTranscurrido", "Tiempo desconocido");
                         alertaTaxi.put("timestamp", Timestamp.now()); // Usar Timestamp de Firebase
                         alertaTaxi.put("idCliente", uidCliente); // Agregar el ID del cliente para referencia
@@ -524,7 +524,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
         // Aquí puedes formatear los datos como desees, por ejemplo, en formato JSON
         return "{\"reservationCode\":\"" + reservationCode +
                 "\",\"guestName\":\"" + guestName +
-                "\",\"hotelName\":\"Hotel Los Andes\",\"checkInDate\":\"22/04/2025\"}";
+                "\",\"hotelName\":\"Hotel Libertador\",\"checkInDate\":\"21/04/2025\"}";
     }
 
     // Método para generar el código QR como un Bitmap
@@ -566,7 +566,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
                     getContentResolver(),
                     bitmap,
                     fileName,
-                    "Código QR de reserva Hotel Los Andes"
+                    "Código QR de reserva Hotel Libertador"
             );
 
             if (savedImageURL != null) {
