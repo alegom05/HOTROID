@@ -64,7 +64,8 @@ public class AdminCheckoutDetalles extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentCheckoutId = extras.getString("ID_CHECKOUT");
-            String roomNumber = extras.getString("ROOM_NUMBER");
+            int roomNumber = extras.getInt("ROOM_NUMBER", -1);
+
             String clientName = extras.getString("CLIENT_NAME");
             tarifaBaseInicial = extras.getDouble("BASE_RATE", 0.0);
             cobrosAdicionalesFijos = extras.getDouble("ADDITIONAL_CHARGES", 0.0);
@@ -74,7 +75,7 @@ public class AdminCheckoutDetalles extends AppCompatActivity {
             long checkoutDateMillis = extras.getLong("CHECKOUT_DATE", -1);
 
 
-            tvNumeroHabitacion.setText(roomNumber);
+            tvNumeroHabitacion.setText(roomNumber != -1 ? String.valueOf(roomNumber) : "N/A");
             tvNombreCliente.setText(clientName);
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
