@@ -54,17 +54,20 @@
             android:text="Todos" />
     </com.google.android.material.tabs.TabLayout>
 
-    <!-- Lista de chats - ID corregido -->
+    <!-- Lista de chats - Cambiado el fondo para mejor contraste con las cards -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChats"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F2F2F2"
+        android:background="#F5F5F5"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         tools:listitem="@layout/item_chat_hotel" />
 
-    <!-- Mensaje cuando no hay chats - ID y contenido corregido -->
+    <!-- Mensaje cuando no hay chats -->
     <LinearLayout
         android:id="@+id/textViewEmptyState"
         android:layout_width="match_parent"
