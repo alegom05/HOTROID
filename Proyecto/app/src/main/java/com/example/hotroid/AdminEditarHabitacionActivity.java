@@ -39,7 +39,7 @@ public class AdminEditarHabitacionActivity extends AppCompatActivity {
         setContentView(R.layout.admin_editar_habitacion);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
@@ -54,7 +54,8 @@ public class AdminEditarHabitacionActivity extends AppCompatActivity {
 
         // Obtener los datos de la habitación pasados a través del Intent
         roomId = getIntent().getStringExtra("ROOM_ID");
-        String roomNumber = getIntent().getStringExtra("ROOM_NUMBER");
+        int roomNumber = getIntent().getIntExtra("ROOM_NUMBER", 0);
+
         String roomType = getIntent().getStringExtra("ROOM_TYPE");
         int capacityAdults = getIntent().getIntExtra("CAPACITY_ADULTS", 0);
         int capacityChildren = getIntent().getIntExtra("CAPACITY_CHILDREN", 0);
@@ -62,7 +63,7 @@ public class AdminEditarHabitacionActivity extends AppCompatActivity {
         currentStatus = getIntent().getStringExtra("STATUS"); // Recibir el estado
 
         // Establecer los datos en los campos de vista
-        etNumeroHabitacion.setText(roomNumber);
+        etNumeroHabitacion.setText(String.valueOf(roomNumber));
         tvTipoHabitacion.setText(roomType); // Establecer el tipo de habitación actual en el TextView
         // Encontrar el índice del tipo de habitación actual para preseleccionar en el diálogo
         for (int i = 0; i < tipos.length; i++) {
@@ -103,7 +104,7 @@ public class AdminEditarHabitacionActivity extends AppCompatActivity {
                     if (roomId != null && !roomId.isEmpty()) {
                         db.collection("habitaciones").document(roomId)
                                 .update(
-                                        "roomNumber", numeroHabitacion,
+                                        "roomNumber", Integer.parseInt(numeroHabitacion),
                                         "roomType", tipoHabitacion, // Guardar el valor del TextView
                                         "capacityAdults", adultos,
                                         "capacityChildren", ninos,
@@ -138,7 +139,7 @@ public class AdminEditarHabitacionActivity extends AppCompatActivity {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_registros) {
-                    Intent intentRegistros = new Intent(AdminEditarHabitacionActivity.this, AdminHabitacionesActivity.class);
+                    Intent intentRegistros = new Intent(AdminEditarHabitacionActivity.this, AdminActivity.class);
                     intentRegistros.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intentRegistros);
                     finish();

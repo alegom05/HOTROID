@@ -59,7 +59,7 @@ public class AdminFotosActivity extends AppCompatActivity {
         setContentView(R.layout.admin_fotos);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
@@ -109,7 +109,7 @@ public class AdminFotosActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_registros) {
-                // Ya estás en registros, no hacer nada o refrescar
+                startActivity(new Intent(AdminFotosActivity.this, AdminActivity.class));
                 return true;
             } else if (itemId == R.id.nav_taxistas) {
                 startActivity(new Intent(AdminFotosActivity.this, AdminTaxistas.class));

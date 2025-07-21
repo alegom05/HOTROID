@@ -111,7 +111,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
         setContentView(R.layout.admin_ventas_usuario);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
@@ -144,7 +144,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 adapter.getFilter().filter(s);
-                btnLimpiar.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                btnLimpiar.setVisibility(View.VISIBLE);
             }
 
             @Override

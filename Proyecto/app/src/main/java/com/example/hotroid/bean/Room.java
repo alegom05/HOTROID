@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.List;
+
 public class Room implements Parcelable {
     @DocumentId
     private String id;
@@ -16,7 +18,7 @@ public class Room implements Parcelable {
     private double area;
     private String status;
     private String hotelId;
-    private String imageResourceName;
+    private List<String> imageResourceName;
     private double price;
     private transient int imageResourceId;
 
@@ -70,7 +72,9 @@ public class Room implements Parcelable {
     public double getArea() { return area; }
     public String getStatus() { return status; }
     public String getHotelId() { return hotelId; }
-    public String getImageResourceName() { return imageResourceName; }
+    public List<String> getImageResourceName() {
+        return imageResourceName;
+    }
     public double getPrice() { return price; }
     public int getImageResourceId() { return imageResourceId; }
 
@@ -83,7 +87,11 @@ public class Room implements Parcelable {
     public void setArea(double area) { this.area = area; }
     public void setStatus(String status) { this.status = status; }
     public void setHotelId(String hotelId) { this.hotelId = hotelId; }
-    public void setImageResourceName(String imageResourceName) { this.imageResourceName = imageResourceName; }
+
+    public void setImageResourceName(List<String> imageResourceName) {
+        this.imageResourceName = imageResourceName;
+    }
+
     public void setPrice(double price) { this.price = price; }
     public void setImageResourceId(int imageResourceId) { this.imageResourceId = imageResourceId; }
 
@@ -112,7 +120,7 @@ public class Room implements Parcelable {
         area = in.readDouble();
         status = in.readString();
         hotelId = in.readString();
-        imageResourceName = in.readString();
+        imageResourceName = in.createStringArrayList();
         price = in.readDouble();
         // imageResourceId no se incluye por ser transient
     }
@@ -139,7 +147,7 @@ public class Room implements Parcelable {
         dest.writeDouble(area);
         dest.writeString(status);
         dest.writeString(hotelId);
-        dest.writeString(imageResourceName);
+        dest.writeStringList(imageResourceName);
         dest.writeDouble(price);
         // imageResourceId no se escribe por ser transient
     }
