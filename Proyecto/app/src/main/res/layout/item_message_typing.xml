@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="Escribiendo..."
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorOnPrimary"
                 android:layout_marginEnd="8dp" />
 
             <ProgressBar

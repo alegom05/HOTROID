@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="Mensaje del hotel"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/colorOnPrimary"
             android:lineSpacingExtra="2dp" />
 
         <!-- Timestamp -->
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="15:30"
             android:textSize="10sp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:layout_marginTop="4dp"
             android:layout_gravity="end" />
 
