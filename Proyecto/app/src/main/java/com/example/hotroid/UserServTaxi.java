@@ -3,6 +3,9 @@ package com.example.hotroid;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
-public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallback {
+public class UserServTaxi extends AppCompatActivity {
 
     private static final String TAG = "UserServTaxi";
 
@@ -36,10 +39,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     private TextView txtDriverInfo;
     private Button btnDriverDetails;
     private Button btnCancel;
-
-    private ProgressBar mapLoading;
-    private ImageView mapView;
-
+    private ImageView qrCodeImage;
 
     // Trip details elements
     private TextView txtOrigen;
@@ -61,8 +61,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     private String viajeId;
     private String alertaId;
     private String taxistaId;
-    private GoogleMap mMap;
-    private SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +89,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         // Initialize components
         initViews();
 
-        // Setup map
-        setupMap();
-
         // Search for active taxi alert
         buscarAlertaTaxiActiva();
 
@@ -105,9 +100,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         txtDriverInfo = findViewById(R.id.txt_driver_info);
         btnDriverDetails = findViewById(R.id.btn_driver_details);
         btnCancel = findViewById(R.id.btn_cancel);
-        mapLoading = findViewById(R.id.map_loading);
-        mapView = findViewById(R.id.map_view);
-
+        qrCodeImage = findViewById(R.id.qr_code_image);
 
         // Initialize new elements
         txtOrigen = findViewById(R.id.txt_origen);
@@ -119,28 +112,13 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         // Initial state
         txtDriverInfo.setText("Buscando detalles del viaje...");
         btnDriverDetails.setVisibility(View.GONE);
-
+        qrCodeImage.setVisibility(View.GONE);
 
         // Default taxista (initially hidden)
         txtTaxista.setText("Asignando taxista...");
     }
 
-    private void setupMap() {
-        // Hide ImageView and show map fragment
-        mapView.setVisibility(View.GONE);
-
-        // Setup map fragment
-        mapFragment = SupportMapFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.map_container, mapFragment)
-                .commit();
-        mapFragment.getMapAsync(this);
-    }
-
     private void setupClickListeners() {
-        // Back button
-
-
         // Cancel button
         btnCancel.setOnClickListener(v -> cancelarViaje());
 
@@ -153,9 +131,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
-
-        // Call driver button
-
     }
 
     private void buscarAlertaTaxiActiva() {
@@ -218,9 +193,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
             // Update driver info based on status
             actualizarInfoConductor(estadoViaje);
 
-            // Hide map loading
-            mapLoading.setVisibility(View.GONE);
-
             Log.d(TAG, "Detalles del viaje mostrados - Origen: " + origen +
                     ", Destino: " + destino + ", Estado: " + estadoViaje);
 
@@ -236,42 +208,53 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
             String estado = estadoViaje.toLowerCase().trim();
 
             switch (estado) {
-                case "No asignado":
+                case "no asignado":
                     txtDriverInfo.setText("Buscando taxista disponible...");
                     txtTaxista.setText("Asignando taxista...");
                     btnDriverDetails.setVisibility(View.GONE);
+                    qrCodeImage.setVisibility(View.GONE);
                     break;
 
-                case "En camino":
+                case "en camino":
                     txtDriverInfo.setText("Taxista asignado y preparándose");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
+                    qrCodeImage.setVisibility(View.GONE);
                     break;
 
-
-                case "Asignado":
+                case "asignado":
                     txtDriverInfo.setText("Tu taxista está afuera del hotel");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
+                    qrCodeImage.setVisibility(View.GONE);
 
-                    // Show toast notification when driver is on the way
+                    // Show toast notification when driver is assigned
                     Toast.makeText(this, "¡Alejandro Gomez está esperandote!", Toast.LENGTH_LONG).show();
                     break;
 
-
-                case "Llego a destino":
-                    txtDriverInfo.setText("Viaje casi finalizado");
+                case "llegó a destino":
+                case "llego a destino":
+                    txtDriverInfo.setText("Has llegado a tu destino");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
+                    qrCodeImage.setVisibility(View.VISIBLE); // Show QR code
+
+                    Toast.makeText(this, "¡Has llegado a tu destino! Escanea el código QR para completar el viaje", Toast.LENGTH_LONG).show();
                     break;
 
-                case "Completado":
+                case "completado":
                     txtDriverInfo.setText("Viaje completado");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
                     btnCancel.setText("Finalizar");
+                    qrCodeImage.setVisibility(View.GONE);
 
-                    Toast.makeText(this, "¡Viaje completado exitosamente!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Viaje Finalizado", Toast.LENGTH_SHORT).show();
+
+                    // Navigate to HotelesFragment after a short delay
+                    new android.os.Handler().postDelayed(() -> {
+                        navigateToHotelesFragment();
+                    }, 2000);
                     break;
 
                 case "cancelado":
@@ -279,6 +262,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtTaxista.setText("Viaje cancelado");
                     btnDriverDetails.setVisibility(View.GONE);
                     btnCancel.setText("Volver");
+                    qrCodeImage.setVisibility(View.GONE);
 
                     Toast.makeText(this, "El viaje ha sido cancelado", Toast.LENGTH_SHORT).show();
                     break;
@@ -287,10 +271,27 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtDriverInfo.setText("Estado: " + estadoViaje);
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
+                    qrCodeImage.setVisibility(View.GONE);
                     break;
             }
 
             Log.d(TAG, "Estado actualizado: " + estadoViaje + " -> Info: " + txtDriverInfo.getText());
+        }
+    }
+
+    private void navigateToHotelesFragment() {
+        try {
+            // Create intent to return to main activity with HotelesFragment
+            Intent intent = new Intent();
+            intent.putExtra("navigate_to_fragment", "hoteles");
+            setResult(RESULT_OK, intent);
+            finish();
+
+            Log.d(TAG, "Navegando a HotelesFragment");
+        } catch (Exception e) {
+            Log.e(TAG, "Error al navegar a HotelesFragment", e);
+            // Fallback: just finish the activity
+            finish();
         }
     }
 
@@ -320,12 +321,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
 
                     // Additional notification for status change
                     Toast.makeText(this, "🚖 ¡Tu taxista Alejandro Gomez está en camino!", Toast.LENGTH_LONG).show();
-                }
-
-                // Auto-close when completed
-                if ("Completado".equals(estadoNuevo)) {
-                    // Delay before closing to show completion message
-                    new android.os.Handler().postDelayed(() -> finish(), 3000);
                 }
             }
         });
@@ -357,35 +352,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             finish();
         }
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Configure map
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-        try {
-            // Enable location layer if permission is granted
-            mMap.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
-            Log.e(TAG, "Location permission not granted", e);
-        }
-
-        // Initial location (Lima, Peru)
-        LatLng lima = new LatLng(-12.0464, -77.0428);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lima, 12));
-
-        // Add example marker
-        mMap.addMarker(new MarkerOptions()
-                .position(lima)
-                .title("Alejandro Gomez")
-                .snippet("Tu taxista - En camino"));
-
-        Log.d(TAG, "Mapa configurado correctamente");
     }
 
     @Override
