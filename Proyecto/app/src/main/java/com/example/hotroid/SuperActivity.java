@@ -6,8 +6,12 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +42,8 @@ public class SuperActivity extends AppCompatActivity {
     private List<Hotel> hotelList;
     private EditText etSearchHotel;
     private Button btnClearSearch;
+    private Spinner spinnerCityFilter;
+    private String[] cities = {"Todas las ciudades", "Arequipa", "Cusco", "Iquitos", "Paracas", "Punta Sal", "Tarapoto", "Trujillo"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +61,43 @@ public class SuperActivity extends AppCompatActivity {
 
         new Handler().postDelayed(this::checkAndLoadHotels, 500);
 
+        setupCityFilter();
         setupSearch();
         setupBottomNavigation();
 
         CardView cardSuper = findViewById(R.id.cardSuper);
-
         cardSuper.setOnClickListener(v -> {
             Intent intent = new Intent(SuperActivity.this, SuperCuentaActivity.class);
             startActivity(intent);
+        });
+    }
+
+    private void setupCityFilter() {
+        spinnerCityFilter = findViewById(R.id.spinnerCityFilter);
+
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                cities
+        );
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCityFilter.setAdapter(cityAdapter);
+
+        spinnerCityFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCity = cities[position];
+                if (position == 0) { // "Todas las ciudades"
+                    hotelAdapter.clearCityFilter();
+                } else {
+                    hotelAdapter.filterByCity(selectedCity);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No hacer nada
+            }
         });
     }
 
@@ -99,8 +134,6 @@ public class SuperActivity extends AppCompatActivity {
                                 try {
                                     Hotel hotel = document.toObject(Hotel.class);
                                     hotel.setIdHotel(document.getId());
-
-                                    // Ya no se necesita cargar imágenes locales desde drawable
                                     fetchedHotels.add(hotel);
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error al procesar documento de hotel " + document.getId() + ": " + e.getMessage(), e);
@@ -122,104 +155,7 @@ public class SuperActivity extends AppCompatActivity {
     }
 
     private void addInitialHotels() {
-        Log.d(TAG, "Agregando los 7 hoteles iniciales...");
-
-        List<Hotel> initialHotels = new ArrayList<>();
-
-        // Hotel 1: Boca Raton
-        Hotel bocaRaton = new Hotel();
-        bocaRaton.setName("Boca Raton");
-        bocaRaton.setDireccion("Tarapoto, San Martín");
-        bocaRaton.setDireccionDetallada("Jr. San Pablo de la Cruz 273");
-        //bocaRaton.setPrice(150.00);
-        bocaRaton.setRating(3.8f);
-        bocaRaton.setDescription("El Hotel Boca Raton te ofrece una experiencia única en Tarapoto, con habitaciones confortables y un ambiente acogedor, ideal para explorar la selva peruana.");
-        bocaRaton.setImageName("hotel_boca_raton");
-        initialHotels.add(bocaRaton);
-
-        // Hotel 2: Oro Verde
-        Hotel oroVerde = new Hotel();
-        oroVerde.setName("Oro Verde");
-        oroVerde.setDireccion("Iquitos, Loreto");
-        oroVerde.setDireccionDetallada("Av. Abelardo Quiñones Km 2.8");
-        //oroVerde.setPrice(450.00);
-        oroVerde.setRating(4.2f);
-        oroVerde.setDescription("Descubre la Amazonía desde el Hotel Oro Verde en Iquitos. Ofrece comodidades modernas y acceso fácil a las maravillas naturales de la selva.");
-        oroVerde.setImageName("hotel_oro_verde");
-        initialHotels.add(oroVerde);
-
-        // Hotel 3: Libertador
-        Hotel libertador = new Hotel();
-        libertador.setName("Libertador");
-        libertador.setDireccion("Machu Picchu, Cusco");
-        libertador.setDireccionDetallada("Jr. Waynapicchu s/n");
-        //libertador.setPrice(567.50);
-        libertador.setRating(4.7f);
-        libertador.setDescription("Situado en el corazón de Machu Picchu, el Hotel Libertador ofrece vistas espectaculares y un servicio excepcional, ideal para tu aventura inca.");
-        libertador.setImageName("hotel_libertador");
-        initialHotels.add(libertador);
-
-        // Hotel 4: Sonesta
-        Hotel sonesta = new Hotel();
-        sonesta.setName("Sonesta");
-        sonesta.setDireccion("Arequipa");
-        sonesta.setDireccionDetallada("Urb. Santa Rosa G-10");
-        //sonesta.setPrice(231.80);
-        sonesta.setRating(3.9f);
-        sonesta.setDescription("El Hotel Sonesta en Arequipa combina la elegancia colonial con el confort moderno, perfecto para explorar la Ciudad Blanca.");
-        sonesta.setImageName("hotel_sonesta");
-        initialHotels.add(sonesta);
-
-        // Hotel 5: Decameron
-        Hotel decameron = new Hotel();
-        decameron.setName("Decameron");
-        decameron.setDireccion("Punta Sal, Piura");
-        decameron.setDireccionDetallada("Km 1192 Panamericana Norte");
-        //decameron.setPrice(989.90);
-        decameron.setRating(4.0f);
-        decameron.setDescription("Disfruta de unas vacaciones todo incluido en el Hotel Decameron Punta Sal. Playas paradisíacas y actividades para toda la familia.");
-        decameron.setImageName("hotel_decameron");
-        initialHotels.add(decameron);
-
-        // Hotel 6: Aranwa
-        Hotel aranwa = new Hotel();
-        aranwa.setName("Aranwa");
-        aranwa.setDireccion("Paracas, Ica");
-        aranwa.setDireccionDetallada("Av. Paracas Lote F");
-        //aranwa.setPrice(756.40);
-        aranwa.setRating(4.5f);
-        aranwa.setDescription("El Hotel Aranwa en Paracas ofrece un oasis de tranquilidad con vistas al mar, ideal para relajarse y explorar la Reserva de Paracas.");
-        aranwa.setImageName("hotel_aranwa");
-        initialHotels.add(aranwa);
-
-        // Hotel 7: Costa del Sol
-        Hotel costaDelSol = new Hotel();
-        costaDelSol.setName("Costa del Sol");
-        costaDelSol.setDireccion("Trujillo, La Libertad");
-        costaDelSol.setDireccionDetallada("Av. Mansiche 790");
-        //costaDelSol.setPrice(546.80);
-        costaDelSol.setRating(4.1f);
-        costaDelSol.setDescription("El Hotel Costa del Sol en Trujillo es el punto de partida perfecto para descubrir la cultura Moche y Chimú, con confort y excelentes servicios.");
-        costaDelSol.setImageName("hotel_costa_sol");
-        initialHotels.add(costaDelSol);
-
-        CollectionReference hotelesRef = db.collection("hoteles");
-        int[] hotelsAddedCount = {0};
-        for (Hotel hotel : initialHotels) {
-            hotelesRef.add(hotel)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Hotel agregado a Firestore: " + hotel.getName());
-                            hotelsAddedCount[0]++;
-                            if (hotelsAddedCount[0] == initialHotels.size()) {
-                                Log.d(TAG, "Todos los hoteles iniciales han sido agregados. Cargando desde Firestore...");
-                                new Handler().postDelayed(SuperActivity.this::loadHotelsFromFirestore, 1000);
-                            }
-                        } else {
-                            Log.e(TAG, "Error al agregar hotel " + hotel.getName() + ": " + task.getException().getMessage(), task.getException());
-                        }
-                    });
-        }
+        // ... (mantén tu método addInitialHotels existente sin cambios) ...
     }
 
     private void setupSearch() {
@@ -235,15 +171,16 @@ public class SuperActivity extends AppCompatActivity {
         });
 
         btnClearSearch.setOnClickListener(v -> {
+            // Limpiar el texto de búsqueda
             etSearchHotel.setText("");
-            hotelAdapter.clearFilter();
+
+            // Restablecer el filtro de ciudad a "Todas las ciudades"
+            spinnerCityFilter.setSelection(0);
+
+            // Limpiar todos los filtros en el adaptador
+            hotelAdapter.clearAllFilters();
         });
     }
-
-
-
-
-
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

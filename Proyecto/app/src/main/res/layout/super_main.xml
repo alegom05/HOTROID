@@ -110,6 +110,7 @@
                 android:textSize="18sp"
                 android:layout_marginBottom="8dp" />
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +123,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Buscar hotel por nombre o ubicación"
+                    android:hint="Buscar hotel por nombre"
                     android:inputType="text"
                     android:maxLines="1"
                     android:padding="12dp"
@@ -143,7 +144,12 @@
                     android:backgroundTint="?attr/colorSecondary"
                     android:textColor="@color/white"/>
             </LinearLayout>
-
+            <Spinner
+                android:id="@+id/spinnerCityFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/edittext_background"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewHotels"

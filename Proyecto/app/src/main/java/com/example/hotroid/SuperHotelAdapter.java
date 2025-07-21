@@ -45,12 +45,11 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
         holder.tvHotelName.setText(hotel.getName());
         holder.tvHotelLocation.setText(hotel.getDireccion());
         holder.tvHotelRating.setText(String.format(Locale.getDefault(), "%.1f", hotel.getRating()));
-        //holder.tvHotelPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", hotel.getPrice()));
         holder.ratingBar.setRating(hotel.getRating());
 
         if (hotel.getImageUrls() != null && !hotel.getImageUrls().isEmpty()) {
             Glide.with(context)
-                    .load(hotel.getImageUrls().get(0)) // Carga la primera imagen de la lista
+                    .load(hotel.getImageUrls().get(0))
                     .placeholder(R.drawable.placeholder_hotel)
                     .error(R.drawable.ic_user_error)
                     .into(holder.ivHotelImage);
@@ -65,9 +64,8 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
             intent.putExtra("hotel_location", hotel.getDireccion());
             intent.putExtra("hotel_detailed_address", hotel.getDireccionDetallada());
             intent.putExtra("hotel_rating", hotel.getRating());
-            //intent.putExtra("hotel_price", hotel.getPrice());
             intent.putExtra("hotel_description", hotel.getDescription());
-            intent.putExtra("hotel_image_urls", new ArrayList<>(hotel.getImageUrls())); // <-- PASA LA LISTA
+            intent.putExtra("hotel_image_urls", new ArrayList<>(hotel.getImageUrls()));
             context.startActivity(intent);
         });
     }
@@ -107,7 +105,6 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
         } else {
             text = text.toLowerCase(Locale.getDefault());
             for (Hotel hotel : hotelListFull) {
-                // *** CAMBIO AQUI: SOLO COMPRUEBA EL NOMBRE DEL HOTEL ***
                 if (hotel.getName().toLowerCase(Locale.getDefault()).contains(text)) {
                     hotelList.add(hotel);
                 }
@@ -116,9 +113,28 @@ public class SuperHotelAdapter extends RecyclerView.Adapter<SuperHotelAdapter.Ho
         notifyDataSetChanged();
     }
 
-    public void clearFilter() {
+    public void filterByCity(String city) {
+        hotelList.clear();
+        for (Hotel hotel : hotelListFull) {
+            if (hotel.getDireccion().contains(city)) {
+                hotelList.add(hotel);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void clearAllFilters() {
         hotelList.clear();
         hotelList.addAll(hotelListFull);
         notifyDataSetChanged();
+    }
+
+    // Mantenemos estos métodos por compatibilidad
+    public void clearFilter() {
+        clearAllFilters();
+    }
+
+    public void clearCityFilter() {
+        clearAllFilters();
     }
 }
