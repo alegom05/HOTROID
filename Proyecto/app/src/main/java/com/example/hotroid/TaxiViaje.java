@@ -294,7 +294,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                 // Asumiendo que "Libertador" podría referirse a una calle o plaza conocida en Lima o en VMT.
                 // Es crucial que esta dirección sea lo más específica posible.
                 // Ejemplo: Una dirección real en Lima. Si se refiere a PUCP como antes, es una dirección conocida.
-                return "Av. La Marina 200, San Miguel 15088, Lima, Perú"; // Ejemplo de dirección real para Libertador (si se refiere a PUCP)
+                return "Av. Venezuela s/n, Lima 15081, Perú";
             case "aeropuerto internacional jorge chávez":
                 return "Av. Elmer Faucett s/n, Callao 07031, Perú";
             case "aeropuerto de santa maría del mar":

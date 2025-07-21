@@ -184,7 +184,7 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
         switch (shortName) {
             // Hoteles de Lima (14 en total, incluyendo el de la PUCP) - Marcadores Rojos
             // Hotel Libertador (simulando PUCP)
-            case "Hotel Libertador": return "Av. Universitaria 1801, San Miguel, Lima, Perú";
+            case "Hotel Libertador": return "Av. Venezuela s/n, Lima 15081, Perú";
             // Hoteles en Miraflores
             case "JW Marriott Hotel Lima": return "Malecón de la Reserva 615, Miraflores 15074, Lima, Perú";
             case "Belmond Miraflores Park": return "Av. Malecón de la Reserva 1035, Miraflores 15074, Lima, Perú";
