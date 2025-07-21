@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hotroid.bean.Room;
 import com.example.hotroid.bean.RoomGroupOption;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -76,6 +77,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
                 intent.putExtra("ROOM_CAPACITY_CHILDREN", room.getCapacityChildren());
                 intent.putExtra("ROOM_PRICE", room.getPrice());
                 intent.putExtra("HOTEL_ID", room.getHotelId());
+                intent.putStringArrayListExtra("ROOM_IMAGE_URLS", new ArrayList<>(room.getImageResourceName()));
+
 
                 // Añadir log para debuguear
                 Log.d("RoomAdapter", "Iniciando DetalleHabitacionUser con roomId: " + room.getId());

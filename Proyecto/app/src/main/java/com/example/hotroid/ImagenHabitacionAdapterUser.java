@@ -1,5 +1,6 @@
 package com.example.hotroid;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,13 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class ImagenHabitacionAdapterUser extends RecyclerView.Adapter<ImagenHabitacionAdapterUser.ImagenViewHolder> {
-    private final List<Integer> listaImagenes;
-    public ImagenHabitacionAdapterUser(List<Integer> imagenes){
+    private final List<String> listaImagenes;
+    public ImagenHabitacionAdapterUser(List<String> imagenes){
         this.listaImagenes=imagenes;
     }
     @NonNull
@@ -23,8 +26,15 @@ public class ImagenHabitacionAdapterUser extends RecyclerView.Adapter<ImagenHabi
     }
     @Override
     public void onBindViewHolder(@NonNull ImagenViewHolder holder, int position){
-        holder.imageView.setImageResource(listaImagenes.get(position));
+        String url = listaImagenes.get(position);
+        Glide.with(holder.itemView.getContext())
+                .load(url)
+                .centerCrop()
+                .placeholder(R.drawable.hotel_room)
+                .into(holder.imageView);
+        Log.d("GlideDebug", "Cargando imagen: " + url);
     }
+
     @Override
     public int getItemCount(){
         return listaImagenes.size();

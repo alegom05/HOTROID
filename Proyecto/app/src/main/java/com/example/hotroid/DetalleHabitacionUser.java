@@ -28,6 +28,8 @@ public class DetalleHabitacionUser extends AppCompatActivity {
     private double precioBase = 0;
     private int cantidadHabitaciones = 1;
     private String roomId, hotelId;
+    private ArrayList<String> roomImageUrls;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +69,12 @@ public class DetalleHabitacionUser extends AppCompatActivity {
         // Botón de reservar
         MaterialButton btnReservar = findViewById(R.id.btnReservar);
         btnReservar.setOnClickListener(v -> {
-            Intent intent = new Intent(DetalleHabitacionUser.this, ProcesoReservaUser.class);
-            intent.putExtra("ROOM_ID", roomId);
-            intent.putExtra("HOTEL_ID", hotelId);
-            intent.putExtra("CANTIDAD_HABITACIONES", cantidadHabitaciones);
-            intent.putExtra("PRECIO_TOTAL", cantidadHabitaciones * precioBase);
-            startActivity(intent);
+//            //Intent intent = new Intent(DetalleHabitacionUser.this, ProcesoReservaUser.class);
+//            intent.putExtra("ROOM_ID", roomId);
+//            intent.putExtra("HOTEL_ID", hotelId);
+//            intent.putExtra("CANTIDAD_HABITACIONES", cantidadHabitaciones);
+//            intent.putExtra("PRECIO_TOTAL", cantidadHabitaciones * precioBase);
+            //startActivity(intent);
         });
     }
 
@@ -86,6 +88,8 @@ public class DetalleHabitacionUser extends AppCompatActivity {
         int capacityChildren = intent.getIntExtra("ROOM_CAPACITY_CHILDREN", 0);
         precioBase = intent.getDoubleExtra("ROOM_PRICE", 0);
         hotelId = intent.getStringExtra("HOTEL_ID");
+        roomImageUrls = getIntent().getStringArrayListExtra("ROOM_IMAGE_URLS");
+
     }
 
     private void inicializarVistas() {
@@ -134,12 +138,19 @@ public class DetalleHabitacionUser extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.viewPagerImagenes);
         CircleIndicator3 indicator = findViewById(R.id.indicadorImagenes);
 
-        // Seleccionar imágenes según el tipo de habitación
-        List<Integer> imagenes = obtenerImagenesPorTipo(getIntent().getStringExtra("ROOM_TYPE"));
-
-        ImagenHabitacionAdapterUser adapter = new ImagenHabitacionAdapterUser(imagenes);
-        viewPager.setAdapter(adapter);
-        indicator.setViewPager(viewPager);
+        if (roomImageUrls != null && !roomImageUrls.isEmpty()) {
+            ImagenHabitacionAdapterUser adapter = new ImagenHabitacionAdapterUser(roomImageUrls);
+            viewPager.setAdapter(adapter);
+            indicator.setViewPager(viewPager);
+        } else {
+            // Si no hay URLs, puedes cargar imágenes por defecto
+            List<String> imagenesDefault = new ArrayList<>();
+            imagenesDefault.add("android.resource://" + getPackageName() + "/" + R.drawable.hotel_room);
+            imagenesDefault.add("android.resource://" + getPackageName() + "/" + R.drawable.hotel_room_doble);
+            ImagenHabitacionAdapterUser adapter = new ImagenHabitacionAdapterUser(imagenesDefault);
+            viewPager.setAdapter(adapter);
+            indicator.setViewPager(viewPager);
+        }
     }
 
     private List<Integer> obtenerImagenesPorTipo(String roomType) {

@@ -2,6 +2,7 @@ package com.example.hotroid.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,6 +42,8 @@ public class RoomGroupOption implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        Log.d("Paso1:Parcel", "Escribiendo RoomGroupOption: " + roomType + " con " +
+                (habitacionesSeleccionadas != null ? habitacionesSeleccionadas.size() : 0) + " habitaciones");
         dest.writeString(roomType);
         dest.writeInt(habitacionesNecesarias);
         dest.writeInt(disponibles);
@@ -110,5 +113,13 @@ public class RoomGroupOption implements Parcelable {
     public void setPrecioPorHabitacion(double precioPorHabitacion) {
         this.precioPorHabitacion = precioPorHabitacion;
     }
-
+    @Override
+    public String toString() {
+        return "RoomGroupOption{" +
+                "roomType='" + roomType + '\'' +
+                ", habitacionesNecesarias=" + habitacionesNecesarias +
+                ", disponibles=" + disponibles +
+                ", habitacionesSeleccionadas=" + habitacionesSeleccionadas +
+                '}';
+    }
 }

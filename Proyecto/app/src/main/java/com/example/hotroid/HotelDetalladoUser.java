@@ -151,7 +151,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
         binding.hotelRating.setRating(hotelRatingValue);
         binding.ratingText.setText(String.valueOf(hotelRatingValue));
         binding.hotelLocation.setText(hotelDireccion);
-        binding.hotelPrice.setText(String.format(Locale.getDefault(), "€%.0f por noche", precioMinimo));
+        binding.hotelPrice.setText(String.format(Locale.getDefault(), "Desde : S/. %.0f por noche", precioMinimo));
         // Configurar fechas seleccionadas
         updateSelectedDatesText();
 

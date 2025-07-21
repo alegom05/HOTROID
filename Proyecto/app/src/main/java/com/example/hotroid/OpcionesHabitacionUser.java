@@ -74,17 +74,6 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
         ninios = getIntent().getIntExtra("niniosSolicitados", 0);
         numHabitaciones = getIntent().getIntExtra("numHabitaciones", 1);
 
-//        ArrayList<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
-//
-//        if (opciones != null) {
-//            // Aquí puedes usar la lista
-//            for (RoomGroupOption opcion : opciones) {
-//                Log.d("OPCION", "Tipo: " + opcion.getRoomType() + ", Precio: " + opcion.getPrecioPorHabitacion());
-//            }
-//        }
-        // Obtener el ID del hotel de los extras del Intent
-        //hotelId = getIntent().getStringExtra("HOTEL_ID");
-
         // Inicializar UI components
         initUI();
 
@@ -138,18 +127,31 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
 
         // ⬇️ Aquí usas los datos recibidos por Intent
         ArrayList<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
+        Log.d(TAG, "Opciones recibidas: " + opciones);
 
         if (opciones != null && !opciones.isEmpty()) {
+            Log.d(TAG, "Cantidad de opciones: " + opciones.size());
             listaOpciones.clear();
             listaOpciones.addAll(opciones);
             availableRoomsTitle.setText("Habitaciones disponibles (" + listaOpciones.size() + ")");
             adapter.notifyDataSetChanged();
+            if (!listaOpciones.isEmpty()) {
+                adapter.getOpcionSeleccionada(); // Solo para forzar la selección inicial si deseas
+                continueButton.setVisibility(View.VISIBLE);
+            }
         } else {
             noResultsText.setVisibility(View.VISIBLE);
         }
 
+        if (!listaOpciones.isEmpty()) {
+            adapter.getOpcionSeleccionada(); // Solo para forzar la selección inicial si deseas
+            continueButton.setVisibility(View.VISIBLE);
+        }
+
+
         continueButton.setOnClickListener(v -> {
             RoomGroupOption seleccionada = adapter.getOpcionSeleccionada();
+
             if (seleccionada != null) {
                 List<Room> disponibles = seleccionada.getHabitacionesSeleccionadas();
                 // Asegurar que hay suficientes habitaciones

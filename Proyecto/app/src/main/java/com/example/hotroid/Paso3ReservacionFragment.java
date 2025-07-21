@@ -34,9 +34,9 @@ import java.util.UUID;
 
 public class Paso3ReservacionFragment extends Fragment {
 
-    private static final String CHANNEL_ID = "reservas_hotel_channel";
-    private static final int NOTIFICATION_ID = 100;
-    private static final int PERMISSION_REQUEST_CODE = 101;
+    private static final String CHANNEL_ID = "reservas_hotel_channell";
+    private static final int NOTIFICATION_ID = 1005;
+    private static final int PERMISSION_REQUEST_CODE = 1010;
 
     private TextView tvResumenHotel, tvResumenFechas, tvResumenHuespedes;
     private TextView tvResumenServicios, tvResumenPrecio;

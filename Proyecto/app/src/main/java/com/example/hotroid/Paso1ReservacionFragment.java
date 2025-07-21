@@ -65,6 +65,10 @@ public class Paso1ReservacionFragment extends Fragment {
         // Recuperar argumentos
         Bundle args = getArguments();
         if (args != null) {
+            for (String key : args.keySet()) {
+                Object value = args.get(key);
+                android.util.Log.d("Paso1:ARG", "Clave: " + key + " → Valor: " + String.valueOf(value));
+            }
             opcionSeleccionada = args.getParcelable("opcionSeleccionada");
             roomNumbersSeleccionados = args.getIntegerArrayList("roomNumbersSeleccionados");
             fechaInicio = new Date(args.getLong("fechaInicio"));
@@ -72,6 +76,14 @@ public class Paso1ReservacionFragment extends Fragment {
             cantidadPersonas = args.getInt("cantidadPersonas");
             niniosSolicitados = args.getInt("niniosSolicitados");
             numHabitaciones = args.getInt("numHabitaciones");
+            if (opcionSeleccionada != null && opcionSeleccionada.getHabitacionesSeleccionadas() != null) {
+                for (int i = 0; i < opcionSeleccionada.getHabitacionesSeleccionadas().size(); i++) {
+                    android.util.Log.d("Paso1:ROOM", "Habitación[" + i + "]: " +
+                            opcionSeleccionada.getHabitacionesSeleccionadas().get(i).getRoomNumber());
+                }
+            }
+        }else {
+            android.util.Log.e("Paso1:ARG", "¡Bundle de argumentos es null!");
         }
 
         // Inicializar componentes

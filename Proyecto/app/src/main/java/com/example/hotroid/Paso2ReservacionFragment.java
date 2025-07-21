@@ -13,12 +13,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.hotroid.bean.RoomGroupOption;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,10 +101,25 @@ public class Paso2ReservacionFragment extends Fragment {
         tvImpuestos = view.findViewById(R.id.tvImpuestos);
         tvTotal = view.findViewById(R.id.tvTotal);
         btnConfirmarReserva = view.findViewById(R.id.btnConfirmarReserva);
+        if (btnConfirmarReserva == null) {
+            Log.e("Paso2:ERROR", "btnConfirmarReserva es null");
+        } else {
+            Log.d("Paso2:OK", "Botón encontrado correctamente");
+        }
+        MaterialCheckBox cbAceptarTerminos = view.findViewById(R.id.cbAceptarTerminos);
+        cbAceptarTerminos.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            btnConfirmarReserva.setEnabled(isChecked);
+        });
+
 
         // Recuperar Bundle
         Bundle args = getArguments();
         if (args != null) {
+            for (String key : args.keySet()) {
+                Object value = args.get(key);
+                android.util.Log.d("Paso2:ARG", "Clave: " + key + " → Valor: " + String.valueOf(value));
+            }
+
             opcionSeleccionada = args.getParcelable("opcionSeleccionada");
             roomNumbersSeleccionados = args.getIntegerArrayList("roomNumbersSeleccionados");
             fechaInicio = new Date(args.getLong("fechaInicio"));
@@ -120,7 +140,23 @@ public class Paso2ReservacionFragment extends Fragment {
 
             gimnasio = args.getBoolean("gimnasio");
 
+            // Log extra para verificar lista de habitaciones dentro del RoomGroupOption
+            if (opcionSeleccionada != null) {
+                android.util.Log.d("Paso2:ROOMTYPE", "Tipo: " + opcionSeleccionada.getRoomType());
+                android.util.Log.d("Paso2:HAB_SELEC", "Habitaciones seleccionadas: " +
+                        opcionSeleccionada.getHabitacionesSeleccionadas());
+
+                if (opcionSeleccionada.getHabitacionesSeleccionadas() != null) {
+                    for (int i = 0; i < opcionSeleccionada.getHabitacionesSeleccionadas().size(); i++) {
+                        android.util.Log.d("Paso2:HAB_NUM", "Hab[" + i + "]: " +
+                                opcionSeleccionada.getHabitacionesSeleccionadas().get(i).getRoomNumber());
+                    }
+                }
+            }
+
             mostrarResumen();
+        }else {
+            android.util.Log.e("Paso2:ARG", "El bundle de argumentos llegó como null.");
         }
 
 
@@ -148,8 +184,8 @@ public class Paso2ReservacionFragment extends Fragment {
         double costoParqueo = parqueo ? 15 : 0;
         tvPrecioGimnasio.setText("S/ " + costoGimnasio);
         tvPrecioDesayuno.setText("S/ " + costoDesayuno);
-        tvPrecioPiscina.setText("S/ " + costoPiscina);
-        tvPrecioParqueo.setText("S/ " + costoParqueo);
+//        tvPrecioPiscina.setText("S/ " + costoPiscina);
+//        tvPrecioParqueo.setText("S/ " + costoParqueo);
 
         double subtotal = costoHabitacion + costoGimnasio + costoDesayuno + costoPiscina + costoParqueo;
         double impuestos = subtotal * IGV;
@@ -189,11 +225,13 @@ public class Paso2ReservacionFragment extends Fragment {
         reserva.put("checkOutRealizado", false); //5
         reserva.put("fechaCancelacion", null); //9
         reserva.put("fechaCreacion", FieldValue.serverTimestamp()); //10
+        Log.d("ReservaFirebase", "Iniciando guardado de reserva...");
 
 
         db.collection("reservas")
                 .add(reserva)
                 .addOnSuccessListener(documentReference -> {
+                    Log.d("ReservaFirebase", "Reserva guardada exitosamente en Firestore");
                     mostrarNotificacionReserva();
                     Toast.makeText(getContext(), "Reserva confirmada correctamente",
                             Toast.LENGTH_LONG).show();
@@ -202,6 +240,8 @@ public class Paso2ReservacionFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Error al guardar reserva: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
+                    Log.e("ReservaFirebase", "Error al guardar: " + e.getMessage());
+
                 });
     }
 
@@ -236,15 +276,31 @@ public class Paso2ReservacionFragment extends Fragment {
     }
 
     private void askNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                ActivityCompat.checkSelfPermission(requireContext(),
-                        Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                    PERMISSION_REQUEST_CODE);
+                requestPermissions(
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        PERMISSION_REQUEST_CODE
+                );
+            }
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("Permisos", "Permiso de notificación concedido");
+                mostrarNotificacionReserva(); // Si es desde el intento de reservar, la llamas otra vez
+            } else {
+                Toast.makeText(requireContext(), "Permiso para notificaciones denegado", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private void mostrarNotificacionReserva() {
         // Crear Intent para abrir MisReservasUser directamente
