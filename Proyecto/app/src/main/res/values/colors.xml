@@ -13,7 +13,7 @@
     <color name="background_gradient">#F8F9FA</color>
 
     <color name="colorPrimary">#00A86B</color>
-    <color name="colorPrimaryVariant">#007A4D</color>
+    <color name="colorPrimaryVariant">#00A86B</color>
     <color name="colorOnPrimary">#FFFFFF</color>
     <color name="color_activo_celeste">#1F66B6</color>
     <color name="color_activo_claro_celeste">#2A75CA</color>
@@ -24,13 +24,13 @@
     <color name="gray_tone_dark">#616161</color>
     <color name="gray">#888888</color>
 
-    <color name="green_500">#4CAF50</color>
+    <color name="green_500">#00A86B</color>
     <color name="red_500">#F44336</color>
     <color name="cliente1">#FF9800</color>
     <color name="cliente2">#3F51B5</color>
     <color name="color_estado_habilitado">#009688</color>
 
-    <color name="green_status">#4CAF50</color>
+    <color name="green_status">#00A86B</color>
     <color name="red_status">#F44336</color>
     <color name="naranja">#FF9800</color>
     <color name="naranja_claro">#FFCC80</color>
