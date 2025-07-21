@@ -65,6 +65,7 @@ public class TaxiCuenta extends AppCompatActivity {
         datos.add(new String[]{"Apellidos:", "Gómez Mostacero"});
         datos.add(new String[]{"Tipo de documento:", "DNI"});
         datos.add(new String[]{"Número de documento:", "45464546"});
+        datos.add(new String[]{"Correo:", "carlosjn.gmos@gmail.com"});
         datos.add(new String[]{"Fecha de nacimiento:", "28 de mayo de 1998"});
         datos.add(new String[]{"Teléfono:", "913454319"});
         datos.add(new String[]{"Dirección:", "Av. Los Taxis 123, Lima"});

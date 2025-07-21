@@ -1,0 +1,157 @@
+[
+  {
+    "id": "HQDQVcHSXShy3IV59rDO",
+    "imageName": "hotel_costa_sol",
+    "imageResourceId": 0,
+    "rating": 4.099999904632568,
+    "description": "El Hotel Costa del Sol en Trujillo es el punto de partida perfecto para descubrir la cultura Moche y Chimú, con confort y excelentes servicios.",
+    "idUbicacion": null,
+    "idFoto": null,
+    "direccionDetallada": "Av. Mansiche 790",
+    "price": 546.8,
+    "name": "Costa del Sol",
+    "idServicio": null,
+    "favorite": false,
+    "pais": "Perú",
+    "direccion": "Trujillo",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750668512/hotel_costa_sol_ldgoqo.jpg"
+    ]
+  },
+  {
+    "id": "Pi5xsI6orodYdy1LZUx1",
+    "imageName": "hotel_boca_raton",
+    "imageResourceId": 0,
+    "rating": 3.799999952316284,
+    "description": "El Hotel Boca Raton te ofrece una experiencia única en Tarapoto, con habitaciones confortables y un ambiente acogedor, ideal para explorar la selva peruana.",
+    "idUbicacion": null,
+    "idHabitacion": null,
+    "idFoto": null,
+    "direccionDetallada": "Jr. San Pablo de la Cruz 273",
+    "price": 150,
+    "name": "Boca Raton",
+    "idServicio": null,
+    "favorite": false,
+    "idReserva": null,
+    "País": "Perú",
+    "direccion": "Tarapoto",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750668501/hotel_boca_raton_wqc9xy.png"
+    ]
+  },
+  {
+    "id": "cMEtNuA6vfA2DII1zC91",
+    "imageName": "hotel_decameron",
+    "imageResourceId": 0,
+    "rating": 4,
+    "description": "Disfruta de unas vacaciones todo incluido en el Hotel Decameron Punta Sal. Playas paradisíacas y actividades para toda la familia.",
+    "idUbicacion": null,
+    "idHabitacion": null,
+    "idFoto": null,
+    "direccionDetallada": "Km 1192 Panamericana Norte",
+    "price": 989.9,
+    "name": "Decameron",
+    "idServicio": null,
+    "favorite": false,
+    "idReserva": null,
+    "País": "Perú",
+    "direccion": "Punta Sal",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750668523/hotel_decameron_nbixkd.png"
+    ]
+  },
+  {
+    "id": "eYVp9hL7QcebrGPFgY0o",
+    "imageName": "hotel_oro_verde",
+    "imageResourceId": 0,
+    "rating": 4.199999809265137,
+    "description": "Descubre la Amazonía desde el Hotel Oro Verde en Iquitos. Ofrece comodidades modernas y acceso fácil a las maravillas naturales de la selva.",
+    "idUbicacion": null,
+    "idHabitacion": null,
+    "idFoto": null,
+    "direccionDetallada": "Av. Abelardo Quiñones Km 2.8",
+    "price": 450,
+    "name": "Oro Verde",
+    "idServicio": null,
+    "favorite": false,
+    "idReserva": null,
+    "País": "Perú",
+    "direccion": "Iquitos",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750668583/hotel_oro_verde_qz8wdz.png"
+    ]
+  },
+  {
+    "id": "eltRKZFk7Cvh81uABPrh",
+    "imageName": "hotel_sonesta",
+    "imageResourceId": 0,
+    "direccion": "Arequipa",
+    "rating": 3.9000000953674316,
+    "description": "El Hotel Sonesta en Arequipa combina la elegancia colonial con el confort moderno, perfecto para explorar la Ciudad Blanca.",
+    "idUbicacion": null,
+    "idHabitacion": null,
+    "idFoto": null,
+    "direccionDetallada": "Urb. Santa Rosa G-10",
+    "price": 231.8,
+    "name": "Sonesta",
+    "idServicio": null,
+    "favorite": false,
+    "idReserva": null,
+    "pais": "Perú",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750668920/hotel_sonesta_kfbciy.jpg"
+    ]
+  },
+  {
+    "id": "yGYsXFWSQV58AANqpLnm",
+    "imageName": "hotel_aranwa",
+    "imageResourceId": 0,
+    "rating": 4.5,
+    "description": "El Hotel Aranwa en Paracas ofrece un oasis de tranquilidad con vistas al mar, ideal para relajarse y explorar la Reserva de Paracas.",
+    "idUbicacion": null,
+    "idHabitacion": null,
+    "idFoto": null,
+    "direccionDetallada": "Av. Paracas Lote F",
+    "price": 756.4,
+    "name": "Aranwa",
+    "idServicio": null,
+    "favorite": false,
+    "idReserva": null,
+    "pais": "Perú",
+    "direccion": "Paracas",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750668481/hotel_aranwa_tmbxhe.png"
+    ]
+  },
+  {
+    "id": "yqrBR3OPmiHnWB677l5X",
+    "imageName": "hotel_libertador",
+    "imageResourceId": 0,
+    "rating": 4.699999809265137,
+    "idUbicacion": null,
+    "idHabitacion": null,
+    "idFoto": null,
+    "price": 567.5,
+    "name": "Libertador",
+    "idServicio": null,
+    "favorite": false,
+    "idReserva": null,
+    "País": "Perú",
+    "longitud": -71.96746259999999,
+    "latitud": -13.53195,
+    "direccion": "Cusco",
+    "direccionDetallada": "Jr. Waynapicchu 334",
+    "lugaresTuristicosCercanos": [
+      "Qorikancha",
+      "Sacsayhuamán",
+      "Museo Inca",
+      "Mercado Central de San Pedro",
+      "Barrio de San Blas"
+    ],
+    "description": "Situado en el corazón de Cusco, el Hotel Libertador ofrece vistas espectaculares y un servicio excepcional, ideal para tu aventura inca. Sus lugares turísticos cercanos son: Qorikancha, Sacsayhuamán, Museo Inca, Mercado Central de San Pedro, Barrio de San Blas.",
+    "imageUrls": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1752300148/hotel_images/hotel_c94e45db-3e8b-4f60-ae61-9f7fc659688e.jpg",
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1753071575/hotel_images/hotel_30590df2-7500-4012-b35d-b6acf6d94f2f.jpg"
+    ]
+  }
+]

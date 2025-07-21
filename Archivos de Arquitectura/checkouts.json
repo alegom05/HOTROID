@@ -1,0 +1,62 @@
+[
+  {
+    "id": "H6J899RKvXddoxi7RUBU",
+    "baseRate": 600,
+    "checkoutDate": {
+      "_seconds": 1747112400,
+      "_nanoseconds": 0
+    },
+    "additionalCharges": 0,
+    "clientName": "Carlos Álvarez Rodríguez",
+    "checkinDate": {
+      "_seconds": 1746853200,
+      "_nanoseconds": 0
+    },
+    "roomNumber": 202
+  },
+  {
+    "id": "Pgr6xikmXYD2fivLelCh",
+    "baseRate": 600,
+    "checkoutDate": {
+      "_seconds": 1747112400,
+      "_nanoseconds": 0
+    },
+    "additionalCharges": 0,
+    "clientName": "Sigrid Bazán Narro",
+    "checkinDate": {
+      "_seconds": 1746853200,
+      "_nanoseconds": 0
+    },
+    "roomNumber": 504
+  },
+  {
+    "id": "a6h6MS4eAFugFAwyvRV1",
+    "baseRate": 1100,
+    "checkoutDate": {
+      "_seconds": 1746594000,
+      "_nanoseconds": 0
+    },
+    "additionalCharges": 0,
+    "clientName": "Leandro Pérez Rojas",
+    "checkinDate": {
+      "_seconds": 1746075600,
+      "_nanoseconds": 0
+    },
+    "roomNumber": 612
+  },
+  {
+    "id": "uHDzjbkn2fxnkfm4qd9U",
+    "baseRate": 950,
+    "checkoutDate": {
+      "_seconds": 1749358800,
+      "_nanoseconds": 0
+    },
+    "additionalCharges": 0,
+    "clientName": "Keiko Fujimori Higuchi",
+    "checkinDate": {
+      "_seconds": 1749099600,
+      "_nanoseconds": 0
+    },
+    "roomNumber": 709
+  }
+]

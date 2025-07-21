@@ -1,0 +1,82 @@
+[
+  {
+    "id": "09na4r0IH12f5UGGMbVt",
+    "evento": "Fuga de agua en cuarto 210",
+    "hotel": "Costa del Sol",
+    "descripcion": "<p><b>Detalle:</b> A las 08:15, el personal de limpieza del Hotel Costa del Mar descubrió una considerable fuga de agua en el baño del cuarto 210. La fuente de la fuga se identificó como una tubería corroída detrás del lavamanos, lo que ha provocado una acumulación de agua debajo del mueble y una filtración visible en la alfombra de la habitación.\n\n<p><b>Impacto:</b> La habitación fue declarada inoperable y el huésped fue trasladado a una habitación superior de cortesía. Existe un riesgo potencial de daño estructural a la pared y al piso si no se repara pronto.\n\n<p><b>Acciones:</b> El equipo de mantenimiento cerró la llave de paso de agua de la habitación y procedió a demoler parcialmente la pared para acceder a la tubería. Se espera que la reparación tome al menos 24 horas. Se ha programado la limpieza profunda y secado de la alfombra.",
+    "fechaHora": {
+      "_seconds": 1752021310,
+      "_nanoseconds": 324000000
+    }
+  },
+  {
+    "id": "0cpvKUI331kgF5cSnXpj",
+    "hotel": "Sauce Resort",
+    "evento": "Incendio menor en cocina",
+    "descripcion": "<p><b>Detalle:</b> A las 05:45 de la mañana, un conato de incendio se registró en el área de la freidora de la cocina principal del Hotel Sauce Resort. La causa se atribuye a un sobrecalentamiento del aceite que provocó llamas. El sistema de rociadores automáticos se activó de inmediato, conteniendo el fuego y evitando su propagación. \n\n<p><b>Impacto:</b> Aunque el incendio fue menor, generó una gran cantidad de humo, lo que activó las alarmas de incendios en todo el hotel por precaución. No hubo heridos. El personal de cocina fue evacuado momentáneamente. \n\n<p><b>Acciones:</b>  Los bomberos llegaron rápidamente para verificar la situación y ventilar el área. Se realizó una inspección de seguridad en todo el sistema de cocina y se reforzaron los protocolos de uso de freidoras con el personal. La cocina reabrió a las 08:00 tras una limpieza exhaustiva.",
+    "fechaHora": {
+      "_seconds": 1751599317,
+      "_nanoseconds": 285000000
+    }
+  },
+  {
+    "id": "88cpYcFvhX4Rnbyt2Oot",
+    "hotel": "Oro Verde",
+    "evento": "Corte de energía en la torre A",
+    "descripcion": "<p><b>Detalle:</b> A las 23:00, la torre A del Hotel Oro Verde experimentó un corte total de energía, afectando todas las habitaciones del piso 5 al 10, así como los ascensores y el sistema de climatización. La causa preliminar apunta a una sobrecarga en el transformador principal de la torre. El generador de emergencia se activó parcialmente, pero no logró suplir toda la demanda. \n\n<p><b>Impacto:</b> Huéspedes en los pisos afectados expresaron incomodidad y algunos tuvieron que ser reubicados. La recepción se vio colapsada por llamadas. \n\n<p><b>Acciones:</b> El equipo técnico ya está en el lugar evaluando la magnitud del daño y se ha solicitado apoyo de una empresa externa especializada para agilizar la reparación. Se estima un tiempo de resolución de 4-6 horas. Se ofreció compensación (desayuno gratuito/descuento) a los afectados.",
+    "fechaHora": {
+      "_seconds": 1752225751,
+      "_nanoseconds": 401000000
+    }
+  },
+  {
+    "id": "8hgcq9TSwVjthLutWccC",
+    "evento": "Caída de objeto en pasillo del restaurante",
+    "hotel": "Libertador",
+    "descripcion": "<p><b>Detalle:</b> Aproximadamente a las 14:30, un gran jarrón decorativo de cerámica, que adornaba el pasillo principal que conduce al restaurante 'El Oasis' del Hotel Las Dunas, se desprendió de su base y cayó al suelo. El impacto provocó la fragmentación del jarrón en múltiples piezas y daños menores en el revestimiento del piso. \n\n<p><b>Impacto:</b> Aunque no hubo heridos, el incidente causó un gran estruendo y asustó a varios huéspedes y personal que se encontraban cerca. El área fue acordonada inmediatamente por seguridad. \n\n<p><b>Acciones:</b> El equipo de limpieza procedió a retirar los escombros y se inició una investigación para determinar la causa del desprendimiento. Se revisarán todos los elementos decorativos colgantes o inestables en el hotel. La gerencia ha dispuesto la instalación de nuevas medidas de sujeción para futuros adornos.",
+    "fechaHora": {
+      "_seconds": 1751671080,
+      "_nanoseconds": 496000000
+    }
+  },
+  {
+    "id": "DHARxeCUAVZh7UXOd5A7",
+    "hotel": "Sauce Resort",
+    "evento": "Incendio menor en cocina",
+    "descripcion": "<p><b>Detalle:</b> A las 05:45 de la mañana, un conato de incendio se registró en el área de la freidora de la cocina principal del Hotel Sauce Resort. La causa se atribuye a un sobrecalentamiento del aceite que provocó llamas. El sistema de rociadores automáticos se activó de inmediato, conteniendo el fuego y evitando su propagación. \n\n<p><b>Impacto:</b> Aunque el incendio fue menor, generó una gran cantidad de humo, lo que activó las alarmas de incendios en todo el hotel por precaución. No hubo heridos. El personal de cocina fue evacuado momentáneamente. \n\n<p><b>Acciones:</b> Los bomberos llegaron rápidamente para verificar la situación y ventilar el área. Se realizó una inspección de seguridad en todo el sistema de cocina y se reforzaron los protocolos de uso de freidoras con el personal. La cocina reabrió a las 08:00 tras una limpieza exhaustiva.",
+    "fechaHora": {
+      "_seconds": 1752103567,
+      "_nanoseconds": 736000000
+    }
+  },
+  {
+    "id": "E6lJZJqkAHYThvsr5N52",
+    "evento": "Caída de objeto en pasillo del restaurante",
+    "hotel": "Libertador",
+    "descripcion": "<p><b>Detalle:</b> Aproximadamente a las 14:30, un gran jarrón decorativo de cerámica, que adornaba el pasillo principal que conduce al restaurante 'El Oasis' del Hotel Las Dunas, se desprendió de su base y cayó al suelo. El impacto provocó la fragmentación del jarrón en múltiples piezas y daños menores en el revestimiento del piso. \n\n<p><b>Impacto:</b>  Aunque no hubo heridos, el incidente causó un gran estruendo y asustó a varios huéspedes y personal que se encontraban cerca. El área fue acordonada inmediatamente por seguridad. \n\n<p><b>Acciones:</b> El equipo de limpieza procedió a retirar los escombros y se inició una investigación para determinar la causa del desprendimiento. Se revisarán todos los elementos decorativos colgantes o inestables en el hotel. La gerencia ha dispuesto la instalación de nuevas medidas de sujeción para futuros adornos.",
+    "fechaHora": {
+      "_seconds": 1752427354,
+      "_nanoseconds": 313000000
+    }
+  },
+  {
+    "id": "Lgw61ohIUkQGb5kh8w8j",
+    "evento": "Problemas de internet en el lobby",
+    "hotel": "Oro Verde",
+    "descripcion": "<p><b>Detalle:</b> Desde las 10:00 AM, el Hotel Oro Verde ha estado experimentando interrupciones intermitentes y una baja velocidad en el servicio de internet Wi-Fi en el área del lobby y salones de conferencias adyacentes. Se observa que la señal se pierde y recupera constantemente. \n\n<p><b>Impacto:</b> Esto está afectando a los huéspedes que intentan trabajar o comunicarse, causando quejas en recepción, especialmente de viajeros de negocios. Las tablets de check-in/out también se vieron ralentizadas. \n\n<p><b>Acciones:</b> El departamento de TI ha reiniciado los routers principales varias veces sin éxito. Se ha contactado al proveedor de servicios de internet, que ha confirmado una incidencia regional. Se espera que un técnico de la operadora visite el hotel en las próximas 3 horas para diagnosticar y resolver el problema. Se han habilitado puntos de acceso alternativos con menor capacidad para necesidades urgentes.",
+    "fechaHora": {
+      "_seconds": 1752164580,
+      "_nanoseconds": 501000000
+    }
+  },
+  {
+    "id": "c6hbb9cixnbrX3OCRjJa",
+    "hotel": "Oro Verde",
+    "descripcion": "<p><b>Detalle:</b> A las 23:00, la torre A del Hotel Oro Verde experimentó un corte total de energía, afectando todas las habitaciones del piso 5 al 10, así como los ascensores y el sistema de climatización. La causa preliminar apunta a una sobrecarga en el transformador principal de la torre. El generador de emergencia se activó parcialmente, pero no logró suplir toda la demanda. \n\n<p><b>Impacto:</b> Huéspedes en los pisos afectados expresaron incomodidad y algunos tuvieron que ser reubicados. La recepción se vio colapsada por llamadas. \n\n<p><b>Acciones:</b> El equipo técnico ya está en el lugar evaluando la magnitud del daño y se ha solicitado apoyo de una empresa externa especializada para agilizar la reparación. Se estima un tiempo de resolución de 4-6 horas. Se ofreció compensación (desayuno gratuito/descuento) a los afectados.",
+    "evento": "Corte Total de Energía",
+    "fechaHora": {
+      "_seconds": 1752884980,
+      "_nanoseconds": 715000000
+    }
+  }
+]

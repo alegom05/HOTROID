@@ -1,0 +1,16 @@
+[
+  {
+    "id": "Ex8XkkuccjGhYqphJhdB",
+    "tipoDocumento": "DNI",
+    "estado": true,
+    "fotoPerfilUrl": "https://res.cloudinary.com/dssoxggz3/image/upload/v1750678214/Administradores/hlyxplvbtoeqy30vkdya.jpg",
+    "fechaNacimiento": "23/06/2006",
+    "apellido": "Padilla Gomez",
+    "correo": "a.padilla@gmail.com",
+    "direccion": "av el sol 456",
+    "numeroDocumento": "14598756",
+    "telefono": "956324789",
+    "nombre": "Alex Luis",
+    "hotelAsignado": "Hotel Libertador"
+  }
+]

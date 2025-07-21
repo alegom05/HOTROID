@@ -1,0 +1,107 @@
+[
+  {
+    "id": "48ngHwDMgZf95lbLKpqi3BVwbcp1_yqrBR3OPmiHnWB677l5X",
+    "createdAt": 1752815265443,
+    "clientId": "48ngHwDMgZf95lbLKpqi3BVwbcp1",
+    "chatId": "48ngHwDMgZf95lbLKpqi3BVwbcp1_yqrBR3OPmiHnWB677l5X",
+    "lastMessage": "¡Hola! Soy el asistente virtual de Libertador. ¿En qué puedo ayudarte?",
+    "messages": [
+      {
+        "messageId": "1752815265443",
+        "type": "text",
+        "content": "¡Hola! Soy el asistente virtual de Libertador. ¿En qué puedo ayudarte?",
+        "fromBot": true,
+        "timestamp": 1752815265443
+      }
+    ],
+    "unreadCount": 0,
+    "lastMessageTime": 1752815265443,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "hotelName": "Libertador",
+    "status": "active"
+  },
+  {
+    "id": "I6K6r3aG5BMrqwClhBw9w61hgGQ2_yGYsXFWSQV58AANqpLnm",
+    "createdAt": 1753067120774,
+    "clientId": "I6K6r3aG5BMrqwClhBw9w61hgGQ2",
+    "chatId": "I6K6r3aG5BMrqwClhBw9w61hgGQ2_yGYsXFWSQV58AANqpLnm",
+    "lastMessage": "¡Hola! Soy el asistente virtual de Aranwa. ¿En qué puedo ayudarte?",
+    "messages": [
+      {
+        "messageId": "1753067120774",
+        "type": "text",
+        "content": "¡Hola! Soy el asistente virtual de Aranwa. ¿En qué puedo ayudarte?",
+        "fromBot": true,
+        "timestamp": 1753067120774
+      }
+    ],
+    "unreadCount": 0,
+    "lastMessageTime": 1753067120774,
+    "hotelId": "yGYsXFWSQV58AANqpLnm",
+    "hotelName": "Aranwa",
+    "status": "active"
+  },
+  {
+    "id": "I6K6r3aG5BMrqwClhBw9w61hgGQ2_yqrBR3OPmiHnWB677l5X",
+    "createdAt": 1753058250958,
+    "clientId": "I6K6r3aG5BMrqwClhBw9w61hgGQ2",
+    "chatId": "I6K6r3aG5BMrqwClhBw9w61hgGQ2_yqrBR3OPmiHnWB677l5X",
+    "lastMessage": "¡Hola! Soy el asistente virtual de Libertador. ¿En qué puedo ayudarte?",
+    "messages": [
+      {
+        "messageId": "1753058250958",
+        "type": "text",
+        "content": "¡Hola! Soy el asistente virtual de Libertador. ¿En qué puedo ayudarte?",
+        "fromBot": true,
+        "timestamp": 1753058250958
+      }
+    ],
+    "unreadCount": 0,
+    "lastMessageTime": 1753058250958,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "hotelName": "Libertador",
+    "status": "active"
+  },
+  {
+    "id": "ltCterZTMOgyEbhgJKRyfCuwSXw2_cMEtNuA6vfA2DII1zC91",
+    "createdAt": 1753052331513,
+    "clientId": "ltCterZTMOgyEbhgJKRyfCuwSXw2",
+    "chatId": "ltCterZTMOgyEbhgJKRyfCuwSXw2_cMEtNuA6vfA2DII1zC91",
+    "lastMessage": "¡Hola! Soy el asistente virtual de Decameron. ¿En qué puedo ayudarte?",
+    "messages": [
+      {
+        "messageId": "1753052331513",
+        "type": "text",
+        "content": "¡Hola! Soy el asistente virtual de Decameron. ¿En qué puedo ayudarte?",
+        "fromBot": true,
+        "timestamp": 1753052331513
+      }
+    ],
+    "unreadCount": 0,
+    "lastMessageTime": 1753052331513,
+    "hotelId": "cMEtNuA6vfA2DII1zC91",
+    "hotelName": "Decameron",
+    "status": "active"
+  },
+  {
+    "id": "x6m7cKisCwNlTF56I3GCGooAIHM2_yqrBR3OPmiHnWB677l5X",
+    "createdAt": 1753067413524,
+    "clientId": "x6m7cKisCwNlTF56I3GCGooAIHM2",
+    "chatId": "x6m7cKisCwNlTF56I3GCGooAIHM2_yqrBR3OPmiHnWB677l5X",
+    "lastMessage": "¡Hola! Soy el asistente virtual de Libertador. ¿En qué puedo ayudarte?",
+    "messages": [
+      {
+        "messageId": "1753067413524",
+        "type": "text",
+        "content": "¡Hola! Soy el asistente virtual de Libertador. ¿En qué puedo ayudarte?",
+        "fromBot": true,
+        "timestamp": 1753067413525
+      }
+    ],
+    "unreadCount": 0,
+    "lastMessageTime": 1753067413525,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "hotelName": "Libertador",
+    "status": "active"
+  }
+]

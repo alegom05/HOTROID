@@ -1,0 +1,470 @@
+[
+  {
+    "id": "0Y4h0aO3HHAJKVG1JoxC",
+    "precioUnitario": 48.588768780708904,
+    "totalVenta": 48.588768780708904,
+    "cantidad": 1,
+    "fechaVenta": {
+      "_seconds": 1746044323,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "V9UASuqy8Kr2iCAQbENF",
+    "idServicio": "xzQjYPknp9Ue8Y9XZ7uo"
+  },
+  {
+    "id": "1jb5OuGgn2hWrBmm7spu",
+    "precioUnitario": 51.10583520761283,
+    "totalVenta": 153.3175056228385,
+    "cantidad": 3,
+    "fechaVenta": {
+      "_seconds": 1750435480,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "6wRhU1tbELOmmX7L3px4",
+    "idServicio": "RDTS5qGLLv19IVC039Wm"
+  },
+  {
+    "id": "1tVI1lDwcnYC1DneIzTo",
+    "precioUnitario": 136.5412845240312,
+    "totalVenta": 273.0825690480624,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1746473109,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "SmkIM3zIXhcxVmMBElZQ",
+    "idServicio": "o2vR9QBwQ0vb9x5JK793"
+  },
+  {
+    "id": "39pQw8FOip8WUAtvcOeO",
+    "precioUnitario": 198.39567548779183,
+    "totalVenta": 396.79135097558367,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1747581182,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "VJCz9ODWuBzmZSAnAslQ",
+    "idServicio": "TaiV2R8xqOgP8WFOkUN8"
+  },
+  {
+    "id": "5bHai6Vdt6KXvEa2Vkv4",
+    "precioUnitario": 89.1235269180851,
+    "totalVenta": 267.37058075425534,
+    "cantidad": 3,
+    "idServicio": "TaiV2R8xqOgP8WFOkUN8",
+    "idCliente": "VswY6QjDhjCYuElTLiDv",
+    "fechaVenta": {
+      "_seconds": 1751667578,
+      "_nanoseconds": 5000000
+    }
+  },
+  {
+    "id": "5zhiQ6mGuehrI66EciT7",
+    "precioUnitario": 159.73969086809944,
+    "totalVenta": 479.21907260429833,
+    "cantidad": 3,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5",
+    "fechaVenta": {
+      "_seconds": 1749229554,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "X3dDlI4W6JWD9i9TPGt5"
+  },
+  {
+    "id": "62kKS1au9y3IiLj65LJs",
+    "precioUnitario": 23.806301976435392,
+    "totalVenta": 47.612603952870785,
+    "cantidad": 2,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5",
+    "fechaVenta": {
+      "_seconds": 1750456346,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "XVKG6FSapbB9oA6u0w2R"
+  },
+  {
+    "id": "7KIZBbRN52MXCo3cmbDo",
+    "precioUnitario": 131.05843978096829,
+    "totalVenta": 262.11687956193657,
+    "cantidad": 2,
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL",
+    "fechaVenta": {
+      "_seconds": 1748812065,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "XvMWV29YDMOFXu0FecxS"
+  },
+  {
+    "id": "7ZuUYr8ufavB3H3nD0s3",
+    "precioUnitario": 20.888696084787234,
+    "totalVenta": 41.77739216957447,
+    "cantidad": 2,
+    "idCliente": "XvMWV29YDMOFXu0FecxS",
+    "fechaVenta": {
+      "_seconds": 1751483764,
+      "_nanoseconds": 806000000
+    },
+    "idServicio": "RDTS5qGLLv19IVC039Wm"
+  },
+  {
+    "id": "9zbIg4e9uWoW2E7jPH4O",
+    "precioUnitario": 102.42438764009756,
+    "totalVenta": 204.84877528019513,
+    "cantidad": 2,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5",
+    "fechaVenta": {
+      "_seconds": 1745587325,
+      "_nanoseconds": 766000000
+    },
+    "idCliente": "Yk5TDDlIvbwyTui40fbU"
+  },
+  {
+    "id": "BTiwtXJVIxWjBjONZ0GE",
+    "precioUnitario": 94.08808228590784,
+    "totalVenta": 94.08808228590784,
+    "cantidad": 1,
+    "idServicio": "o2vR9QBwQ0vb9x5JK793",
+    "fechaVenta": {
+      "_seconds": 1744919323,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "ZQc9FMozZBf7aFgRw6Tt"
+  },
+  {
+    "id": "BmzjapbEw1iMELQ8ePUu",
+    "precioUnitario": 141.47291341317714,
+    "totalVenta": 141.47291341317714,
+    "cantidad": 1,
+    "fechaVenta": {
+      "_seconds": 1748272684,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "xnntjnHlvn2KjriTDtOu",
+    "idServicio": "xzQjYPknp9Ue8Y9XZ7uo"
+  },
+  {
+    "id": "CD8ZVNYyPlZZ3sdiYQOv",
+    "precioUnitario": 180.15776877101925,
+    "totalVenta": 180.15776877101925,
+    "cantidad": 1,
+    "idServicio": "o2vR9QBwQ0vb9x5JK793",
+    "fechaVenta": {
+      "_seconds": 1751237556,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "opv7pSGEPZvNRk33XRfl"
+  },
+  {
+    "id": "Cc6Wfx34Pk1UpZ4fQwom",
+    "precioUnitario": 46.53044712243306,
+    "totalVenta": 93.06089424486612,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1744391879,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "xnntjnHlvn2KjriTDtOu",
+    "idServicio": "xzQjYPknp9Ue8Y9XZ7uo"
+  },
+  {
+    "id": "DtjtDbNO22VLfreNIE29",
+    "precioUnitario": 25.244702733333945,
+    "totalVenta": 75.73410820000183,
+    "cantidad": 3,
+    "idServicio": "o2vR9QBwQ0vb9x5JK793",
+    "fechaVenta": {
+      "_seconds": 1750434849,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "xnntjnHlvn2KjriTDtOu"
+  },
+  {
+    "id": "JbNibtk4D9xiXQiXr9cF",
+    "precioUnitario": 188.0728779233735,
+    "totalVenta": 564.2186337701205,
+    "cantidad": 3,
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL",
+    "fechaVenta": {
+      "_seconds": 1748982144,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "db2nS4FTRQUY1kO7j9fZ"
+  },
+  {
+    "id": "JlPFRn2dRjgfXW9gptfZ",
+    "precioUnitario": 30.405607681352098,
+    "totalVenta": 60.811215362704196,
+    "cantidad": 2,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5",
+    "fechaVenta": {
+      "_seconds": 1751030520,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "kl97FSOGzBzlrMj5JOPU"
+  },
+  {
+    "id": "KMxHOCCpZQxwUAckeEj9",
+    "precioUnitario": 197.8397215008867,
+    "totalVenta": 395.6794430017734,
+    "cantidad": 2,
+    "idServicio": "rNfMeK2YQaHVQBHSQ5Fk",
+    "fechaVenta": {
+      "_seconds": 1747261678,
+      "_nanoseconds": 949000000
+    },
+    "idCliente": "opv7pSGEPZvNRk33XRfl"
+  },
+  {
+    "id": "NdtbvNBcaegMasRwPRRI",
+    "precioUnitario": 51.80606531257524,
+    "totalVenta": 51.80606531257524,
+    "cantidad": 1,
+    "fechaVenta": {
+      "_seconds": 1747333750,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "opv7pSGEPZvNRk33XRfl",
+    "idServicio": "RDTS5qGLLv19IVC039Wm"
+  },
+  {
+    "id": "XwVLlAs6S9LuF8qeRRfR",
+    "precioUnitario": 87.15322437542059,
+    "totalVenta": 261.4596731262618,
+    "cantidad": 3,
+    "idServicio": "rNfMeK2YQaHVQBHSQ5Fk",
+    "fechaVenta": {
+      "_seconds": 1750770017,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "hFYOPuUlpryjraartm5u"
+  },
+  {
+    "id": "YWsm7ckQSfn5CWIVe5Iz",
+    "precioUnitario": 40.52183795906234,
+    "totalVenta": 121.56551387718702,
+    "cantidad": 3,
+    "fechaVenta": {
+      "_seconds": 1745872430,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "db2nS4FTRQUY1kO7j9fZ",
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL"
+  },
+  {
+    "id": "apDGJX9YZbp0AA95rvQM",
+    "precioUnitario": 28.700161196490278,
+    "totalVenta": 28.700161196490278,
+    "cantidad": 1,
+    "fechaVenta": {
+      "_seconds": 1751203152,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "x0JTypMuRrxHHO6dPy6R",
+    "idServicio": "RDTS5qGLLv19IVC039Wm"
+  },
+  {
+    "id": "bO0h0K8oA2wK6mbjBunq",
+    "precioUnitario": 28.86200386572576,
+    "totalVenta": 28.86200386572576,
+    "cantidad": 1,
+    "idServicio": "rNfMeK2YQaHVQBHSQ5Fk",
+    "fechaVenta": {
+      "_seconds": 1743539945,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "Yk5TDDlIvbwyTui40fbU"
+  },
+  {
+    "id": "c5VM1bXB6UFMDlEkQzwx",
+    "precioUnitario": 134.38030746473277,
+    "totalVenta": 268.76061492946553,
+    "cantidad": 2,
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL",
+    "idCliente": "Yk5TDDlIvbwyTui40fbU",
+    "fechaVenta": {
+      "_seconds": 1751390433,
+      "_nanoseconds": 876000000
+    }
+  },
+  {
+    "id": "cLT1zZLQBn6NSKtnHk32",
+    "precioUnitario": 178.03502708533608,
+    "totalVenta": 178.03502708533608,
+    "cantidad": 1,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5",
+    "fechaVenta": {
+      "_seconds": 1744048700,
+      "_nanoseconds": 766000000
+    },
+    "idCliente": "hFYOPuUlpryjraartm5u"
+  },
+  {
+    "id": "dnVWV7bPZPTIMo58aiuv",
+    "precioUnitario": 157.5562660000805,
+    "totalVenta": 157.5562660000805,
+    "cantidad": 1,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5",
+    "fechaVenta": {
+      "_seconds": 1743518631,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "hFYOPuUlpryjraartm5u"
+  },
+  {
+    "id": "enRirMV2YzcpehFOecdm",
+    "precioUnitario": 73.4832934904376,
+    "totalVenta": 146.9665869808752,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1748627104,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "Yk5TDDlIvbwyTui40fbU",
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL"
+  },
+  {
+    "id": "f2wxnA3IEAmutqGNhcPL",
+    "precioUnitario": 104.10381295117523,
+    "totalVenta": 312.3114388535257,
+    "cantidad": 3,
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL",
+    "fechaVenta": {
+      "_seconds": 1750187884,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "x0JTypMuRrxHHO6dPy6R"
+  },
+  {
+    "id": "jbz53mv5B2eThh7miVZT",
+    "precioUnitario": 28.43135118523427,
+    "totalVenta": 85.29405355570282,
+    "cantidad": 3,
+    "idServicio": "rNfMeK2YQaHVQBHSQ5Fk",
+    "fechaVenta": {
+      "_seconds": 1747324369,
+      "_nanoseconds": 949000000
+    },
+    "idCliente": "kl97FSOGzBzlrMj5JOPU"
+  },
+  {
+    "id": "lQ66smTQJf17uBSA2VX1",
+    "precioUnitario": 59.62707336117285,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1747580589,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "kl97FSOGzBzlrMj5JOPU",
+    "totalVenta": 619.2541467223457,
+    "idServicio": "agKD4GfBjs1JK4mkD0e5"
+  },
+  {
+    "id": "mzJemrWvgX0gPgX9kHbW",
+    "precioUnitario": 29.20444109822731,
+    "totalVenta": 87.61332329468193,
+    "cantidad": 3,
+    "fechaVenta": {
+      "_seconds": 1747757988,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "XVKG6FSapbB9oA6u0w2R",
+    "idServicio": "TaiV2R8xqOgP8WFOkUN8"
+  },
+  {
+    "id": "nglyXpmctpJbu6uO74mL",
+    "precioUnitario": 194.34207950268345,
+    "totalVenta": 583.0262385080504,
+    "cantidad": 3,
+    "fechaVenta": {
+      "_seconds": 1746744462,
+      "_nanoseconds": 949000000
+    },
+    "idCliente": "db2nS4FTRQUY1kO7j9fZ",
+    "idServicio": "t1tgiuSTUhIvaw4YGIUL"
+  },
+  {
+    "id": "ntOd3YxJhlsSFKoJQKed",
+    "precioUnitario": 91.21872618123706,
+    "totalVenta": 182.43745236247412,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1746996595,
+      "_nanoseconds": 766000000
+    },
+    "idCliente": "6wRhU1tbELOmmX7L3px4",
+    "idServicio": "agKD4GfBjs1JK4mkD0e5"
+  },
+  {
+    "id": "oOV7xAPJhHvzMzz1VMS3",
+    "precioUnitario": 197.76531152712207,
+    "totalVenta": 593.2959345813662,
+    "cantidad": 3,
+    "idServicio": "o2vR9QBwQ0vb9x5JK793",
+    "fechaVenta": {
+      "_seconds": 1744915735,
+      "_nanoseconds": 948000000
+    },
+    "idCliente": "kl97FSOGzBzlrMj5JOPU"
+  },
+  {
+    "id": "ukAzGdu86kAMgghzB93r",
+    "precioUnitario": 145.89595939886095,
+    "totalVenta": 145.89595939886095,
+    "cantidad": 1,
+    "idCliente": "bKFmTJc38i7r0dFF3if8",
+    "fechaVenta": {
+      "_seconds": 1751555026,
+      "_nanoseconds": 31000000
+    },
+    "idServicio": "o2vR9QBwQ0vb9x5JK793"
+  },
+  {
+    "id": "vjDRaUK4vKplS2AVce3A",
+    "precioUnitario": 30.50604509744698,
+    "totalVenta": 61.01209019489396,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1745357430,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "6wRhU1tbELOmmX7L3px4",
+    "idServicio": "RDTS5qGLLv19IVC039Wm"
+  },
+  {
+    "id": "wtRZTN4ZrM3I5lbNVadN",
+    "precioUnitario": 182.54593990425988,
+    "totalVenta": 365.09187980851976,
+    "cantidad": 2,
+    "idServicio": "rNfMeK2YQaHVQBHSQ5Fk",
+    "fechaVenta": {
+      "_seconds": 1747003571,
+      "_nanoseconds": 767000000
+    },
+    "idCliente": "6wRhU1tbELOmmX7L3px4"
+  },
+  {
+    "id": "zK39ljtueVAVlEIQlmZU",
+    "precioUnitario": 100.42355676793319,
+    "totalVenta": 301.2706703037996,
+    "cantidad": 3,
+    "fechaVenta": {
+      "_seconds": 1747522499,
+      "_nanoseconds": 135000000
+    },
+    "idCliente": "ZQc9FMozZBf7aFgRw6Tt",
+    "idServicio": "xzQjYPknp9Ue8Y9XZ7uo"
+  },
+  {
+    "id": "zadrxh8Cs5SasSmrDRsN",
+    "precioUnitario": 161.47971455971972,
+    "totalVenta": 322.95942911943945,
+    "cantidad": 2,
+    "fechaVenta": {
+      "_seconds": 1746814171,
+      "_nanoseconds": 948000000
+    },
+    "idServicio": "xzQjYPknp9Ue8Y9XZ7uo",
+    "idCliente": "6wRhU1tbELOmmX7L3px4"
+  }
+]

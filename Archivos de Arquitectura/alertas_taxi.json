@@ -1,0 +1,141 @@
+[
+  {
+    "id": "A8g8oQD0MyMne3pwwZp0",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Gómez Hidalgo",
+    "documentId": null,
+    "nombresCliente": "Pedro Alejandro",
+    "destino": "Aeropuerto de Chinchero (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1753057727,
+      "_nanoseconds": 398000000
+    },
+    "estadoViaje": "Llegó a destino"
+  },
+  {
+    "id": "KkdagVDbz7niZpbcTMiO",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Reyes Bustamante",
+    "documentId": null,
+    "nombresCliente": "Camila Fernanda",
+    "destino": "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1752977191,
+      "_nanoseconds": 646000000
+    },
+    "estadoViaje": "Completado"
+  },
+  {
+    "id": "VzhKZ7f1o3QhfN37QftR",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Vargas Rojas",
+    "documentId": null,
+    "nombresCliente": "Daniel Felipe",
+    "destino": "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1752975296,
+      "_nanoseconds": 238000000
+    },
+    "estadoViaje": "Completado"
+  },
+  {
+    "id": "YD7Qp4na2kOYsMiVkc5p",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Castañeda Ríos",
+    "documentId": null,
+    "nombresCliente": "Gabriela Fernanda",
+    "destino": "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1752615632,
+      "_nanoseconds": 678000000
+    },
+    "estadoViaje": "No asignado"
+  },
+  {
+    "id": "g71r4XF1q8fbYf9K4byk",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Salazar Mendoza",
+    "documentId": null,
+    "nombresCliente": "Juan Pablo",
+    "destino": "Aeropuerto de Chinchero (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestampLlegadaDestino": {
+      "_seconds": 1752968383,
+      "_nanoseconds": 721000000
+    },
+    "timestamp": {
+      "_seconds": 1753057648,
+      "_nanoseconds": 161000000
+    },
+    "estadoViaje": "Completado"
+  },
+  {
+    "id": "o9yuw1K8fAfV9v4MQIyR",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Espinoza Luna",
+    "documentId": null,
+    "nombresCliente": "Sofía Alejandra",
+    "destino": "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1750719750,
+      "_nanoseconds": 642000000
+    },
+    "estadoViaje": "No asignado"
+  },
+  {
+    "id": "tCLkV5VqXkH2Ns7FJ3y7",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Sánchez Vásquez",
+    "documentId": null,
+    "nombresCliente": "María José",
+    "destino": "Aeropuerto de Chinchero (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1752974773,
+      "_nanoseconds": 402000000
+    },
+    "estadoViaje": "Completado"
+  },
+  {
+    "id": "u1yOS9RfPcULXwWepPEl",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Morales Ruiz",
+    "documentId": null,
+    "nombresCliente": "Laura Camila",
+    "destino": "Aeropuerto de Chinchero (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1751328803,
+      "_nanoseconds": 456000000
+    },
+    "estadoViaje": "No asignado"
+  },
+  {
+    "id": "wddxfBwaZCYycZtxHIm8",
+    "tiempoTranscurrido": "Tiempo desconocido",
+    "apellidosCliente": "Soto Valdivia",
+    "documentId": null,
+    "nombresCliente": "José Antonio",
+    "destino": "Aeropuerto de Chinchero (CUZ)",
+    "origen": "Libertador",
+    "region": "Cusco",
+    "timestamp": {
+      "_seconds": 1752356598,
+      "_nanoseconds": 13000000
+    },
+    "estadoViaje": "No asignado"
+  }
+]

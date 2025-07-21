@@ -1,0 +1,154 @@
+[
+  {
+    "id": "DL6cbUYBZMUor3qyzqyA",
+    "descripcion": "Asdf",
+    "horaFin": "03:20",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1753078868/Servicios/ivsikeljcnibegym51gf.jpg"
+    ],
+    "precio": 35.5,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Wifi",
+    "horaInicio": "01:20"
+  },
+  {
+    "id": "KVGyfrRid6ct9ccYkwpZ",
+    "descripcion": "Fiesta novelera que brinda el hotel durante la madrugada. no se lo pierdan",
+    "precio": 10.28,
+    "documentId": null,
+    "nombre": "Parranda",
+    "horaFin": "03:05",
+    "horaInicio": "00:28",
+    "habilitado": false,
+    "imagenes": []
+  },
+  {
+    "id": "RDTS5qGLLv19IVC039Wm",
+    "descripcion": "Reparaciones e instalaciones eléctricas.",
+    "precio": 120,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Servicio de Electricidad",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750664798/Servicios/dnwfjqhszr7v6kkjstpp.jpg"
+    ],
+    "horaFin": "18:35",
+    "horaInicio": "16:19"
+  },
+  {
+    "id": "TaiV2R8xqOgP8WFOkUN8",
+    "descripcion": "Pintura de paredes y techos.",
+    "precio": 200,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Servicio de Pintura",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750664842/Servicios/rzv8afjpyv3ttaodbmvi.jpg"
+    ],
+    "horaFin": "12:00",
+    "horaInicio": "10:32"
+  },
+  {
+    "id": "agKD4GfBjs1JK4mkD0e5",
+    "descripcion": "Disfruta de una noche de diversión con amigos y familia.",
+    "precio": 50.5,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Sala de Karaoke",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750664871/Servicios/acwhwc8d0nk6t5n1r1w1.jpg"
+    ],
+    "horaInicio": "22:36",
+    "horaFin": "23:59"
+  },
+  {
+    "id": "lTNaKQowXWWeiQNKwrHC",
+    "descripcion": "Detalles",
+    "horaFin": "03:30",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1753036295/Servicios/wniip9960pceoa8oe8bu.jpg"
+    ],
+    "precio": 23,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Wifi",
+    "horaInicio": "11:30"
+  },
+  {
+    "id": "o2vR9QBwQ0vb9x5JK793",
+    "descripcion": "Reparación de tuberías y grifos.",
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Servicio de Fontanería",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750664912/Servicios/n4k4rybcub4j3wfmixln.jpg"
+    ],
+    "precio": 92,
+    "horaFin": "12:47",
+    "horaInicio": "10:47"
+  },
+  {
+    "id": "rNfMeK2YQaHVQBHSQ5Fk",
+    "descripcion": "Limpieza completa de interiores.",
+    "precio": 50,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Servicio de Limpieza General",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750664932/Servicios/voroszbxrpjgeii4mx2q.jpg"
+    ],
+    "horaFin": "14:16",
+    "horaInicio": "11:30"
+  },
+  {
+    "id": "t1tgiuSTUhIvaw4YGIUL",
+    "descripcion": "Mantenimiento y cuidado de jardines.",
+    "precio": 75,
+    "documentId": null,
+    "nombre": "Servicio de Jardinería",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1750664981/Servicios/z2z70gdxpemcgbew35xn.jpg"
+    ],
+    "horaFin": "12:46",
+    "horaInicio": "09:46",
+    "habilitado": false
+  },
+  {
+    "id": "tRDf07f0PAhK49YLD2M3",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1751846106/Servicios/vxqqhbzmis0d6hthrdh3.jpg"
+    ],
+    "precio": 12.56,
+    "documentId": null,
+    "nombre": "wifi-zz",
+    "descripcion": "Con mucho gusto estamos ofreciendo conexión Wi-Fi en cada una de las habitaciones para Que tengan una mayor cobertura de conexión.",
+    "horaFin": "13:30",
+    "horaInicio": "00:46",
+    "habilitado": true
+  },
+  {
+    "id": "xzQjYPknp9Ue8Y9XZ7uo",
+    "documentId": null,
+    "nombre": "Servicio de mantemiento higiénico",
+    "descripcion": "Se realiza los SS.HH",
+    "imagenes": [],
+    "habilitado": true,
+    "horaFin": "23:48",
+    "horaInicio": "22:48",
+    "precio": 22.44
+  },
+  {
+    "id": "zWES7xYWVN75MbmgORSz",
+    "descripcion": "Detalles",
+    "horaFin": "03:30",
+    "imagenes": [
+      "https://res.cloudinary.com/dssoxggz3/image/upload/v1753036293/Servicios/ehhzubld3xpkuxk9t8xa.jpg"
+    ],
+    "precio": 23,
+    "documentId": null,
+    "habilitado": true,
+    "nombre": "Wifi",
+    "horaInicio": "11:30"
+  }
+]
