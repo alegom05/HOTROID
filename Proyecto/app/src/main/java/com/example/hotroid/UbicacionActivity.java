@@ -58,17 +58,18 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
     private AutoCompleteTextView autoCompleteDireccion; // Este es el campo de texto para la dirección detallada
     private Button btnGuardarActualizar;
 
-    // Lugares turísticos de Cusco, relevantes al Hotel Libertador
+    // Lugares turísticos de Lima
     private String[] lugaresTuristicos = {
-            "Qorikancha",
-            "Sacsayhuamán",
-            "Plaza de Armas de Cusco",
-            "Barrio de San Blas",
-            "Mercado Central de San Pedro",
-            "Museo de Arte Precolombino",
-            "Catedral de Cusco",
-            "Museo Inca",
-            "Cristo Blanco"
+            "Plaza Mayor de Lima",
+            "Parque de la Reserva (Circuito Mágico del Agua)",
+            "Larcomar",
+            "Barrio de Barranco",
+            "Huaca Pucllana",
+            "Museo Larco",
+            "Parque Kennedy (Parque Central de Miraflores)",
+            "Malecon de Miraflores",
+            "Catedral de Lima",
+            "Convento de San Francisco y Catacumbas"
     };
     private boolean[] seleccionados;
     private List<String> lugaresElegidos = new ArrayList<>();
@@ -93,11 +94,12 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
     private DocumentReference hotelDocRef;
 
     // Texto fijo para la descripción del hotel
-    private static final String BASE_DESCRIPCION_HOTEL = "Situado en el corazón de Cusco, el Hotel Libertador ofrece vistas espectaculares y un servicio excepcional, ideal para tu aventura inca.";
+    private static final String BASE_DESCRIPCION_HOTEL = "Ubicado estratégicamente en Lima, el Hotel Libertador ofrece comodidad y cercanía a los principales atractivos de la capital, ideal para tu visita.";
 
-    // Coordenadas fijas para el Hotel Libertador
-    private LatLng HOTEL_LIBERTADOR_COORDS = new LatLng(-13.53195, -71.96746259999999); //
-    private String HOTEL_LIBERTADOR_ADDRESS_DEFAULT = "Jr. Waynapicchu s/n, Cusco, Perú"; //
+    // Coordenadas fijas para el Hotel Libertador (ahora UNMSM)
+    // Estas coordenadas no se sobrescribirán desde Firestore para este marcador.
+    private LatLng HOTEL_LIBERTADOR_COORDS = new LatLng(-12.0577, -77.0869); // Coordenadas aproximadas de UNMSM en Lima
+    private String HOTEL_LIBERTADOR_ADDRESS_DEFAULT = "Av. Venezuela s/n, Lima 15081, Perú"; // Dirección de UNMSM
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,15 +245,16 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
-    // Renombrado para Claridad: Esta función ya no se usa para el Hotel.
-    // Solo se usará para lugares turísticos si es necesario geocodificarlos.
+    // Esta función maneja la adición de marcadores al mapa.
+    // Para el "Hotel Libertador", siempre usa las coordenadas fijas (UNMSM).
+    // Para los lugares turísticos, intenta geocodificar la dirección completa.
     private void geocodeAndAddMarker(String addressString, LatLng fixedCoords, String title, float markerColor) {
         if (mMap == null) return;
 
         LatLng finalLatLng = null;
 
         if (fixedCoords != null) {
-            finalLatLng = fixedCoords; // Usar coordenadas fijas si se proporcionan
+            finalLatLng = fixedCoords; // Usa coordenadas fijas si se proporcionan (para Hotel Libertador)
         } else if (geocoder != null && !addressString.isEmpty()) {
             try {
                 List<Address> addresses = geocoder.getFromLocationName(addressString, 1);
@@ -334,16 +337,14 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
         // Las coordenadas del hotel son FIJAS, no las obtenemos ni las actualizamos aquí.
-        // Si el marcador del hotel ya existe en el mapa, es porque se inicializó con las coordenadas fijas.
         if (hotelMarker == null) {
-            // Esto no debería ocurrir si loadHotelLocation se ejecuta correctamente
             Toast.makeText(this, "Error: Marcador del hotel no inicializado. Intente recargar la aplicación.", Toast.LENGTH_LONG).show();
             return;
         }
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("direccionDetallada", direccionDetalladaInput); // Actualiza solo el texto de la dirección detallada
-        // NO actualizamos latitud ni longitud aquí, ya que son fijas
+        // NO actualizamos latitud ni longitud aquí, ya que son fijas para este marcador
         updates.put("lugaresTuristicosCercanos", lugaresElegidos);
 
         // Construir la descripción según el formato especificado
@@ -369,25 +370,23 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     /**
-     * Carga la ubicación del hotel desde Firestore y actualiza la UI.
-     * Prioriza 'direccionDetallada' para el AutoCompleteTextView.
-     * El marcador del hotel se añade con coordenadas fijas.
+     * Carga los datos del hotel desde Firestore y actualiza la UI.
+     * La latitud y longitud del "Hotel Libertador" NO se leen ni se sobrescriben desde Firestore.
+     * Siempre se usarán las coordenadas fijas de UNMSM.
      */
     private void loadHotelLocation() {
         hotelDocRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     String direccionDetallada = null;
-                    Double latitud = null;
-                    Double longitud = null;
+                    // Ya no leemos latitud y longitud de Firestore para este marcador
                     List<String> lugaresGuardados = null;
                     String descriptionFromDb = null;
 
                     if (documentSnapshot.exists()) {
-                        direccionDetallada = documentSnapshot.getString("direccionDetallada"); //
-                        latitud = documentSnapshot.getDouble("latitud"); //
-                        longitud = documentSnapshot.getDouble("longitud"); //
-                        lugaresGuardados = (List<String>) documentSnapshot.get("lugaresTuristicosCercanos"); //
-                        descriptionFromDb = documentSnapshot.getString("description"); //
+                        direccionDetallada = documentSnapshot.getString("direccionDetallada");
+                        // IGNORAMOS latitud y longitud del documento para el marcador principal.
+                        lugaresGuardados = (List<String>) documentSnapshot.get("lugaresTuristicosCercanos");
+                        descriptionFromDb = documentSnapshot.getString("description");
                         Log.d(TAG, "Datos de documento: " + documentSnapshot.getData());
                     } else {
                         Log.d(TAG, "No hay datos para el Hotel Libertador en Firestore. Usando valores predeterminados.");
@@ -400,22 +399,14 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
                         autoCompleteDireccion.setText(HOTEL_LIBERTADOR_ADDRESS_DEFAULT);
                     }
 
-                    // Asegurarse de que las coordenadas del hotel se usan, si existen en Firestore, o las fijas
-                    if (latitud != null && longitud != null) {
-                        HOTEL_LIBERTADOR_COORDS = new LatLng(latitud, longitud); // Actualiza las coordenadas fijas si hay en DB
-                    }
+                    // **IMPORTANTE:** Eliminamos la lógica que sobrescribía HOTEL_LIBERTADOR_COORDS
+                    // con valores de Firestore. Ahora, siempre se mantendrán las coordenadas de UNMSM.
 
                     // Procesar lugares turísticos
-                    if (lugaresGuardados == null || lugaresGuardados.isEmpty()) {
-                        lugaresGuardados = parseTouristSpotsFromDescription(descriptionFromDb);
-                        if (lugaresGuardados == null) {
-                            lugaresGuardados = new ArrayList<>();
-                        }
-                        Log.d(TAG, "Lugares turísticos parseados de la descripción: " + lugaresGuardados);
-                    }
-
                     lugaresElegidos.clear();
-                    lugaresElegidos.addAll(lugaresGuardados);
+                    if (lugaresGuardados != null) { // Añadir verificación de nulo
+                        lugaresElegidos.addAll(lugaresGuardados);
+                    }
                     if (lugaresElegidos.isEmpty()) {
                         tvSeleccionLugares.setText("Selecciona lugares turísticos");
                     } else {
@@ -438,7 +429,7 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
                 .addOnFailureListener(e -> {
                     Toast.makeText(UbicacionActivity.this, "Error al cargar ubicación: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error al cargar datos de Firestore para Hotel Libertador: ", e);
-                    // Si falla la carga, establecer en modo edición y usar valores predeterminados
+                    // Si falla la carga, establecer en modo edición y usar valores predeterminados (UNMSM)
                     setEditMode(true);
                     autoCompleteDireccion.setText(HOTEL_LIBERTADOR_ADDRESS_DEFAULT);
                     if (mMap != null) {
@@ -484,7 +475,7 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.clear(); // Limpia todos los marcadores existentes (excepto la ubicación del usuario si está habilitada)
         touristMarkers.clear(); // Limpia el mapa de marcadores de lugares turísticos
 
-        // Añadir marcador del hotel con las coordenadas FIJAS
+        // Añadir marcador del hotel con las coordenadas FIJAS (UNMSM)
         geocodeAndAddMarker(null, HOTEL_LIBERTADOR_COORDS, "Hotel Libertador", BitmapDescriptorFactory.HUE_GREEN);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(HOTEL_LIBERTADOR_COORDS, 15));
 
@@ -500,30 +491,32 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     /**
-     * Provee una dirección más específica para los lugares turísticos.
+     * Provee una dirección más específica para los lugares turísticos de LIMA.
      */
     private String getTouristSpotFullAddress(String spotName) {
         switch (spotName) {
-            case "Qorikancha":
-                return "Av. El Sol 400, Cusco, Perú";
-            case "Sacsayhuamán":
-                return "Sacsayhuamán, Cusco, Perú";
-            case "Plaza de Armas de Cusco":
-                return "Plaza de Armas, Cusco, Perú";
-            case "Barrio de San Blas":
-                return "Tandapata 145, Cusco, Perú";
-            case "Mercado Central de San Pedro":
-                return "Tupac Amaru, Cusco, Perú";
-            case "Museo de Arte Precolombino":
-                return "Plaza Nazarenas 231, Cusco, Perú";
-            case "Catedral de Cusco":
-                return "Plaza de Armas s/n, Cusco, Perú";
-            case "Museo Inca":
-                return "Cuesta del Almirante 103, Cusco, Perú";
-            case "Cristo Blanco":
-                return "Ruta a Sacsayhuaman, Cusco, Perú";
+            case "Plaza Mayor de Lima":
+                return "Jirón de la Unión 301, Lima 15001, Perú";
+            case "Parque de la Reserva (Circuito Mágico del Agua)":
+                return "Jr. Madre de Dios S/N, Cercado de Lima 15046, Perú";
+            case "Larcomar":
+                return "Malecón de la Reserva 610, Miraflores 15074, Perú";
+            case "Barrio de Barranco":
+                return "Puente de los Suspiros, Barranco 15063, Perú"; // Punto central en Barranco
+            case "Huaca Pucllana":
+                return "Calle General Borgoño cuadra 8, Miraflores 15074, Perú";
+            case "Museo Larco":
+                return "Av. Bolívar 1515, Pueblo Libre 15084, Perú";
+            case "Parque Kennedy (Parque Central de Miraflores)":
+                return "Diagonal, Miraflores 15074, Perú";
+            case "Malecon de Miraflores":
+                return "Malecón de la Reserva, Miraflores, Perú"; // Dirección general, pueden ser varias secciones
+            case "Catedral de Lima":
+                return "Jirón Carabaya, Plaza Mayor, Lima 15001, Perú";
+            case "Convento de San Francisco y Catacumbas":
+                return "Jr. Ancash 471, Cercado de Lima 15001, Perú";
             default:
-                return spotName + ", Cusco, Perú"; // Fallback
+                return spotName + ", Lima, Perú"; // Fallback para otros casos o si el nombre es muy genérico
         }
     }
 
@@ -539,9 +532,9 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
 
         // Cambiar color según estado
         if (enable) {
-            btnGuardarActualizar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.teal_700)); // verde jade
+            btnGuardarActualizar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.teal_700)); // verde jade (ajusta el color si es necesario)
         } else {
-            btnGuardarActualizar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.blue_500)); // azul
+            btnGuardarActualizar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.blue_500)); // azul (ajusta el color si es necesario)
         }
 
         if (mMap != null) {

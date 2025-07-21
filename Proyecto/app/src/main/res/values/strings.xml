@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hotroid</string>
+    <string name="app_name"></string>
     <string name="spinner_prompt">Selecciona aquí</string>
     <string name="seleccione_tipo_documento">Seleccione tipo de documento</string>
     <string name="texto_politicas_seguridad">Tratamiento de Datos Personales

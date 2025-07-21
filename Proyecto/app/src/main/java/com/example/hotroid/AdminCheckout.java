@@ -225,12 +225,35 @@ public class AdminCheckout extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             reservasList.clear();
+                            originalCheckoutList.clear(); // Limpiamos la nueva lista
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Reserva reserva = document.toObject(Reserva.class);
+                                reserva.setIdReserva(document.getId());
+
+                                if (!reserva.isCheckOutRealizado()) {
+                                    // Creamos un CheckoutFirebase basado en la reserva
+                                    CheckoutFirebase checkout = new CheckoutFirebase();
+                                    checkout.setIdCheckout(reserva.getIdReserva());
+                                    checkout.setClientName(reserva.getNombreCompleto());
+                                    checkout.setRoomNumber(
+                                            reserva.getRoomNumber() != null && !reserva.getRoomNumber().isEmpty()
+                                                    ? reserva.getRoomNumber().get(0) : 0); // Toma la primera habitación
+                                    checkout.setBaseRate(reserva.getPrecioTotal());
+                                    checkout.setAdditionalCharges(reserva.getCobrosAdicionales());
+                                    checkout.setCheckinDate(reserva.getFechaInicio());
+                                    checkout.setCheckoutDate(reserva.getFechaFin());
+
+                                    originalCheckoutList.add(checkout);
+                                }
                                 reservasList.add(reserva);
                             }
+
+                            applyFilters();
+
                             Log.d("AdminCheckout", "Reservas cargadas exitosamente: " + reservasList.size());
-                            loadClientesThenGenerateCheckouts();
+                            if (originalCheckoutList.isEmpty()) {
+                                Toast.makeText(AdminCheckout.this, "No hay checkouts pendientes.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Log.w("AdminCheckout", "Error al obtener documentos de reservas: ", task.getException());
                             Toast.makeText(AdminCheckout.this, "Error al cargar reservas: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -238,105 +261,6 @@ public class AdminCheckout extends AppCompatActivity {
                     }
                 });
     }
-
-    private void loadClientesThenGenerateCheckouts() {
-        db.collection("clientes")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            clientesList.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Cliente cliente = document.toObject(Cliente.class);
-                                cliente.setFirestoreId(document.getId());
-                                clientesList.add(cliente);
-                            }
-                            Log.d("AdminCheckout", "Clientes cargados exitosamente: " + clientesList.size());
-                            // generateAndSaveRandomCheckouts(); // Uncomment this line ONCE to populate your DB for testing
-                            loadCheckoutsFromFirestore();
-                        } else {
-                            Log.w("AdminCheckout", "Error al obtener documentos de clientes: ", task.getException());
-                            Toast.makeText(AdminCheckout.this, "Error al cargar clientes: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
-    /*private void generateAndSaveRandomCheckouts() {
-        if (reservasList.isEmpty() || clientesList.isEmpty()) {
-            Log.w("AdminCheckout", "No hay suficientes reservas o clientes para generar checkouts aleatorios.");
-            Toast.makeText(AdminCheckout.this, "No hay reservas o clientes para generar checkouts.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Random random = new Random();
-        int numberOfCheckoutsToGenerate = 5;
-
-        for (int i = 0; i < numberOfCheckoutsToGenerate; i++) {
-            Reserva randomReserva = reservasList.get(random.nextInt(reservasList.size()));
-            Cliente randomCliente = clientesList.get(random.nextInt(clientesList.size()));
-
-            String clientFullName = randomCliente.getNombres() + " " + randomCliente.getApellidos();
-            int roomNumInt = 0;
-            try {
-                // Parse the room number string from Reserva to an int
-                roomNumInt = randomReserva.getRoomNumber()
-            } catch (NumberFormatException e) {
-                Log.e("AdminCheckout", "Error parsing room number from Reserva: " + randomReserva.getRoomNumber(), e);
-                // Handle error, maybe skip this checkout or use a default value
-                Toast.makeText(AdminCheckout.this, "Error de formato de número de habitación en reserva.", Toast.LENGTH_SHORT).show();
-                continue; // Skip this iteration if parsing fails
-            }
-
-            CheckoutFirebase newCheckout = new CheckoutFirebase(
-                    null,
-                    roomNumInt, // Pass the parsed int here
-                    clientFullName,
-                    randomReserva.getPrecioTotal(),
-                    randomReserva.getCobrosAdicionales(),
-                    randomReserva.getFechaInicio(),
-                    randomReserva.getFechaFin()
-            );
-
-            db.collection("checkouts")
-                    .add(newCheckout)
-                    .addOnSuccessListener(documentReference -> {
-                        Log.d("AdminCheckout", "Checkout generado y guardado con ID: " + documentReference.getId());
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w("AdminCheckout", "Error al añadir checkout", e);
-                        Toast.makeText(AdminCheckout.this, "Error al generar checkout: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        }
-    }*/
-
-    private void loadCheckoutsFromFirestore() {
-        db.collection("checkouts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            originalCheckoutList.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                // Ensure CheckoutFirebase class properly deserializes roomNumber as an int/long
-                                CheckoutFirebase checkout = document.toObject(CheckoutFirebase.class);
-                                originalCheckoutList.add(checkout);
-                            }
-                            applyFilters();
-                            Log.d("AdminCheckout", "Checkouts cargados: " + checkoutList.size());
-                            if (checkoutList.isEmpty() && originalCheckoutList.isEmpty()) {
-                                Toast.makeText(AdminCheckout.this, "No hay checkouts pendientes.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Log.w("AdminCheckout", "Error al cargar checkouts: ", task.getException());
-                            Toast.makeText(AdminCheckout.this, "Error al cargar checkouts: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
     private void applyFilters() {
         List<CheckoutFirebase> filteredList = new ArrayList<>();
         String clientSearchText = etBuscadorCliente.getText().toString().toLowerCase(Locale.getDefault()).trim();
@@ -402,7 +326,6 @@ public class AdminCheckout extends AppCompatActivity {
         super.onResume();
         // Recargar los checkouts cada vez que la actividad vuelve a estar en primer plano
         // Esto es crucial para ver la lista actualizada después de una eliminación o edición
-        loadCheckoutsFromFirestore();
         // Clear search fields and reset date pickers
         etBuscadorCliente.setText("");
         etBuscadorDepartamento.setText("");
