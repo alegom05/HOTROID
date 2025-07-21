@@ -418,14 +418,24 @@ public class HotelDetalladoUser extends AppCompatActivity {
     }
 
     private void mostrarOpciones(List<RoomGroupOption> opciones) {
+
         if (opciones.isEmpty()) {
             Toast.makeText(this, "No se encontraron opciones con la cantidad de personas y fechas seleccionadas", Toast.LENGTH_LONG).show();
             return;
         }
-
         Intent intent = new Intent(this, OpcionesHabitacionUser.class);
         intent.putParcelableArrayListExtra("opciones", new ArrayList<>(opciones));
-//        intent.putExtra("opciones", (Serializable) opciones);
+
+        if (fechaInicioSeleccionado != null && fechaFinSeleccionado != null) {
+            intent.putExtra("fechaInicio", fechaInicioSeleccionado.getTime());
+            intent.putExtra("fechaFin", fechaFinSeleccionado.getTime());
+        }else{
+            Toast.makeText(this, "Debe seleccionar alguna fecha disponible para realizar la reserva", Toast.LENGTH_LONG).show();
+            return;
+        }
+        intent.putExtra("cantidadPersonas", numPersonas); // o "numPersonas"
+        intent.putExtra("niniosSolicitados", niniosSolicitados);
+        intent.putExtra("numHabitaciones", numHabitaciones);
         startActivity(intent);
     }
 

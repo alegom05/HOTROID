@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class OpcionesHabitacionUser extends AppCompatActivity {
@@ -50,8 +51,12 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
     private String hotelId;
     private int adultsFilter = 0;
     private int childrenFilter = 0;
-    //List<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
     private List<RoomGroupOption> listaOpciones = new ArrayList<>();
+    private Date fechaInicio;
+    private Date fechaFin;
+    private int cantidadPersonas;
+    private int ninios;
+    private int numHabitaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,14 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
 
         // Inicializar Firestore
         db = FirebaseFirestore.getInstance();
+        long fechaInicioLong = getIntent().getLongExtra("fechaInicio", 0);
+        long fechaFinLong = getIntent().getLongExtra("fechaFin", 0);
+        fechaInicio = new Date(fechaInicioLong);
+        fechaFin = new Date(fechaFinLong);
+
+        cantidadPersonas = getIntent().getIntExtra("cantidadPersonas", 1);
+        ninios = getIntent().getIntExtra("niniosSolicitados", 0);
+        numHabitaciones = getIntent().getIntExtra("numHabitaciones", 1);
 
 //        ArrayList<RoomGroupOption> opciones = getIntent().getParcelableArrayListExtra("opciones");
 //
@@ -114,7 +127,7 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
             public void onSeleccionar(RoomGroupOption opcion) {
                 continueButton.setVisibility(View.VISIBLE);
             }
-        });
+        }, fechaInicio, fechaFin, cantidadPersonas, ninios);
 
         roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         roomsRecyclerView.setAdapter(adapter);
@@ -138,9 +151,33 @@ public class OpcionesHabitacionUser extends AppCompatActivity {
         continueButton.setOnClickListener(v -> {
             RoomGroupOption seleccionada = adapter.getOpcionSeleccionada();
             if (seleccionada != null) {
-                Intent intent = new Intent(OpcionesHabitacionUser.this, ProcesoReservaUser.class);
-                intent.putExtra("opcionSeleccionada", seleccionada);
-                startActivity(intent);
+                List<Room> disponibles = seleccionada.getHabitacionesSeleccionadas();
+                // Asegurar que hay suficientes habitaciones
+                if (disponibles.size() >= numHabitaciones) {
+                    // Seleccionamos las primeras N habitaciones disponibles
+                    List<Integer> roomNumbersSeleccionados = new ArrayList<>();
+                    ArrayList<Room> habitacionesSeleccionadas = new ArrayList<>();
+
+                    for (int i = 0; i < numHabitaciones; i++) {
+                        roomNumbersSeleccionados.add(disponibles.get(i).getRoomNumber());
+                        habitacionesSeleccionadas.add(disponibles.get(i));
+                    }
+                    // Ahora roomNumbersSeleccionados contiene [108, 109, 110], por ejemplo
+
+                    Intent intent = new Intent(OpcionesHabitacionUser.this, ProcesoReservaUser.class);
+                    intent.putExtra("opcionSeleccionada", seleccionada); // Parcelable
+                    intent.putExtra("roomNumbersSeleccionados", new ArrayList<>(roomNumbersSeleccionados)); // List<Integer>
+                    intent.putExtra("fechaInicio", fechaInicio.getTime()); // long
+                    intent.putExtra("fechaFin", fechaFin.getTime()); // long
+                    intent.putExtra("cantidadPersonas", cantidadPersonas); // int
+                    intent.putExtra("niniosSolicitados", ninios); // int
+                    intent.putExtra("numHabitaciones", numHabitaciones); // int
+                    intent.putParcelableArrayListExtra("habitacionesSeleccionadas", habitacionesSeleccionadas);
+
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "No hay suficientes habitaciones disponibles", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Debes seleccionar una habitación", Toast.LENGTH_SHORT).show();
             }

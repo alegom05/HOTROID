@@ -43,7 +43,7 @@ public class Paso2ReservacionFragment extends Fragment {
         switchPiscina = view.findViewById(R.id.switchPiscina);
         switchParqueo = view.findViewById(R.id.switchParqueo);
         tvTotal = view.findViewById(R.id.tvTotal);
-        btnSiguiente = view.findViewById(R.id.btnSiguientePaso2);
+        btnSiguiente = view.findViewById(R.id.btnConfirmarReserva);
 
         // Calcular el precio base según el número de habitaciones
         precioBase = 200 * ReservacionTempData.habitaciones;

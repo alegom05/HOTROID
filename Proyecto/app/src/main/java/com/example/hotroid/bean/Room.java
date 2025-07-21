@@ -101,15 +101,20 @@ public class Room implements Parcelable {
         return desc;
     }
 
-    // Parcel constructor
+    // Constructor para Parcelable
     protected Room(Parcel in) {
         id = in.readString();
         roomNumber = in.readInt();
         roomType = in.readString();
         capacityAdults = in.readInt();
         capacityChildren = in.readInt();
+        totalCapacity = in.readInt();
         area = in.readDouble();
+        status = in.readString();
+        hotelId = in.readString();
+        imageResourceName = in.readString();
         price = in.readDouble();
+        // imageResourceId no se incluye por ser transient
     }
     public static final Creator<Room> CREATOR = new Creator<Room>() {
         @Override
@@ -130,8 +135,13 @@ public class Room implements Parcelable {
         dest.writeString(roomType);
         dest.writeInt(capacityAdults);
         dest.writeInt(capacityChildren);
+        dest.writeInt(capacityAdults + capacityChildren); // o totalCapacity
         dest.writeDouble(area);
+        dest.writeString(status);
+        dest.writeString(hotelId);
+        dest.writeString(imageResourceName);
         dest.writeDouble(price);
+        // imageResourceId no se escribe por ser transient
     }
 
     @Override

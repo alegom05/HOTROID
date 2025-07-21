@@ -19,6 +19,7 @@ import com.example.hotroid.bean.RoomGroupOption;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +28,10 @@ public class OpcionesAdapter extends RecyclerView.Adapter<OpcionesAdapter.ViewHo
     private RoomGroupOption opcionSeleccionada;
     private Context context;
     private OnOpcionClickListener listener;
+    private Date fechaInicio;
+    private Date fechaFin;
+    private int cantidadPersonas;
+    private int ninios;
 
     public interface OnOpcionClickListener {
         void onVerDetalle(RoomGroupOption opcion);
@@ -34,11 +39,18 @@ public class OpcionesAdapter extends RecyclerView.Adapter<OpcionesAdapter.ViewHo
         void onSeleccionar(RoomGroupOption opcion);
     }
 
-    public OpcionesAdapter(List<RoomGroupOption> listaOpciones, Context context, OnOpcionClickListener listener) {
+    public OpcionesAdapter(List<RoomGroupOption> listaOpciones, Context context, OnOpcionClickListener listener,
+                           Date fechaInicio, Date fechaFin, int cantidadPersonas, int ninios) {
         this.listaOpciones = listaOpciones;
         this.context = context;
         this.listener = listener;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.cantidadPersonas = cantidadPersonas;
+        this.ninios = ninios;
     }
+
+
 
     @NonNull
     @Override

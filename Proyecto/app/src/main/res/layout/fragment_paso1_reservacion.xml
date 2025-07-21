@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="24dp"
+    android:layout_margin="18dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
+    app:cardElevation="10dp"
     app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutline">
+    app:strokeColor="?attr/colorOutline"
+    android:backgroundTint="#FFFAF3">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -25,40 +26,53 @@
                 android:layout_height="wrap_content"
                 android:text="Proceso de reserva"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textColor="#FF6F00"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Datos de reserva"
+                android:text="Datos personales y pago"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"
                 android:layout_gravity="center_horizontal"
-                android:alpha="0.7" />
+                android:alpha="0.7"
+                android:textColor="#81643E"/>
 
-            <!-- Datos personales con MaterialTextView y estilo mejorado -->
+            <!-- SECCIÓN DATOS PERSONALES -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datos personales"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"
+                android:drawableStart="@drawable/ic_person"
+                android:drawablePadding="8dp"
+                app:drawableTint="@color/material_dynamic_primary10" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 app:startIconDrawable="@drawable/ic_person"
                 app:startIconTint="@color/material_dynamic_primary10"
-                android:hint="Nombre">
+                android:hint="Nombre completo">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nombreEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Juan Marquinez"
+                    android:inputType="textPersonName|textCapWords"
                     android:textColor="?attr/colorOnSurface" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 app:startIconDrawable="@drawable/ic_person"
                 app:startIconTint="@color/material_dynamic_primary10"
                 android:hint="Apellidos">
@@ -67,127 +81,232 @@
                     android:id="@+id/apellidoEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Díaz Pinto"
+                    android:inputType="textPersonName|textCapWords"
                     android:textColor="?attr/colorOnSurface" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Sección de fechas -->
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dniInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Fechas de la reserva"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="24dp"
+                app:startIconDrawable="@drawable/credit_card_24"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="DNI"
+                android:visibility="gone">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fecha de entrada:"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
-
-            <DatePicker
-                android:id="@+id/fechaInicioPicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:datePickerMode="spinner"
-                android:calendarViewShown="false"
-                android:layout_marginBottom="16dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fecha de salida:"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
-
-            <DatePicker
-                android:id="@+id/fechaFinPicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:datePickerMode="spinner"
-                android:calendarViewShown="false"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- Sección de huéspedes -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Detalles de la estancia"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dniEditText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Número de habitaciones:"
-                    android:textStyle="bold"/>
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <NumberPicker
-                    android:id="@+id/habitacionesPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"/>
-            </LinearLayout>
-
-            <LinearLayout
+            <!-- SECCIÓN DATOS DE PAGO -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+                android:text="Datos de pago"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:drawableStart="@drawable/credit_card_24"
+                android:drawablePadding="8dp"
+                app:drawableTint="@color/material_dynamic_primary10" />
 
-                <TextView
-                    android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:startIconDrawable="@drawable/credit_card_24"
+                app:startIconTint="@color/material_dynamic_primary10"
+                android:hint="Número de tarjeta">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/numeroTarjetaEditText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Adultos:"
-                    android:textStyle="bold"/>
-
-                <NumberPicker
-                    android:id="@+id/adultosPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"/>
-            </LinearLayout>
+                    android:inputType="number"
+                    android:maxLength="16"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginBottom="24dp">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Niños:"
-                    android:textStyle="bold"/>
+                    android:layout_marginEnd="8dp"
+                    app:startIconDrawable="@drawable/ic_calendar"
+                    app:startIconTint="@color/material_dynamic_primary10"
+                    android:hint="MM/AA">
 
-                <NumberPicker
-                    android:id="@+id/ninosPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/fechaVencimientoEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:startIconDrawable="@drawable/ic_lock"
+                    app:startIconTint="@color/material_dynamic_primary10"
+                    android:hint="CVV">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cvvEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberPassword"
+                        android:maxLength="3"
+                        android:textColor="?attr/colorOnSurface" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <!-- SECCIÓN SERVICIOS ADICIONALES -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Servicios adicionales"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:drawableStart="@drawable/ic_room_service"
+                android:drawablePadding="8dp"
+                app:drawableTint="@color/material_dynamic_primary10" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#FFF8E1"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#FFB74D">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchGimnasio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gimnasio"
+                        android:padding="8dp"
+                        app:switchPadding="12dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 100 por estancia"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginStart="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:alpha="0.7" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="4dp" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchDesayuno"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Desayuno"
+                        android:padding="8dp"
+                        app:switchPadding="12dp"
+                        app:thumbTint="@color/verde_jade_claro"
+                        app:trackTint="@color/verdejade"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 80 por día"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginStart="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:alpha="0.7" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="4dp" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchPiscina"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Piscina"
+                        android:padding="8dp"
+                        app:switchPadding="12dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 100 por estancia"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginStart="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:alpha="0.7" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="4dp" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchParqueo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Parqueo"
+                        android:padding="8dp"
+                        app:switchPadding="12dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 100 por estancia"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginStart="56dp"
+                        android:alpha="0.7" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botón Siguiente -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSiguientePaso1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:text="Siguiente"
-                app:cornerRadius="20dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:text="Continuar"
+                app:icon="@drawable/ic_arrow_right"
+                app:iconGravity="end"
+                app:cornerRadius="24dp"
                 android:backgroundTint="#009688"
                 style="@style/Widget.Material3.Button" />
 

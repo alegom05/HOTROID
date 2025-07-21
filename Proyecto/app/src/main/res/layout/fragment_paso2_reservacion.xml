@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Paso2ReservacionFragment">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>-->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="24dp"
-    android:padding="16dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
     app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutline">
+    app:strokeColor="?attr/colorOutline"
+    android:backgroundTint="#FFFAF3">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -30,163 +19,229 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp">
+
             <!-- Título -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Proceso de reserva"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                android:textStyle="bold"
+                android:textColor="#FF6F00"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Servicios adicionales"
+                android:text="Resumen y confirmación"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:layout_gravity="center_horizontal"
-                android:alpha="0.7" />
-
-            <!-- Imagen ilustrativa -->
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/ic_room_service"
-                app:tint="@color/material_dynamic_primary10"
-                />
-
-            <!-- Servicios con switches -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        style="@style/CustomSwitchStyle"
-                        android:id="@+id/switchGimnasio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Gimnasio"
-                        android:padding="6dp"
-                        app:switchPadding="12dp"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 100"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_marginStart="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:alpha="0.7" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="4dp" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        style="@style/CustomSwitchStyle"
-                        android:id="@+id/switchDesayuno"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Desayuno"
-                        android:padding="6dp"
-                        app:switchPadding="12dp"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 80"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_marginStart="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:alpha="0.7" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="4dp" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        style="@style/CustomSwitchStyle"
-                        android:id="@+id/switchPiscina"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Piscina"
-                        android:padding="6dp"
-                        app:switchPadding="12dp"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 100"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_marginStart="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:alpha="0.7" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="4dp" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        style="@style/CustomSwitchStyle"
-                        android:id="@+id/switchParqueo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Parqueo"
-                        android:padding="6dp"
-                        app:switchPadding="12dp"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="PEN 100"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_marginStart="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:alpha="0.7" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-            <!-- Resumen de costos -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp">
+                android:layout_gravity="center_horizontal"
+                android:textColor="#81643E"
+                android:alpha="0.8" />
+
+            <!-- DATOS DE LA RESERVA -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFF8E1"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#FFB74D">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Resumen"
+                        android:text="Datos de la reserva"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:layout_marginBottom="12dp" />
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"
+                        android:drawableStart="@drawable/ic_hotel"
+                        android:drawablePadding="8dp"
+                        app:drawableTint="@color/material_dynamic_primary10" />
 
+                    <!-- Huésped -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Huésped:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/tvHuespedResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Juan Marquinez Díaz"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Fechas -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Check-in:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/tvFechaInicioResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="15 Jul 2025"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Check-out:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/tvFechaFinResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="18 Jul 2025"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Duración -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Duración:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/tvDuracionResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3 noches"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Huéspedes -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Huéspedes:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/tvHuespedesResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2 adultos, 1 niño"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Habitación -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Habitación:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/tvHabitacionResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Suite Lujo"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- DESGLOSE DE COSTOS -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFF8E1"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#FFB74D">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Desglose de costos"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"
+                        android:drawableStart="@drawable/ic_registros"
+                        android:drawablePadding="8dp"
+                        app:drawableTint="@color/material_dynamic_primary10" />
+
+                    <!-- Costo habitación -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -197,104 +252,297 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Habitación estándar"
+                            android:text="Habitación (3 noches)"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+                        <TextView
+                            android:id="@+id/tvCostoHabitacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/. 3,900"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                    </LinearLayout>
+
+                    <!-- Servicios adicionales -->
+                    <LinearLayout
+                        android:id="@+id/layoutServiciosAdicionales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Servicios adicionales:"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="4dp" />
+
+                        <LinearLayout
+                            android:id="@+id/layoutGimnasio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="• Gimnasio"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                android:layout_marginStart="16dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="S/. 100"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutDesayuno"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="• Desayuno (3 días)"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                android:layout_marginStart="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvCostoDesayuno"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="S/. 240"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutPiscina"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="• Piscina"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                android:layout_marginStart="16dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="S/. 100"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutParqueo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="4dp"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="• Parqueo"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                android:layout_marginStart="16dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gratis"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                android:textColor="@color/material_dynamic_primary10" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Divisor -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <!-- Subtotal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Subtotal:"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
                         <TextView
                             android:id="@+id/tvSubtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="PEN 200"
+                            android:text="S/. 4,340"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
                     </LinearLayout>
 
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="4dp" />
-
+                    <!-- Impuestos -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="TOTAL"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                            android:text="Impuestos (18%):"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+                        <TextView
+                            android:id="@+id/tvImpuestos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/. 781"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                    </LinearLayout>
+
+                    <!-- Total -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/bordergreen"
+                        android:elevation="10dp"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total a pagar:"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
 
                         <TextView
                             android:id="@+id/tvTotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="PEN 200"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                            android:text="S/. 5,121"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <!-- Botón Siguiente -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSiguientePaso2"
-                android:layout_width="wrap_content"
+
+            <!-- TÉRMINOS Y CONDICIONES -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:text="Siguiente"
-                app:cornerRadius="20dp"
-                android:backgroundTint="#009688"
-                style="@style/Widget.Material3.Button" />
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Políticas de reserva"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"
+                        android:drawableStart="@drawable/ic_registros"
+                        android:drawablePadding="8dp"
+                        app:drawableTint="@color/material_dynamic_primary10" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Cancelación gratuita hasta 24 horas antes del check-in"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Check-in: 3:00 PM | Check-out: 12:00 PM"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Se requiere presentar documento de identidad al check-in"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/cbAceptarTerminos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Acepto los términos y condiciones de la reserva"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- BOTONES DE ACCIÓN -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegresar"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Regresar"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:icon="@drawable/ic_back"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnConfirmarReserva"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Confirmar reserva"
+                    android:enabled="false"
+                    android:backgroundTint="#009688"
+                    app:icon="@drawable/ic_check_double"
+                    app:iconTint="#FFFFFF"
+                    app:iconGravity="textEnd"/>
+            </LinearLayout>
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchGimnasio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gimnasio PEN 100" />
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchDesayuno"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Desayuno PEN 80" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchPiscina"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Piscina PEN 100" />
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchParqueo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Parqueo PEN 100" />
-
-        <TextView android:id="@+id/tvSubtotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reserva PEN 0" />
-
-        <TextView android:id="@+id/tvTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TOTAL PEN 0"
-            android:textStyle="bold" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSiguientePaso2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Siguiente" />
-    </LinearLayout>-->
 </com.google.android.material.card.MaterialCardView>
