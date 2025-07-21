@@ -119,6 +119,8 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_registros) {
+                    Intent intentInicio = new Intent(AdminHabitacionesActivity.this, AdminActivity.class); // Asumo que AdminActivity es tu pantalla principal
+                    startActivity(intentInicio);
                     return true;
                 } else if (itemId == R.id.nav_taxistas) {
                     Intent intentUbicacion = new Intent(AdminHabitacionesActivity.this, AdminTaxistas.class);

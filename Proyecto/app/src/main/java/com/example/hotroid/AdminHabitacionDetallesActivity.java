@@ -27,7 +27,7 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
         setContentView(R.layout.admin_habitacion_detalles);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
@@ -78,7 +78,7 @@ public class AdminHabitacionDetallesActivity extends AppCompatActivity {
             bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_registros) {
-                    Intent intentRegistros = new Intent(AdminHabitacionDetallesActivity.this, AdminHabitacionesActivity.class);
+                    Intent intentRegistros = new Intent(AdminHabitacionDetallesActivity.this, AdminActivity.class);
                     // Para evitar duplicados en la pila y volver al estado correcto
                     intentRegistros.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intentRegistros);
