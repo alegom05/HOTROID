@@ -3,6 +3,7 @@ package com.example.hotroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -44,6 +46,7 @@ public class MisReservasUser extends AppCompatActivity {
     private List<Reserva> listaReservas = new ArrayList<>();
     private List<Hotel> listaHoteles = new ArrayList<>();
     private ReservaService reservaService;
+    ReservasPagerAdapterUser adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +65,8 @@ public class MisReservasUser extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         setupBottomNavigation();
 
-        // Cargar datos
-        cargarHoteles();
+//        // Cargar datos
+//        cargarHoteles();
         cargarReservasDesdeFirebase();
 
         // Ajustar insets para barras del sistema si EdgeToEdge está habilitado
@@ -78,8 +81,6 @@ public class MisReservasUser extends AppCompatActivity {
         // Verificar si el usuario está autenticado
         if (auth.getCurrentUser() == null) {
             Log.w(TAG, "Usuario no autenticado");
-            // Usar datos estáticos como fallback
-            mostrarReservasEstaticas();
             return;
         }
 
@@ -87,111 +88,121 @@ public class MisReservasUser extends AppCompatActivity {
         String userId = auth.getCurrentUser().getUid();
 
         // Consultar las reservas del usuario en Firestore
-        reservaService.obtenerReservasUsuario(
-                // Callback de éxito
-                reservas -> {
-                    listaReservas = reservas;
-
-                    if (listaReservas.isEmpty()) {
-                        Log.d(TAG, "No se encontraron reservas para el usuario actual");
-                        // Si no hay reservas, usar datos estáticos de ejemplo
-                        mostrarReservasEstaticas();
-                    } else {
-                        Log.d(TAG, "Reservas cargadas desde Firestore: " + listaReservas.size());
-                        mostrarReservasDinamicas();
-                    }
-                },
-                // Callback de error
-                e -> {
-                    Log.e(TAG, "Error al cargar reservas: " + e.getMessage());
-                    // En caso de error, usar datos estáticos
-                    mostrarReservasEstaticas();
-                }
-        );
+        reservaService.obtenerReservasUsuario( reservas -> {
+            listaReservas = reservas;
+            Log.d(TAG, "Reservas obtenidas desde Firestore: " + listaReservas.size());
+            mostrarReservasDinamicas();
+            }, e -> {
+            Log.e(TAG, "Error al obtener reservas: " + e.getMessage());
+            Toast.makeText(this, "Error al cargar reservas", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void cargarHoteles() {
         // Cargar hoteles desde Firestore o usar datos estáticos
         // Por simplicidad, usamos los datos estáticos
         listaHoteles = obtenerHoteles();
-
-        // En una implementación real, podríamos cargar los hoteles desde Firestore:
-        /*
-        db.collection("hoteles")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    listaHoteles.clear();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Hotel hotel = document.toObject(Hotel.class);
-                        listaHoteles.add(hotel);
-                    }
-                    // Si ya tenemos las reservas, mostrarlas
-                    if (!listaReservas.isEmpty()) {
-                        mostrarReservasDinamicas();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error al cargar hoteles: " + e.getMessage());
-                    // Usar datos estáticos como fallback
-                    listaHoteles = obtenerHoteles();
-                });
-        */
     }
-
     private void mostrarReservasDinamicas() {
         // Usar ReservaRepository para combinar Reservas y Hoteles
         ReservaRepository reservaRepository = new ReservaRepository();
-        List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(
-                listaReservas, listaHoteles);
+        reservaRepository.obtenerReservasConHotelFirestore(listaReservas, new ReservaRepository.Callback() {
+                    @Override
+                    public void onResult(List<ReservaConHotel> reservasConHotel) {
+                        // Filtrar las reservas por estado
+                        List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel, "activo");
+                        List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel, "pasado");
+                        List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel, "cancelado");
 
-        // Filtrar las reservas por estado
-        List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel, "activo");
-        List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel, "pasado");
-        List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel, "cancelado");
+                        Log.d(TAG, "Cantidad de reservas activas: " + activos.size());
+                        Log.d(TAG, "Cantidad de reservas pasadas: " + pasados.size());
+                        Log.d(TAG, "Cantidad de reservas canceladas: " + cancelados.size());
 
-        Log.d(TAG, "Cantidad de reservas activas: " + activos.size());
-        Log.d(TAG, "Cantidad de reservas pasadas: " + pasados.size());
-        Log.d(TAG, "Cantidad de reservas canceladas: " + cancelados.size());
+                        // Agrupar en el orden de tabs
+                        List<List<ReservaConHotel>> listasParaPagerAdapter = Arrays.asList(activos, pasados, cancelados);
+                        // Crear e inicializar el ViewPager con el adaptador
+                        adapter = new ReservasPagerAdapterUser(MisReservasUser.this, listasParaPagerAdapter);
+                        viewPager.setAdapter(adapter);
+                        // Conectar el TabLayout con el ViewPager2
+                        conectarTabsConViewPager();
+                    }
 
-        // Agrupar las listas filtradas para el PagerAdapter
-        List<List<ReservaConHotel>> listasParaPagerAdapter = Arrays.asList(activos, pasados, cancelados);
-
-        // Crear e inicializar el ViewPager con el adaptador
-        ReservasPagerAdapterUser adapter = new ReservasPagerAdapterUser(this, listasParaPagerAdapter);
-        viewPager.setAdapter(adapter);
-
-        // Conectar el TabLayout con el ViewPager2
-        conectarTabsConViewPager();
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error al obtener hoteles: " + e.getMessage());
+                Toast.makeText(MisReservasUser.this, "Error al obtener hoteles", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void mostrarReservasEstaticas() {
-        // Obtener datos estáticos de ejemplo
-        List<Reserva> reservas = obtenerReservas();
-
-        // Usar ReservaRepository para combinar Reservas y Hoteles
-        ReservaRepository reservaRepository = new ReservaRepository();
-        List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(
-                reservas, listaHoteles);
-
-        // Filtrar las reservas por estado
-        List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel, "activo");
-        List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel, "pasado");
-        List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel, "cancelado");
-
-        Log.d(TAG, "Cantidad de reservas activas (estáticas): " + activos.size());
-        Log.d(TAG, "Cantidad de reservas pasadas (estáticas): " + pasados.size());
-        Log.d(TAG, "Cantidad de reservas canceladas (estáticas): " + cancelados.size());
-
-        // Agrupar las listas filtradas para el PagerAdapter
-        List<List<ReservaConHotel>> listasParaPagerAdapter = Arrays.asList(activos, pasados, cancelados);
-
-        // Crear e inicializar el ViewPager con el adaptador
-        ReservasPagerAdapterUser adapter = new ReservasPagerAdapterUser(this, listasParaPagerAdapter);
-        viewPager.setAdapter(adapter);
-
-        // Conectar el TabLayout con el ViewPager2
-        conectarTabsConViewPager();
-    }
+//    private void mostrarReservasDinamicasDesdeFirestore() {
+//        db = FirebaseFirestore.getInstance();
+//        auth = FirebaseAuth.getInstance();
+//        String currentUserId = auth.getCurrentUser().getUid();
+//
+//        db.collection("reservas")
+//                .whereEqualTo("idPersona", currentUserId)
+//                .get()
+//                .addOnSuccessListener(queryDocumentSnapshots -> {
+//                    List<Reserva> activas = new ArrayList<>();
+//                    List<Reserva> pasadas = new ArrayList<>();
+//                    List<Reserva> canceladas = new ArrayList<>();
+//
+//                    Date hoy = new Date();
+//
+//                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+//                        Reserva reserva = doc.toObject(Reserva.class);
+//                        reserva.setIdReserva(doc.getId()); // Si quieres guardar el ID del doc
+//
+//                        if (reserva.getEstado().equals("Cancelada")) {
+//                            canceladas.add(reserva);
+//                        } else if (reserva.getFechaFin().before(hoy)) {
+//                            pasadas.add(reserva);
+//                        } else {
+//                            activas.add(reserva);
+//                        }
+//                    }
+//
+//                    // Asignar listas a cada fragmento
+//                    adapter = new ReservasPagerAdapterUser(this);
+//                    adapter.setListasReservas(activas, pasadas, canceladas);
+//                    viewPager.setAdapter(adapter);
+//                    new TabLayoutMediator(tabLayout, viewPager,
+//                            (tab, position) -> {
+//                                if (position == 0) tab.setText("Activos");
+//                                else if (position == 1) tab.setText("Pasados");
+//                                else tab.setText("Cancelados");
+//                            }).attach();
+//                })
+//                .addOnFailureListener(e -> {
+//                    Toast.makeText(this, "Error al cargar reservas", Toast.LENGTH_SHORT).show();
+//                    Log.e("MisReservasUser", "Error Firestore: " + e.getMessage());
+//                });
+//
+//        // Usar ReservaRepository para combinar Reservas y Hoteles
+//        ReservaRepository reservaRepository = new ReservaRepository();
+//        List<ReservaConHotel> reservasConHotel = reservaRepository.obtenerReservasConHotel(
+//                reservas, listaHoteles);
+//
+//        // Filtrar las reservas por estado
+//        List<ReservaConHotel> activos = filtrarPorEstado(reservasConHotel, "activo");
+//        List<ReservaConHotel> pasados = filtrarPorEstado(reservasConHotel, "pasado");
+//        List<ReservaConHotel> cancelados = filtrarPorEstado(reservasConHotel, "cancelado");
+//
+//        Log.d(TAG, "Cantidad de reservas activas (estáticas): " + activos.size());
+//        Log.d(TAG, "Cantidad de reservas pasadas (estáticas): " + pasados.size());
+//        Log.d(TAG, "Cantidad de reservas canceladas (estáticas): " + cancelados.size());
+//
+//        // Agrupar las listas filtradas para el PagerAdapter
+//        List<List<ReservaConHotel>> listasParaPagerAdapter = Arrays.asList(activos, pasados, cancelados);
+//
+//        // Crear e inicializar el ViewPager con el adaptador
+//        ReservasPagerAdapterUser adapter = new ReservasPagerAdapterUser(this, listasParaPagerAdapter);
+//        viewPager.setAdapter(adapter);
+//
+//        // Conectar el TabLayout con el ViewPager2
+//        conectarTabsConViewPager();
+//    }
 
     private void conectarTabsConViewPager() {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
@@ -229,130 +240,9 @@ public class MisReservasUser extends AppCompatActivity {
      */
     public static List<Hotel> obtenerHoteles() {
         List<Hotel> hoteles = new ArrayList<>();
-
-        // HOTEL 1
-        Hotel hotel1 = new Hotel();
-        hotel1.setIdHotel("H1");
-        hotel1.setName("Hotel Central");
-        hotel1.setRating(4.5f);
-        //hotel1.setPrice(130.00);
-        hotel1.setDireccion("Argentina");
-        hotel1.setDireccionDetallada("High St 10, Old Town");
-        hotel1.setImageResourceId(R.drawable.hotel_decameron);
-        hoteles.add(hotel1);
-
-        // HOTEL 2
-        Hotel hotel2 = new Hotel();
-        hotel2.setIdHotel("H2");
-        hotel2.setName("Hotel D'Cameron");
-        hotel2.setRating(4.0f);
-        //hotel2.setPrice(123.00);
-        hotel2.setDireccion("USA");
-        hotel2.setDireccionDetallada("Av. del Prado 123, Centro Histórico");
-        hotel2.setImageResourceId(R.drawable.hotel_aranwa);
-        hoteles.add(hotel2);
-
-        // HOTEL 3
-        Hotel hotel3 = new Hotel();
-        hotel3.setIdHotel("H3");
-        hotel3.setName("Hotel Mar Azul");
-        hotel3.setRating(3.8f);
-        //hotel3.setPrice(230.00);
-        hotel3.setDireccion("Perú");
-        hotel3.setDireccionDetallada("Paseo Marítimo 78, Playa Norte");
-        hotel3.setImageResourceId(R.drawable.hotel_boca_raton);
-        hoteles.add(hotel3);
-
         return hoteles;
     }
 
-    /**
-     * Proporciona una lista estática de objetos Reserva.
-     * @return List<Reserva>
-     */
-    public static List<Reserva> obtenerReservas() {
-        List<Reserva> reservas = new ArrayList<>();
-        try {
-            // Reserva 1: Estado "pasado"
-            reservas.add(new Reserva(
-                    "R1-" + UUID.randomUUID().toString(),
-                    "U1",
-                    "Carlos",
-                    "Ruiz",
-                    "H1",
-                    "Hotel Central",
-                    2,
-                    3,
-                    1,
-                    dateFormatter.parse("2025-05-01"),
-                    dateFormatter.parse("2025-05-03"),
-                    "pasado",
-                    160.0,
-                    true,
-                    true,
-                    20.0,
-                    false,
-                    null,
-                    "V1",
-                    Arrays.asList(101,108),
-                    true
-            ));
-
-            // Reserva 2: Estado "activo"
-            reservas.add(new Reserva(
-                    "R2-" + UUID.randomUUID().toString(),
-                    "U1",
-                    "Ana",
-                    "Martínez",
-                    "H2",
-                    "Hotel D'Cameron",
-                    1,
-                    2,
-                    0,
-                    dateFormatter.parse("2025-06-25"),
-                    dateFormatter.parse("2025-06-28"),
-                    "activo",
-                    240.0,
-                    false,
-                    false,
-                    0.0,
-                    false,
-                    null,
-                    null,
-                    Arrays.asList(205),
-                    false
-            ));
-
-            // Reserva 3: Estado "cancelado"
-            reservas.add(new Reserva(
-                    "R3-" + UUID.randomUUID().toString(),
-                    "U1",
-                    "Pedro",
-                    "García",
-                    "H3",
-                    "Hotel Mar Azul",
-                    1,
-                    2,
-                    2,
-                    dateFormatter.parse("2025-07-05"),
-                    dateFormatter.parse("2025-07-08"),
-                    "cancelado",
-                    0.0,
-                    false,
-                    false,
-                    0.0,
-                    true,
-                    dateFormatter.parse("2025-06-15"),
-                    null,
-                    Arrays.asList(218),
-                    false
-            ));
-
-        } catch (ParseException e) {
-            Log.e(TAG, "Error al parsear la fecha en obtenerReservas(): " + e.getMessage());
-        }
-        return reservas;
-    }
 
     /**
      * Configura la barra de navegación inferior.

@@ -1,5 +1,6 @@
 package com.example.hotroid.bean;
 
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.PropertyName; // Importa esta anotación

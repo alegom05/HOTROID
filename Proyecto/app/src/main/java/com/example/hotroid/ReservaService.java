@@ -34,14 +34,14 @@ public class ReservaService {
      * @param onFailure Callback para error
      */
     public void crearReserva(Reserva reserva, Runnable onSuccess, Consumer<Exception> onFailure) {
-        // Si no existe ID, generar uno
-        if (reserva.getIdReserva() == null || reserva.getIdReserva().isEmpty()) {
-            reserva.setIdReserva(db.collection("reservas").document().getId());
-        }
+
+            // Generar un ID único
+            String id = db.collection("reservas").document().getId();
+            reserva.setIdReserva(id);
 
         // Guardar en Firestore
         db.collection("reservas")
-                .document(reserva.getIdReserva())
+                .document(id)
                 .set(reserva)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Reserva creada con éxito");

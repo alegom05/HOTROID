@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.hotroid.R;
 import com.example.hotroid.bean.ReservaConHotel;
 import com.google.android.material.button.MaterialButton;
@@ -45,6 +46,8 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
         String info = item.getReserva().getAdultos() + " adultos";
         if (item.getReserva().getNinos() > 0) {
             info += ", " + item.getReserva().getNinos() + " niños";
+        }else {
+            info += ", 0 niños";
         }
         return info;
     }
@@ -52,29 +55,50 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
     @Override
     public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
         ReservaConHotel item = reservas.get(position);
+        // Configurar nombre del hotel
+        if (item.getHotel() != null) {
+            holder.tvNombreHotel.setText(item.getHotel().getName());
 
-        // Mostrar datos del hotel
-        holder.tvNombreHotel.setText(item.getReserva().getNombreHotel());
+            // Cargar imagen del hotel
+            if (item.getHotel().getImageUrls() != null && !item.getHotel().getImageUrls().isEmpty()) {
+                Glide.with(context)
+                        .load(item.getHotel().getImageUrls())
+                        .placeholder(R.drawable.placeholder_hotel)
+                        .error(R.drawable.ic_hotel_error)
+                        .centerCrop()
+                        .into(holder.imagenHotel);
+            } else {
+                holder.imagenHotel.setImageResource(R.drawable.hotel_placeholder);
+            }
+        } else {
+            holder.tvNombreHotel.setText("Hotel no disponible");
+            holder.imagenHotel.setImageResource(R.drawable.placeholder_hotel);
+        }
+        // Configurar número de habitación
         holder.tvHabitacion.setText("Habitación: " + item.getReserva().getRoomNumber());
 
-        // Mostrar datos de la reserva
+        // Mostrar fechas de la reserva
         String fechaInicio = dateFormat.format(item.getReserva().getFechaInicio());
         String fechaFin = dateFormat.format(item.getReserva().getFechaFin());
         holder.tvFechas.setText("Desde: " + fechaInicio + "\nHasta: " + fechaFin);
+//        String fechas = "Desde: " + dateFormat.format(item.getReserva().getFechaInicio()) +
+//                "\nHasta: " + dateFormat.format(item.getReserva().getFechaFin());
+//        holder.tvFechas.setText(fechas);
 
         // Mostrar huéspedes usando el método auxiliar
         holder.tvHuespedes.setText(getGuestsInfo(item));
 
         // Mostrar precio
-        holder.tvPrecio.setText(String.format("PEN %.2f", item.getReserva().getPrecioTotal()));
+        holder.tvPrecio.setText(String.format(Locale.getDefault(), "S/. %.2f",
+                item.getReserva().getPrecioTotal()));
 
-        // Configurar imagen del hotel
-        if (item.getHotel() != null) {
-            holder.imagenHotel.setImageResource(item.getHotel().getImageResourceId());
-        } else {
-            // Imagen por defecto si no hay hotel
-            holder.imagenHotel.setImageResource(R.drawable.hotel_placeholder);
-        }
+//        // Configurar imagen del hotel
+//        if (item.getHotel() != null) {
+//            holder.imagenHotel.setImageResource(item.getHotel().getImageResourceId());
+//        } else {
+//            // Imagen por defecto si no hay hotel
+//            holder.imagenHotel.setImageResource(R.drawable.hotel_placeholder);
+//        }
 
         // Eliminar cualquier onClick listener previamente establecido
         holder.btnAccion.setOnClickListener(null);
@@ -107,7 +131,7 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
                     intent.putExtra("room_details", "Habitación: " + item.getReserva().getRoomNumber());
 
                     // Estado, fechas y código de reserva
-                    intent.putExtra("status", "Confirmado");
+                    intent.putExtra("estado", "activo");
                     intent.putExtra("checkInDate", fechaInicio);
                     intent.putExtra("checkOutDate", fechaFin);
                     intent.putExtra("reservationCode", item.getReserva().getIdReserva());
