@@ -185,19 +185,30 @@ public class HotelesFragment extends Fragment {
 
         Log.d(TAG, "Verificando viajes para usuario: " + currentUserId);
 
-        db.collection("viajes")
+        db.collection("alertas_taxi")
                 .whereEqualTo("idCliente", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        // Hay viajes para este usuario, mostrar el ícono
+                    boolean hayViajesActivos = false;
+
+                    // Filtrar manualmente los documentos que NO están "Completado"
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String estadoViaje = document.getString("estadoViaje");
+                        if (estadoViaje != null && !estadoViaje.equals("Completado")) {
+                            hayViajesActivos = true;
+                            break; // No necesitamos seguir buscando
+                        }
+                    }
+
+                    if (hayViajesActivos) {
+                        // Hay viajes activos para este usuario, mostrar el ícono
                         binding.notificationIcon.setVisibility(View.VISIBLE);
                         configurarClickNotificacion();
-                        Log.d(TAG, "Viajes encontrados: " + queryDocumentSnapshots.size());
+                        Log.d(TAG, "Viajes activos encontrados");
                     } else {
-                        // No hay viajes, ocultar el ícono
+                        // No hay viajes activos, ocultar el ícono
                         binding.notificationIcon.setVisibility(View.GONE);
-                        Log.d(TAG, "No hay viajes para este usuario");
+                        Log.d(TAG, "No hay viajes activos para este usuario");
                     }
                 })
                 .addOnFailureListener(e -> {

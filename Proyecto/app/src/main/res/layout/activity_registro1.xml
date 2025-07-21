@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:padding="22dp">
 
-        <!-- Back Button -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
@@ -25,7 +24,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
-        <!-- Progress Indicator -->
         <LinearLayout
             android:id="@+id/progressContainer"
             android:layout_width="wrap_content"
@@ -37,14 +35,12 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="10dp">
 
-            <!-- Step 1 Indicator -->
             <View
                 android:layout_width="24dp"
                 android:layout_height="4dp"
                 android:background="@android:color/white"
                 android:layout_marginEnd="8dp" />
 
-            <!-- Step 2 Indicator -->
             <View
                 android:layout_width="24dp"
                 android:layout_height="4dp"
@@ -53,7 +49,6 @@
 
         </LinearLayout>
 
-        <!-- Logo Container -->
         <LinearLayout
             android:id="@+id/logoContainer"
             android:layout_width="wrap_content"
@@ -65,7 +60,6 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="20dp">
 
-            <!-- App Icon   android:background="@drawable/ic_hotroid_background" -->
             <ImageView
                 android:id="@+id/appIcon"
                 android:layout_width="60dp"
@@ -73,7 +67,6 @@
                 android:src="@mipmap/ic_hotroid3"
                 android:padding="8dp"
                 android:layout_marginBottom="8dp" />
-            <!-- Title -->
             <TextView
                 android:id="@+id/registerTitle"
                 android:layout_width="wrap_content"
@@ -83,7 +76,6 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="8dp" />
-            <!-- Subtitle -->
             <TextView
                 android:id="@+id/registerSubtitle"
                 android:layout_width="wrap_content"
@@ -95,7 +87,6 @@
 
         </LinearLayout>
 
-        <!-- Register Form Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/registerCard"
             android:layout_width="0dp"
@@ -112,7 +103,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp">
-                <!-- First Name Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -131,7 +121,6 @@
                         android:inputType="textPersonName" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-                <!-- Last Name Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,11 +135,9 @@
                         android:id="@+id/etLastName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Apellido"
-                        android:inputType="textPersonName" />
+                        android:hint="Apellido"                        android:inputType="textPersonName" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-                <!-- DNI Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,10 +154,7 @@
                         android:layout_height="wrap_content"
                         android:hint="DNI"
                         android:inputType="number"
-                        android:maxLength="8" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-                <!-- Email Field -->
+                        android:maxLength="9" /> </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -190,7 +174,29 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Continue Button -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilRole"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Seleccionar Rol"
+                    app:startIconDrawable="@drawable/ic_role_selection"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/etRole"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnContinue"
                     android:layout_width="match_parent"
@@ -206,7 +212,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Terms and Privacy -->
         <TextView
             android:id="@+id/tvTerms"
             android:layout_width="0dp"
@@ -222,5 +227,4 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

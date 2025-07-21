@@ -36,7 +36,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.Timestamp;
 
 public class DetalleReservaActivo extends AppCompatActivity {
 
@@ -63,32 +65,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
                     .setTitle("Solicitar Taxi")
                     .setMessage("¿Desea solicitar un taxi?")
                     .setPositiveButton("Sí", (dialog, which) -> {
-                        // Obtener Firestore y Auth
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        String uidCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        String idHotel = "yqrBR3OPmiHnWB677l5X";
-
-                        // Construir datos del viaje
-                        Map<String, Object> viaje = new HashMap<>();
-                        viaje.put("estado", "pendiente");
-                        viaje.put("idCliente", uidCliente);
-                        viaje.put("idHotel", idHotel);
-                        viaje.put("solicitadoEn", new Date());
-
-                        // Crear la colección 'viajes'
-                        db.collection("viajes")
-                                .add(viaje)
-                                .addOnSuccessListener(documentReference -> {
-                                    Toast.makeText(DetalleReservaActivo.this, "Viaje solicitado correctamente", Toast.LENGTH_SHORT).show();
-                                    // Ocultar el botón de solicitar taxi
-                                    btnSolicitarTaxi.setVisibility(View.GONE);
-                                    Intent intent = new Intent(DetalleReservaActivo.this, UserServTaxi.class);
-                                    startActivity(intent);
-
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(DetalleReservaActivo.this, "Error al solicitar viaje", Toast.LENGTH_SHORT).show();
-                                });
+                        solicitarTaxi();
                     })
                     .setNegativeButton("No", null)
                     .show();
@@ -189,17 +166,78 @@ public class DetalleReservaActivo extends AppCompatActivity {
         setupButtons();
     }
 
+    private void solicitarTaxi() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String uidCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if (uidCliente == null) {
+            Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Obtener datos del usuario desde Firestore
+        db.collection("usuarios").document(uidCliente)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Extraer nombres y apellidos del documento del usuario
+                        String nombresCliente = documentSnapshot.getString("nombres");
+                        String apellidosCliente = documentSnapshot.getString("apellidos");
+
+                        // Valores por defecto si no existen en el documento
+                        if (nombresCliente == null) nombresCliente = "Isaac";
+                        if (apellidosCliente == null) apellidosCliente = "Huamani";
+
+                        // Crear el documento para alertas_taxi
+                        Map<String, Object> alertaTaxi = new HashMap<>();
+                        alertaTaxi.put("apellidosCliente", apellidosCliente);
+                        alertaTaxi.put("destino", "Aeropuerto de Chinchero (CUZ)"); // Puedes hacer esto dinámico si es necesario
+                        alertaTaxi.put("documentId", null);
+                        alertaTaxi.put("estadoViaje", "No asignado");
+                        alertaTaxi.put("nombresCliente", nombresCliente);
+                        alertaTaxi.put("origen", "Libertador"); // Puedes hacer esto dinámico basado en el hotel
+                        alertaTaxi.put("region", "Cusco"); // Puedes hacer esto dinámico basado en la ubicación
+                        alertaTaxi.put("tiempoTranscurrido", "Tiempo desconocido");
+                        alertaTaxi.put("timestamp", Timestamp.now()); // Usar Timestamp de Firebase
+                        alertaTaxi.put("idCliente", uidCliente); // Agregar el ID del cliente para referencia
+
+                        // Crear el documento en la colección alertas_taxi
+                        db.collection("alertas_taxi")
+                                .add(alertaTaxi)
+                                .addOnSuccessListener(documentReference -> {
+                                    Toast.makeText(DetalleReservaActivo.this, "Taxi solicitado correctamente", Toast.LENGTH_SHORT).show();
+                                    // Ocultar el botón de solicitar taxi
+                                    btnSolicitarTaxi.setVisibility(View.GONE);
+                                    // Navegar a la actividad de servicio de taxi
+                                    Intent intent = new Intent(DetalleReservaActivo.this, UserServTaxi.class);
+                                    startActivity(intent);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(DetalleReservaActivo.this, "Error al solicitar taxi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        Toast.makeText(DetalleReservaActivo.this, "Error: No se encontraron datos del usuario", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(DetalleReservaActivo.this, "Error al obtener datos del usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void verificarViajeExistente() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String uidCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        db.collection("viajes")
+        if (uidCliente == null) return;
+
+        // Verificar si ya existe una alerta de taxi pendiente para este usuario
+        db.collection("alertas_taxi")
                 .whereEqualTo("idCliente", uidCliente)
-                .whereEqualTo("estado", "pendiente")
+                .whereEqualTo("estadoViaje", "No asignado")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // El usuario ya tiene un viaje pendiente
+                        // El usuario ya tiene una alerta de taxi pendiente
                         btnSolicitarTaxi.setVisibility(View.GONE);
                     }
                 });
@@ -222,12 +260,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
         });
 
         verificarViajeExistente();
-
-
     }
-
-
-
 
     private void showCheckInDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

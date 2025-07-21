@@ -38,7 +38,7 @@
             android:clickable="true"
             android:contentDescription="Notificaciones"
             android:focusable="true"
-            android:src="@drawable/ic_notifications" />
+            android:src="@drawable/ic_taxistas" />
 
     </androidx.appcompat.widget.Toolbar>
 
