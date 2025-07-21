@@ -102,4 +102,5 @@ En HOTROID, nos comprometemos a garantizar que su información personal sea trat
     <string name="nav_taxistas">Taxistas</string>
     <string name="nav_checkout">Checkout</string>
     <string name="nav_reportes">Reportes</string>
+    <!-- Agregar estos strings a tu archivo res/values/strings.xml -->
 </resources>

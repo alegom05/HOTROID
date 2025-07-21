@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Administrador de Hotel"
+                    android:text="Administrador de Hotel - Hotel Libertador"
                     android:textStyle="italic" />
             </LinearLayout>
 
@@ -99,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <TextView android:text="Pedro Miguel"
+                <TextView android:text="Christopher"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <TextView android:text="Bustamante Melo"
+                <TextView android:text="Terrones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -131,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <TextView android:text="12341234"
+                <TextView android:text="15421542"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -142,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <TextView android:text="15 de septiembre de 2002"
+                <TextView android:text="29 de diciembre de 2002"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -153,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <TextView android:text="pedro.bume@gmail.com"
+                <TextView android:text="cterrones@gmail.com"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -175,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <TextView android:text="Av. Las Palmeras 123, Los Olivos"
+                <TextView android:text="Av. El Triunfo 123"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />

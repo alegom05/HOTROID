@@ -2,6 +2,7 @@ package com.example.hotroid.bean;
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.PropertyName; // Importa esta anotación
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Reserva {
     private double precioTotal;
     private boolean checkInRealizado;
     private boolean checkOutRealizado;
-    private double cobrosAdicionales;
+    private double cobrosAdicionales; // Nombre del campo en Java
     private boolean cancelada;
     private Date fechaCancelacion;
     private String idValoracion;
@@ -45,7 +46,8 @@ public class Reserva {
     public Reserva(String idReserva, String idPersona, String nombresCliente, String apellidosCliente,
                    String idHotel, String nombreHotel, int habitaciones, int adultos, int ninos,
                    Date fechaInicio, Date fechaFin, String estado, double precioTotal,
-                   boolean checkInRealizado, boolean checkOutRealizado, double cobrosAdicionales,
+                   boolean checkInRealizado, boolean checkOutRealizado,
+                   double cobrosAdicionales, // Asegúrate de que este constructor también lo reciba
                    boolean cancelada, Date fechaCancelacion, String idValoracion, List<Integer> roomNumber,
                    boolean tieneValoracion) {
         this.idReserva = idReserva;
@@ -63,7 +65,7 @@ public class Reserva {
         this.precioTotal = precioTotal;
         this.checkInRealizado = checkInRealizado;
         this.checkOutRealizado = checkOutRealizado;
-        this.cobrosAdicionales = cobrosAdicionales;
+        this.cobrosAdicionales = cobrosAdicionales; // Asignación de la propiedad
         this.cancelada = cancelada;
         this.fechaCancelacion = fechaCancelacion;
         this.idValoracion = idValoracion;
@@ -192,10 +194,14 @@ public class Reserva {
         this.checkOutRealizado = checkOutRealizado;
     }
 
+    // *** CAMBIO CLAVE AQUÍ: Anotación @PropertyName ***
+    @PropertyName("cobros_adicionales") // Mapea la propiedad Java 'cobrosAdicionales' al campo 'cobros_adicionales' en Firestore
     public double getCobrosAdicionales() {
         return cobrosAdicionales;
     }
 
+    // *** CAMBIO CLAVE AQUÍ: Anotación @PropertyName ***
+    @PropertyName("cobros_adicionales") // Mapea la propiedad Java 'cobrosAdicionales' al campo 'cobros_adicionales' en Firestore
     public void setCobrosAdicionales(double cobrosAdicionales) {
         this.cobrosAdicionales = cobrosAdicionales;
     }

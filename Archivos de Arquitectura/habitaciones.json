@@ -1,0 +1,403 @@
+[
+  {
+    "id": "room101",
+    "capacityAdults": 4,
+    "totalCapacity": 6,
+    "capacityDescription": "4 adultos, 2 niños",
+    "status": "Unavailable",
+    "price": 1500,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "doble_superior_img_1"
+    ],
+    "roomType": "Estándar",
+    "roomNumber": 101,
+    "area": 28.8,
+    "capacityChildren": 3,
+    "hotelId": "yqrBR3OPmiHnWB677l5X"
+  },
+  {
+    "id": "room102",
+    "roomNumber": 102,
+    "roomType": "Economica",
+    "capacityAdults": 5,
+    "capacityChildren": 0,
+    "totalCapacity": 5,
+    "capacityDescription": "5 adultos",
+    "area": 33.7,
+    "status": "Available",
+    "price": 800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "economica_img_1",
+      "economica_img_2",
+      "economica_img_3",
+      "economica_img_4"
+    ],
+    "hotelId": "yqrBR3OPmiHnWB677l5X"
+  },
+  {
+    "id": "room103",
+    "roomNumber": 103,
+    "roomType": "Estandar",
+    "capacityAdults": 1,
+    "capacityChildren": 2,
+    "totalCapacity": 3,
+    "capacityDescription": "1 adulto, 2 niños",
+    "area": 42.4,
+    "status": "Unavailable",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1",
+      "estandar_img_2",
+      "estandar_img_3"
+    ],
+    "hotelId": "yqrBR3OPmiHnWB677l5X"
+  },
+  {
+    "id": "room104",
+    "roomNumber": 104,
+    "roomType": "Doble Superior",
+    "capacityAdults": 2,
+    "capacityChildren": 0,
+    "totalCapacity": 2,
+    "capacityDescription": "2 adultos",
+    "area": 44.2,
+    "status": "Available",
+    "price": 1500,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "doble_superior_img_1"
+    ],
+    "hotelId": "yqrBR3OPmiHnWB677l5X"
+  },
+  {
+    "id": "room105",
+    "roomNumber": 105,
+    "roomType": "Suite Lujo",
+    "capacityAdults": 5,
+    "capacityChildren": 0,
+    "totalCapacity": 5,
+    "capacityDescription": "5 adultos",
+    "area": 42.3,
+    "status": "Unavailable",
+    "price": 2000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "suite_lujo_img_1",
+      "suite_lujo_img_2"
+    ],
+    "hotelId": "yqrBR3OPmiHnWB677l5X"
+  },
+  {
+    "id": "room201",
+    "roomNumber": 201,
+    "roomType": "Lux",
+    "capacityAdults": 3,
+    "capacityChildren": 2,
+    "totalCapacity": 5,
+    "capacityDescription": "3 adultos, 2 niños",
+    "area": 28.5,
+    "status": "Unavailable",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "lux_img_1",
+      "lux_img_2"
+    ]
+  },
+  {
+    "id": "room202",
+    "roomNumber": 202,
+    "roomType": "Lux",
+    "capacityAdults": 5,
+    "capacityChildren": 1,
+    "totalCapacity": 6,
+    "capacityDescription": "5 adultos, 1 niño",
+    "area": 34.5,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "lux_img_1",
+      "lux_img_2"
+    ]
+  },
+  {
+    "id": "room203",
+    "roomNumber": 203,
+    "roomType": "Estandar",
+    "capacityAdults": 4,
+    "capacityChildren": 2,
+    "totalCapacity": 6,
+    "capacityDescription": "4 adultos, 2 niños",
+    "area": 32.5,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1",
+      "estandar_img_2"
+    ]
+  },
+  {
+    "id": "room204",
+    "roomNumber": 204,
+    "roomType": "Estandar",
+    "capacityAdults": 2,
+    "capacityChildren": 2,
+    "totalCapacity": 4,
+    "capacityDescription": "2 adultos, 2 niños",
+    "area": 24,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1",
+      "estandar_img_2"
+    ]
+  },
+  {
+    "id": "room205",
+    "roomNumber": 205,
+    "roomType": "Estandar",
+    "capacityAdults": 4,
+    "capacityChildren": 1,
+    "totalCapacity": 5,
+    "capacityDescription": "4 adultos, 1 niño",
+    "area": 25.5,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1",
+      "estandar_img_2"
+    ]
+  },
+  {
+    "id": "room301",
+    "roomNumber": 301,
+    "roomType": "Estandar",
+    "capacityAdults": 2,
+    "capacityChildren": 1,
+    "totalCapacity": 3,
+    "capacityDescription": "2 adultos, 1 niño",
+    "area": 39.2,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1",
+      "estandar_img_2",
+      "estandar_img_3",
+      "estandar_img_4"
+    ]
+  },
+  {
+    "id": "room302",
+    "roomNumber": 302,
+    "roomType": "Suite Lujo",
+    "capacityAdults": 4,
+    "capacityChildren": 3,
+    "totalCapacity": 7,
+    "capacityDescription": "4 adultos, 3 niños",
+    "area": 24.3,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 2000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "suite_lujo_img_1",
+      "suite_lujo_img_2"
+    ]
+  },
+  {
+    "id": "room303",
+    "roomNumber": 303,
+    "roomType": "Lux",
+    "capacityAdults": 2,
+    "capacityChildren": 3,
+    "totalCapacity": 5,
+    "capacityDescription": "2 adultos, 3 niños",
+    "area": 27.1,
+    "status": "Unavailable",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "lux_img_1"
+    ]
+  },
+  {
+    "id": "room304",
+    "roomNumber": 304,
+    "roomType": "Suite Lujo",
+    "capacityAdults": 5,
+    "capacityChildren": 3,
+    "totalCapacity": 8,
+    "capacityDescription": "5 adultos, 3 niños",
+    "area": 27.3,
+    "status": "Unavailable",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 2000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "suite_lujo_img_1"
+    ]
+  },
+  {
+    "id": "room305",
+    "roomNumber": 305,
+    "roomType": "Lux",
+    "capacityAdults": 5,
+    "capacityChildren": 3,
+    "totalCapacity": 8,
+    "capacityDescription": "5 adultos, 3 niños",
+    "area": 41.2,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "lux_img_1",
+      "lux_img_2",
+      "lux_img_3"
+    ]
+  },
+  {
+    "id": "room401",
+    "roomNumber": 401,
+    "roomType": "Economica",
+    "capacityAdults": 2,
+    "capacityChildren": 2,
+    "totalCapacity": 4,
+    "capacityDescription": "2 adultos, 2 niños",
+    "area": 25.2,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "economica_img_1",
+      "economica_img_2"
+    ]
+  },
+  {
+    "id": "room402",
+    "roomNumber": 402,
+    "roomType": "Lux",
+    "capacityAdults": 1,
+    "capacityChildren": 3,
+    "totalCapacity": 4,
+    "capacityDescription": "1 adulto, 3 niños",
+    "area": 30.3,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "lux_img_1",
+      "lux_img_2"
+    ]
+  },
+  {
+    "id": "room403",
+    "roomNumber": 403,
+    "roomType": "Doble Superior",
+    "capacityAdults": 3,
+    "capacityChildren": 2,
+    "totalCapacity": 5,
+    "capacityDescription": "3 adultos, 2 niños",
+    "area": 33.5,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1500,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "doble_superior_img_1",
+      "doble_superior_img_2",
+      "doble_superior_img_3",
+      "doble_superior_img_4"
+    ]
+  },
+  {
+    "id": "room404",
+    "roomNumber": 404,
+    "roomType": "Estandar",
+    "capacityAdults": 5,
+    "capacityChildren": 1,
+    "totalCapacity": 6,
+    "capacityDescription": "5 adultos, 1 niño",
+    "area": 37.8,
+    "status": "Unavailable",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1"
+    ]
+  },
+  {
+    "id": "room405",
+    "roomNumber": 405,
+    "roomType": "Economica",
+    "capacityAdults": 4,
+    "capacityChildren": 2,
+    "totalCapacity": 6,
+    "capacityDescription": "4 adultos, 2 niños",
+    "area": 22.6,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "economica_img_1",
+      "economica_img_2"
+    ]
+  },
+  {
+    "id": "room406",
+    "roomNumber": 406,
+    "roomType": "Estandar",
+    "capacityAdults": 1,
+    "capacityChildren": 2,
+    "totalCapacity": 3,
+    "capacityDescription": "1 adulto, 2 niños",
+    "area": 32.8,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 1000,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "estandar_img_1",
+      "estandar_img_2",
+      "estandar_img_3",
+      "estandar_img_4"
+    ]
+  },
+  {
+    "id": "room505",
+    "roomNumber": 505,
+    "roomType": "Economica",
+    "capacityAdults": 3,
+    "capacityChildren": 3,
+    "totalCapacity": 6,
+    "capacityDescription": "3 adultos, 3 niños",
+    "area": 40,
+    "status": "Available",
+    "hotelId": "HOTEL-DEFAULT",
+    "price": 800,
+    "imageResourceId": 0,
+    "imageResourceName": [
+      "economica_img_1",
+      "economica_img_2"
+    ]
+  }
+]

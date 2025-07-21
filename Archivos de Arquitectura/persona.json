@@ -1,0 +1,20 @@
+[
+  {
+    "id": "CLIENTE001",
+    "nombre": "Nala Alicia",
+    "direccion": "Av. Siempre Viva 742",
+    "correo": "nala@gmail.com",
+    "numeroTarjetaCredito": {
+      "estadoTarjeta": true,
+      "numeroTarjeta": 1111222233334444
+    },
+    "telefono": "999999999",
+    "apellido": "Perez Menendez",
+    "nacimiento": {
+      "_seconds": 1749488972,
+      "_nanoseconds": 28000000
+    },
+    "idRol": "id_ROL_CLIENTE001",
+    "dni": "12345678"
+  }
+]

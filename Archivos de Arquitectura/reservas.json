@@ -1,0 +1,1085 @@
+[
+  {
+    "id": "06107fed-8525-41fb-8b87-3acd4db11432",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "roomNumber": [
+      108
+    ],
+    "ninos": 0,
+    "cobrosAdicionales": 0,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1753040691,
+      "_nanoseconds": 595000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 1,
+    "piscina": false,
+    "precioTotal": 200,
+    "idPersona": "48ngHwDMgZf95lbLKpqi3BVwbcp1",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1753127091,
+      "_nanoseconds": 595000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "06107fed-8525-41fb-8b87-3acd4db11432",
+    "fechaCreacion": {
+      "_seconds": 1753043692,
+      "_nanoseconds": 721000000
+    }
+  },
+  {
+    "id": "081728c4-83a7-4715-b058-4e6b03677714",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "roomNumber": [
+      558
+    ],
+    "ninos": 0,
+    "cobrosAdicionales": 380,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1753034535,
+      "_nanoseconds": 533000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 1,
+    "piscina": false,
+    "precioTotal": 580,
+    "idPersona": "48ngHwDMgZf95lbLKpqi3BVwbcp1",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1753120935,
+      "_nanoseconds": 533000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "081728c4-83a7-4715-b058-4e6b03677714",
+    "fechaCreacion": {
+      "_seconds": 1753034552,
+      "_nanoseconds": 788000000
+    }
+  },
+  {
+    "id": "0931afc4-0b6c-4a5f-ba35-f3c6d8768898",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "roomNumber": [
+      662
+    ],
+    "ninos": 0,
+    "cobrosAdicionales": 0,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1753030042,
+      "_nanoseconds": 815000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 3,
+    "piscina": false,
+    "precioTotal": 200,
+    "idPersona": "48ngHwDMgZf95lbLKpqi3BVwbcp1",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1753116442,
+      "_nanoseconds": 816000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "0931afc4-0b6c-4a5f-ba35-f3c6d8768898",
+    "fechaCreacion": {
+      "_seconds": 1753030050,
+      "_nanoseconds": 710000000
+    }
+  },
+  {
+    "id": "09sDnMixf8NdnLajsSOz",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yqrBR3OPmiHnWB677l5X",
+    "ninos": 0,
+    "fechaFin": {
+      "_seconds": 1753585344,
+      "_nanoseconds": 779000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Díaz Pinedo",
+    "fechaInicio": {
+      "_seconds": 1753412544,
+      "_nanoseconds": 779000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Libertador",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Carlos Alberto",
+    "precioTotal": 1575.49,
+    "idPersona": "hFYOPuUlpryjraartm5u",
+    "roomNumber": [
+      785
+    ],
+    "cobros_adicionales": 80.13
+  },
+  {
+    "id": "0f4XJT265FEN1EwqHVA0",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yqrBR3OPmiHnWB677l5X",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1752462128,
+      "_nanoseconds": 653000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Vásquez Rojas",
+    "fechaInicio": {
+      "_seconds": 1752116528,
+      "_nanoseconds": 653000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Libertador",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Andrea Luciana",
+    "precioTotal": 723.64,
+    "idPersona": "x0JTypMuRrxHHO6dPy6R",
+    "roomNumber": [
+      638
+    ],
+    "cobros_adicionales": 35.5
+  },
+  {
+    "id": "0wGkIj0hK4GHRSYFtBj3",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yGYsXFWSQV58AANqpLnm",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1753844544,
+      "_nanoseconds": 781000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Quispe Tello",
+    "fechaInicio": {
+      "_seconds": 1753326144,
+      "_nanoseconds": 781000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Aranwa",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Renzo Fabián",
+    "precioTotal": 1876.01,
+    "idPersona": "SmkIM3zIXhcxVmMBElZQ",
+    "roomNumber": [
+      421
+    ],
+    "cobros_adicionales": 19.42
+  },
+  {
+    "id": "1JZqqkX5YxukLbvWti2M",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yGYsXFWSQV58AANqpLnm",
+    "ninos": 1,
+    "fechaFin": {
+      "_seconds": 1753239728,
+      "_nanoseconds": 654000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Díaz Pinedo",
+    "fechaInicio": {
+      "_seconds": 1752807728,
+      "_nanoseconds": 654000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Aranwa",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Carlos Alberto",
+    "precioTotal": 2054.72,
+    "idPersona": "hFYOPuUlpryjraartm5u",
+    "roomNumber": [
+      653
+    ],
+    "cobros_adicionales": 10.34
+  },
+  {
+    "id": "1euPVvmguZ2wtUYWx6Ac",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yqrBR3OPmiHnWB677l5X",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1751425368,
+      "_nanoseconds": 956000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Soto Valdivia",
+    "fechaInicio": {
+      "_seconds": 1750820568,
+      "_nanoseconds": 956000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Libertador",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "José Antonio",
+    "precioTotal": 1163.36,
+    "idPersona": "xnntjnHlvn2KjriTDtOu",
+    "roomNumber": [
+      345
+    ],
+    "cobros_adicionales": 61.56
+  },
+  {
+    "id": "20e3d103-3854-4096-9ddd-e380d97b8b49",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 4,
+    "cobrosAdicionales": 200,
+    "habitaciones": 2,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1750690759,
+      "_nanoseconds": 874000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 3,
+    "piscina": false,
+    "precioTotal": 600,
+    "idPersona": "mw5rSEjwKkaUzgLWsglGjDa5Nww1",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1753369159,
+      "_nanoseconds": 874000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "20e3d103-3854-4096-9ddd-e380d97b8b49",
+    "fechaCreacion": {
+      "_seconds": 1750690785,
+      "_nanoseconds": 653000000
+    },
+    "roomNumber": [
+      753
+    ]
+  },
+  {
+    "id": "2DzC6abmM1EeKry94Stw",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yqrBR3OPmiHnWB677l5X",
+    "cobros_adicionales": 15.26,
+    "ninos": 1,
+    "fechaFin": {
+      "_seconds": 1755140528,
+      "_nanoseconds": 653000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Quispe Tello",
+    "fechaInicio": {
+      "_seconds": 1755054128,
+      "_nanoseconds": 653000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Libertador",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Renzo Fabián",
+    "precioTotal": 1238.8,
+    "idPersona": "SmkIM3zIXhcxVmMBElZQ",
+    "roomNumber": [
+      282
+    ]
+  },
+  {
+    "id": "2qvOuv3gepisc3I8B6Fc",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "Pi5xsI6orodYdy1LZUx1",
+    "cobros_adicionales": 10.67,
+    "ninos": 1,
+    "fechaFin": {
+      "_seconds": 1752894128,
+      "_nanoseconds": 653000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Ramírez Castro",
+    "fechaInicio": {
+      "_seconds": 1752289328,
+      "_nanoseconds": 653000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Boca Raton",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 3,
+    "nombresCliente": "Luis Miguel",
+    "precioTotal": 337.87,
+    "idPersona": "kl97FSOGzBzlrMj5JOPU",
+    "roomNumber": [
+      405
+    ]
+  },
+  {
+    "id": "2sv3KRetbaOfgOTCD95C",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "HQDQVcHSXShy3IV59rDO",
+    "cobros_adicionales": 12.85,
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1751252544,
+      "_nanoseconds": 779000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Castañeda Ríos",
+    "fechaInicio": {
+      "_seconds": 1750820544,
+      "_nanoseconds": 779000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Costa del Sol",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 2,
+    "nombresCliente": "Gabriela Fernanda",
+    "precioTotal": 1169.95,
+    "idPersona": "opv7pSGEPZvNRk33XRfl",
+    "roomNumber": [
+      164
+    ]
+  },
+  {
+    "id": "31112045-0069-4414-a5ee-32615d34163f",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 0,
+    "cobrosAdicionales": 280,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1752503741,
+      "_nanoseconds": 673000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 1,
+    "piscina": false,
+    "precioTotal": 480,
+    "idPersona": "I6K6r3aG5BMrqwClhBw9w61hgGQ2",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 2036586941,
+      "_nanoseconds": 673000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "31112045-0069-4414-a5ee-32615d34163f",
+    "fechaCreacion": {
+      "_seconds": 1752503757,
+      "_nanoseconds": 12000000
+    },
+    "roomNumber": [
+      241
+    ]
+  },
+  {
+    "id": "3MpD2opv7olPhVGCQDkw",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "Pi5xsI6orodYdy1LZUx1",
+    "cobros_adicionales": 22.69,
+    "ninos": 1,
+    "fechaFin": {
+      "_seconds": 1752030144,
+      "_nanoseconds": 780000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Vásquez Rojas",
+    "fechaInicio": {
+      "_seconds": 1751770944,
+      "_nanoseconds": 780000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Boca Raton",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 2,
+    "nombresCliente": "Andrea Luciana",
+    "precioTotal": 322.54,
+    "idPersona": "x0JTypMuRrxHHO6dPy6R",
+    "roomNumber": [
+      419
+    ]
+  },
+  {
+    "id": "4d0a801f-6129-485f-9572-9bfe806182f5",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 2,
+    "cobrosAdicionales": 180,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1751048922,
+      "_nanoseconds": 682000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 2,
+    "piscina": false,
+    "precioTotal": 380,
+    "idPersona": "ltCterZTMOgyEbhgJKRyfCuwSXw2",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1751480922,
+      "_nanoseconds": 682000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "4d0a801f-6129-485f-9572-9bfe806182f5",
+    "fechaCreacion": {
+      "_seconds": 1750703332,
+      "_nanoseconds": 597000000
+    },
+    "roomNumber": [
+      860
+    ]
+  },
+  {
+    "id": "59eYpaYjKAqYVq2eVnFZ",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "eltRKZFk7Cvh81uABPrh",
+    "cobros_adicionales": 35.2,
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1752634945,
+      "_nanoseconds": 571000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Ortiz Paredes",
+    "fechaInicio": {
+      "_seconds": 1752462145,
+      "_nanoseconds": 571000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Sonesta",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Diego Armando",
+    "precioTotal": 321.46,
+    "idPersona": "6wRhU1tbELOmmX7L3px4",
+    "roomNumber": [
+      134
+    ]
+  },
+  {
+    "id": "6Hx6jaK18TJAeCh3n5aa",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "eYVp9hL7QcebrGPFgY0o",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1754967728,
+      "_nanoseconds": 654000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Gonzáles Flores",
+    "fechaInicio": {
+      "_seconds": 1754794928,
+      "_nanoseconds": 654000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Oro Verde",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Ana Sofía",
+    "precioTotal": 659.76,
+    "idPersona": "V9UASuqy8Kr2iCAQbENF",
+    "roomNumber": [
+      358
+    ],
+    "cobros_adicionales": 14.45
+  },
+  {
+    "id": "6du60SxEoic5rXLRfgAc",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "cMEtNuA6vfA2DII1zC91",
+    "ninos": 0,
+    "fechaFin": {
+      "_seconds": 1753153368,
+      "_nanoseconds": 955000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Castañeda Ríos",
+    "fechaInicio": {
+      "_seconds": 1752634968,
+      "_nanoseconds": 955000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Decameron",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Gabriela Fernanda",
+    "precioTotal": 1008.86,
+    "idPersona": "opv7pSGEPZvNRk33XRfl",
+    "roomNumber": [
+      435
+    ],
+    "cobros_adicionales": 14.12
+  },
+  {
+    "id": "6hmUEBLDZHXoqiGAziAD",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "eltRKZFk7Cvh81uABPrh",
+    "cobros_adicionales": 42.56,
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1753585554,
+      "_nanoseconds": 979000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Espinoza Luna",
+    "fechaInicio": {
+      "_seconds": 1753326354,
+      "_nanoseconds": 979000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Sonesta",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 2,
+    "nombresCliente": "Sofía Alejandra",
+    "precioTotal": 236.77,
+    "idPersona": "VswY6QjDhjCYuElTLiDv",
+    "roomNumber": [
+      866
+    ]
+  },
+  {
+    "id": "78383781-35cc-40da-8b86-8afd65fa7f53",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 2,
+    "cobrosAdicionales": 200,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1750807446,
+      "_nanoseconds": 683000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 2,
+    "piscina": false,
+    "precioTotal": 400,
+    "idPersona": "ltCterZTMOgyEbhgJKRyfCuwSXw2",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1751325846,
+      "_nanoseconds": 683000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "78383781-35cc-40da-8b86-8afd65fa7f53",
+    "fechaCreacion": {
+      "_seconds": 1750721074,
+      "_nanoseconds": 879000000
+    },
+    "roomNumber": [
+      350
+    ]
+  },
+  {
+    "id": "8c7bab38-00fa-426a-9039-c633a87e76ce",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 4,
+    "cobrosAdicionales": 280,
+    "habitaciones": 3,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1750690673,
+      "_nanoseconds": 439000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 2,
+    "piscina": false,
+    "precioTotal": 880,
+    "idPersona": "mw5rSEjwKkaUzgLWsglGjDa5Nww1",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1908629873,
+      "_nanoseconds": 439000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Huamani Sulca",
+    "checkInRealizado": false,
+    "nombresCliente": "Isaac",
+    "desayuno": false,
+    "idReserva": "8c7bab38-00fa-426a-9039-c633a87e76ce",
+    "fechaCreacion": {
+      "_seconds": 1750690684,
+      "_nanoseconds": 803000000
+    },
+    "roomNumber": [
+      456
+    ]
+  },
+  {
+    "id": "8f1a881e-88e5-4370-a381-85f0a94907d5",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 0,
+    "cobrosAdicionales": 180,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1751784647,
+      "_nanoseconds": 568000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 1,
+    "piscina": false,
+    "precioTotal": 380,
+    "idPersona": "6hMpXUU86TWrVSRMzr987PQcivH3",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1751871047,
+      "_nanoseconds": 568000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "8f1a881e-88e5-4370-a381-85f0a94907d5",
+    "fechaCreacion": {
+      "_seconds": 1751784658,
+      "_nanoseconds": 861000000
+    },
+    "roomNumber": [
+      279
+    ]
+  },
+  {
+    "id": "9MgL1DxHwiUSZAew2gVp",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yqrBR3OPmiHnWB677l5X",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1752030354,
+      "_nanoseconds": 980000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Ramírez Castro",
+    "fechaInicio": {
+      "_seconds": 1751771154,
+      "_nanoseconds": 980000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Libertador",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 3,
+    "nombresCliente": "Luis Miguel",
+    "precioTotal": 1309.83,
+    "idPersona": "kl97FSOGzBzlrMj5JOPU",
+    "roomNumber": [
+      528
+    ],
+    "cobros_adicionales": 95.4
+  },
+  {
+    "id": "Lex7Qw8LZ3xQzX6vfZ1l",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "eltRKZFk7Cvh81uABPrh",
+    "cobros_adicionales": 17.2,
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1754190136,
+      "_nanoseconds": 831000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Reyes Bustamante",
+    "fechaInicio": {
+      "_seconds": 1753585336,
+      "_nanoseconds": 831000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Sonesta",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Camila Fernanda",
+    "precioTotal": 574.45,
+    "idPersona": "VJCz9ODWuBzmZSAnAslQ",
+    "roomNumber": [
+      509
+    ]
+  },
+  {
+    "id": "LseDXumfMKCGttpO7S3X",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "Pi5xsI6orodYdy1LZUx1",
+    "ninos": 1,
+    "fechaFin": {
+      "_seconds": 1752980754,
+      "_nanoseconds": 981000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Ramírez Castro",
+    "fechaInicio": {
+      "_seconds": 1752721554,
+      "_nanoseconds": 981000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Boca Raton",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 3,
+    "nombresCliente": "Luis Miguel",
+    "precioTotal": 175.12,
+    "idPersona": "kl97FSOGzBzlrMj5JOPU",
+    "roomNumber": [
+      502
+    ],
+    "cobros_adicionales": 35.13
+  },
+  {
+    "id": "Mjzo9VBW8Km6vFE4WO05",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "eltRKZFk7Cvh81uABPrh",
+    "ninos": 1,
+    "fechaFin": {
+      "_seconds": 1751079954,
+      "_nanoseconds": 979000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Huamán Cueva",
+    "fechaInicio": {
+      "_seconds": 1750907154,
+      "_nanoseconds": 979000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Sonesta",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 3,
+    "nombresCliente": "Martín Alonso",
+    "precioTotal": 509.77,
+    "idPersona": "ZQc9FMozZBf7aFgRw6Tt",
+    "roomNumber": [
+      475
+    ],
+    "cobros_adicionales": 65.24
+  },
+  {
+    "id": "a22naUXm7eIwFUktrQJN",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "Pi5xsI6orodYdy1LZUx1",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1752375768,
+      "_nanoseconds": 957000000
+    },
+    "idValoracion": null,
+    "habitaciones": 1,
+    "apellidosCliente": "Morales Ruiz",
+    "fechaInicio": {
+      "_seconds": 1752116568,
+      "_nanoseconds": 957000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Boca Raton",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Laura Camila",
+    "precioTotal": 172.76,
+    "idPersona": "X3dDlI4W6JWD9i9TPGt5",
+    "roomNumber": [
+      412,
+      320
+    ],
+    "cobros_adicionales": 65.24
+  },
+  {
+    "id": "ab47ee74-b00f-4efc-9a5a-3324226fc831",
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "cancelada": false,
+    "ninos": 0,
+    "cobrosAdicionales": 280,
+    "habitaciones": 1,
+    "parqueo": false,
+    "fechaInicio": {
+      "_seconds": 1752365200,
+      "_nanoseconds": 77000000
+    },
+    "nombreHotel": "",
+    "tieneValoracion": false,
+    "gimnasio": false,
+    "adultos": 1,
+    "piscina": false,
+    "precioTotal": 480,
+    "idPersona": "ltCterZTMOgyEbhgJKRyfCuwSXw2",
+    "fechaCancelacion": null,
+    "idHotel": "",
+    "fechaFin": {
+      "_seconds": 1752710800,
+      "_nanoseconds": 77000000
+    },
+    "idValoracion": null,
+    "apellidosCliente": "Díaz Pinto",
+    "checkInRealizado": false,
+    "nombresCliente": "Juan Marquinez",
+    "desayuno": false,
+    "idReserva": "ab47ee74-b00f-4efc-9a5a-3324226fc831",
+    "fechaCreacion": {
+      "_seconds": 1752278807,
+      "_nanoseconds": 675000000
+    },
+    "roomNumber": [
+      153
+    ]
+  },
+  {
+    "id": "uPvWMi4chQdsRJtgZbGx",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yGYsXFWSQV58AANqpLnm",
+    "cobros_adicionales": 45.36,
+    "ninos": 0,
+    "fechaFin": {
+      "_seconds": 1755054168,
+      "_nanoseconds": 958000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Herrera Salazar",
+    "fechaInicio": {
+      "_seconds": 1754535768,
+      "_nanoseconds": 958000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Aranwa",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 2,
+    "nombresCliente": "Gabriel Andrés",
+    "precioTotal": 2238.53,
+    "idPersona": "bKFmTJc38i7r0dFF3if8",
+    "roomNumber": [
+      632
+    ]
+  },
+  {
+    "id": "vvZTRjKPsav5ZKazgqS6",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "eltRKZFk7Cvh81uABPrh",
+    "ninos": 2,
+    "fechaFin": {
+      "_seconds": 1755054144,
+      "_nanoseconds": 779000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Ortiz Paredes",
+    "fechaInicio": {
+      "_seconds": 1754622144,
+      "_nanoseconds": 779000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Sonesta",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 1,
+    "nombresCliente": "Diego Armando",
+    "precioTotal": 623.06,
+    "idPersona": "6wRhU1tbELOmmX7L3px4",
+    "roomNumber": [
+      301
+    ],
+    "cobros_adicionales": 24.13
+  },
+  {
+    "id": "zWIoIJKoQBgLOtIUqjFS",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yGYsXFWSQV58AANqpLnm",
+    "cobros_adicionales": 0,
+    "ninos": 0,
+    "fechaFin": {
+      "_seconds": 1751425368,
+      "_nanoseconds": 958000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Vásquez Rojas",
+    "fechaInicio": {
+      "_seconds": 1751252568,
+      "_nanoseconds": 958000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Aranwa",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 3,
+    "nombresCliente": "Andrea Luciana",
+    "precioTotal": 1533.27,
+    "idPersona": "x0JTypMuRrxHHO6dPy6R",
+    "roomNumber": [
+      607
+    ]
+  },
+  {
+    "id": "ziogIyc2LaJupbUjqVql",
+    "fechaCancelacion": null,
+    "checkOutRealizado": false,
+    "estado": "activo",
+    "idHotel": "yGYsXFWSQV58AANqpLnm",
+    "cobros_adicionales": 0,
+    "ninos": 0,
+    "fechaFin": {
+      "_seconds": 1751511745,
+      "_nanoseconds": 573000000
+    },
+    "idValoracion": null,
+    "habitaciones": 2,
+    "apellidosCliente": "Gonzáles Flores",
+    "fechaInicio": {
+      "_seconds": 1751252545,
+      "_nanoseconds": 573000000
+    },
+    "tieneValoracion": false,
+    "nombreHotel": "Aranwa",
+    "checkInRealizado": false,
+    "estaCancelado": false,
+    "adultos": 3,
+    "nombresCliente": "Ana Sofía",
+    "precioTotal": 1799.81,
+    "idPersona": "V9UASuqy8Kr2iCAQbENF",
+    "roomNumber": [
+      418
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "libertador_cusco",
+    "lugaresTuristicos": [
+      "Catedral de Cusco",
+      "Mercado Central de San Pedro",
+      "Plaza de Armas de Cusco",
+      "Sacsayhuamán"
+    ],
+    "latitud": -13.518913099999999,
+    "longitud": -71.97508189999999,
+    "direccion": "Calle San Agustín 400, Cusco 08001, Perú"
+  }
+]

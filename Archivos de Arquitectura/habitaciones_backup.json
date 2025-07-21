@@ -1,0 +1,799 @@
+[
+  {
+    "id": "0QahKcJarYRga47lZa5q",
+    "estado": "Available",
+    "roomNumber": 5,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "roomType": "Deluxe",
+    "capacidadTotal": 3,
+    "price": 500.8,
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 20,
+    "imageResourceName": null,
+    "services": [
+      ""
+    ]
+  },
+  {
+    "id": "1WoGSedMkbr0bKdHQXVt",
+    "estado": "Available",
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "capacidadTotal": null,
+    "roomType": "Deluxe",
+    "price": 151.8,
+    "area": 20,
+    "roomNumber": 106
+  },
+  {
+    "id": "1zWgy8Jlx6VG9HgfgQto",
+    "price": 140.8,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 20,
+    "status": "Available\n",
+    "roomNumber": 107
+  },
+  {
+    "id": "3DgdxFdxop4K3j3xLgjd",
+    "price": 130,
+    "hotelId": "eYVp9hL7QcebrGPFgY0o",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "status": "Available",
+    "roomNumber": 108
+  },
+  {
+    "id": "3OVE18oEiXezYcXZ4sBh",
+    "roomNumber": "Room 4",
+    "hotelId": "eYVp9hL7QcebrGPFgY0o",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30,
+    "status": "Available",
+    "price": 110
+  },
+  {
+    "id": "3aVz4FfTHQI3yDIOHQiP",
+    "price": 110.2,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30,
+    "status": "Available",
+    "roomNumber": 201
+  },
+  {
+    "id": "3lSBYxUVuYOGtodQ1K5F",
+    "price": 110.2,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30,
+    "status": "Available",
+    "roomNumber": 202
+  },
+  {
+    "id": "3y3Q3AFyNdWWy2XrPixt",
+    "price": 120.4,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30,
+    "status": "Available",
+    "roomNumber": 203
+  },
+  {
+    "id": "456gg01HMBiuZM3pt9jQ",
+    "price": 120,
+    "hotelId": "cMEtNuA6vfA2DII1zC91",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30,
+    "status": "Available",
+    "roomNumber": 204
+  },
+  {
+    "id": "4QdysRf9zdp5nB1iqKMc",
+    "capacityAdults": 1,
+    "roomType": "Suite Lujo",
+    "capacityDescription": "1 adulto,1 niño",
+    "imageResourceName": null,
+    "price": 1300,
+    "imageResourceId": 0,
+    "capacityChildren": 2,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "roomNumber": 202,
+    "status": "Available",
+    "totalCapacity": 3,
+    "area": 25
+  },
+  {
+    "id": "5RVzccfX5FVC2JhAagvR",
+    "price": 120.4,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 28,
+    "status": "Available",
+    "roomNumber": 203
+  },
+  {
+    "id": "5XQBNlLDgN6hmhFi1OO5",
+    "estado": "Available",
+    "price": 140.8,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30,
+    "status": "Available\n",
+    "roomNumber": 204
+  },
+  {
+    "id": "5vNLF1Y7eWL6PtnIkZwX",
+    "estado": "Available",
+    "price": 151,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 28,
+    "status": "Available\n",
+    "roomNumber": 205
+  },
+  {
+    "id": "6Cd35xKRlW0rhTUeI6FQ",
+    "price": 140,
+    "hotelId": "cMEtNuA6vfA2DII1zC91",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "status": "Available",
+    "roomNumber": 206
+  },
+  {
+    "id": "73GxRPi8GDIrMs2nuqvg",
+    "estado": "Available",
+    "price": 120.4,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 20,
+    "roomNumber": 207
+  },
+  {
+    "id": "7EsSK2Iqty9h9zkFoOJc",
+    "capacityAdults": 3,
+    "imageResourceName": null,
+    "capacityDescription": "3 adultos, 1 niño",
+    "totalCapacity": 4,
+    "price": 2000,
+    "imageResourceId": 0,
+    "capacityChildren": 1,
+    "hotelId": "HOTEL-DEFAULT",
+    "roomType": "Suite Lujo",
+    "status": "Available",
+    "area": 35,
+    "roomNumber": 208
+  },
+  {
+    "id": "7MThCK1obqQ2Mf43JInk",
+    "capacityAdults": 1,
+    "capacityChildren": 0,
+    "roomType": "Doble Superior",
+    "roomNumber": 102,
+    "area": 30
+  },
+  {
+    "id": "7l9wxLYsqAaCU5PuojAj",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "7y43A08RnfPjhak7Mqs0",
+    "estado": "Available",
+    "roomNumber": "Room 5",
+    "price": 150,
+    "hotelId": "eYVp9hL7QcebrGPFgY0o",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 28
+  },
+  {
+    "id": "8CrxQfBddtc9xiaQzF6W",
+    "estado": "Available",
+    "roomNumber": 4,
+    "price": 140.8,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "8Q1cfw0Xl3qzZisPFYHA",
+    "estado": "Available",
+    "roomNumber": 2,
+    "price": 120.4,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 28
+  },
+  {
+    "id": "9FVeq58P7I2iPGXybcSo",
+    "estado": "Available",
+    "roomNumber": 2,
+    "price": 120.4,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "9FmZL8J9s9ynl4K0pCTH",
+    "estado": "Available",
+    "roomNumber": 5,
+    "price": 151,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "9HBkHSOVWMIpC83R7vzr",
+    "estado": "Available",
+    "roomNumber": 5,
+    "price": 151,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "BAHoTbumrgg7luHMPa4H",
+    "estado": "Available",
+    "roomNumber": "Room 1",
+    "price": 110,
+    "hotelId": "cMEtNuA6vfA2DII1zC91",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "JdDMVrWtVjerQIWN6CJi",
+    "estado": "Available",
+    "roomNumber": 5,
+    "price": 151,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 28
+  },
+  {
+    "id": "Jsj1wZ3FktuJrUP3SIq4",
+    "estado": "Available",
+    "roomNumber": "Room 1",
+    "price": 110,
+    "hotelId": "eYVp9hL7QcebrGPFgY0o",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 28
+  },
+  {
+    "id": "K7dk7KLKzlhQIDenzgl6",
+    "estado": "Available",
+    "roomNumber": 1,
+    "price": 110.2,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "KQiVMovjAopvvGcJ5YwY",
+    "estado": "Available",
+    "roomNumber": "Room 3",
+    "price": 130,
+    "hotelId": "cMEtNuA6vfA2DII1zC91",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "LDTGDdzHc4bOF70KH5vH",
+    "estado": "Available",
+    "roomNumber": "Room 2",
+    "price": 120,
+    "hotelId": "eltRKZFk7Cvh81uABPrh",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "MMQxWZQCQX7a07HUkKGZ",
+    "estado": "Available",
+    "roomNumber": "Room 5",
+    "price": 150,
+    "hotelId": "eltRKZFk7Cvh81uABPrh",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "MpkDWHiSAlcB3yzdQm3z",
+    "area": 47.58,
+    "capacityAdults": 1,
+    "capacityChildren": 0,
+    "roomType": "Doble Superior",
+    "roomNumber": 303
+  },
+  {
+    "id": "NIFc48SMAj8nJsWHfPTh",
+    "estado": "Available",
+    "roomNumber": "Room 2",
+    "price": 120,
+    "hotelId": "eYVp9hL7QcebrGPFgY0o",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "PfVJTpycfSKc3crBIxy1",
+    "estado": "Available",
+    "roomNumber": 1,
+    "price": 110.2,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "PqxH1A4DQY0xNZHFGvqO",
+    "estado": "Available",
+    "roomNumber": "Room 4",
+    "price": 140,
+    "hotelId": "yGYsXFWSQV58AANqpLnm",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "QW1KVMnUAPd3nJMCe55j",
+    "estado": "Available",
+    "roomNumber": "Room 1",
+    "price": 110,
+    "hotelId": "eltRKZFk7Cvh81uABPrh",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "RqrKbAcjeNBfC5xS82l0",
+    "estado": "Available",
+    "roomNumber": 1,
+    "price": 110.2,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "STQJPIshKT29h7jlvvQB",
+    "estado": "Available",
+    "roomNumber": "Room 5",
+    "price": 150,
+    "hotelId": "cMEtNuA6vfA2DII1zC91",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "TKHlHSjxOtH0jgTxWfp8",
+    "estado": "Available",
+    "roomNumber": "Room 4",
+    "price": 140,
+    "hotelId": "eltRKZFk7Cvh81uABPrh",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "ULf2pxJSDck1NRigYJfO",
+    "estado": "Available",
+    "roomNumber": 2,
+    "price": 120.4,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "Uatw8mPDoJMG5FLhBR0W",
+    "estado": "Available",
+    "roomNumber": 1,
+    "price": 110.2,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "UnUMABISDssIYWuWzO1T",
+    "estado": "Available",
+    "roomNumber": "Room 3",
+    "price": 130,
+    "hotelId": "yGYsXFWSQV58AANqpLnm",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "VfZk0mPu6FOTCugQuSlV",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "VnKACNXsVvkGwULrwlzs",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "Yp4IcirJFFLrORaCEVSh",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "ccyR4wwnEBcssDFToT7j",
+    "estado": "Available",
+    "roomNumber": 5,
+    "price": 151,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "capacityAdults": 2,
+    "capacityChildren": 2
+  },
+  {
+    "id": "deluxe-01",
+    "area": 35,
+    "capacityAdults": 2,
+    "imageResourceName": null,
+    "capacityDescription": "2 adultos, 1 niño",
+    "totalCapacity": 3,
+    "price": 1950,
+    "imageResourceId": 0,
+    "capacityChildren": 1,
+    "hotelId": "HQDQVcHSXShy3IV59rDO",
+    "roomType": "Deluxe",
+    "status": "Available",
+    "roomNumber": 201
+  },
+  {
+    "id": "doEcMrGl6h1ezEcUDLeK",
+    "area": 35.68,
+    "capacityAdults": 2,
+    "capacityChildren": 0,
+    "roomType": "Doble Superior",
+    "roomNumber": 301
+  },
+  {
+    "id": "eWubrdBAD7xrYeojQGwK",
+    "estado": "Available",
+    "roomNumber": 4,
+    "price": 140.8,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacityChildren": 1,
+    "capacityAdults": 2
+  },
+  {
+    "id": "estandar-01",
+    "area": 25,
+    "capacityAdults": 2,
+    "imageResourceName": null,
+    "capacityDescription": "2 adultos",
+    "totalCapacity": 2,
+    "price": 1200,
+    "imageResourceId": 0,
+    "capacityChildren": 0,
+    "hotelId": "HQDQVcHSXShy3IV59rDO",
+    "roomType": "Estándar",
+    "status": "Available",
+    "roomNumber": 101
+  },
+  {
+    "id": "f1YnaF60B7GHZbrBltWk",
+    "estado": "Available",
+    "roomNumber": "Room 3",
+    "price": 130,
+    "hotelId": "eltRKZFk7Cvh81uABPrh",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "fRsFPKDvqjYlmNAS3LD8",
+    "estado": "Available",
+    "roomNumber": 4,
+    "price": 140.8,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "hfd4qyfRVvLevlDhLZc5",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "hrAvZU4jwtdQAe2pxcbZ",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "hyZhychD0s188zqqGT3A",
+    "area": 58.34,
+    "capacityAdults": 4,
+    "capacityChildren": 1,
+    "roomType": "Suite Lujo",
+    "roomNumber": 503
+  },
+  {
+    "id": "iKonT3lqDyOMyDy1VIod",
+    "roomNumber": 5,
+    "price": 151,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "status": "Available"
+  },
+  {
+    "id": "iUfIEyBB5MKBnrQDI9NV",
+    "roomNumber": "Room 5",
+    "price": 150,
+    "hotelId": "yGYsXFWSQV58AANqpLnm",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "knqMuPemRjEShrFDgraQ",
+    "estado": "Available",
+    "roomNumber": 5,
+    "price": 151,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "mpd6Ln2HgeMdwTxryzH5",
+    "area": 80,
+    "capacityAdults": 2,
+    "imageResourceName": null,
+    "capacityDescription": "2 adultos, 2 niños",
+    "totalCapacity": 4,
+    "price": 2000,
+    "imageResourceId": 0,
+    "capacityChildren": 2,
+    "hotelId": "HOTEL-DEFAULT",
+    "roomType": "Suite Lujo",
+    "status": "Available",
+    "roomNumber": 132
+  },
+  {
+    "id": "pUghLdrb0Gxgyh3jOHWi",
+    "estado": "Available",
+    "roomNumber": 2,
+    "price": 120.4,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "q6Tq3wG8txctgTfyFAmY",
+    "estado": "Available",
+    "roomNumber": "Room 2",
+    "price": 120,
+    "hotelId": "yGYsXFWSQV58AANqpLnm",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "r8ZVMmdidByPQO0axb3T",
+    "estado": "Available",
+    "roomNumber": 4,
+    "price": 140.8,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "riJejKi6QzKtksaEKXQn",
+    "estado": "Available",
+    "roomNumber": 2,
+    "price": 120.4,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "rxvArWUu8tPY9aTsHvdD",
+    "estado": "Available",
+    "roomNumber": "Room 1",
+    "price": 110,
+    "hotelId": "yGYsXFWSQV58AANqpLnm",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    },
+    "area": 30
+  },
+  {
+    "id": "ttaeNcePjPG2iXgMHssN",
+    "area": 36.99,
+    "capacityAdults": 1,
+    "roomType": "Doble Superior",
+    "capacityChildren": 2,
+    "status": null,
+    "roomNumber": 702
+  },
+  {
+    "id": "u22jcKfMNbbtjUFOtGxZ",
+    "estado": "Available",
+    "roomNumber": 3,
+    "price": 130.6,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "uy3HOHeN5zEtu99O25bb",
+    "estado": "Available",
+    "roomNumber": 1,
+    "price": 110.2,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "wrCtlKiNgTRkRrfMEd8x",
+    "estado": "Available",
+    "roomNumber": 1,
+    "price": 110.2,
+    "hotelId": "yqrBR3OPmiHnWB677l5X",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  },
+  {
+    "id": "wuJE2inobPgOkSJ20get",
+    "estado": "Available",
+    "roomNumber": 4,
+    "price": 140.8,
+    "hotelId": "Pi5xsI6orodYdy1LZUx1",
+    "capacidad": {
+      "capacityAdults": 2,
+      "capacityChildren": 1
+    }
+  }
+]

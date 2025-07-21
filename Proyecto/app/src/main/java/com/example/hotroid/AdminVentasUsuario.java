@@ -9,6 +9,15 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,14 +60,19 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.ByteArrayOutputStream;
 import java.util.List; // Importar java.util.List explícitamente
 import com.itextpdf.text.ListItem; // Importar ListItem de iText
 // No se necesita importar com.itextpdf.text.List con alias, se usará el nombre completo
@@ -419,46 +433,118 @@ public class AdminVentasUsuario extends AppCompatActivity {
             if (outputStream == null) {
                 throw new IOException("Output stream is null. Cannot write PDF.");
             }
-
-            Document document = new Document(PageSize.A4);
-            PdfWriter.getInstance(document, outputStream);
+            // Inicializar documento PDF
+            Document document = new Document();
+            PdfWriter.getInstance(document, outputStream); // ✅ corregido
             document.open();
 
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
-            Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
-            Font itemHeaderFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
-            Font itemFont = new Font(Font.FontFamily.HELVETICA, 12);
-
-            // Título principal
-            Paragraph title = new Paragraph("Reporte de Venta por Usuarios", titleFont);
-            title.setAlignment(Paragraph.ALIGN_CENTER);
-            document.add(title);
-
-            // Subtítulo con el mes del reporte
-            SimpleDateFormat sdfReportMonth = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
-            Paragraph subtitle = new Paragraph("Mes: " + sdfReportMonth.format(selectedCalendar.getTime()), subtitleFont);
-            subtitle.setAlignment(Paragraph.ALIGN_CENTER);
-            subtitle.setSpacingAfter(20f);
-            document.add(subtitle);
-
-            // Generar PDF como una lista de ítems (como cards)
+            // Fuentes
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+            Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font cellBoldFont = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD);
+            Font cellFont = new Font(Font.FontFamily.HELVETICA, 13);
             DecimalFormat df = new DecimalFormat("0.00");
 
-            // Usamos el nombre completo para evitar conflictos: com.itextpdf.text.List
-            com.itextpdf.text.List pdfList = new com.itextpdf.text.List(false, 15);
+            // Agregar logo alineado a la derecha
+            try {
+                Drawable d = ContextCompat.getDrawable(this, R.drawable.logo_app);
+                Bitmap originalBitmap = ((BitmapDrawable) d).getBitmap();
+
+                // Convertir el bitmap en redondo
+                int size = Math.min(originalBitmap.getWidth(), originalBitmap.getHeight());
+                Bitmap roundedBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+
+                Canvas canvas = new Canvas(roundedBitmap);
+                Paint paint = new Paint();
+                paint.setAntiAlias(true);
+                RectF rect = new RectF(0f, 0f, size, size);
+                canvas.drawOval(rect, paint);
+
+                // Usar DST_IN para recortar en forma de círculo
+                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+                canvas.drawBitmap(originalBitmap, new Rect(0, 0, size, size), rect, paint);
+
+                // Convertir a Image de iText
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                roundedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Image logo = Image.getInstance(stream.toByteArray());
+
+
+                logo.scaleAbsolute(50f, 50f);
+                logo.setAbsolutePosition(document.right() - 50, document.top() - 50);
+                document.add(logo);
+            } catch (Exception e) {
+                Log.e("PDF", "No se pudo cargar el logo: " + e.getMessage());
+            }
+
+
+            // Hotel
+            Paragraph hotelName = new Paragraph("Hotel Libertador", titleFont);
+            hotelName.setAlignment(Element.ALIGN_LEFT);
+            hotelName.setSpacingAfter(5f);
+            document.add(hotelName);
+
+            // Título
+            Paragraph title = new Paragraph("Reporte de Ventas por Usuario", subtitleFont);
+            title.setAlignment(Element.ALIGN_LEFT);
+            title.setSpacingAfter(2f);
+            document.add(title);
+
+            // Subtítulo
+            SimpleDateFormat sdfMes = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
+            String mesTexto = sdfMes.format(selectedCalendar.getTime());
+            Paragraph month = new Paragraph("Mes: " + mesTexto, cellBoldFont);
+            month.setAlignment(Element.ALIGN_LEFT);
+            month.setSpacingAfter(10f);
+            document.add(month);
+
+
+            // Tabla con columnas: Cliente | Cantidad de Servicios | Monto Total
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{4f, 2f, 2f});
+
+            Font headerFont = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD);
+
+            // Encabezados de tabla
+            PdfPCell h1 = createCenteredCell("Cliente", headerFont);
+            PdfPCell h2 = createCenteredCell("Servicios Comprados", headerFont);
+            PdfPCell h3 = createCenteredCell("Monto Total (S/.)", headerFont);
+            table.addCell(h1);
+            table.addCell(h2);
+            table.addCell(h3);
+
+            // Totales acumulados
+            int totalServicios = 0;
+            double totalMonto = 0.0;
 
             for (VentaClienteConsolidado venta : ventasConsolidadas) {
-                // Cada usuario es un ListItem
-                ListItem userItem = new ListItem();
-                userItem.add(new Paragraph("Cliente: " + venta.getNombreCompletoCliente(), itemHeaderFont));
-                userItem.add(new Paragraph("  Servicios Comprados: " + venta.getCantidadTotalServicios(), itemFont));
-                userItem.add(new Paragraph("  Monto Total Gastado (S/.): " + df.format(venta.getMontoTotal()), itemFont));
+                table.addCell(new Paragraph(venta.getNombreCompletoCliente(), cellFont));
 
-                pdfList.add(userItem);
+                int cantidad = (int) venta.getCantidadTotalServicios(); // ✅ casteo explícito
+                double monto = venta.getMontoTotal();
+
+                table.addCell(createCenteredCell(String.valueOf(cantidad), cellFont));
+                table.addCell(createCenteredCell(df.format(monto), cellFont));
+
+                totalServicios += cantidad;
+                totalMonto += monto;
             }
-            document.add(pdfList);
 
+            // Fila de totales
+            PdfPCell totalLabel = createCenteredCell("TOTALES", headerFont);
+            totalLabel.setBackgroundColor(new BaseColor(230, 230, 250));
+            table.addCell(totalLabel);
 
+            PdfPCell totalServCell = createCenteredCell(String.valueOf(totalServicios), headerFont);
+            totalServCell.setBackgroundColor(new BaseColor(230, 230, 250));
+            table.addCell(totalServCell);
+
+            PdfPCell totalMontoCell = createCenteredCell(df.format(totalMonto), headerFont);
+            totalMontoCell.setBackgroundColor(new BaseColor(230, 230, 250));
+            table.addCell(totalMontoCell);
+
+            document.add(table);
             document.close();
             outputStream.close();
 

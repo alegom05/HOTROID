@@ -9,6 +9,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,15 +53,30 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import com.itextpdf.text.ListItem;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPCell;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -332,15 +351,13 @@ public class AdminVentasServicio extends AppCompatActivity {
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 
                 pdfUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-                if (pdfUri == null) {
-                    throw new IOException("Failed to create new MediaStore entry.");
-                }
+                if (pdfUri == null) throw new IOException("Failed to create MediaStore entry.");
                 outputStream = resolver.openOutputStream(pdfUri);
 
             } else {
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permiso de almacenamiento denegado. No se puede generar PDF.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Permiso de almacenamiento denegado.", Toast.LENGTH_LONG).show();
                     ActivityCompat.requestPermissions(this,
                             new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             STORAGE_PERMISSION_CODE);
@@ -348,9 +365,7 @@ public class AdminVentasServicio extends AppCompatActivity {
                 }
 
                 File pdfDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                if (!pdfDir.exists()) {
-                    pdfDir.mkdirs();
-                }
+                if (!pdfDir.exists()) pdfDir.mkdirs();
                 pdfFile = new File(pdfDir, fileName);
                 outputStream = new FileOutputStream(pdfFile);
                 pdfUri = FileProvider.getUriForFile(
@@ -360,49 +375,143 @@ public class AdminVentasServicio extends AppCompatActivity {
                 );
             }
 
-            if (outputStream == null) {
-                throw new IOException("Output stream is null. Cannot write PDF.");
-            }
+            if (outputStream == null) throw new IOException("Output stream is null");
 
-            Document document = new Document(PageSize.A4);
-            PdfWriter.getInstance(document, outputStream);
+            Document document = new Document();
+            PdfWriter.getInstance(document, outputStream); // ✅ corregido
             document.open();
 
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
-            Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
-            Font itemHeaderFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
-            Font itemFont = new Font(Font.FontFamily.HELVETICA, 12);
-
-            // Título principal
-            Paragraph title = new Paragraph("Reporte de Venta de Servicios", titleFont);
-            title.setAlignment(Paragraph.ALIGN_CENTER);
-            document.add(title);
-
-            // Subtítulo con el mes del reporte
-            SimpleDateFormat sdfReportMonth = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
-            Paragraph subtitle = new Paragraph("Mes: " + sdfReportMonth.format(selectedCalendar.getTime()), subtitleFont);
-            subtitle.setAlignment(Paragraph.ALIGN_CENTER);
-            subtitle.setSpacingAfter(20f);
-            document.add(subtitle);
-
-            // Generar PDF como una lista de ítems
+            // Fuentes
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+            Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font cellBoldFont = new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD);
+            Font cellFont = new Font(Font.FontFamily.HELVETICA, 13);
             DecimalFormat df = new DecimalFormat("0.00");
 
-            // Usamos el nombre completo para evitar conflictos: com.itextpdf.text.List
-            com.itextpdf.text.List pdfList = new com.itextpdf.text.List(false, 15);
+            // Agregar logo alineado a la derecha
+            try {
+                Drawable d = ContextCompat.getDrawable(this, R.drawable.logo_app);
+                Bitmap originalBitmap = ((BitmapDrawable) d).getBitmap();
+
+                // Convertir el bitmap en redondo
+                int size = Math.min(originalBitmap.getWidth(), originalBitmap.getHeight());
+                Bitmap roundedBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+
+                Canvas canvas = new Canvas(roundedBitmap);
+                Paint paint = new Paint();
+                paint.setAntiAlias(true);
+                RectF rect = new RectF(0f, 0f, size, size);
+                canvas.drawOval(rect, paint);
+
+                // Usar DST_IN para recortar en forma de círculo
+                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+                canvas.drawBitmap(originalBitmap, new Rect(0, 0, size, size), rect, paint);
+
+                // Convertir a Image de iText
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                roundedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Image logo = Image.getInstance(stream.toByteArray());
+
+
+                logo.scaleAbsolute(50f, 50f);
+                logo.setAbsolutePosition(document.right() - 50, document.top() - 50);
+                document.add(logo);
+            } catch (Exception e) {
+                Log.e("PDF", "No se pudo cargar el logo: " + e.getMessage());
+            }
+
+            // Hotel
+            Paragraph hotelName = new Paragraph("Hotel Libertador", titleFont);
+            hotelName.setAlignment(Element.ALIGN_LEFT);
+            hotelName.setSpacingAfter(5f);
+            document.add(hotelName);
+
+            // Título
+            Paragraph title = new Paragraph("Reporte de Venta de Servicios", subtitleFont);
+            title.setAlignment(Element.ALIGN_LEFT);
+            title.setSpacingAfter(2f);
+            document.add(title);
+
+            // Subtítulo
+            SimpleDateFormat sdfMes = new SimpleDateFormat("MMMM yyyy", new Locale("es", "ES"));
+            String mesTexto = sdfMes.format(selectedCalendar.getTime());
+            Paragraph month = new Paragraph("Mes: " + mesTexto, cellBoldFont);
+            month.setAlignment(Element.ALIGN_LEFT);
+            month.setSpacingAfter(10f);
+            document.add(month);
+
+            // Tabla
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{3f, 1f, 2f});
+
+            PdfPCell cell1 = new PdfPCell(new Phrase("Servicio", cellBoldFont));
+            PdfPCell cell2 = new PdfPCell(new Phrase("Cantidad", cellBoldFont));
+            PdfPCell cell3 = new PdfPCell(new Phrase("Monto Total (S/.)", cellBoldFont));
+            for (PdfPCell cell : new PdfPCell[]{cell1, cell2, cell3}) {
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setPaddingTop(6f);
+                cell.setPaddingBottom(6f);
+                table.addCell(cell);
+            }
+
+            // Datos
+            int totalCantidad = 0;
+            double totalMonto = 0.0;
 
             for (VentaServicioConsolidado venta : ventasConsolidadasOriginal) {
-                // Cada servicio es un ListItem
-                ListItem serviceItem = new ListItem();
-                serviceItem.add(new Paragraph("Servicio: " + venta.getNombreServicio(), itemHeaderFont));
-                serviceItem.add(new Paragraph("  Cantidad: " + venta.getCantidadTotal(), itemFont));
-                serviceItem.add(new Paragraph("  Monto Total (S/.): " + df.format(venta.getMontoTotal()), itemFont));
+                String nombre = venta.getNombreServicio();
+                int cantidad = (int) venta.getCantidadTotal();
+                double monto = venta.getMontoTotal();
 
-                pdfList.add(serviceItem);
+                totalCantidad += cantidad;
+                totalMonto += monto;
+
+                PdfPCell c1 = new PdfPCell(new Phrase(nombre, cellFont));
+                PdfPCell c2 = new PdfPCell(new Phrase(String.valueOf(cantidad), cellFont));
+                PdfPCell c3 = new PdfPCell(new Phrase(df.format(monto), cellFont));
+
+                c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                c2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                c3.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+                for (PdfPCell c : new PdfPCell[]{c1, c2, c3}) {
+                    c.setPaddingTop(6f);
+                    c.setPaddingBottom(6f);
+                }
+
+                table.addCell(c1);
+                table.addCell(c2);
+                table.addCell(c3);
             }
-            document.add(pdfList);
 
 
+            // Totales
+            PdfPCell totalLabel = new PdfPCell(new Phrase("TOTALES", cellBoldFont));
+            totalLabel.setColspan(1);
+            totalLabel.setHorizontalAlignment(Element.ALIGN_CENTER);
+            totalLabel.setBackgroundColor(new BaseColor(220, 220, 250));
+            totalLabel.setPaddingTop(6f);
+            totalLabel.setPaddingBottom(6f);
+
+            PdfPCell totalCant = new PdfPCell(new Phrase(String.valueOf(totalCantidad), cellBoldFont));
+            totalCant.setHorizontalAlignment(Element.ALIGN_CENTER);
+            totalCant.setBackgroundColor(new BaseColor(220, 220, 250));
+            totalCant.setPaddingTop(6f);
+            totalCant.setPaddingBottom(6f);
+
+            PdfPCell totalMontoCell = new PdfPCell(new Phrase(df.format(totalMonto), cellBoldFont));
+            totalMontoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            totalMontoCell.setBackgroundColor(new BaseColor(220, 220, 250));
+            totalMontoCell.setPaddingTop(6f);
+            totalMontoCell.setPaddingBottom(6f);
+
+            table.addCell(totalLabel);
+            table.addCell(totalCant);
+            table.addCell(totalMontoCell);
+
+            document.add(table);
             document.close();
             outputStream.close();
 
@@ -419,6 +528,8 @@ public class AdminVentasServicio extends AppCompatActivity {
             Toast.makeText(this, "Error al generar PDF: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+
 
     private void abrirPdf(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);

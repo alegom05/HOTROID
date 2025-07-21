@@ -57,7 +57,7 @@
                     android:id="@+id/tvRolAdmin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Administrador de Hotel"
+                    android:text="Administrador de Hotel - Hotel Libertador"
                     android:textStyle="italic" />
             </LinearLayout>
 

@@ -1,0 +1,208 @@
+[
+  {
+    "id": "1s0NHRdBioPdl90yyItH",
+    "correo": "juan.perez@pucp.edu.pe",
+    "nombre": "Juan",
+    "dni": "12345678",
+    "nacimiento": {
+      "_seconds": 954738000,
+      "_nanoseconds": 941000000
+    }
+  },
+  {
+    "id": "3Dk7PntT8Rcjl5jHjGHdzQS9Pxs2",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "nacimiento": {
+      "_seconds": 1751100004,
+      "_nanoseconds": 640000000
+    },
+    "fechaNacimiento": "",
+    "telefono": "999555444",
+    "correo": "thehotroid@gmail.com",
+    "dni": "14231432",
+    "apellido": "Gomez\n",
+    "nombre": "Alejandro\n",
+    "idRol": "Taxista",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "48ngHwDMgZf95lbLKpqi3BVwbcp1",
+    "apellido": "VALERIA",
+    "correo": "a20203644@pucp.edu.pe",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "nombre": "NIKOL",
+    "nacimiento": {
+      "_seconds": 1751763384,
+      "_nanoseconds": 610000000
+    },
+    "fechaNacimiento": "12 de Julio, 2000",
+    "telefono": "",
+    "dni": "76510881",
+    "hotelesfav": [
+      null
+    ],
+    "idRol": "Cliente"
+  },
+  {
+    "id": "5I0x9RUKbvNwDzivkwFLXjuFhDP2",
+    "correo": "c.terrones@pucp.edu.pe",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "telefono": null,
+    "nacimiento": {
+      "_seconds": 1751139683,
+      "_nanoseconds": 401000000
+    },
+    "idRol": "Admin",
+    "apellido": "Terrones\n",
+    "nombre": "Christopher\n",
+    "dni": "23454567",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "7Yegdd7MxGYkINJp5DV0r6fa1ss2",
+    "apellido": "Bustamante",
+    "correo": "pm.bustamante@gmail.com",
+    "nombre": "Pedro",
+    "dni": "71735617",
+    "idRol": "Superadmin"
+  },
+  {
+    "id": "9yLzTp9iAKD9dlzo8lxC",
+    "correo": "juan.perez@pucp.edu.pe",
+    "nombre": "Juan",
+    "dni": "12345678",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "ETQfFFgx2ubVqFQ7f6OrjXhaHir1",
+    "apellido": "Montes",
+    "correo": "valery06mn@gmail.com",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "telefono": null,
+    "nombre": "Valeria",
+    "dni": null,
+    "nacimiento": {
+      "_seconds": 1751766701,
+      "_nanoseconds": 557000000
+    },
+    "idRol": "Cliente",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "I6K6r3aG5BMrqwClhBw9w61hgGQ2",
+    "idRol": "Cliente",
+    "apellido": "HS",
+    "correo": "isaachuamanisulca@gmail.com",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "nombre": "Isaac",
+    "nacimiento": {
+      "_seconds": 1752503349,
+      "_nanoseconds": 452000000
+    },
+    "dni": "71032954",
+    "telefono": "966067091",
+    "fechaNacimiento": "28/11/2002",
+    "hotelesFav": []
+  },
+  {
+    "id": "clTiyIIz15SRQ7u4NOqXVNSZm8L2",
+    "apellido": "Terrones",
+    "correo": "cterrones@gmail.com",
+    "nombre": "Christopher",
+    "dni": "15421542",
+    "idRol": "Admin"
+  },
+  {
+    "id": "eeMzJ6gz5lbA7LgHtefmDRGWqUG2",
+    "apellido": "Gomez",
+    "correo": "thehotroid@gmail.com",
+    "nombre": "Alejandro",
+    "dni": "12121212",
+    "idRol": "Superman",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "iqEeLDtESWbOd2QeuzEIyTHfwy52",
+    "correo": "carlosjn.gmos@gmail.com",
+    "nombre": "Carlos",
+    "dni": "74123568",
+    "apellido": "Gomez\n",
+    "idRol": "Taxista",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "jt5pfFimE9HNLV08wVrA",
+    "correo": "juan.perez@pucp.edu.pe",
+    "nombre": "Juan",
+    "dni": "12345678",
+    "apellido": "Perez",
+    "telefono": "983567889",
+    "idRol": "taxista",
+    "hotelesfav": [
+      null
+    ]
+  },
+  {
+    "id": "ltCterZTMOgyEbhgJKRyfCuwSXw2",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "telefono": null,
+    "dni": null,
+    "nacimiento": {
+      "_seconds": 1751315396,
+      "_nanoseconds": 218000000
+    },
+    "apellido": "Bustamante Melo",
+    "nombre": "Pedro Miguel",
+    "correo": "a20206156@pucp.edu.pe",
+    "hotelesfav": [
+      null
+    ],
+    "idRol": "Superadmin"
+  },
+  {
+    "id": "x6m7cKisCwNlTF56I3GCGooAIHM2",
+    "idRol": "Cliente",
+    "apellido": "Huamani",
+    "correo": "isaac.huamani@pucp.edu.pe",
+    "nombre": "Isaac",
+    "dni": "71032961",
+    "hotelesFav": []
+  },
+  {
+    "id": "zqPY1LQ416M9PDX5OqFuJdhoycm2",
+    "correo": "76510881@pronabec.edu.pe",
+    "numeroTarjetaCredito": null,
+    "direccion": null,
+    "nombre": "NIKOL",
+    "nacimiento": {
+      "_seconds": 1751839905,
+      "_nanoseconds": 543000000
+    },
+    "idRol": "Cliente",
+    "fechaNacimiento": "12 de Julio, 2000",
+    "apellido": "VALERIA",
+    "telefono": "",
+    "dni": "",
+    "hotelesfav": [
+      null
+    ]
+  }
+]

@@ -156,8 +156,6 @@
                         android:background="?android:attr/listDivider"
                         android:alpha="0.2" />
 
-
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1.5dp"
