@@ -52,9 +52,9 @@ public class SuperCuentaActivity extends AppCompatActivity {
         listaDatosCuenta.add(new String[]{"Nombres", "Pedro Miguel"});
         listaDatosCuenta.add(new String[]{"Apellidos", "Bustamante Melo"});
         listaDatosCuenta.add(new String[]{"Modo de Identificación", "DNI"});
-        listaDatosCuenta.add(new String[]{"Número de Identidad", "12341234"});
+        listaDatosCuenta.add(new String[]{"Número de Identidad", "71735617"});
         listaDatosCuenta.add(new String[]{"Fecha de nacimiento", "15 de septiembre de 2002"});
-        listaDatosCuenta.add(new String[]{"Correo electrónico", "pedro.bume@gmail.com"});
+        listaDatosCuenta.add(new String[]{"Correo electrónico", "pm.bustamante@gmail.com"});
         listaDatosCuenta.add(new String[]{"Teléfono", "912345123"});
         listaDatosCuenta.add(new String[]{"Domicilio", "Av. Las Palmeras 123, Los Olivos"});
 
