@@ -20,6 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +39,8 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
 
     // Firebase
     private FirebaseFirestore db;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
     private ListenerRegistration tripListener;
     private ListenerRegistration driverLocationListener;
 
@@ -54,16 +58,22 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
 
         // Inicializar Firebase
         db = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
 
-        // Obtener ID del cliente desde SharedPreferences
-        SharedPreferences sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE);
-        clienteId = sharedPref.getString("userId", null);
-
-        if (clienteId == null) {
-            Toast.makeText(this, "Error: No se pudo obtener el ID del usuario", Toast.LENGTH_SHORT).show();
+        // Verificar si el usuario está autenticado
+        if (currentUser == null) {
+            Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show();
+            // Redirigir al login si es necesario
+            // Intent intent = new Intent(this, LoginActivity.class);
+            // startActivity(intent);
             finish();
             return;
         }
+
+        // Obtener el UID del usuario autenticado
+        clienteId = currentUser.getUid();
+        Log.d(TAG, "Cliente ID obtenido: " + clienteId);
 
         // Inicializar componentes
         initViews();
@@ -149,9 +159,20 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void crearNuevoViaje() {
-        // Obtener ID del hotel desde SharedPreferences o Intent
+        // Para el hotelId, primero intenta obtenerlo desde SharedPreferences
+        // Si no existe, podrías obtenerlo de otra forma o pedírselo al usuario
         SharedPreferences sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE);
         String hotelId = sharedPref.getString("hotelId", null);
+
+        // Si no hay hotelId en SharedPreferences, podrías:
+        // 1. Obtenerlo del Intent que llamó a esta actividad
+        // 2. Obtenerlo de la base de datos del usuario
+        // 3. Usar un valor por defecto o mostrar un selector de hoteles
+
+        if (hotelId == null) {
+            // Intentar obtener desde Intent
+            hotelId = getIntent().getStringExtra("hotelId");
+        }
 
         if (hotelId == null) {
             Toast.makeText(this, "Error: No se pudo obtener el hotel", Toast.LENGTH_SHORT).show();
