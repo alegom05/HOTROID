@@ -128,7 +128,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Administradores"
-                                android:textSize="17sp"
+                                android:textSize="16dp"
                                 android:textStyle="bold"/>
 
                             <TextView
@@ -139,7 +139,7 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="120dp"
+                            android:layout_width="118dp"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_admin_character"
@@ -176,7 +176,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Taxistas"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"/>
 
                             <TextView
@@ -187,7 +187,7 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="120dp"
+                            android:layout_width="118dp"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_taxi_character" />
@@ -222,7 +222,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Clientes"
-                                android:textSize="18sp"
+                                android:textSize="16dp"
                                 android:textStyle="bold"/>
 
                             <TextView
@@ -233,7 +233,7 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="120dp"
+                            android:layout_width="118dp"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_client_character" />
