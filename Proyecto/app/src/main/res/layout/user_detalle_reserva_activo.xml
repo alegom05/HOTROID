@@ -180,7 +180,7 @@
                                     android:textColor="@android:color/white"
                                     android:text="Check-In"
                                     android:textSize="12sp"
-                                    android:enabled="false"
+                                    android:enabled="true"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"

@@ -212,6 +212,8 @@
                         android:text="Gimnasio"
                         android:padding="8dp"
                         app:switchPadding="12dp"
+                        app:thumbTint="@color/verde_jade_claro"
+                        app:trackTint="@color/verdejade"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
                     <TextView
@@ -260,6 +262,8 @@
                         android:text="Piscina"
                         android:padding="8dp"
                         app:switchPadding="12dp"
+                        app:thumbTint="@color/verde_jade_claro"
+                        app:trackTint="@color/verdejade"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
                     <TextView
@@ -283,6 +287,8 @@
                         android:text="Parqueo"
                         android:padding="8dp"
                         app:switchPadding="12dp"
+                        app:thumbTint="@color/verde_jade_claro"
+                        app:trackTint="@color/verdejade"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
                     <TextView

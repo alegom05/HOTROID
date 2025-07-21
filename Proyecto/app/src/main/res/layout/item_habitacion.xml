@@ -38,7 +38,7 @@
             android:contentDescription="Imagen de la habitación"
             android:src="@drawable/placeholder_hotel"
             tools:src="@drawable/placeholder_hotel" />
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/btnVerDetalle"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -46,7 +46,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="Ver más detalles"
             android:src="@drawable/ic_search"
-            app:tint="@color/cliente1" />
+            app:tint="@color/cliente1" />-->
     </LinearLayout>
 
         <!-- Contenido de la habitación -->

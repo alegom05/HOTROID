@@ -95,7 +95,7 @@ public class OpcionesAdapter extends RecyclerView.Adapter<OpcionesAdapter.ViewHo
             tvHabitaciones = itemView.findViewById(R.id.tvHabitaciones);
 
 //            // Botón "ver detalle" si lo agregas en el layout
-            btnVerDetalle = itemView.findViewById(R.id.btnVerDetalle);
+            /*btnVerDetalle = itemView.findViewById(R.id.btnVerDetalle);*/
 //            btnVerDetalle = new MaterialButton(itemView.getContext());
 //            btnVerDetalle.setText("Ver detalle");
 //            btnVerDetalle.setTextSize(12);
@@ -137,7 +137,7 @@ public class OpcionesAdapter extends RecyclerView.Adapter<OpcionesAdapter.ViewHo
             // Listeners
             btnSeleccionar.setOnClickListener(v -> seleccionar(opcion));
             cardView.setOnClickListener(v -> seleccionar(opcion));
-            btnVerDetalle.setOnClickListener(v -> listener.onVerDetalle(opcion));
+            //btnVerDetalle.setOnClickListener(v -> listener.onVerDetalle(opcion));
             ;
         }
 

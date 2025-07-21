@@ -18,12 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -233,13 +227,12 @@ public class UserServTaxi extends AppCompatActivity {
                     break;
 
                 case "llegó a destino":
-                case "llego a destino":
                     txtDriverInfo.setText("Has llegado a tu destino");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
                     qrCodeImage.setVisibility(View.VISIBLE); // Show QR code
 
-                    Toast.makeText(this, "¡Has llegado a tu destino! Escanea el código QR para completar el viaje", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "¡Has llegado a tu destino! Escanea taxista deberá escanear el código QR para completar el viaje", Toast.LENGTH_LONG).show();
                     break;
 
                 case "completado":
