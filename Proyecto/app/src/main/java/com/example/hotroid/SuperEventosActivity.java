@@ -235,7 +235,7 @@ public class SuperEventosActivity extends AppCompatActivity {
         }
 
         adapter.actualizarLista(filteredEventList);
-        
+
     }
 
     private void setupBottomNavigation() {

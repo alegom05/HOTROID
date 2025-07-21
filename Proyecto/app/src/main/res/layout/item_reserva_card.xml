@@ -25,8 +25,8 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:text="Cliente: Nombre del Cliente"/>
+        android:textColor="@android:color/black"
+        android:text="Cliente: Nombre del Cliente"/>
 
         <TextView
             android:id="@+id/tvFechaReservaCard"
@@ -45,6 +45,15 @@
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:text="Habitaciones: X"/>
+
+        <TextView
+            android:id="@+id/tvCobrosAdicionalesCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/holo_orange_dark"
+            android:text="Cobros Adicionales: $X"/>
 
         <TextView
             android:id="@+id/tvPrecioTotalCard"
