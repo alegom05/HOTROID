@@ -74,7 +74,7 @@ public class ChatDetalladoUser extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        /*EdgeToEdge.enable(this);*/
 
         // Configurar la ventana para ajustarse al teclado
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -82,11 +82,11 @@ public class ChatDetalladoUser extends AppCompatActivity {
         setContentView(R.layout.user_chat_detallado);
 
         // Configurar window insets
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
+        /*findViewById(R.id.toolbar).setOnApplyWindowInsetsListener((v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
-        });
+        });*/
 
         // Obtener datos del intent
         getIntentData();
