@@ -60,9 +60,11 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
             holder.tvNombreHotel.setText(item.getHotel().getName());
 
             // Cargar imagen del hotel
-            if (item.getHotel().getImageUrls() != null && !item.getHotel().getImageUrls().isEmpty()) {
+            List<String> urls = item.getHotel().getImageUrls();
+            // Cargar imagen del hotel
+            if (urls != null && !urls.isEmpty()) {
                 Glide.with(context)
-                        .load(item.getHotel().getImageUrls())
+                        .load(urls.get(0))
                         .placeholder(R.drawable.placeholder_hotel)
                         .error(R.drawable.ic_hotel_error)
                         .centerCrop()
