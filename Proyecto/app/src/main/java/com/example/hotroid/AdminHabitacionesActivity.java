@@ -102,11 +102,12 @@ public class AdminHabitacionesActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(AdminHabitacionesActivity.this,AdminHabitacionDetallesActivity.class);
                 intent.putExtra("ROOM_ID", clickedRoom.getId());
-                intent.putExtra("ROOM_NUMBER", clickedRoom.getRoomNumber());
+                intent.putExtra("ROOM_NUMBER", clickedRoom.getRoomNumber()); // ✅ como int
                 intent.putExtra("ROOM_TYPE", clickedRoom.getRoomType());
                 intent.putExtra("CAPACITY_ADULTS", clickedRoom.getCapacityAdults()); // Pasar como int
                 intent.putExtra("CAPACITY_CHILDREN", clickedRoom.getCapacityChildren()); // Pasar como int
                 intent.putExtra("AREA", clickedRoom.getArea()); // ¡Pasar como double!
+                intent.putExtra("STATUS", clickedRoom.getStatus());
                 startActivity(intent);
             }
         });
