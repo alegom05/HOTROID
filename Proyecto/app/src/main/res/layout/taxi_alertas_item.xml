@@ -60,9 +60,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-    android:textSize="14sp"
-    android:textColor="#777777"
-    tools:text="Hace 5 min" />
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@color/blue_status"
+        tools:text="Hace 5 min" />
 
 </LinearLayout>
     </androidx.cardview.widget.CardView>

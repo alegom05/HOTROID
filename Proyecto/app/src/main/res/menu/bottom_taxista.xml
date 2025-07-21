@@ -14,8 +14,8 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/notify"
-        android:icon="@drawable/baseline_alert"
-        android:title="Alertas"
+        android:icon="@drawable/viaje"
+        android:title="Viajes"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -19,6 +19,9 @@ import com.example.hotroid.bean.Room;
 import com.example.hotroid.bean.RoomGroupOption;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import java.util.HashMap;
+import java.util.Map;
 import android.widget.Toast;
 
 
@@ -79,6 +82,8 @@ public class HotelDetalladoUser extends AppCompatActivity {
     private String hotelId;
     private FirebaseFirestore db;
     private List<Valoracion> comentarios = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +106,7 @@ public class HotelDetalladoUser extends AppCompatActivity {
         loadHotelImages();
 
         // Configurar botón de favoritos
-//        configurarBotonFavoritos();
+        configurarBotonFavoritos();
         // Cargar datos del hotel (simulado)
 //        cargarDatosHotel();
         // Configurar galería de imágenes
@@ -449,16 +454,77 @@ public class HotelDetalladoUser extends AppCompatActivity {
 //    }
 
     private void configurarBotonFavoritos() {
+        // Primero verificar si ya está en favoritos
+        verificarEstadoFavorito();
+
         binding.favoriteIcon.setOnClickListener(v -> {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser == null) {
+                Toast.makeText(this, "Debes iniciar sesión para usar favoritos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String userId = currentUser.getUid();
             isFavorite = !isFavorite;
+
             if (isFavorite) {
-                binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
+                // Añadir a favoritos
+                añadirAFavoritos(userId);
+                binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_filled);
                 Toast.makeText(this, "Añadido a favoritos", Toast.LENGTH_SHORT).show();
             } else {
-                binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
+                // Quitar de favoritos
+                quitarDeFavoritos(userId);
+                binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
                 Toast.makeText(this, "Eliminado de favoritos", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void verificarEstadoFavorito() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        String userId = currentUser.getUid();
+        db.collection("usuarios").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> favoritos = (List<String>) documentSnapshot.get("hotelesFav");
+                        if (favoritos != null && favoritos.contains(hotelId)) {
+                            isFavorite = true;
+                            binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_filled);
+                        } else {
+                            isFavorite = false;
+                            binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error verificando favorito", e));
+    }
+
+    private void añadirAFavoritos(String userId) {
+        db.collection("usuarios").document(userId)
+                .update("hotelesFav", com.google.firebase.firestore.FieldValue.arrayUnion(hotelId))
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al añadir favorito", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error añadiendo favorito", e);
+                    // Revertir el estado visual si hay error
+                    isFavorite = false;
+                    binding.favoriteIcon.setImageResource(R.drawable.ic_favorite);
+                });
+    }
+
+    private void quitarDeFavoritos(String userId) {
+        db.collection("usuarios").document(userId)
+                .update("hotelesFav", com.google.firebase.firestore.FieldValue.arrayRemove(hotelId))
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al quitar favorito", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error quitando favorito", e);
+                    // Revertir el estado visual si hay error
+                    isFavorite = true;
+                    binding.favoriteIcon.setImageResource(R.drawable.ic_favorite_filled);
+                });
     }
 
     //modificar fechas inicio y fin de reserva

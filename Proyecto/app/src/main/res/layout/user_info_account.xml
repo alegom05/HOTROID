@@ -14,7 +14,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#FF9800"
+        android:background="@color/cliente1"
         android:elevation="4dp"
         app:navigationIcon="@drawable/ic_back"
         app:navigationIconTint="@color/white"
@@ -79,10 +79,9 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/baseline_account"
                             app:shapeAppearanceOverlay="@style/CircleImageView"
-                            app:strokeColor="@color/naranjaTransparen"
+                            app:strokeColor="@color/cliente1"
                             app:strokeWidth="3dp" />
-
-                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/fab_edit_photo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -93,7 +92,8 @@
                             android:src="@drawable/photo_camera_24px"
                             app:backgroundTint="@color/naranjaTransparen"
                             app:fabSize="mini"
-                            app:tint="?attr/colorOnSecondary" />
+                            app:tint="?attr/colorOnSecondary" />-->
+
 
                     </RelativeLayout>
                     <TextView
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Información Personal"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/cliente2"
                 android:textSize="18sp"
                 android:textStyle="bold" />
             <!-- Card de Nombre Completo -->
@@ -150,7 +150,7 @@
                         android:layout_height="24dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/baseline_account"
-                        app:tint="@color/naranjaTransparen" />
+                        app:tint="@color/cliente1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -210,7 +210,7 @@
                         android:layout_height="24dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/baseline_call_24"
-                        app:tint="@color/naranjaTransparen" />
+                        app:tint="@color/cliente1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -270,7 +270,7 @@
                         android:layout_height="24dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/outline_email_24"
-                        app:tint="@color/naranjaTransparen" />
+                        app:tint="@color/cliente1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -329,7 +329,7 @@
                         android:layout_height="24dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/ic_event"
-                        app:tint="@color/naranjaTransparen" />
+                        app:tint="@color/cliente1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -359,7 +359,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="24 años"
-                            android:textColor="?attr/colorSecondary"
+                            android:textColor="@color/cliente2"
                             android:textSize="12sp"
                             android:textStyle="italic" />
 
@@ -398,7 +398,7 @@
                         android:layout_height="24dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/outline_contact_emergency_24"
-                        app:tint="@color/naranjaTransparen" />
+                        app:tint="@color/cliente1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -450,7 +450,6 @@
         </LinearLayout>
 
     </ScrollView>
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -464,4 +463,5 @@
         app:layout_constraintTop_toBottomOf="@+id/scrollviewpage"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_menu_user" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

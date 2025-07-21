@@ -1,103 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <!-- Avatar del hotel -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/chatProfileImage"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/hotel_decameron"
-        app:civ_border_width="1dp"
-        app:civ_border_color="@color/cliente1" />
-
-    <!-- Contenido del chat -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <!-- Header con nombre y timestamp -->
+        <!-- Avatar del hotel -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chatProfileImage"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/hotel_decameron"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/cliente1" />
+
+        <!-- Contenido del chat -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/chatHotelName"
-                android:layout_width="0dp"
+            <!-- Header con nombre y timestamp -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Hotel Decamerón"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-            <TextView
-                android:id="@+id/chatTimestamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="15:30"
-                android:textSize="12sp"
-                android:textColor="@color/cliente1"
-                android:layout_marginStart="8dp" />
-
-        </LinearLayout>
-
-        <!-- Último mensaje y badge -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="4dp">
-
-            <TextView
-                android:id="@+id/chatLastMessage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="¡Hola! Bienvenido al asistente virtual..."
-                android:textSize="14sp"
-                android:textColor="@color/cliente2"
-                android:maxLines="2"
-                android:ellipsize="end" />
-
-            <!-- Badge de mensajes no leídos -->
-            <FrameLayout
-                android:id="@+id/unreadBadge"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/circle_badge_background"
-                android:visibility="gone">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/unreadCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="1"
-                    android:textSize="10sp"
-                    android:textColor="@color/white"
-                    android:gravity="center"
-                    android:textStyle="bold" />
+                    android:id="@+id/chatHotelName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hotel Decamerón"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-            </FrameLayout>
+                <TextView
+                    android:id="@+id/chatTimestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15:30"
+                    android:textSize="12sp"
+                    android:textColor="@color/cliente1"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- Último mensaje y badge -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/chatLastMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="¡Hola! Bienvenido al asistente virtual..."
+                    android:textSize="14sp"
+                    android:textColor="@color/cliente2"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+
+                <!-- Badge de mensajes no leídos -->
+                <FrameLayout
+                    android:id="@+id/unreadBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/circle_badge_background"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/unreadCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="1"
+                        android:textSize="10sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -2,6 +2,9 @@ package com.example.hotroid.bean;
 
 import com.google.firebase.firestore.Exclude; // Import for Firestore exclusion
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cliente {
     private String firestoreId; // Para almacenar el ID del documento en Firestore
     private String nombres;
@@ -15,13 +18,15 @@ public class Cliente {
     private String direccion;
     private String fotoPerfilUrl; // ¡AÑADIDO PARA LA FOTO DE PERFIL!
 
+    private List<String> hotelesFav;
+
     public Cliente() {
         // Constructor vacío requerido para Firebase Firestore
     }
 
     // Constructor con todos los campos (excepto firestoreId, que se asigna después de guardar)
     public Cliente(String nombres, String apellidos, String estado, String tipoDocumento, String numeroDocumento,
-                   String nacimiento, String correo, String telefono, String direccion, String fotoPerfilUrl) {
+                   String nacimiento, String correo, String telefono, String direccion, String fotoPerfilUrl, List<String> hotelesFav) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.estado = estado;
@@ -31,6 +36,7 @@ public class Cliente {
         this.correo = correo;
         this.telefono = telefono;
         this.direccion = direccion;
+        this.hotelesFav = hotelesFav != null ? hotelesFav : new ArrayList<>();
         this.fotoPerfilUrl = fotoPerfilUrl; // Inicializa la URL de la foto
     }
 
@@ -48,7 +54,9 @@ public class Cliente {
     public String getTelefono() { return telefono; }
     public String getDireccion() { return direccion; }
     public String getFotoPerfilUrl() { return fotoPerfilUrl; }
-
+    public List<String> getHotelesFav() {
+        return hotelesFav != null ? hotelesFav : new ArrayList<>();
+    }
     // Setters
     public void setNombres(String nombres) { this.nombres = nombres; }
     public void setApellidos(String apellidos) { this.apellidos = apellidos; }
@@ -63,7 +71,9 @@ public class Cliente {
     public void setTelefono(String telefono) { this.telefono = telefono; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
     public void setFotoPerfilUrl(String fotoPerfilUrl) { this.fotoPerfilUrl = fotoPerfilUrl; }
-
+    public void setHotelesFav(List<String> hotelesFav) {
+        this.hotelesFav = hotelesFav;
+    }
     // Getter y Setter para firestoreId (se usa para manejar el ID del documento en la app,
     // pero no se guarda directamente en Firestore con @Exclude)
     @Exclude

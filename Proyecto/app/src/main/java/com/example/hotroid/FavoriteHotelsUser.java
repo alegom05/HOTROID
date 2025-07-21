@@ -1,101 +1,166 @@
 package com.example.hotroid;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.Color;
-import com.example.hotroid.R;
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import android.widget.LinearLayout;
 
-import com.google.android.material.card.MaterialCardView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotroid.bean.Hotel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FavoriteHotelsUser extends AppCompatActivity {
-    private ImageButton deleSelectionButton;
+    private static final String TAG = "FavoriteHotelUser";
+
+    private RecyclerView recyclerView;
+    private LinearLayout emptyStateLayout;
+    private HotelFavoriteAdapter favoriteAdapter;
+    private List<Hotel> favoriteHotels = new ArrayList<>();
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.user_favorite_hotels);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        LinearLayout backAndTitle = findViewById(R.id.back_and_tittle);
-        //se señala(y crea)  el boton de eliminar pero permanece oculto
-        deleSelectionButton = new ImageButton(this);
-        deleSelectionButton.setImageResource(R.drawable.delete_24);
-        deleSelectionButton.setContentDescription("Eliminar de favoritos");
-        deleSelectionButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        try {
+            setContentView(R.layout.user_favorite_hotels);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(0,2,5,2);
-        deleSelectionButton.setLayoutParams(params);
+            db = FirebaseFirestore.getInstance();
 
-        // Agrega el botón al layout y lo oculta
-        backAndTitle.addView(deleSelectionButton);
-        deleSelectionButton.setVisibility(View.GONE);
+            findViewById(R.id.back_button).setOnClickListener(v -> {
+                // Regresar a la actividad anterior sin ir a HotelesFragment
+                finish();
+            });
 
-        //al presionar el boton de delete en el toolbar
-        deleSelectionButton.setOnClickListener(v1 -> {
-            Toast.makeText(FavoriteHotelsUser.this, "Eliminando seleccionados", Toast.LENGTH_SHORT).show();
-        });
+            initViews();
+            setupRecyclerView();
+            loadFavoriteHotels();
 
-        //llamado del longpress de los cards
-        handleLongPress();
+        } catch (Exception e) {
+            Log.e(TAG, "Error en onCreate", e);
+            Toast.makeText(this, "Error al cargar la pantalla", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
-     /**cambiando la vista (barra superior) al mantener presionado un card*/
-    private void handleLongPress(){
-        LinearLayout backAndTitle = findViewById(R.id.back_and_tittle);
-        TextView titleText = findViewById(R.id.title_text);
-        ImageButton backButtom = findViewById(R.id.back_button);
+    @Override
+    public void onBackPressed() {
+        // Solo cerrar esta actividad, no navegar
+        super.onBackPressed();
+    }
 
-        MaterialCardView card1 = findViewById(R.id.card1);
-        ImageView check1 = findViewById(R.id.checkicon1);
+    private void initViews() {
+        recyclerView = findViewById(R.id.recyclerViewFavorites);
+        emptyStateLayout = findViewById(R.id.empty_state_layout);
+    }
 
-        card1.setOnLongClickListener(v -> {
-            titleText.setText("Elemento(s) seleccionado(s)"); //cmbia el texto del titulo
-            check1.setVisibility(View.VISIBLE); //el check se vuelve visible
-            backAndTitle.setBackgroundColor(ContextCompat.getColor(FavoriteHotelsUser.this, R.color.azulNoti)); // Change background color if needed
-            backButtom.setImageResource(R.drawable.baseline_close_24); // se cambia el icono de retroceso a "x"
-            backButtom.setContentDescription("Cancelar selección");
-            deleSelectionButton.setVisibility(View.VISIBLE);
-            //mostramos el boton de delete en el toolbar
-            /*deleSelectionButton.setOnClickListener(v1 -> {
-                Toast.makeText(FavoriteHotelsUser.this, "Eliminando seleccionados", Toast.LENGTH_SHORT).show();
-            });
-            backAndTitle.addView(deleSelectionButton); *///se agrega el boton de delete a la barra(toolbar)
-            return true;
-        });
+    private void setupRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        /** se regresa el icono de "x" a "<-" para cancelar la selección**/
-        backButtom.setOnClickListener(v -> {
-            titleText.setText("Holteles Favoritos");
-            backButtom.setImageResource(R.drawable.baseline_arrow_back_24);
-            backButtom.setContentDescription("Volver");
-            // Restaura el color de fondo original desde el tema
-            backAndTitle.setBackgroundColor(
-                    ContextCompat.getColor(FavoriteHotelsUser.this, android.R.color.transparent) // o usa el valor de fondo original
-            );
-            // Ocultar botón de eliminar y check
-            if (deleSelectionButton != null)
-                deleSelectionButton.setVisibility(View.GONE);
-            check1.setVisibility(View.GONE);  // Hide the checkmark
-        });
+        favoriteAdapter = new HotelFavoriteAdapter(favoriteHotels, this);
+        recyclerView.setAdapter(favoriteAdapter);
+    }
+
+    private void loadFavoriteHotels() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            showEmptyState();
+            return;
+        }
+
+        String userId = currentUser.getUid();
+        Log.d(TAG, "Cargando favoritos para usuario: " + userId);
+
+        db.collection("usuarios").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> hotelIds = (List<String>) documentSnapshot.get("hotelesFav");
+                        Log.d(TAG, "Hoteles favoritos encontrados: " + (hotelIds != null ? hotelIds.size() : 0));
+
+                        if (hotelIds != null && !hotelIds.isEmpty()) {
+                            loadHotelsData(hotelIds);
+                        } else {
+                            showEmptyState();
+                        }
+                    } else {
+                        Log.w(TAG, "Documento de usuario no existe");
+                        showEmptyState();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error cargando favoritos", e);
+                    showEmptyState();
+                });
+    }
+
+    private void loadHotelsData(List<String> hotelIds) {
+        favoriteHotels.clear();
+        final int totalHotels = hotelIds.size();
+        final int[] loadedCount = {0};
+
+        for (String hotelId : hotelIds) {
+            Log.d(TAG, "Cargando hotel: " + hotelId);
+
+            db.collection("hoteles").document(hotelId)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists()) {
+                            Hotel hotel = doc.toObject(Hotel.class);
+                            if (hotel != null) {
+                                hotel.setIdHotel(doc.getId());
+                                favoriteHotels.add(hotel);
+                                Log.d(TAG, "Hotel cargado: " + hotel.getName());
+                            }
+                        }
+                        loadedCount[0]++;
+
+                        if (loadedCount[0] == totalHotels) {
+                            updateUI();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error cargando hotel: " + hotelId, e);
+                        loadedCount[0]++;
+
+                        if (loadedCount[0] == totalHotels) {
+                            updateUI();
+                        }
+                    });
+        }
+    }
+
+    private void updateUI() {
+        Log.d(TAG, "Actualizando UI con " + favoriteHotels.size() + " hoteles");
+
+        if (favoriteHotels.isEmpty()) {
+            showEmptyState();
+        } else {
+            showHotels();
+        }
+    }
+
+    private void showEmptyState() {
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
+        Log.d(TAG, "Mostrando estado vacío");
+    }
+
+    private void showHotels() {
+        emptyStateLayout.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        favoriteAdapter.updateList(favoriteHotels);
+        Log.d(TAG, "Mostrando hoteles");
     }
 }
