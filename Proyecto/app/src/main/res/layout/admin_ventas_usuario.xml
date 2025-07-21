@@ -146,48 +146,58 @@
                 android:textColor="@color/white"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center"
-                 /> <LinearLayout
-            android:id="@+id/layoutBuscador"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/rounded_border_background"
-            android:padding="4dp">
-
-            <EditText
-                android:id="@+id/etBuscador"
-                android:layout_width="0dp"
+                 />
+            <LinearLayout
+                android:id="@+id/layoutBuscador"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/search_user_hint"
-                android:padding="8dp"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="8dp"
-                android:singleLine="true"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textColorHint="#888888" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:padding="4dp"
+                android:baselineAligned="false">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLimpiar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/clear_button"
-                android:backgroundTint="#009688"
-                android:textColor="@color/white"
-                android:layout_marginStart="8dp"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/rounded_border_background"
+                    android:padding="4dp">
 
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp" />
-        </LinearLayout>
+                    <EditText
+                        android:id="@+id/etBuscador"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/search_user_hint"
+                        android:padding="8dp"
+                        android:background="@android:color/transparent"
+                        android:drawableStart="@drawable/ic_search"
+                        android:drawablePadding="8dp"
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textColorHint="#888888" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLimpiar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clear_button"
+                    android:backgroundTint="#009688"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="8dp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerVentasUsuario"

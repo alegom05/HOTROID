@@ -535,13 +535,18 @@ public class UbicacionActivity extends AppCompatActivity implements OnMapReadyCa
         autoCompleteDireccion.setEnabled(enable);
         tvSeleccionLugares.setClickable(enable);
         tvSeleccionLugares.setFocusable(enable);
-        btnGuardarActualizar.setText(enable ? "Guardar" : "Actualizar");
+        btnGuardarActualizar.setText(enable ? "Guardar" : "Editar");
 
-        // Si se cambia a modo edición, aseguramos que los marcadores se muestren
-        // Si se cambia a solo lectura, los marcadores deben estar ya correctamente dibujados por loadHotelLocation/saveHotelLocation
+        // Cambiar color según estado
+        if (enable) {
+            btnGuardarActualizar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.teal_700)); // verde jade
+        } else {
+            btnGuardarActualizar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.blue_500)); // azul
+        }
+
         if (mMap != null) {
-            // Siempre llamamos a updateMapMarkers para asegurar que los marcadores del hotel y turísticos estén presentes
             updateMapMarkers(autoCompleteDireccion.getText().toString(), lugaresElegidos);
         }
     }
+
 }

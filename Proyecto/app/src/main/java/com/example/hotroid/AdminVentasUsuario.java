@@ -144,7 +144,7 @@ public class AdminVentasUsuario extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 adapter.getFilter().filter(s);
-                btnLimpiar.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                btnLimpiar.setVisibility(View.VISIBLE);
             }
 
             @Override
