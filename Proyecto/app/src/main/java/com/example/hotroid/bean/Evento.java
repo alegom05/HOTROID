@@ -1,64 +1,65 @@
 package com.example.hotroid.bean;
 
-import com.google.firebase.firestore.DocumentId; // Importar si quieres que Firestore asigne el ID del documento aquí
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentId;
 
 public class Evento {
-    // Si quieres que el ID del documento de Firestore se guarde en este campo
-    // @DocumentId
-    // private String id; // Opcional: Para guardar el ID del documento de Firestore
-
-    private String fecha;
-    private String evento; // Título del evento
+    @DocumentId
+    private String id;
+    private Timestamp fechaHora;
+    private String evento;
     private String hotel;
-    private String descripcion; // Descripción detallada
+    private String descripcion;
 
     // Constructor vacío requerido por Firestore
-    public Evento() {
-        // Constructor sin argumentos
-    }
+    public Evento() {}
 
-    // Constructor original
-    public Evento(String fecha, String evento, String hotel, String descripcion) {
-        this.fecha = fecha;
+    // Constructor completo
+    public Evento(Timestamp fechaHora, String evento, String hotel, String descripcion) {
+        this.fechaHora = fechaHora;
         this.evento = evento;
         this.hotel = hotel;
         this.descripcion = descripcion;
     }
 
-    // --- Getters ---
-    // public String getId() { return id; } // Getter si añadiste el campo id
-    public String getFecha() {
-        return fecha;
+    // Getters y Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Timestamp getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(Timestamp fechaHora) {
+        this.fechaHora = fechaHora;
     }
 
     public String getEvento() {
         return evento;
     }
 
-    public String getHotel() {
-        return hotel;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    // --- Setters ---
-    // public void setId(String id) { this.id = id; } // Setter si añadiste el campo id
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
-
     public void setEvento(String evento) {
         this.evento = evento;
+    }
+
+    public String getHotel() {
+        return hotel;
     }
 
     public void setHotel(String hotel) {
         this.hotel = hotel;
     }
 
-    // CORRECCIÓN: Tu setter original de descripcion no tomaba un argumento.
-    public void setDescripcion(String descripcion) { // <-- Asegúrate que este setter tome un argumento
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 }
