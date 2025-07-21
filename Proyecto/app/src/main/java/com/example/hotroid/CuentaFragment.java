@@ -60,7 +60,7 @@ public class CuentaFragment extends Fragment {
             startActivity(new Intent(requireContext(), FavoriteHotelsUser.class));
         });
 
-        binding.temaButton.setOnClickListener(v -> mostrarDialogoDeTema());
+
 
 
 
