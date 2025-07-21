@@ -304,7 +304,7 @@ public class HotelesFragment extends Fragment {
         // TODO: Aquí puedes conectar la lógica real de disponibilidad usando Firestore
         db.collection("habitaciones")
                 .whereEqualTo("idHotel", hotel.getIdHotel())
-                .whereEqualTo("estado", "Available")
+                .whereEqualTo("status", "Available")
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     List<String> habitacionesCandidatas = new ArrayList<>();
