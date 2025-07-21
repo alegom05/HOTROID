@@ -186,7 +186,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
 
                         // Valores por defecto si no existen en el documento
                         if (nombresCliente == null) nombresCliente = "Isaac";
-                        if (apellidosCliente == null) apellidosCliente = "HS";
+                        if (apellidosCliente == null) apellidosCliente = "Huamani";
 
                         // Crear el documento para alertas_taxi
                         Map<String, Object> alertaTaxi = new HashMap<>();

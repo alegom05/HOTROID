@@ -31,11 +31,21 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String TAG = "UserServTaxi";
 
+    // UI Elements
     private TextView txtDriverInfo;
     private Button btnDriverDetails;
     private Button btnCancel;
+    private Button btnCallDriver;
     private ProgressBar mapLoading;
     private ImageView mapView;
+    private ImageView btnBack;
+
+    // Trip details elements
+    private TextView txtOrigen;
+    private TextView txtDestino;
+    private TextView txtTiempoTranscurrido;
+    private TextView txtEstadoViaje;
+    private TextView txtTaxista;
 
     // Firebase
     private FirebaseFirestore db;
@@ -43,10 +53,12 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     private FirebaseUser currentUser;
     private ListenerRegistration tripListener;
     private ListenerRegistration driverLocationListener;
+    private ListenerRegistration alertaListener;
 
-    // Variables del viaje
+    // Trip variables
     private String clienteId;
     private String viajeId;
+    private String alertaId;
     private String taxistaId;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
@@ -56,35 +68,32 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_servicio_taxi);
 
-        // Inicializar Firebase
+        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
 
-        // Verificar si el usuario está autenticado
+        // Check if user is authenticated
         if (currentUser == null) {
             Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show();
-            // Redirigir al login si es necesario
-            // Intent intent = new Intent(this, LoginActivity.class);
-            // startActivity(intent);
             finish();
             return;
         }
 
-        // Obtener el UID del usuario autenticado
+        // Get authenticated user UID
         clienteId = currentUser.getUid();
         Log.d(TAG, "Cliente ID obtenido: " + clienteId);
 
-        // Inicializar componentes
+        // Initialize components
         initViews();
 
-        // Configurar mapa
+        // Setup map
         setupMap();
 
-        // Buscar viaje activo del cliente
-        buscarViajeActivo();
+        // Search for active taxi alert
+        buscarAlertaTaxiActiva();
 
-        // Configurar listeners
+        // Setup listeners
         setupClickListeners();
     }
 
@@ -92,19 +101,32 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         txtDriverInfo = findViewById(R.id.txt_driver_info);
         btnDriverDetails = findViewById(R.id.btn_driver_details);
         btnCancel = findViewById(R.id.btn_cancel);
+        btnCallDriver = findViewById(R.id.btn_call_driver);
         mapLoading = findViewById(R.id.map_loading);
         mapView = findViewById(R.id.map_view);
+        btnBack = findViewById(R.id.btn_back);
 
-        // Estado inicial
-        txtDriverInfo.setText(R.string.finding_driver);
+        // Initialize new elements
+        txtOrigen = findViewById(R.id.txt_origen);
+        txtDestino = findViewById(R.id.txt_destino);
+        txtTiempoTranscurrido = findViewById(R.id.txt_tiempo_transcurrido);
+        txtEstadoViaje = findViewById(R.id.txt_estado_viaje);
+        txtTaxista = findViewById(R.id.txt_taxista);
+
+        // Initial state
+        txtDriverInfo.setText("Buscando detalles del viaje...");
         btnDriverDetails.setVisibility(View.GONE);
+        btnCallDriver.setVisibility(View.GONE);
+
+        // Default taxista (initially hidden)
+        txtTaxista.setText("Asignando taxista...");
     }
 
     private void setupMap() {
-        // Ocultar ImageView y mostrar fragment del mapa
+        // Hide ImageView and show map fragment
         mapView.setVisibility(View.GONE);
 
-        // Configurar el fragmento del mapa
+        // Setup map fragment
         mapFragment = SupportMapFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.map_container, mapFragment)
@@ -113,8 +135,13 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setupClickListeners() {
+        // Back button
+        btnBack.setOnClickListener(v -> finish());
+
+        // Cancel button
         btnCancel.setOnClickListener(v -> cancelarViaje());
 
+        // Driver details button
         btnDriverDetails.setOnClickListener(v -> {
             if (taxistaId != null) {
                 Intent intent = new Intent(UserServTaxi.this, UserDetalleTaxista.class);
@@ -123,259 +150,213 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
+
+        // Call driver button
+        btnCallDriver.setOnClickListener(v -> {
+            // Here you would implement the call functionality
+            Toast.makeText(this, "Llamando a Alejandro Gomez...", Toast.LENGTH_SHORT).show();
+            // Intent callIntent = new Intent(Intent.ACTION_CALL);
+            // callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            // startActivity(callIntent);
+        });
     }
 
-    private void buscarViajeActivo() {
-        db.collection("viajes")
+    private void buscarAlertaTaxiActiva() {
+        Log.d(TAG, "Buscando alerta de taxi activa para cliente: " + clienteId);
+
+        db.collection("alertas_taxi")
                 .whereEqualTo("idCliente", clienteId)
-                .whereIn("estado", java.util.Arrays.asList("pendiente", "asignado", "en_progreso"))
-                .limit(1)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        DocumentSnapshot viajeDoc = queryDocumentSnapshots.getDocuments().get(0);
-                        viajeId = viajeDoc.getId();
-                        String estado = viajeDoc.getString("estado");
+                    boolean alertaEncontrada = false;
 
-                        Log.d(TAG, "Viaje encontrado: " + viajeId + ", Estado: " + estado);
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        String estadoViaje = document.getString("estadoViaje");
 
-                        if ("pendiente".equals(estado)) {
-                            // El viaje está pendiente, esperar asignación
-                            esperarAsignacion();
-                        } else if ("asignado".equals(estado) || "en_progreso".equals(estado)) {
-                            // Ya hay un taxista asignado
-                            taxistaId = viajeDoc.getString("idTaxista");
-                            mostrarTaxistaAsignado();
+                        // Check that status is not "Completado"
+                        if (estadoViaje != null && !estadoViaje.equals("Completado")) {
+                            alertaId = document.getId();
+                            alertaEncontrada = true;
+
+                            Log.d(TAG, "Alerta encontrada: " + alertaId + ", Estado: " + estadoViaje);
+
+                            // Show trip details
+                            mostrarDetallesViaje(document);
+
+                            // Setup listener for changes
+                            escucharCambiosAlerta();
+                            break;
                         }
-                    } else {
-                        // No hay viaje activo, crear uno nuevo
-                        crearNuevoViaje();
+                    }
+
+                    if (!alertaEncontrada) {
+                        txtDriverInfo.setText("No hay viajes activos");
+                        txtEstadoViaje.setText("Sin viajes activos");
+                        Toast.makeText(this, "No se encontraron viajes activos", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "No hay alertas activas para este cliente");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error al buscar viaje activo", e);
-                    Toast.makeText(this, "Error al buscar viaje", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error al buscar alerta de taxi", e);
+                    txtDriverInfo.setText("Error al cargar información del viaje");
+                    txtEstadoViaje.setText("Error");
+                    Toast.makeText(this, "Error al buscar viaje activo", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void crearNuevoViaje() {
-        // Para el hotelId, primero intenta obtenerlo desde SharedPreferences
-        // Si no existe, podrías obtenerlo de otra forma o pedírselo al usuario
-        SharedPreferences sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE);
-        String hotelId = sharedPref.getString("hotelId", null);
+    private void mostrarDetallesViaje(DocumentSnapshot alertaDoc) {
+        try {
+            // Get document data
+            String origen = alertaDoc.getString("origen");
+            String destino = alertaDoc.getString("destino");
+            String tiempoTranscurrido = alertaDoc.getString("tiempoTranscurrido");
+            String estadoViaje = alertaDoc.getString("estadoViaje");
 
-        // Si no hay hotelId en SharedPreferences, podrías:
-        // 1. Obtenerlo del Intent que llamó a esta actividad
-        // 2. Obtenerlo de la base de datos del usuario
-        // 3. Usar un valor por defecto o mostrar un selector de hoteles
+            // Show data in views
+            txtOrigen.setText(origen != null ? origen : "No especificado");
+            txtDestino.setText(destino != null ? destino : "No especificado");
+            txtTiempoTranscurrido.setText("Tiempo: " + (tiempoTranscurrido != null ? tiempoTranscurrido : "0 min"));
+            txtEstadoViaje.setText(estadoViaje != null ? estadoViaje : "Desconocido");
 
-        if (hotelId == null) {
-            // Intentar obtener desde Intent
-            hotelId = getIntent().getStringExtra("hotelId");
+            // Update driver info based on status
+            actualizarInfoConductor(estadoViaje);
+
+            // Hide map loading
+            mapLoading.setVisibility(View.GONE);
+
+            Log.d(TAG, "Detalles del viaje mostrados - Origen: " + origen +
+                    ", Destino: " + destino + ", Estado: " + estadoViaje);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error al mostrar detalles del viaje", e);
+            txtDriverInfo.setText("Error al cargar detalles");
+            txtEstadoViaje.setText("Error");
         }
-
-        if (hotelId == null) {
-            Toast.makeText(this, "Error: No se pudo obtener el hotel", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        // Crear nuevo documento de viaje
-        com.google.firebase.firestore.CollectionReference viajesRef = db.collection("viajes");
-
-        java.util.Map<String, Object> nuevoViaje = new java.util.HashMap<>();
-        nuevoViaje.put("idCliente", clienteId);
-        nuevoViaje.put("idHotel", hotelId);
-        nuevoViaje.put("estado", "pendiente");
-        nuevoViaje.put("fechaCreacion", com.google.firebase.Timestamp.now());
-
-        viajesRef.add(nuevoViaje)
-                .addOnSuccessListener(documentReference -> {
-                    viajeId = documentReference.getId();
-                    Log.d(TAG, "Nuevo viaje creado: " + viajeId);
-                    esperarAsignacion();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error al crear nuevo viaje", e);
-                    Toast.makeText(this, "Error al crear el viaje", Toast.LENGTH_SHORT).show();
-                });
     }
 
-    private void esperarAsignacion() {
-        txtDriverInfo.setText(R.string.finding_driver);
+    private void actualizarInfoConductor(String estadoViaje) {
+        if (estadoViaje != null) {
+            String estado = estadoViaje.toLowerCase().trim();
 
-        // Escuchar cambios en el documento del viaje
-        DocumentReference viajeRef = db.collection("viajes").document(viajeId);
+            switch (estado) {
+                case "No asignado":
+                    txtDriverInfo.setText("Buscando taxista disponible...");
+                    txtTaxista.setText("Asignando taxista...");
+                    btnDriverDetails.setVisibility(View.GONE);
+                    btnCallDriver.setVisibility(View.GONE);
+                    break;
 
-        tripListener = viajeRef.addSnapshotListener((snapshot, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Error al escuchar cambios del viaje", e);
-                return;
-            }
-
-            if (snapshot != null && snapshot.exists()) {
-                String estado = snapshot.getString("estado");
-                Log.d(TAG, "Estado del viaje actualizado: " + estado);
-
-                if ("asignado".equals(estado) || "en_progreso".equals(estado)) {
-                    taxistaId = snapshot.getString("idTaxista");
-                    if (taxistaId != null) {
-                        mostrarTaxistaAsignado();
-                    }
-                } else if ("cancelado".equals(estado)) {
-                    Toast.makeText(this, "El viaje ha sido cancelado", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        });
-    }
-
-    private void mostrarTaxistaAsignado() {
-        // Remover el listener del viaje pendiente si existe
-        if (tripListener != null) {
-            tripListener.remove();
-        }
-
-        // Obtener información del taxista desde la colección usuarios
-        db.collection("usuarios").document(taxistaId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String nombre = documentSnapshot.getString("nombre");
-                        String apellido = documentSnapshot.getString("apellido");
-
-                        // Construir nombre completo
-                        String nombreCompleto = "";
-                        if (nombre != null) {
-                            nombreCompleto = nombre.trim();
-                        }
-                        if (apellido != null && !apellido.trim().isEmpty()) {
-                            nombreCompleto += " " + apellido.trim();
-                        }
-                        if (nombreCompleto.isEmpty()) {
-                            nombreCompleto = "Taxista";
-                        }
-
-                        txtDriverInfo.setText(getString(R.string.driver_assigned, nombreCompleto));
-                        btnDriverDetails.setVisibility(View.VISIBLE);
-
-                        // Ocultar loading del mapa
-                        mapLoading.setVisibility(View.GONE);
-
-                        // Verificar si el taxista tiene coordenadas, si no, agregarlas
-                        verificarYAgregarCoordenadas(documentSnapshot);
-
-                        // Comenzar a escuchar la ubicación del taxista
-                        escucharUbicacionTaxista();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error al obtener información del taxista", e);
-                    txtDriverInfo.setText("Taxista asignado");
+                case "En camino":
+                    txtDriverInfo.setText("Taxista asignado y preparándose");
+                    txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
-                    mapLoading.setVisibility(View.GONE);
-                    escucharUbicacionTaxista();
-                });
+                    btnCallDriver.setVisibility(View.VISIBLE);
+                    break;
+
+
+                case "Asignado":
+                    txtDriverInfo.setText("Tu taxista está afuera del hotel");
+                    txtTaxista.setText("Alejandro Gomez");
+                    btnDriverDetails.setVisibility(View.VISIBLE);
+                    btnCallDriver.setVisibility(View.VISIBLE);
+
+                    // Show toast notification when driver is on the way
+                    Toast.makeText(this, "¡Alejandro Gomez está esperandote!", Toast.LENGTH_LONG).show();
+                    break;
+
+
+                case "Llego a destino":
+                    txtDriverInfo.setText("Viaje casi finalizado");
+                    txtTaxista.setText("Alejandro Gomez");
+                    btnDriverDetails.setVisibility(View.VISIBLE);
+                    btnCallDriver.setVisibility(View.VISIBLE);
+                    break;
+
+                case "Completado":
+                    txtDriverInfo.setText("Viaje completado");
+                    txtTaxista.setText("Alejandro Gomez");
+                    btnDriverDetails.setVisibility(View.VISIBLE);
+                    btnCallDriver.setVisibility(View.GONE);
+                    btnCancel.setText("Finalizar");
+
+                    Toast.makeText(this, "¡Viaje completado exitosamente!", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "cancelado":
+                    txtDriverInfo.setText("Viaje cancelado");
+                    txtTaxista.setText("Viaje cancelado");
+                    btnDriverDetails.setVisibility(View.GONE);
+                    btnCallDriver.setVisibility(View.GONE);
+                    btnCancel.setText("Volver");
+
+                    Toast.makeText(this, "El viaje ha sido cancelado", Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
+                    txtDriverInfo.setText("Estado: " + estadoViaje);
+                    txtTaxista.setText("Alejandro Gomez");
+                    btnDriverDetails.setVisibility(View.VISIBLE);
+                    btnCallDriver.setVisibility(View.VISIBLE);
+                    break;
+            }
+
+            Log.d(TAG, "Estado actualizado: " + estadoViaje + " -> Info: " + txtDriverInfo.getText());
+        }
     }
 
-    private void escucharUbicacionTaxista() {
-        if (taxistaId == null) return;
+    private void escucharCambiosAlerta() {
+        if (alertaId == null) return;
 
-        // Escuchar cambios en el documento del usuario taxista para obtener sus coordenadas
-        DocumentReference taxistaRef = db.collection("usuarios").document(taxistaId);
+        DocumentReference alertaRef = db.collection("alertas_taxi").document(alertaId);
 
-        driverLocationListener = taxistaRef.addSnapshotListener((snapshot, e) -> {
+        alertaListener = alertaRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
-                Log.w(TAG, "Error al escuchar ubicación del taxista", e);
+                Log.w(TAG, "Error al escuchar cambios de la alerta", e);
                 return;
             }
 
             if (snapshot != null && snapshot.exists()) {
-                // Obtener las coordenadas del taxista desde el documento de usuarios
-                Double latitud = snapshot.getDouble("latitud");
-                Double longitud = snapshot.getDouble("longitud");
+                Log.d(TAG, "Alerta actualizada en tiempo real");
 
-                if (latitud != null && longitud != null && mMap != null) {
-                    actualizarUbicacionEnMapa(latitud, longitud);
-                } else {
-                    // Si no tiene coordenadas, agregamos unas coordenadas de ejemplo (Lima, Peru)
-                    Log.d(TAG, "Taxista sin coordenadas, usando ubicación por defecto");
-                    // Puedes usar coordenadas fijas o generar aleatorias cerca de Lima
-                    actualizarUbicacionEnMapa(-12.073151046604849, -77.08191024613195);
+                String estadoPrevio = txtEstadoViaje.getText().toString();
+                mostrarDetallesViaje(snapshot);
+
+                String estadoNuevo = snapshot.getString("estadoViaje");
+
+                // Special notification when status changes to "En camino"
+                if (estadoNuevo != null &&
+                        (estadoNuevo.equalsIgnoreCase("en camino") || estadoNuevo.equalsIgnoreCase("en_camino")) &&
+                        !estadoPrevio.equalsIgnoreCase(estadoNuevo)) {
+
+                    // Additional notification for status change
+                    Toast.makeText(this, "🚖 ¡Tu taxista Alejandro Gomez está en camino!", Toast.LENGTH_LONG).show();
+                }
+
+                // Auto-close when completed
+                if ("Completado".equals(estadoNuevo)) {
+                    // Delay before closing to show completion message
+                    new android.os.Handler().postDelayed(() -> finish(), 3000);
                 }
             }
         });
-    }
-
-    private double[] generarCoordenadasAleatorias() {
-        // Coordenadas base de Lima, Peru
-        double latitudBase = -12.0464;
-        double longitudBase = -77.0428;
-
-        // Generar variación aleatoria de aproximadamente ±0.05 grados (unos 5km de radio)
-        java.util.Random random = new java.util.Random();
-        double variacionLat = (random.nextDouble() - 0.5) * 0.1; // ±0.05 grados
-        double variacionLng = (random.nextDouble() - 0.5) * 0.1; // ±0.05 grados
-
-        double latitudFinal = latitudBase + variacionLat;
-        double longitudFinal = longitudBase + variacionLng;
-
-        return new double[]{latitudFinal, longitudFinal};
-    }
-
-    private void verificarYAgregarCoordenadas(DocumentSnapshot taxistaDoc) {
-        Double latitud = taxistaDoc.getDouble("latitud");
-        Double longitud = taxistaDoc.getDouble("longitud");
-
-        // Si el taxista no tiene coordenadas, agregar unas coordenadas aleatorias
-        if (latitud == null || longitud == null) {
-            Log.d(TAG, "Taxista sin coordenadas, agregando coordenadas aleatorias");
-
-            // Generar coordenadas aleatorias cerca de Lima
-            double[] coordenadas = generarCoordenadasAleatorias();
-
-            java.util.Map<String, Object> actualizacion = new java.util.HashMap<>();
-            actualizacion.put("latitud", coordenadas[0]);
-            actualizacion.put("longitud", coordenadas[1]);
-            actualizacion.put("ultimaActualizacion", com.google.firebase.Timestamp.now());
-
-            // Actualizar el documento del taxista con las coordenadas
-            db.collection("usuarios").document(taxistaId)
-                    .update(actualizacion)
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "Coordenadas agregadas al taxista: " + taxistaId +
-                                " - Lat: " + coordenadas[0] + ", Lng: " + coordenadas[1]);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error al agregar coordenadas al taxista", e);
-                    });
-        }
-    }
-
-    private void actualizarUbicacionEnMapa(double latitud, double longitud) {
-        if (mMap != null) {
-            LatLng ubicacionTaxista = new LatLng(latitud, longitud);
-
-            // Limpiar marcadores anteriores
-            mMap.clear();
-
-            // Agregar marcador del taxista
-            mMap.addMarker(new MarkerOptions()
-                    .position(ubicacionTaxista)
-                    .title("Tu taxista"));
-
-            // Mover la cámara a la ubicación del taxista
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ubicacionTaxista, 15));
-        }
     }
 
     private void cancelarViaje() {
-        if (viajeId != null) {
-            // Actualizar el estado del viaje a cancelado
-            db.collection("viajes").document(viajeId)
-                    .update("estado", "cancelado")
+        if (alertaId != null) {
+            String estadoActual = txtEstadoViaje.getText().toString();
+
+            // If already completed or cancelled, just finish
+            if (estadoActual.equalsIgnoreCase("Completado") ||
+                    estadoActual.equalsIgnoreCase("Cancelado")) {
+                finish();
+                return;
+            }
+
+            // Update alert status to "Cancelado"
+            db.collection("alertas_taxi").document(alertaId)
+                    .update("estadoViaje", "Cancelado")
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Viaje cancelado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Viaje cancelado exitosamente", Toast.LENGTH_SHORT).show();
                         finish();
                     })
                     .addOnFailureListener(e -> {
@@ -392,25 +373,61 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Configurar el mapa
+        // Configure map
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        // Ubicación inicial (Lima, Peru)
+        try {
+            // Enable location layer if permission is granted
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            Log.e(TAG, "Location permission not granted", e);
+        }
+
+        // Initial location (Lima, Peru)
         LatLng lima = new LatLng(-12.0464, -77.0428);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lima, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lima, 12));
+
+        // Add example marker
+        mMap.addMarker(new MarkerOptions()
+                .position(lima)
+                .title("Alejandro Gomez")
+                .snippet("Tu taxista - En camino"));
+
+        Log.d(TAG, "Mapa configurado correctamente");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        // Remover listeners para evitar memory leaks
+        // Remove listeners to avoid memory leaks
         if (tripListener != null) {
             tripListener.remove();
         }
         if (driverLocationListener != null) {
             driverLocationListener.remove();
         }
+        if (alertaListener != null) {
+            alertaListener.remove();
+        }
+
+        Log.d(TAG, "Actividad destruida y listeners removidos");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh trip data when returning to activity
+        if (alertaId != null) {
+            Log.d(TAG, "Actividad resumida - actualizando datos del viaje");
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "Actividad pausada");
     }
 }
