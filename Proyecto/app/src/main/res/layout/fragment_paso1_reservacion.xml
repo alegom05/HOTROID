@@ -93,7 +93,7 @@
                 app:startIconDrawable="@drawable/credit_card_24"
                 app:startIconTint="@color/material_dynamic_primary10"
                 android:hint="DNI"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dniEditText"

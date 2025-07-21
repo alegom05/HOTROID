@@ -19,6 +19,8 @@ public class Paso2ReservacionFragment extends Fragment {
     private SwitchMaterial switchGimnasio, switchDesayuno, switchPiscina, switchParqueo;
     private TextView tvTotal;
     private MaterialButton btnSiguiente;
+    private TextView tvResumenCliente, tvResumenHabitaciones, tvResumenFechas, tvResumenServicios;
+    private MaterialButton btnConfirmarReserva;
     private double precioBase = 200; // Precio base por habitación
 
     public Paso2ReservacionFragment() {
