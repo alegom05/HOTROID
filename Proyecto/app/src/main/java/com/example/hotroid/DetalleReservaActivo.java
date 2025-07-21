@@ -1,5 +1,7 @@
 package com.example.hotroid;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,11 +10,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
+import com.example.hotroid.bean.ReservaConHotel;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -32,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -43,20 +50,35 @@ import com.google.firebase.Timestamp;
 public class DetalleReservaActivo extends AppCompatActivity {
 
     private TextView tvHotelName, tvHotelLocation, tvRoomDetails;
-    private TextView tvStatus, tvArrivalDay, tvGuestsInfo;
-    private TextView tvCheckIn, tvCheckOut, tvReservationCode;
+    private TextView tvStatus, tvArrivalDay, tvGuestsInfo, tvTimeRemaining;
+    private TextView tvCheckInDate, tvCheckOutDate, tvReservationCode;
     private Button btnCheckIn, btnCancelReservation, btnCheckOut, btnSolicitarTaxi;
     private Bitmap qrCodeBitmap;
+    private LinearLayout checkOutContainer, cancelContainer;
+    private ImageView imgCheckInComplete;
+    private ReservaConHotel reserva;
+    // Datos recibidos del Intent
+    private String hotelName, city, hotelLocation, roomDetails, checkInDate,
+            checkOutDate, guestsInfo, reservationCode, estado;
+    // Firebase
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
+
     private boolean checkInRealizado = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_detalle_reserva_activo);
+        // Inicializar Firebase
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         // Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //obtener daa del intent
+        inicializarVistas();
 
         btnSolicitarTaxi = findViewById(R.id.btnSolicitarTaxi);
 
@@ -75,95 +97,288 @@ public class DetalleReservaActivo extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        // Obtener datos del Intent
+        obtenerDatosIntent();
 
-        // Inicializar vistas
-        tvHotelName = findViewById(R.id.tvHotelNameDetail);
-        tvHotelLocation = findViewById(R.id.tvHotelLocation);
-        tvRoomDetails = findViewById(R.id.tvRoomDetailsDetail);
-        tvGuestsInfo = findViewById(R.id.tvGuestsInfo);
-        tvStatus = findViewById(R.id.tvStatusDetail);
-        tvCheckIn = findViewById(R.id.tvCheckInDate);
-        tvCheckOut = findViewById(R.id.tvCheckOutDate);
-        tvArrivalDay = findViewById(R.id.tvArrivalDay);
-        tvReservationCode = findViewById(R.id.tvReservationCode);
-        btnCheckIn = findViewById(R.id.btnCheckIn);
-        btnCancelReservation = findViewById(R.id.btnCancelReservation);
-        btnCheckOut = findViewById(R.id.btnCheckOut);
+        // Mostrar datos básicos
+        mostrarDatos();
+        // Cargar datos adicionales desde Firestore
+        cargarDatosAdicionales();
 
-        try {
-            // Obtener datos del intent
-            Intent intent = getIntent();
-            String hotelName = intent.getStringExtra("hotel_name");
-            String roomDetails = intent.getStringExtra("room_details");
-            String hotelciudad = intent.getStringExtra("city");
-            String hotelLocation = intent.getStringExtra("hotel_location");
-            String status = intent.getStringExtra("status");
-            String checkInDate = intent.getStringExtra("checkInDate");
-            String checkOutDate = intent.getStringExtra("checkOutDate");
-            String reservationCode = intent.getStringExtra("reservationCode");
-            String guestsInfo = intent.getStringExtra("guestsInfo"); // Nuevo extra para información de huéspedes
 
-            // Configurar datos
-            tvHotelName.setText((hotelName != null ? hotelName : "Hotel Desconocido") +
-                    (hotelciudad != null ? hotelciudad : ""));
-            tvHotelLocation.setText(hotelLocation != null ? hotelLocation : "");
-            tvRoomDetails.setText(roomDetails != null ? roomDetails : "Detalles no disponibles");
-
-            // Usar el parámetro guestsInfo si está disponible, o usar una opción alternativa
-            if (guestsInfo != null) {
-                tvGuestsInfo.setText(guestsInfo);
-            } else {
-                // Intentar extraer información de huéspedes de roomDetails como fallback
-                try {
-                    if (roomDetails != null && roomDetails.contains(", ") && roomDetails.split(", ").length >= 3) {
-                        tvGuestsInfo.setText(roomDetails.split(", ")[1] + ", " + roomDetails.split(", ")[2]);
-                    } else {
-                        tvGuestsInfo.setText("Información no disponible");
-                    }
-                } catch (Exception e) {
-                    tvGuestsInfo.setText("Información no disponible");
-                }
-            }
-
-            tvStatus.setText("Estado: " + (status != null ? status : "Confirmado"));
-
-            // Fechas de check-in y check-out
-            if (checkInDate != null && !checkInDate.startsWith("Check-in:")) {
-                tvCheckIn.setText("Check-in: " + checkInDate);
-            } else {
-                tvCheckIn.setText(checkInDate != null ? checkInDate : "Check-in: -");
-            }
-
-            if (checkOutDate != null && !checkOutDate.startsWith("Check-out:")) {
-                tvCheckOut.setText("Check-out: " + checkOutDate);
-            } else {
-                tvCheckOut.setText(checkOutDate != null ? checkOutDate : "Check-out: -");
-            }
-
-            // Intentar calcular el día de la semana
-            String dayOfWeek = "Desconocido";
-            try {
-                // Extraer la fecha sin el prefijo "Check-in: " si existe
-                String dateStr = checkInDate;
-                if (dateStr != null && dateStr.startsWith("Check-in: ")) {
-                    dateStr = dateStr.substring("Check-in: ".length());
-                }
-                dayOfWeek = getDayOfWeek(dateStr);
-            } catch (Exception e) {
-                // En caso de error, usar valor por defecto
-            }
-
-            tvArrivalDay.setText("Día de llegada: " + dayOfWeek);
-            tvReservationCode.setText(reservationCode != null ? reservationCode : "Código de reserva: -");
-
-        } catch (Exception e) {
-            // Manejar cualquier excepción
-            Toast.makeText(this, "Error al cargar los datos de la reserva", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+//        try {
+//            // Obtener datos del intent
+//            Intent intent = getIntent();
+//            String hotelName = intent.getStringExtra("hotel_name");
+//            String roomDetails = intent.getStringExtra("room_details");
+//            String hotelciudad = intent.getStringExtra("city");
+//            String hotelLocation = intent.getStringExtra("hotel_location");
+//            String status = intent.getStringExtra("status");
+//            String checkInDate = intent.getStringExtra("checkInDate");
+//            String checkOutDate = intent.getStringExtra("checkOutDate");
+//            String reservationCode = intent.getStringExtra("reservationCode");
+//            String guestsInfo = intent.getStringExtra("guestsInfo"); // Nuevo extra para información de huéspedes
+//
+//            // Configurar datos
+//            tvHotelName.setText((hotelName != null ? hotelName : "Hotel Desconocido") +
+//                    (hotelciudad != null ? hotelciudad : ""));
+//            tvHotelLocation.setText(hotelLocation != null ? hotelLocation : "");
+//            tvRoomDetails.setText(roomDetails != null ? roomDetails : "Detalles no disponibles");
+//
+//            // Usar el parámetro guestsInfo si está disponible, o usar una opción alternativa
+//            if (guestsInfo != null) {
+//                tvGuestsInfo.setText(guestsInfo);
+//            } else {
+//                // Intentar extraer información de huéspedes de roomDetails como fallback
+//                try {
+//                    if (roomDetails != null && roomDetails.contains(", ") && roomDetails.split(", ").length >= 3) {
+//                        tvGuestsInfo.setText(roomDetails.split(", ")[1] + ", " + roomDetails.split(", ")[2]);
+//                    } else {
+//                        tvGuestsInfo.setText("Información no disponible");
+//                    }
+//                } catch (Exception e) {
+//                    tvGuestsInfo.setText("Información no disponible");
+//                }
+//            }
+//
+//            tvStatus.setText("Estado: " + (status != null ? status : "Confirmado"));
+//
+//            // Fechas de check-in y check-out
+//            if (checkInDate != null && !checkInDate.startsWith("Check-in:")) {
+//                tvCheckInDate.setText("Check-in: " + checkInDate);
+//            } else {
+//                tvCheckInDate.setText(checkInDate != null ? checkInDate : "Check-in: -");
+//            }
+//
+//            if (checkOutDate != null && !checkOutDate.startsWith("Check-out:")) {
+//                tvCheckOutDate.setText("Check-out: " + checkOutDate);
+//            } else {
+//                tvCheckOutDate.setText(checkOutDate != null ? checkOutDate : "Check-out: -");
+//            }
+//
+//            // Intentar calcular el día de la semana
+//            String dayOfWeek = "Desconocido";
+//            try {
+//                // Extraer la fecha sin el prefijo "Check-in: " si existe
+//                String dateStr = checkInDate;
+//                if (dateStr != null && dateStr.startsWith("Check-in: ")) {
+//                    dateStr = dateStr.substring("Check-in: ".length());
+//                }
+//                dayOfWeek = getDayOfWeek(dateStr);
+//            } catch (Exception e) {
+//                // En caso de error, usar valor por defecto
+//            }
+//
+//            tvArrivalDay.setText("Día de llegada: " + dayOfWeek);
+//            tvReservationCode.setText(reservationCode != null ? reservationCode : "Código de reserva: -");
+//
+//        } catch (Exception e) {
+//            // Manejar cualquier excepción
+//            Toast.makeText(this, "Error al cargar los datos de la reserva", Toast.LENGTH_SHORT).show();
+//            e.printStackTrace();
+//        }
 
         // Configurar botones
         setupButtons();
+    }
+
+    private void inicializarVistas() {
+        tvHotelName = findViewById(R.id.tvHotelNameDetail);
+        tvHotelLocation = findViewById(R.id.tvHotelLocation);
+        tvStatus = findViewById(R.id.tvStatusDetail);
+        tvCheckInDate = findViewById(R.id.tvCheckInDate);  //<<--fecha de checkin
+        tvArrivalDay = findViewById(R.id.tvArrivalDay);  //<.. dia de llegada (nombre de dia de la semana)
+        tvCheckOutDate = findViewById(R.id.tvCheckOutDate); //<<--fecha de checkout
+        tvReservationCode = findViewById(R.id.tvReservationCode);
+        tvTimeRemaining = findViewById(R.id.tvTimeRemaining); //<--tiempo hasta que se active check-in
+        btnCheckIn = findViewById(R.id.btnCheckIn);
+        btnCheckOut = findViewById(R.id.btnCheckOut);
+        btnCancelReservation = findViewById(R.id.btnCancelReservation);
+        imgCheckInComplete = findViewById(R.id.imgCheckInComplete);
+        checkOutContainer = findViewById(R.id.checkOutContainer);
+        cancelContainer = findViewById(R.id.cancelContainer);
+        tvRoomDetails = findViewById(R.id.tvRoomDetails);
+        tvGuestsInfo = findViewById(R.id.tvGuestsInfo);
+
+
+    }
+
+    private void obtenerDatosIntent() {
+        Intent intent = getIntent();
+        hotelName = intent.getStringExtra("hotel_name");
+        city = intent.getStringExtra("city");
+        hotelLocation = intent.getStringExtra("hotel_location");
+        roomDetails = intent.getStringExtra("room_details");
+        estado = intent.getStringExtra("estado");
+        checkInDate = intent.getStringExtra("checkInDate");
+        checkOutDate = intent.getStringExtra("checkOutDate");
+        reservationCode = intent.getStringExtra("reservationCode");
+        guestsInfo = intent.getStringExtra("guestsInfo");
+
+        Log.d(TAG, "Datos recibidos - Hotel: " + hotelName + ", Código: " + reservationCode);
+    }
+
+    private void mostrarDatos() {
+        // Mostrar datos básicos recibidos del Intent
+        Log.d("DetalleReserva", "hotelName: " + hotelName);
+        Log.d("DetalleReserva", "city: " + city);
+        Log.d("DetalleReserva", "roomDetails: " + roomDetails);
+        Log.d("DetalleReserva", "checkInDate: " + checkInDate);
+        Log.d("DetalleReserva", "checkOutDate: " + checkOutDate);
+        Log.d("DetalleReserva", "estado: " + estado);
+        Log.d("DetalleReserva", "reservationCode: " + reservationCode);
+        Log.d("DetalleReserva", "guestsInfo: " + guestsInfo);
+
+        if (hotelName != null) {
+            tvHotelName.setText(hotelName);
+        }
+
+        if (hotelLocation != null && !hotelLocation.isEmpty()) {
+            tvHotelLocation.setText(hotelLocation);
+        } else if (city != null && !city.isEmpty()) {
+            tvHotelLocation.setText(city);
+        } else {
+            tvHotelLocation.setText("Ubicación no disponible");
+        }
+
+        if (roomDetails != null) {
+            tvRoomDetails.setText(roomDetails);
+        }
+
+        if (checkInDate != null) {
+            tvCheckInDate.setText("Check-in: "+ checkInDate);
+        }
+
+        if (checkOutDate != null) {
+            tvCheckOutDate.setText("Check-out: "+ checkOutDate);
+        }
+
+        if (guestsInfo != null) {
+            tvGuestsInfo.setText(guestsInfo);
+        }
+
+        if (reservationCode != null) {
+            tvReservationCode.setText("Código: " + reservationCode);
+        }
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Log.d("IntentExtra", key + " => " + extras.get(key));
+            }
+        } else {
+            Log.d("IntentExtra", "No extras found");
+        }
+
+    }
+
+    private void cargarDatosAdicionales() {
+        if (reservationCode == null) {
+            Log.w(TAG, "No se puede cargar datos adicionales: código de reserva nulo");
+            return;
+        }
+
+        // Buscar la reserva en Firestore para obtener datos adicionales
+        db.collection("reservas")
+                .document(reservationCode)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Log.d(TAG, "Reserva encontrada en Firestore");
+
+                        // Obtener datos adicionales de la reserva
+                        String hotelId = documentSnapshot.getString("idHotel");
+
+                        // Cargar información del hotel
+                        if (hotelId != null) {
+                            cargarInformacionHotel(hotelId);
+                        }
+
+                        // Aquí puedes obtener más datos si son necesarios
+                        // Por ejemplo: precio, servicios adicionales, etc.
+
+                    } else {
+                        Log.w(TAG, "Reserva no encontrada en Firestore");
+                        Toast.makeText(this, "No se pudieron cargar algunos detalles", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al cargar datos de la reserva: " + e.getMessage());
+                    Toast.makeText(this, "Error al cargar detalles completos", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void cargarInformacionHotel(String hotelId) {
+        db.collection("hoteles")
+                .document(hotelId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+//                        // Cargar imagen del hotel
+//                        List<String> imageUrls = (List<String>) documentSnapshot.get("imageUrls");
+//                        if (imageUrls != null && !imageUrls.isEmpty()) {
+//                            Glide.with(this)
+//                                    .load(imageUrls.get(0))
+//                                    .placeholder(R.drawable.placeholder_hotel)
+//                                    .error(R.drawable.ic_hotel_error)
+//                                    .centerCrop()
+//                                    .into(ivHotelImage);
+//                        }
+
+                        // Actualizar ubicación si no se tenía
+                        String direccion = documentSnapshot.getString("direccion");
+                        String pais = documentSnapshot.getString("País");
+                        String direccionaven = documentSnapshot.getString("direccionDetallada");
+                        if (direccion != null && (hotelLocation == null || hotelLocation.isEmpty())) {
+                            tvHotelLocation.setText(direccion);
+                            if(direccionaven!=null){
+                                tvHotelLocation.setText(direccionaven + ", "+ direccion);
+                            }
+                        }
+
+                        Log.d(TAG, "Información del hotel cargada exitosamente");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al cargar información del hotel: " + e.getMessage());
+                    // Cargar imagen por defecto
+//                    ivHotelImage.setImageResource(R.drawable.placeholder_hotel);
+                });
+    }
+
+
+    private void cancelarReserva() {
+        if (reservationCode == null) {
+            Toast.makeText(this, "Error: Código de reserva no disponible", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Verificar que la reserva se pueda cancelar
+        // (por ejemplo, verificar fechas, políticas de cancelación, etc.)
+        verificarPoliticaCancelacion();
+    }
+
+    private void verificarPoliticaCancelacion() {
+        try {
+            // Verificar si estamos dentro del plazo de cancelación
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date fechaCheckIn = sdf.parse(checkInDate);
+            Date fechaActual = new Date();
+
+            if (fechaCheckIn != null) {
+                long diferenciaMilisegundos = fechaCheckIn.getTime() - fechaActual.getTime();
+                long diferenciaDias = diferenciaMilisegundos / (1000 * 60 * 60 * 24);
+
+                if (diferenciaDias >= 1) { // Se puede cancelar si falta al menos 1 día
+                    showCancelReservationDialog();
+                } else {
+                    Toast.makeText(this, "No se puede cancelar la reserva. Debe hacerlo al menos 24 horas antes.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error al verificar política de cancelación: " + e.getMessage());
+            showCancelReservationDialog(); // En caso de error, permitir cancelación
+        }
     }
 
     private void solicitarTaxi() {
@@ -251,13 +466,15 @@ public class DetalleReservaActivo extends AppCompatActivity {
 
         // Botón Cancelar Reserva
         btnCancelReservation.setOnClickListener(v -> {
-            showCancelReservationDialog();
+//            showCancelReservationDialog();
+            cancelarReserva();
         });
 
         btnCheckOut.setOnClickListener(v -> {
             Intent intent = new Intent(DetalleReservaActivo.this, CheckOutUser.class);
             startActivity(intent);
         });
+
 
         verificarViajeExistente();
     }
@@ -370,6 +587,7 @@ public class DetalleReservaActivo extends AppCompatActivity {
 
         builder.setPositiveButton("Sí, cancelar", (dialog, which) -> {
             // Lógica para cancelar la reserva
+            ejecutarCancelacion();
             Toast.makeText(DetalleReservaActivo.this,
                     "Reserva cancelada con éxito", Toast.LENGTH_LONG).show();
             finish(); // Cerrar la actividad después de cancelar
@@ -379,6 +597,37 @@ public class DetalleReservaActivo extends AppCompatActivity {
 
         builder.show();
     }
+
+    private void ejecutarCancelacion() {
+        if (reservationCode == null) return;
+
+        // Mostrar indicador de carga
+        btnCancelReservation.setEnabled(false);
+        btnCancelReservation.setText("Cancelando...");
+
+        // Actualizar el estado de la reserva en Firestore
+        db.collection("reservas")
+                .document(reservationCode)
+                .update("estado", "cancelado")
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Reserva cancelada exitosamente");
+                    Toast.makeText(this, "Reserva cancelada exitosamente", Toast.LENGTH_SHORT).show();
+
+                    // Regresar a la actividad anterior
+                    setResult(RESULT_OK);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al cancelar reserva: " + e.getMessage());
+                    Toast.makeText(this, "Error al cancelar la reserva. Inténtalo más tarde.",
+                            Toast.LENGTH_SHORT).show();
+
+                    // Restaurar botón
+                    btnCancelReservation.setEnabled(true);
+                    btnCancelReservation.setText("Cancelar Reserva");
+                });
+    }
+
 
     // Método para obtener el día de la semana a partir de una fecha
     private String getDayOfWeek(String dateString) {

@@ -356,7 +356,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tvRoomDetailsDetail"
+                            android:id="@+id/tvRoomDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
