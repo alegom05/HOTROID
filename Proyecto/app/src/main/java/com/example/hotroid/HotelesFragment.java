@@ -185,19 +185,20 @@ public class HotelesFragment extends Fragment {
 
         Log.d(TAG, "Verificando viajes para usuario: " + currentUserId);
 
-        db.collection("viajes")
+        db.collection("alertas_taxi")
                 .whereEqualTo("idCliente", currentUserId)
+                .whereNotEqualTo("estadoViaje", "completado")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        // Hay viajes para este usuario, mostrar el ícono
+                        // Hay viajes activos para este usuario, mostrar el ícono
                         binding.notificationIcon.setVisibility(View.VISIBLE);
                         configurarClickNotificacion();
-                        Log.d(TAG, "Viajes encontrados: " + queryDocumentSnapshots.size());
+                        Log.d(TAG, "Viajes activos encontrados: " + queryDocumentSnapshots.size());
                     } else {
-                        // No hay viajes, ocultar el ícono
+                        // No hay viajes activos, ocultar el ícono
                         binding.notificationIcon.setVisibility(View.GONE);
-                        Log.d(TAG, "No hay viajes para este usuario");
+                        Log.d(TAG, "No hay viajes activos para este usuario");
                     }
                 })
                 .addOnFailureListener(e -> {
