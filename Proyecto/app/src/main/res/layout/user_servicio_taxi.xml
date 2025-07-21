@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,37 +14,22 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/cliente1"
         android:elevation="4dp"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/quantum_ic_arrow_back_grey600_24"
-
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
-                android:contentDescription="Volver atrás" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Servicio Taxi"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Servicio taxi"
+            android:background="@color/cliente1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <!-- ScrollView para permitir desplazamiento -->
@@ -85,7 +70,7 @@
                         android:text="Estado del Viaje"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="@color/cliente1"
+                        android:textColor="@color/cliente2"
                         android:gravity="center"
                         android:layout_marginBottom="16dp" />
 
@@ -136,7 +121,7 @@
                         android:text="Tu Taxista"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/cliente1"
+                        android:textColor="@color/cliente2"
                         android:gravity="center"
                         android:layout_marginBottom="16dp" />
 
@@ -145,13 +130,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/circle_background"
-                            android:padding="12dp"
-                            android:layout_marginEnd="16dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -217,7 +195,7 @@
                         android:text="Detalles del Viaje"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/cliente1"
+                        android:textColor="@color/cliente2"
                         android:gravity="center"
                         android:layout_marginBottom="16dp" />
 
@@ -320,7 +298,7 @@
                         android:text="Ubicación en Tiempo Real"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/cliente1"
+                        android:textColor="@color/cliente2"
                         android:gravity="center"
                         android:padding="16dp" />
 
@@ -361,18 +339,6 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
 
-                <Button
-                    android:id="@+id/btn_call_driver"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Llamar"
-                    android:backgroundTint="@color/cliente1"
-                    android:textColor="@android:color/white"
-                    android:drawablePadding="8dp"
-                    android:visibility="gone"
-                    style="@style/Widget.Material3.Button" />
 
                 <Button
                     android:id="@+id/btn_cancel"

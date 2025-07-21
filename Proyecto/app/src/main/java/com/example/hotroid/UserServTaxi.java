@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,10 +36,10 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     private TextView txtDriverInfo;
     private Button btnDriverDetails;
     private Button btnCancel;
-    private Button btnCallDriver;
+
     private ProgressBar mapLoading;
     private ImageView mapView;
-    private ImageView btnBack;
+
 
     // Trip details elements
     private TextView txtOrigen;
@@ -67,6 +68,9 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_servicio_taxi);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
@@ -101,10 +105,9 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         txtDriverInfo = findViewById(R.id.txt_driver_info);
         btnDriverDetails = findViewById(R.id.btn_driver_details);
         btnCancel = findViewById(R.id.btn_cancel);
-        btnCallDriver = findViewById(R.id.btn_call_driver);
         mapLoading = findViewById(R.id.map_loading);
         mapView = findViewById(R.id.map_view);
-        btnBack = findViewById(R.id.btn_back);
+
 
         // Initialize new elements
         txtOrigen = findViewById(R.id.txt_origen);
@@ -116,7 +119,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         // Initial state
         txtDriverInfo.setText("Buscando detalles del viaje...");
         btnDriverDetails.setVisibility(View.GONE);
-        btnCallDriver.setVisibility(View.GONE);
+
 
         // Default taxista (initially hidden)
         txtTaxista.setText("Asignando taxista...");
@@ -136,7 +139,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setupClickListeners() {
         // Back button
-        btnBack.setOnClickListener(v -> finish());
+
 
         // Cancel button
         btnCancel.setOnClickListener(v -> cancelarViaje());
@@ -152,13 +155,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         // Call driver button
-        btnCallDriver.setOnClickListener(v -> {
-            // Here you would implement the call functionality
-            Toast.makeText(this, "Llamando a Alejandro Gomez...", Toast.LENGTH_SHORT).show();
-            // Intent callIntent = new Intent(Intent.ACTION_CALL);
-            // callIntent.setData(Uri.parse("tel:" + phoneNumber));
-            // startActivity(callIntent);
-        });
+
     }
 
     private void buscarAlertaTaxiActiva() {
@@ -243,14 +240,12 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtDriverInfo.setText("Buscando taxista disponible...");
                     txtTaxista.setText("Asignando taxista...");
                     btnDriverDetails.setVisibility(View.GONE);
-                    btnCallDriver.setVisibility(View.GONE);
                     break;
 
                 case "En camino":
                     txtDriverInfo.setText("Taxista asignado y preparándose");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
-                    btnCallDriver.setVisibility(View.VISIBLE);
                     break;
 
 
@@ -258,7 +253,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtDriverInfo.setText("Tu taxista está afuera del hotel");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
-                    btnCallDriver.setVisibility(View.VISIBLE);
 
                     // Show toast notification when driver is on the way
                     Toast.makeText(this, "¡Alejandro Gomez está esperandote!", Toast.LENGTH_LONG).show();
@@ -269,14 +263,12 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtDriverInfo.setText("Viaje casi finalizado");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
-                    btnCallDriver.setVisibility(View.VISIBLE);
                     break;
 
                 case "Completado":
                     txtDriverInfo.setText("Viaje completado");
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
-                    btnCallDriver.setVisibility(View.GONE);
                     btnCancel.setText("Finalizar");
 
                     Toast.makeText(this, "¡Viaje completado exitosamente!", Toast.LENGTH_SHORT).show();
@@ -286,7 +278,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtDriverInfo.setText("Viaje cancelado");
                     txtTaxista.setText("Viaje cancelado");
                     btnDriverDetails.setVisibility(View.GONE);
-                    btnCallDriver.setVisibility(View.GONE);
                     btnCancel.setText("Volver");
 
                     Toast.makeText(this, "El viaje ha sido cancelado", Toast.LENGTH_SHORT).show();
@@ -296,7 +287,6 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
                     txtDriverInfo.setText("Estado: " + estadoViaje);
                     txtTaxista.setText("Alejandro Gomez");
                     btnDriverDetails.setVisibility(View.VISIBLE);
-                    btnCallDriver.setVisibility(View.VISIBLE);
                     break;
             }
 
@@ -325,7 +315,7 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Special notification when status changes to "En camino"
                 if (estadoNuevo != null &&
-                        (estadoNuevo.equalsIgnoreCase("en camino") || estadoNuevo.equalsIgnoreCase("en_camino")) &&
+                        (estadoNuevo.equalsIgnoreCase("En camino") || estadoNuevo.equalsIgnoreCase("en_camino")) &&
                         !estadoPrevio.equalsIgnoreCase(estadoNuevo)) {
 
                     // Additional notification for status change
@@ -429,5 +419,11 @@ public class UserServTaxi extends AppCompatActivity implements OnMapReadyCallbac
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "Actividad pausada");
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed(); // Acción cuando se toca la flecha de la toolbar
+        return true;
     }
 }
