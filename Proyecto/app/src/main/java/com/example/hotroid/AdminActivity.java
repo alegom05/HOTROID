@@ -110,13 +110,13 @@ public class AdminActivity extends AppCompatActivity {
                             }
                         } else {
                             Log.d("AdminActivity", "No such document for admin: " + adminUid);
-                            updateAdminStatusUI(false); // Default to deactivated if document doesn't exist
+                            updateAdminStatusUI(true); // Default to deactivated if document doesn't exist
                         }
                     })
                     .addOnFailureListener(e -> {
                         Log.e("AdminActivity", "Error fetching admin status: " + e.getMessage());
                         Toast.makeText(AdminActivity.this, "Error al cargar estado del administrador.", Toast.LENGTH_SHORT).show();
-                        updateAdminStatusUI(false); // Default to deactivated on error
+                        updateAdminStatusUI(true); // Default to deactivated on error
                     });
         } else {
             updateAdminStatusUI(false); // No user logged in, default to deactivated
