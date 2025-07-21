@@ -70,9 +70,9 @@
                 android:id="@+id/tvRol"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Administrador de Hotel"
+                android:text="Administrador de Hotel - Hotel Libertador"
                 android:textStyle="italic"
-                android:textSize="16sp"
+
                 android:textColor="#555555"
                 app:layout_constraintTop_toBottomOf="@id/tvNombre"
                 app:layout_constraintStart_toStartOf="parent"
