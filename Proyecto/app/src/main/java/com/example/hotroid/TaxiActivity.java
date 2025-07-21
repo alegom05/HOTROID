@@ -52,6 +52,7 @@ public class TaxiActivity extends AppCompatActivity {
     private Spinner spinnerHoteles;     // Spinner para filtro de hoteles
     private Spinner spinnerAeropuertos; // Spinner para filtro de aeropuertos
     private TextView tvNoAlerts; // Para mostrar mensaje si no hay alertas
+    private TextView tvTripStatus; // NEW: TextView para mostrar el estado del viaje
 
     private ListenerRegistration firestoreListener; // Listener para alertas "No asignado"
     private ListenerRegistration activeTripListener; // Listener para verificar viaje activo
@@ -85,6 +86,7 @@ public class TaxiActivity extends AppCompatActivity {
         spinnerHoteles = findViewById(R.id.spinnerHoteles);
         spinnerAeropuertos = findViewById(R.id.spinnerAeropuertos);
         tvNoAlerts = findViewById(R.id.tvNoAlerts);
+        tvTripStatus = findViewById(R.id.tvTripStatus); // NEW: Inicializar tvTripStatus
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -251,6 +253,8 @@ public class TaxiActivity extends AppCompatActivity {
                     }
                     hasActiveTrip = snapshots != null && !snapshots.isEmpty();
                     Log.d(TAG, "Estado de viaje activo actualizado: " + hasActiveTrip);
+                    // NEW: Update the TextView for trip status
+                    updateTripStatusText();
                 });
     }
 
@@ -273,23 +277,23 @@ public class TaxiActivity extends AppCompatActivity {
     private void initLimaLocations() {
         // Nombres ya normalizados para comparación directa desde Firestore
         limaHotelsNormalized = new ArrayList<>();
-        limaHotelsNormalized.add("Libertador");
-        limaHotelsNormalized.add("Jw marriott hotel lima");
-        limaHotelsNormalized.add("Belmond miraflores park");
-        limaHotelsNormalized.add("Hilton lima miraflores");
-        limaHotelsNormalized.add("Ac hotel by marriott lima miraflores");
-        limaHotelsNormalized.add("Aloft lima miraflores");
-        limaHotelsNormalized.add("Radisson red miraflores");
-        limaHotelsNormalized.add("Swissotel lima");
-        limaHotelsNormalized.add("Pullman lima San isidro");
-        limaHotelsNormalized.add("Novotel lima San isidro");
-        limaHotelsNormalized.add("Costa del sol wyndham lima airport");
+        limaHotelsNormalized.add("libertador");
+        limaHotelsNormalized.add("jw marriott hotel lima");
+        limaHotelsNormalized.add("belmond miraflores park");
+        limaHotelsNormalized.add("hilton lima miraflores");
+        limaHotelsNormalized.add("ac hotel by marriott lima miraflores");
+        limaHotelsNormalized.add("aloft lima miraflores");
+        limaHotelsNormalized.add("radisson red miraflores");
+        limaHotelsNormalized.add("swissotel lima");
+        limaHotelsNormalized.add("pullman lima san isidro");
+        limaHotelsNormalized.add("novotel lima san isidro");
+        limaHotelsNormalized.add("costa del sol wyndham lima airport");
 
         limaAirportsNormalized = new ArrayList<>();
-        limaAirportsNormalized.add("Aeropuerto Internacional Jorge Chávez");
-        limaAirportsNormalized.add("Aeropuerto de Santa María del Mar");
-        limaAirportsNormalized.add("Base Aérea Las Palmas");
-        limaAirportsNormalized.add("Aerodromo Lib Mandi de San Bartolo");
+        limaAirportsNormalized.add("aeropuerto internacional jorge chávez");
+        limaAirportsNormalized.add("aeropuerto de santa maría del mar");
+        limaAirportsNormalized.add("base aérea las palmas");
+        limaAirportsNormalized.add("aerodromo lib mandi de san bartolo");
     }
 
     /**
@@ -384,6 +388,17 @@ public class TaxiActivity extends AppCompatActivity {
             tvNoAlerts.setVisibility(View.VISIBLE);
         } else {
             tvNoAlerts.setVisibility(View.GONE);
+        }
+    }
+
+    // NEW: Method to update the trip status TextView
+    private void updateTripStatusText() {
+        if (hasActiveTrip) {
+            tvTripStatus.setText("Estado de Viaje: En curso");
+            tvTripStatus.setTextColor(ContextCompat.getColor(this, R.color.verdejade)); // Optional: Change color for "En curso"
+        } else {
+            tvTripStatus.setText("Estado de Viaje: Libre");
+            tvTripStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark)); // Optional: Revert to original color or set another
         }
     }
 
