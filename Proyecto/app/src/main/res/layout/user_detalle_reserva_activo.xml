@@ -421,8 +421,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Taxi"
+                            android:layout_weight="1"
                             android:textSize="14sp"
                             android:textColor="#333333"
+                            android:layout_marginEnd="10dp"
                             android:layout_marginStart="8dp"/>
                         <Button
                             android:id="@+id/btnSolicitarTaxi"
