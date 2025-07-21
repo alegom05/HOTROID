@@ -2,6 +2,7 @@ package com.example.hotroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.hotroid.R;
+import com.example.hotroid.bean.Reserva;
 import com.example.hotroid.bean.ReservaConHotel;
+import com.example.hotroid.bean.Room;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -117,16 +120,16 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
                     Intent intent = new Intent(context, DetalleReservaActivo.class);
 
                     // Enviamos los datos necesarios para DetalleReservaActivo
-                    intent.putExtra("hotel_name", item.getReserva().getNombreHotel());
+                    intent.putExtra("hotel_name", item.getHotel().getName());
 
                     // Si hay información de ubicación del hotel, la incluimos
                     if (item.getHotel() != null) {
                         String ciudad = item.getHotel().getDireccion();
                         intent.putExtra("city", ciudad != null ? ", " + ciudad : "");
-                        intent.putExtra("hotel_location", item.getHotel().getDireccion());
+                        intent.putExtra("hotel_location", item.getHotel().getDireccionDetallada());
                     } else {
-                        intent.putExtra("city", "");
-                        intent.putExtra("hotel_location", "");
+                        intent.putExtra("city", item.getHotel().getDireccion());
+                        intent.putExtra("hotel_location", item.getHotel().getDireccionDetallada());
                     }
 
                     // Información de la habitación
@@ -137,6 +140,7 @@ public class ReservaItemAdapter extends RecyclerView.Adapter<ReservaItemAdapter.
                     intent.putExtra("checkInDate", fechaInicio);
                     intent.putExtra("checkOutDate", fechaFin);
                     intent.putExtra("reservationCode", item.getReserva().getIdReserva());
+                    Log.d("ReservaAdapter", "ID de la reserva: " + item.getReserva().getIdReserva());
 
                     // Usar el método auxiliar para la información de huéspedes
                     intent.putExtra("guestsInfo", getGuestsInfo(item));

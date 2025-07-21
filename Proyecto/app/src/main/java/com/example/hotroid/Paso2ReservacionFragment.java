@@ -50,7 +50,7 @@ public class Paso2ReservacionFragment extends Fragment {
     private static final int NOTIFICATION_ID = 100;
     private static final int PERMISSION_REQUEST_CODE = 101;
     private TextView tvResumenCliente, tvResumenHabitaciones, tvResumenFechas, tvResumenServicios;
-    private MaterialButton btnConfirmarReserva;
+    private MaterialButton btnConfirmarReserva, btnRegresar;
     // Datos recibidos
     private ArrayList<Integer> roomNumbersSeleccionados;
     private TextView tvHuesped, tvFechaInicioResumen, tvFechaFinResumen, tvDuracionResumen;

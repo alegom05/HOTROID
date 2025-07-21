@@ -75,6 +75,8 @@ public class ReservaService {
                         List<Reserva> reservas = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Reserva reserva = document.toObject(Reserva.class);
+                            // ¡AQUÍ ASIGNAS el ID del documento!
+                            reserva.setIdReserva(document.getId());
                             reservas.add(reserva);
                         }
                         onSuccess.accept(reservas);

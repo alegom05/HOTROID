@@ -34,6 +34,7 @@ import com.google.zxing.common.BitMatrix;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,13 +49,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.Timestamp;
 
 public class DetalleReservaActivo extends AppCompatActivity {
+    private static final String TAG = "DetalleReserva";
 
     private TextView tvHotelName, tvHotelLocation, tvRoomDetails;
     private TextView tvStatus, tvArrivalDay, tvGuestsInfo, tvTimeRemaining;
     private TextView tvCheckInDate, tvCheckOutDate, tvReservationCode;
     private Button btnCheckIn, btnCancelReservation, btnCheckOut, btnSolicitarTaxi;
     private Bitmap qrCodeBitmap;
-    private LinearLayout checkOutContainer, cancelContainer;
+    private LinearLayout checkOutContainer, cancelContainer,checkInContainer;
     private ImageView imgCheckInComplete;
     private ReservaConHotel reserva;
     // Datos recibidos del Intent
@@ -104,6 +106,8 @@ public class DetalleReservaActivo extends AppCompatActivity {
         mostrarDatos();
         // Cargar datos adicionales desde Firestore
         cargarDatosAdicionales();
+        // 👇 Aquí llamas a la verificación de estado de botones
+        actualizarEstadoBotonesPorHorario();
 
 
 //        try {
@@ -199,6 +203,8 @@ public class DetalleReservaActivo extends AppCompatActivity {
         cancelContainer = findViewById(R.id.cancelContainer);
         tvRoomDetails = findViewById(R.id.tvRoomDetails);
         tvGuestsInfo = findViewById(R.id.tvGuestsInfo);
+        checkInContainer = findViewById(R.id.checkInContainer);
+        btnSolicitarTaxi = findViewById(R.id.btnSolicitarTaxi);
 
 
     }
@@ -213,9 +219,19 @@ public class DetalleReservaActivo extends AppCompatActivity {
         checkInDate = intent.getStringExtra("checkInDate");
         checkOutDate = intent.getStringExtra("checkOutDate");
         reservationCode = intent.getStringExtra("reservationCode");
+        Log.d("DetalleReserva", "Código de reserva: " + reservationCode);
         guestsInfo = intent.getStringExtra("guestsInfo");
 
         Log.d(TAG, "Datos recibidos - Hotel: " + hotelName + ", Código: " + reservationCode);
+        // Ver todos los extras
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Log.d("IntentExtra", key + " => " + extras.get(key));
+            }
+        } else {
+            Log.d("IntentExtra", "No extras encontrados.");
+        }
     }
 
     private void mostrarDatos() {
@@ -260,6 +276,20 @@ public class DetalleReservaActivo extends AppCompatActivity {
         if (reservationCode != null) {
             tvReservationCode.setText("Código: " + reservationCode);
         }
+
+        // Día de llegada desde fecha
+        if (checkInDate != null) {
+            try {
+                SimpleDateFormat sdfInput = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date date = sdfInput.parse(checkInDate);
+                SimpleDateFormat sdfDay = new SimpleDateFormat("EEEE", new Locale("es", "ES"));
+                String diaSemana = sdfDay.format(date);
+                tvArrivalDay.setText("Día de llegada: " + diaSemana);
+            } catch (ParseException e) {
+                Log.e(TAG, "Error al parsear la fecha: " + e.getMessage());
+                tvArrivalDay.setText("Día no disponible");
+            }
+        }
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             for (String key : extras.keySet()) {
@@ -268,6 +298,16 @@ public class DetalleReservaActivo extends AppCompatActivity {
         } else {
             Log.d("IntentExtra", "No extras found");
         }
+
+        Log.d("ReservaDebug", "Hotel: " + hotelName);
+        Log.d("ReservaDebug", "Ubicación: " + hotelLocation);
+        Log.d("ReservaDebug", "Ciudad: " + city);
+        Log.d("ReservaDebug", "Room Details: " + roomDetails);
+        Log.d("ReservaDebug", "Check-in: " + checkInDate);
+        Log.d("ReservaDebug", "Check-out: " + checkOutDate);
+        Log.d("ReservaDebug", "Guests: " + guestsInfo);
+        Log.d("ReservaDebug", "Reservation ID: " + reservationCode);
+
 
     }
 
@@ -292,7 +332,6 @@ public class DetalleReservaActivo extends AppCompatActivity {
                         if (hotelId != null) {
                             cargarInformacionHotel(hotelId);
                         }
-
                         // Aquí puedes obtener más datos si son necesarios
                         // Por ejemplo: precio, servicios adicionales, etc.
 
@@ -327,14 +366,13 @@ public class DetalleReservaActivo extends AppCompatActivity {
                         // Actualizar ubicación si no se tenía
                         String direccion = documentSnapshot.getString("direccion");
                         String pais = documentSnapshot.getString("País");
-                        String direccionaven = documentSnapshot.getString("direccionDetallada");
-                        if (direccion != null && (hotelLocation == null || hotelLocation.isEmpty())) {
-                            tvHotelLocation.setText(direccion);
-                            if(direccionaven!=null){
-                                tvHotelLocation.setText(direccionaven + ", "+ direccion);
-                            }
+                        String direccionDetallada  = documentSnapshot.getString("direccionDetallada");
+                        if ((hotelLocation == null || hotelLocation.isEmpty()) && direccion != null) {
+                            String ubicacionCompleta = (direccionDetallada != null)
+                                    ? direccionDetallada + ", " + direccion
+                                    : direccion;
+                            tvHotelLocation.setText(ubicacionCompleta);
                         }
-
                         Log.d(TAG, "Información del hotel cargada exitosamente");
                     }
                 })
@@ -439,6 +477,48 @@ public class DetalleReservaActivo extends AppCompatActivity {
                 });
     }
 
+    private void actualizarEstadoBotonesPorHorario() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date fechaCheckIn = sdf.parse(checkInDate);
+
+            if (fechaCheckIn != null) {
+                // Establece la hora exacta del Check-In a las 12:00 (o la que manejes)
+                Calendar calendarCheckIn = Calendar.getInstance();
+                calendarCheckIn.setTime(fechaCheckIn);
+                calendarCheckIn.set(Calendar.HOUR_OF_DAY, 12); // hora exacta de check-in
+                calendarCheckIn.set(Calendar.MINUTE, 0);
+                calendarCheckIn.set(Calendar.SECOND, 0);
+
+                long tiempoRestanteMs = calendarCheckIn.getTimeInMillis() - System.currentTimeMillis();
+                long horasRestantes = tiempoRestanteMs / (1000 * 60 * 60);
+
+                Log.d("BotonesEstado", "Horas restantes para el check-in: " + horasRestantes);
+
+                if (horasRestantes <= 12) {
+                    // ✅ Habilitar Check-In
+                    btnCheckIn.setEnabled(true);
+                    btnCheckIn.setAlpha(1f);
+
+                    // 🔒 Deshabilitar Cancelar
+                    btnCancelReservation.setEnabled(false);
+                    btnCancelReservation.setAlpha(0.5f);
+                } else {
+                    // 🔒 Deshabilitar Check-In
+                    btnCheckIn.setEnabled(false);
+                    btnCheckIn.setAlpha(0.5f);
+
+                    // ✅ Habilitar Cancelar
+                    btnCancelReservation.setEnabled(true);
+                    btnCancelReservation.setAlpha(1f);
+                }
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, "Error al parsear la fecha de Check-In: " + e.getMessage());
+        }
+    }
+
+
     private void verificarViajeExistente() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String uidCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -493,12 +573,23 @@ public class DetalleReservaActivo extends AppCompatActivity {
         Button btnCancelCheckIn = dialogView.findViewById(R.id.btnCancelCheckIn);
         Button btnDownloadQR = dialogView.findViewById(R.id.btnDownloadQR);
 
+        // Obtener datos del Intent
+        String reservationCode = getIntent().getStringExtra("reservationCode");
+        String guestName = getIntent().getStringExtra("guestName"); // opcional
+        if (guestName == null || guestName.isEmpty()) {
+            guestName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            if (guestName == null) guestName = "Usuario";
+        }
+
+        Log.d("DetalleReserva", "Código de reserva: " + reservationCode);
+        Log.d("DetalleReserva", "Nombre huésped: " + guestName);
+
         // Establecer datos en las vistas
-        tvReservationCodeQR.setText("RES123456");
-        tvGuestNameQR.setText("Juan Pérez"); // Este sería el nombre del usuario logueado
+        tvReservationCodeQR.setText(reservationCode);
+        tvGuestNameQR.setText(guestName);
 
         // Generar código QR
-        String qrCodeData = generateQRCodeData("RES123456", "Juan Pérez");
+        String qrCodeData = generateQRCodeData(reservationCode, guestName, hotelName, checkInDate);
         try {
             qrCodeBitmap = generateQRCode(qrCodeData, 500);
             imageViewQRCode.setImageBitmap(qrCodeBitmap);
@@ -520,11 +611,12 @@ public class DetalleReservaActivo extends AppCompatActivity {
     }
 
     // Método para generar los datos del código QR
-    private String generateQRCodeData(String reservationCode, String guestName) {
+    private String generateQRCodeData(String reservationCode, String guestName, String hotelName, String checkInDate) {
         // Aquí puedes formatear los datos como desees, por ejemplo, en formato JSON
         return "{\"reservationCode\":\"" + reservationCode +
                 "\",\"guestName\":\"" + guestName +
-                "\",\"hotelName\":\"Hotel Los Andes\",\"checkInDate\":\"22/04/2025\"}";
+                "\",\"hotelName\":\""+ hotelName  +
+                "\",\"checkInDate\":\""+ checkInDate  +"\"}";
     }
 
     // Método para generar el código QR como un Bitmap
