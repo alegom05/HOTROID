@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hotroid.ClienteActivity;
 import com.example.hotroid.R;
+import com.example.hotroid.TaxiActivity;
 import com.example.hotroid.databinding.ActivityRegistro2Binding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,7 +27,7 @@ public class RegistroActivity2 extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
-    private String nombre, apellido, dni, correo;
+    private String nombre, apellido, dni, correo, idRol; // Add idRol
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,10 @@ public class RegistroActivity2 extends AppCompatActivity {
         apellido = getIntent().getStringExtra("apellido");
         dni = getIntent().getStringExtra("dni");
         correo = getIntent().getStringExtra("correo");
+        idRol = getIntent().getStringExtra("idRol"); // Retrieve the selected role
 
-        // Mostrar resumen
-        binding.tvUserInfo.setText(nombre + " " + apellido + " • DNI: " + dni + " • " + correo);
+        // Mostrar resumen (you might want to include the role here too)
+        binding.tvUserInfo.setText(nombre + " " + apellido + " • DNI: " + dni + " • " + correo + " • Rol: " + idRol);
 
         // Botón retroceso
         binding.btnBack.setOnClickListener(v -> finish());
@@ -70,14 +72,24 @@ public class RegistroActivity2 extends AppCompatActivity {
                         personaMap.put("apellido", apellido);
                         personaMap.put("dni", dni);
                         personaMap.put("correo", correo);
-                        personaMap.put("idRol", "Cliente");
+                        personaMap.put("idRol", idRol); // Use the selected role here!
 
                         firestore.collection("usuarios").document(user.getUid())
                                 .set(personaMap)
                                 .addOnSuccessListener(unused -> {
                                     Toast.makeText(this, "Cuenta creada correctamente", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(this, ClienteActivity.class));
-                                    finishAffinity();
+                                    // *** LÓGICA DE REDIRECCIÓN CONDICIONAL ***
+                                    if ("Cliente".equals(idRol)) {
+                                        startActivity(new Intent(this, ClienteActivity.class));
+                                    } else if ("Taxista".equals(idRol)) {
+                                        startActivity(new Intent(this, TaxiActivity.class)); // Redirige a TaxistaActivity
+                                    } else {
+                                        // Esto es un caso de respaldo si por alguna razón el rol no es "Cliente" ni "Taxista"
+                                        Toast.makeText(this, "Rol desconocido, redireccionando a inicio.", Toast.LENGTH_SHORT).show();
+                                        // Puedes decidir a dónde ir por defecto, por ejemplo, a ClienteActivity
+                                        startActivity(new Intent(this, ClienteActivity.class));
+                                    }
+                                    finishAffinity(); // Cierra todas las actividades de registro
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar datos: " + e.getMessage(), Toast.LENGTH_LONG).show());
                     }
@@ -95,7 +107,7 @@ public class RegistroActivity2 extends AppCompatActivity {
         }
 
         if (pass.length() < 8 || !pass.matches(".*[A-Z].*") || !pass.matches(".*[0-9].*")) {
-            Toast.makeText(this, "La contraseña no cumple con los requisitos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "La contraseña no cumple con los requisitos: mínimo 8 caracteres, al menos una mayúscula y un número.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
