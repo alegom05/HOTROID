@@ -7,16 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,8 +43,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.maps.android.PolyUtil; // Todavía se usa si decides decodificar polilíneas en el futuro, pero no para esta solución básica.
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +64,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Arrays;
 
 public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -58,6 +71,9 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 2;
     private static final String CHANNEL_ID = "taxi_channel";
     private static final String TAG = "TaxiViajeDebug";
+
+    // Your Google Maps API Key will be loaded from strings.xml
+    private String Maps_API_KEY; // Aunque no se usará directamente para las rutas ahora, se mantiene por si se vuelve a usar
 
     private FirebaseFirestore db;
     private DocumentReference currentTripDocRef;
@@ -79,10 +95,21 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
     private String destinoDireccion;
     private String region;
 
+    // Variables para almacenar LatLng geocodificados
+    private LatLng origenLatLng;
+    private LatLng destinoLatLng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxi_viaje);
+
+        // Load your API key from strings.xml
+        Maps_API_KEY = getString(R.string.Maps_api_key);
+        if (Maps_API_KEY.isEmpty() || Maps_API_KEY.equals("YOUR_Maps_API_KEY")) {
+            Log.e(TAG, "ERROR: Maps_API_KEY no está configurada correctamente en strings.xml. Las funciones del mapa pueden verse afectadas.");
+            Toast.makeText(this, "Advertencia: Clave de API de Mapas ausente o incorrecta.", Toast.LENGTH_LONG).show();
+        }
 
         db = FirebaseFirestore.getInstance();
 
@@ -107,7 +134,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         origenDireccion = intent.getStringExtra("origen");
         destinoDireccion = intent.getStringExtra("destino");
         region = intent.getStringExtra("region");
-        Log.d(TAG, "Datos recibidos en el Intent:" + origenDireccion + "," + destinoDireccion + ", Region=" + region);
+        Log.d(TAG, "Datos recibidos en el Intent: Origen=" + origenDireccion + ", Destino=" + destinoDireccion + ", Region=" + region);
 
         if (currentTripDocumentId == null || currentTripDocumentId.isEmpty()) {
             Log.e(TAG, "TaxiViaje iniciado sin documentId válido. Redirigiendo a Dashboard.");
@@ -214,13 +241,8 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         // Habilita la capa de mi ubicación.
         enableMyLocation();
 
-        // --- 3. Dibuja la ruta y los marcadores si las direcciones están disponibles ---
-        if (origenDireccion != null && destinoDireccion != null && region != null) {
-            addRouteMarkersAndPath(origenDireccion, destinoDireccion, region);
-        } else {
-            Log.d(TAG, "No se recibieron direcciones completas para dibujar la ruta.");
-            Toast.makeText(this, "No se pudo cargar la ruta completa.", Toast.LENGTH_SHORT).show();
-        }
+        // --- 3. Geocodifica y dibuja la línea básica ---
+        new GeocodeAndDrawRouteTask().execute(origenDireccion, destinoDireccion, region);
     }
 
     private void enableMyLocation() {
@@ -235,7 +257,8 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                         if (location != null) {
                             LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
                             // Mueve la cámara a la ubicación actual solo si no hay una ruta definida para evitar conflictos con el zoom de la ruta
-                            if (origenDireccion == null || destinoDireccion == null) {
+                            // Este ajuste de cámara se hará después de dibujar la ruta en GeocodeAndDrawRouteTask.
+                            if (origenLatLng == null || destinoLatLng == null) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, 15));
                             }
                             Log.d(TAG, "Ubicación actual obtenida: " + miPosicion.latitude + ", " + miPosicion.longitude);
@@ -257,108 +280,176 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
     /**
      * Mapea nombres cortos de lugares a direcciones completas para el Geocoder.
      * @param shortName El nombre del lugar (ej. "Libertador").
-     * @param region La región/ciudad para dar contexto (ej. "Cusco").
+     * @param region La región/ciudad para dar contexto (ej. "Lima").
      * @return La dirección completa para geocodificar.
      */
     private String getFullAddress(String shortName, String region) {
         if (shortName == null) return null;
 
         // Mapea los nombres de tus lugares a direcciones reales para el Geocoder
-        switch (shortName) {
-            case "Libertador":
-                // Esta es una dirección real y precisa para el Hotel Libertador en Cusco.
-                return "Calle San Agustín 400, Cusco 08001, Perú";
-            case "Aeropuerto de Chinchero (CUZ)":
-                // Dirección más precisa del nuevo aeropuerto.
-                return "Aeropuerto Internacional de Chinchero, Cusco, Perú";
-            case "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)":
-                // Dirección del aeropuerto antiguo.
-                return "Av. Velasco Astete s/n, Wanchaq 08002, Perú";
+        // Estas direcciones deben ser lo más precisas posible para un buen geocodificado.
+        // Considerando la ubicación actual: Villa María del Triunfo, Lima Province, Peru
+        switch (shortName.trim().toLowerCase(Locale.getDefault())) {
+            case "libertador":
+                // Asumiendo que "Libertador" podría referirse a una calle o plaza conocida en Lima o en VMT.
+                // Es crucial que esta dirección sea lo más específica posible.
+                // Ejemplo: Una dirección real en Lima. Si se refiere a PUCP como antes, es una dirección conocida.
+                return "Av. La Marina 200, San Miguel 15088, Lima, Perú"; // Ejemplo de dirección real para Libertador (si se refiere a PUCP)
+            case "aeropuerto internacional jorge chávez":
+                return "Av. Elmer Faucett s/n, Callao 07031, Perú";
+            case "aeropuerto de santa maría del mar":
+                return "Santa María del Mar, Lima, Perú"; // Ubicación general, puede necesitar una dirección más específica
+            case "base aérea las palmas":
+                return "Av. Jorge Chávez s/n, Santiago de Surco, Lima, Perú";
+            // Agrega más casos si tienes otros nombres cortos en tu base de datos y necesitan una dirección específica
             default:
-                // Si el nombre no está en la lista fija, concatena con la región para tener una pista.
-                return shortName + ", " + (region != null ? region : "") + ", Perú";
+                // Si el nombre no está en la lista fija, concatena con la región para una pista.
+                // Es importante que la base de datos almacene direcciones lo más completas posible.
+                return shortName + ", " + (region != null ? region : "Lima") + ", Perú";
+        }
+    }
+
+
+    /**
+     * AsyncTask para geocodificar direcciones en segundo plano y luego dibujar la línea recta.
+     */
+    private class GeocodeAndDrawRouteTask extends AsyncTask<String, Void, Map<String, LatLng>> {
+
+        @Override
+        protected Map<String, LatLng> doInBackground(String... params) {
+            String origenStr = params[0];
+            String destinoStr = params[1];
+            String region = params[2];
+
+            Map<String, LatLng> latLngMap = new HashMap<>();
+            // Es importante que el contexto para Geocoder sea el de la aplicación o actividad
+            // y que haya conectividad a internet para que funcione correctamente.
+            Geocoder geocoder = new Geocoder(TaxiViaje.this, Locale.getDefault());
+
+            String origenCompleto = getFullAddress(origenStr, region);
+            String destinoCompleto = getFullAddress(destinoStr, region);
+
+            if (origenCompleto == null || destinoCompleto == null) {
+                Log.e(TAG, "Una o ambas direcciones completas son nulas después de mapear en GeocodeAndDrawRouteTask.");
+                return null;
+            }
+
+            try {
+                // Geocodificar Origen
+                List<Address> origenAddresses = geocoder.getFromLocationName(origenCompleto, 1);
+                if (origenAddresses != null && !origenAddresses.isEmpty()) {
+                    Address origenAddress = origenAddresses.get(0);
+                    latLngMap.put("origen", new LatLng(origenAddress.getLatitude(), origenAddress.getLongitude()));
+                    Log.d(TAG, "Origen geocodificado: " + latLngMap.get("origen") + " para: " + origenCompleto);
+                } else {
+                    Log.w(TAG, "No se encontraron coordenadas para la dirección de origen: " + origenCompleto);
+                }
+
+                // Geocodificar Destino
+                List<Address> destinoAddresses = geocoder.getFromLocationName(destinoCompleto, 1);
+                if (destinoAddresses != null && !destinoAddresses.isEmpty()) {
+                    Address destinoAddress = destinoAddresses.get(0);
+                    latLngMap.put("destino", new LatLng(destinoAddress.getLatitude(), destinoAddress.getLongitude()));
+                    Log.d(TAG, "Destino geocodificado: " + latLngMap.get("destino") + " para: " + destinoCompleto);
+                } else {
+                    Log.w(TAG, "No se encontraron coordenadas para la dirección de destino: " + destinoCompleto);
+                }
+
+            } catch (IOException e) {
+                Log.e(TAG, "Error de servicio de geocodificación en segundo plano (IOException): " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "Error de argumento en geocodificación (IllegalArgumentException): " + e.getMessage());
+            }
+            return latLngMap;
+        }
+
+        @Override
+        protected void onPostExecute(Map<String, LatLng> latLngMap) {
+            super.onPostExecute(latLngMap);
+
+            if (latLngMap != null && mMap != null) {
+                origenLatLng = latLngMap.get("origen");
+                destinoLatLng = latLngMap.get("destino");
+
+                mMap.clear(); // Limpia marcadores y polilíneas anteriores si las hubiera
+
+                if (origenLatLng != null) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(origenLatLng)
+                            .title("Origen: " + origenDireccion)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                } else {
+                    Toast.makeText(TaxiViaje.this, "No se pudo marcar el origen en el mapa.", Toast.LENGTH_SHORT).show();
+                }
+
+                if (destinoLatLng != null) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(destinoLatLng)
+                            .title("Destino: " + destinoDireccion)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                } else {
+                    Toast.makeText(TaxiViaje.this, "No se pudo marcar el destino en el mapa.", Toast.LENGTH_SHORT).show();
+                }
+
+                // Dibuja una línea recta simple si ambos puntos fueron encontrados
+                if (origenLatLng != null && destinoLatLng != null) {
+                    mMap.addPolyline(new PolylineOptions()
+                            .add(origenLatLng, destinoLatLng)
+                            .width(10)
+                            .color(ContextCompat.getColor(TaxiViaje.this, R.color.verdejade))); // Usar tu color verdejade
+                    Log.d(TAG, "Línea recta dibujada entre origen y destino.");
+                    zoomToFitMarkers(origenLatLng, destinoLatLng); // Ajusta la cámara para ver ambos puntos
+                } else {
+                    Toast.makeText(TaxiViaje.this, "No se pudieron obtener coordenadas válidas para trazar la línea.", Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "No se pudieron obtener LatLngs válidos para trazar la línea después de geocodificación.");
+                }
+            } else {
+                Toast.makeText(TaxiViaje.this, "Error al procesar las direcciones para el mapa.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     /**
-     * Geocodifica direcciones y añade marcadores de origen y destino al mapa.
-     * Dibuja una polilínea entre los dos puntos y ajusta la cámara.
-     * @param origenStr Dirección de origen (nombre corto).
-     * @param destinoStr Dirección de destino (nombre corto).
-     * @param region La región para la geocodificación.
+     * COMENTADO: Esta clase ya no se usa para dibujar una línea recta simple.
+     * Si en el futuro se decide usar la API de Directions/Routes, esta clase
+     * deberá ser actualizada y descomentada.
      */
-    private void addRouteMarkersAndPath(String origenStr, String destinoStr, String region) {
-        if (mMap == null) return;
+    /*
+    private class FetchDirectionsTask extends AsyncTask<Void, Void, String> {
+        private LatLng origin;
+        private LatLng destination;
 
-        // Convierte los nombres cortos a direcciones completas
-        String origenCompleto = getFullAddress(origenStr, region);
-        String destinoCompleto = getFullAddress(destinoStr, region);
-
-        if (origenCompleto == null || destinoCompleto == null) {
-            Log.e(TAG, "Una o ambas direcciones completas son nulas después de mapear.");
-            return;
+        public FetchDirectionsTask(LatLng origin, LatLng destination) {
+            this.origin = origin;
+            this.destination = destination;
         }
 
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        LatLng origenLatLng = null;
-        LatLng destinoLatLng = null;
+        @Override
+        protected String doInBackground(Void... voids) {
+            // Este método estaba haciendo llamadas a la API de Directions/Routes.
+            // Por ahora, lo dejamos vacío o retornando null para no ejecutar esas llamadas.
+            Log.d(TAG, "FetchDirectionsTask ha sido omitida para una línea recta simple.");
+            return null;
+        }
 
-        try {
-            // Geocodificar Origen
-            List<android.location.Address> origenAddresses = geocoder.getFromLocationName(origenCompleto, 1);
-            if (origenAddresses != null && !origenAddresses.isEmpty()) {
-                android.location.Address origenAddress = origenAddresses.get(0);
-                origenLatLng = new LatLng(origenAddress.getLatitude(), origenAddress.getLongitude());
-                mMap.addMarker(new MarkerOptions()
-                        .position(origenLatLng)
-                        .title("Origen: " + origenStr)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                Log.d(TAG, "Marcador de Origen añadido: " + origenLatLng);
-            } else {
-                Log.w(TAG, "No se encontraron coordenadas para la dirección de origen: " + origenCompleto);
-                Toast.makeText(this, "No se pudo encontrar la dirección de origen.", Toast.LENGTH_LONG).show();
-            }
-
-            // Geocodificar Destino
-            List<android.location.Address> destinoAddresses = geocoder.getFromLocationName(destinoCompleto, 1);
-            if (destinoAddresses != null && !destinoAddresses.isEmpty()) {
-                android.location.Address destinoAddress = destinoAddresses.get(0);
-                destinoLatLng = new LatLng(destinoAddress.getLatitude(), destinoAddress.getLongitude());
-                mMap.addMarker(new MarkerOptions()
-                        .position(destinoLatLng)
-                        .title("Destino: " + destinoStr)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                Log.d(TAG, "Marcador de Destino añadido: " + destinoLatLng);
-            } else {
-                Log.w(TAG, "No se encontraron coordenadas para la dirección de destino: " + destinoCompleto);
-                Toast.makeText(this, "No se pudo encontrar la dirección de destino.", Toast.LENGTH_LONG).show();
-            }
-
-            // Dibuja la ruta y ajusta la cámara si ambos puntos fueron encontrados
-            if (origenLatLng != null && destinoLatLng != null) {
-                drawRoute(origenLatLng, destinoLatLng);
-                zoomToFitMarkers(origenLatLng, destinoLatLng);
-            }
-
-        } catch (IOException e) {
-            Log.e(TAG, "Error de servicio de geocodificación: " + e.getMessage());
-            Toast.makeText(this, "Error de servicio de geocodificación. Asegúrate de tener conexión a internet.", Toast.LENGTH_LONG).show();
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            // No hay procesamiento de resultados aquí ya que la tarea está omitida.
         }
     }
+    */
 
-    private void drawRoute(LatLng origen, LatLng destino) {
-        if (mMap == null) return;
-
-        PolylineOptions polylineOptions = new PolylineOptions()
-                .add(origen)
-                .add(destino)
-                .width(10)
-                .color(ContextCompat.getColor(this, R.color.verdejade))
-                .geodesic(true);
-
-        mMap.addPolyline(polylineOptions);
-        Log.d(TAG, "Ruta simple dibujada entre origen y destino.");
+    /**
+     * COMENTADO: Este método ya no es necesario si no se decodifican polilíneas complejas de una API.
+     */
+    /*
+    private void parseDirectionsResult(String jsonResponse) {
+        // Este método estaba procesando la respuesta JSON de la API de Directions/Routes.
+        // Ahora la ruta se dibuja directamente en GeocodeAndDrawRouteTask.
+        Log.d(TAG, "parseDirectionsResult ha sido omitida para una línea recta simple.");
     }
+    */
 
     private void zoomToFitMarkers(LatLng origen, LatLng destino) {
         if (mMap == null) return;
@@ -380,7 +471,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
-    // --- NUEVO MÉTODO: Lógica para manejar la navegación inferior ---
+    // --- Lógica para manejar la navegación inferior ---
     private void setupBottomNavigationListener() {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (!item.isEnabled()) {
@@ -404,6 +495,7 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                 return false;
             }
 
+            // Para evitar la creación de múltiples instancias de la misma actividad
             targetIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(targetIntent);
             finish();
@@ -530,17 +622,17 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                     String notificationText = "";
 
                     switch (newStatus) {
-                        case "En camino": // Corresponde al clic de "Iniciar Viaje"
+                        case "En camino": // Corresponds to "Iniciar Viaje" button click
                             notificationTitle = "¡Viaje Iniciado!";
                             notificationText = "En camino a recoger al pasajero.";
                             break;
-                        case "Asignado": // Corresponde al clic de "Llegue a origen"
+                        case "Asignado": // Corresponds to "Llegue a origen" button click
                             notificationTitle = "¡Recogida Exitosa!";
                             notificationText = "En ruta hacia el destino.";
                             break;
-                        case "Llegó a destino": // Corresponde al clic de "Llegue a destino"
-                            notificationTitle = "¡Llegada a Destino!";
-                            notificationText = "El pasajero ha llegado a su destino. Esperando QR.";
+                        case "Llegó a destino":
+                            notificationTitle = "¡Llegaste a destino!";
+                            notificationText = "Por favor, finaliza el viaje con el código QR.";
                             break;
                     }
                     if (!notificationTitle.isEmpty()) {
@@ -548,53 +640,86 @@ public class TaxiViaje extends AppCompatActivity implements OnMapReadyCallback {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error actualizando estado del viaje en Firestore: " + e.getMessage(), e);
-                    Toast.makeText(this, "Error al guardar estado: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error al actualizar el estado del viaje a " + newStatus + ": " + e.getMessage());
+                    Toast.makeText(this, "Error al actualizar el estado del viaje.", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void updateButtonsAndNavigation(String currentStatus) {
-        // Reiniciar visibilidad de todos los botones
+    // Método updateButtonsAndNavigation (añadido previamente)
+    private void updateButtonsAndNavigation(String tripStatus) {
+        // Reset all buttons and navigation items to default disabled state
         btnIniciarViaje.setVisibility(View.GONE);
         btnLlegueOrigen.setVisibility(View.GONE);
         btnViajeCompletado.setVisibility(View.GONE);
 
-        // Lógica para mostrar el botón adecuado según el estado
-        switch (currentStatus) {
-            case "No asignado":
+        // Disable all bottom navigation items by default, then enable based on status
+        bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.location).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(false);
+
+
+        int colorRes;
+        switch (tripStatus) {
+            case "No asignado": // Initial state
                 btnIniciarViaje.setVisibility(View.VISIBLE);
+                btnIniciarViaje.setText("Iniciar Viaje");
+                // Allow navigation to alerts and dashboard
+                bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(true); // Alerts
+                bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(true); // Dashboard
+                colorRes = android.R.color.darker_gray; // Grey for not assigned
                 break;
-            case "En camino":
+            case "En camino": // On the way to pick up client
                 btnLlegueOrigen.setVisibility(View.VISIBLE);
+                btnLlegueOrigen.setText("Llegué a Origen");
+                // Allow all navigation during trip
+                bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.location).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(true);
+                colorRes = android.R.color.holo_blue_dark; // Blue for en camino
                 break;
-            case "Asignado":
+            case "Asignado": // Client picked up, on the way to destination
                 btnViajeCompletado.setVisibility(View.VISIBLE);
+                btnViajeCompletado.setText("Llegué a Destino"); // Now this button means arrived at *final* destination
+                // Allow all navigation during trip
+                bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.location).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(true);
+                colorRes = android.R.color.holo_blue_dark; // Blue for assigned
                 break;
-            // Para "Llegó a destino", "Completado" o "Cancelado", todos los botones permanecen ocultos.
-            case "Llegó a destino":
-            case "Completado":
-            case "Cancelado":
-                // No mostrar ningún botón de acción aquí
+            case "Llegó a destino": // Arrived at final destination, awaiting payment/QR scan
+                // No action button visible here, as this state leads to TaxiFin
+                // Navigation should still be possible if user returns
+                bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.location).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(true);
+                colorRes = R.color.naranja; // Orange for arrived at destination
+                break;
+            case "Completado": // Trip finished
+            case "Cancelado": // Trip cancelled
+                // No buttons visible, all navigation items enabled to go back to dashboard/alerts
+                bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.location).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(true);
+                colorRes = android.R.color.black; // Black or default for final states
                 break;
             default:
-                Log.w(TAG, "Estado de viaje desconocido o inicial: " + currentStatus);
+                // Default case if status is unexpected
+                bottomNavigationView.getMenu().findItem(R.id.wifi).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.location).setEnabled(true);
+                bottomNavigationView.getMenu().findItem(R.id.notify).setEnabled(true);
+                colorRes = android.R.color.black;
                 break;
         }
-
-        // Deshabilitar la navegación inferior si el viaje ha llegado a destino, está completado o cancelado.
-        boolean enableBottomNav = !("Llegó a destino".equals(currentStatus) || "Completado".equals(currentStatus) || "Cancelado".equals(currentStatus));
-
-        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-            bottomNavigationView.getMenu().getItem(i).setEnabled(enableBottomNav);
-        }
+        tvEstadoViaje.setTextColor(ContextCompat.getColor(this, colorRes));
     }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (tripStatusListener != null) {
             tripStatusListener.remove();
-            Log.d(TAG, "Listener de estado de viaje (TaxiViaje) desregistrado.");
+            Log.d(TAG, "Listener de estado de viaje desregistrado.");
         }
         stopTimer();
     }

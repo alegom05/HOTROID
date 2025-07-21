@@ -25,7 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng; // <<<<<<<<<<<<<<<< CORREGIDO AQUÍ
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -61,7 +61,7 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.verdejade));
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this); // Using .getService() instead of .getFusedLocationProviderClient() is also valid
 
         // Obtiene el SupportMapFragment y notifica cuando el mapa está listo.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -173,34 +173,47 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Mapea nombres de lugares a direcciones completas y precisas.
+     * Mapea nombres de lugares a direcciones completas y precisas en LIMA.
      * Centraliza la información de dirección para los puntos de interés.
-     * @param shortName El nombre del lugar (ej. "Libertador").
+     * @param shortName El nombre del lugar.
      * @return La dirección completa para geocodificar, o null si no se reconoce.
      */
     private String getFullAddress(String shortName) {
         if (shortName == null) return null;
 
         switch (shortName) {
-            case "Hotel Libertador": return "Calle San Agustín 400, Cusco 08001, Perú";
-            case "Palacio del Inka": return "Plazoleta Santo Domingo 259, Cusco 08002, Perú";
-            case "JW Marriott El Convento Cusco": return "Esquina de la Calle Ruinas 432 y San Agustín, Cusco 08002, Perú";
-            case "Belmond Hotel Monasterio": return "Calle Palacio 140, Cusco 08002, Perú";
-            case "Novotel Cusco": return "Calle San Agustín 239, Cusco 08002, Perú";
-            case "Hilton Garden Inn Cusco": return "Av. Pachacuteq 101, Cusco 08002, Perú";
-            case "Casa Andina Premium Cusco": return "Av. El Sol 954, Cusco 08002, Perú";
-            case "El Mercado Tunqui": return "Calle Garcilaso 210, Cusco 08002, Perú";
-            case "Antigua Casona San Blas": return "Tandapata 116, Cusco 08007, Perú";
-            case "Hotel Rumi Punku": return "Calle Choquechaka 339, Cusco 08002, Perú";
-            case "Aeropuerto Internacional Alejandro Velasco Astete": return "Av. Velasco Astete s/n, Wanchaq 08002, Perú";
-            case "Aeropuerto Internacional de Chinchero": return "Aeropuerto Internacional de Chinchero, Cusco, Perú";
+            // Hoteles de Lima (14 en total, incluyendo el de la PUCP) - Marcadores Rojos
+            // Hotel Libertador (simulando PUCP)
+            case "Hotel Libertador": return "Av. Universitaria 1801, San Miguel, Lima, Perú";
+            // Hoteles en Miraflores
+            case "JW Marriott Hotel Lima": return "Malecón de la Reserva 615, Miraflores 15074, Lima, Perú";
+            case "Belmond Miraflores Park": return "Av. Malecón de la Reserva 1035, Miraflores 15074, Lima, Perú";
+            case "Hilton Lima Miraflores": return "Av. La Paz 1099, Miraflores 15074, Lima, Perú";
+            case "AC Hotel by Marriott Lima Miraflores": return "Malecón de la Reserva 875, Miraflores 15074, Lima, Perú";
+            case "Hotel Aloft Lima Miraflores": return "Av. Kennedy 1090, Miraflores 15074, Lima, Perú";
+            case "Radisson Red Miraflores": return "Calle Alcanfores 290, Miraflores 15074, Lima, Perú";
+            case "Hotel Dazzler by Wyndham Lima Miraflores": return "Av. José Pardo 879, Miraflores 15074, Lima, Perú";
+            // Hoteles en San Isidro
+            case "Swissôtel Lima": return "Vía Central 150, San Isidro 15073, Lima, Perú";
+            case "The Westin Lima Hotel & Convention Center": return "Calle Las Begonias 450, San Isidro 15037, Lima, Perú";
+            case "Pullman Lima San Isidro": return "Calle Los Eucaliptos 590, San Isidro 15073, Lima, Perú";
+            case "Novotel Lima San Isidro": return "Av. Víctor Andrés Belaúnde 198, San Isidro 15073, Lima, Perú";
+            // Hoteles en Barranco
+            case "Hotel B": return "Av. Sáenz Peña 204, Barranco 15063, Lima, Perú";
+            // Hotel en Callao (aeropuerto)
+            case "Costa del Sol Wyndham Lima Airport": return "Av. Elmer Faucett s/n, Callao 07031, Perú"; // Es el hotel dentro del aeropuerto Jorge Chávez
+
+            // Aeropuertos y bases aéreas de Lima/Callao - Marcadores Verdes
+            case "Aeropuerto Internacional Jorge Chávez": return "Av. Elmer Faucett s/n, Callao 07031, Perú";
+            case "Base Aérea del Callao (Grupo Aéreo N° 8)": return "Av. Faucett s/n, Callao 07031, Perú";
+            case "Aeródromo Lib Mandi de San Bartolo": return "Carretera Panamericana Sur Km 52, San Bartolo 15862, Lima, Perú";
             default: return null; // Si el nombre no está en la lista fija
         }
     }
 
     /**
-     * Añade marcadores para el Hotel Libertador + 9 hoteles más (rojos)
-     * y dos aeropuertos (verdes). Ajusta la cámara para mostrar todos los puntos.
+     * Añade marcadores para 14 hoteles (rojos) y 3 aeropuertos/bases aéreas (verdes) en Lima/Callao.
+     * Ajusta la cámara para mostrar todos los puntos.
      */
     private void addFixedMarkers() {
         if (mMap == null) {
@@ -214,16 +227,20 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
 
         // --- Hoteles (Marcadores Rojos) ---
         List<String> hotels = new ArrayList<>();
-        hotels.add("Hotel Libertador");
-        hotels.add("Palacio del Inka");
-        hotels.add("JW Marriott El Convento Cusco");
-        hotels.add("Belmond Hotel Monasterio");
-        hotels.add("Novotel Cusco");
-        hotels.add("Hilton Garden Inn Cusco");
-        hotels.add("Casa Andina Premium Cusco");
-        hotels.add("El Mercado Tunqui");
-        hotels.add("Antigua Casona San Blas");
-        hotels.add("Hotel Rumi Punku");
+        hotels.add("Hotel Libertador"); // Simulación de PUCP
+        hotels.add("JW Marriott Hotel Lima");
+        hotels.add("Belmond Miraflores Park");
+        hotels.add("Swissôtel Lima");
+        hotels.add("Hotel B");
+        hotels.add("Hilton Lima Miraflores");
+        hotels.add("AC Hotel by Marriott Lima Miraflores");
+        hotels.add("Hotel Aloft Lima Miraflores");
+        hotels.add("Radisson Red Miraflores");
+        hotels.add("Hotel Dazzler by Wyndham Lima Miraflores");
+        hotels.add("The Westin Lima Hotel & Convention Center");
+        hotels.add("Pullman Lima San Isidro");
+        hotels.add("Novotel Lima San Isidro");
+        hotels.add("Costa del Sol Wyndham Lima Airport"); // Hotel del aeropuerto
 
         for (String hotelName : hotels) {
             String address = getFullAddress(hotelName);
@@ -242,7 +259,8 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
                         Log.d(TAG, "Marcador rojo añadido: " + hotelName + " en " + latLng);
                     } else {
                         Log.w(TAG, "No se encontraron coordenadas para el hotel: " + hotelName + " (" + address + ")");
-                        Toast.makeText(this, "No se pudo encontrar el hotel: " + hotelName, Toast.LENGTH_SHORT).show();
+                        // Considerar si quieres un Toast por cada hotel no encontrado, puede ser excesivo.
+                        // Toast.makeText(this, "No se pudo encontrar el hotel: " + hotelName, Toast.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "Error de geocodificación para el hotel " + hotelName + ": " + e.getMessage());
@@ -252,10 +270,11 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
 
-        // --- Aeropuertos (Marcadores Verdes) ---
+        // --- Aeropuertos y Bases Aéreas (Marcadores Verdes) ---
         List<String> airports = new ArrayList<>();
-        airports.add("Aeropuerto Internacional Alejandro Velasco Astete");
-        airports.add("Aeropuerto Internacional de Chinchero");
+        airports.add("Aeropuerto Internacional Jorge Chávez");
+        airports.add("Base Aérea del Callao (Grupo Aéreo N° 8)");
+        airports.add("Aeródromo Lib Mandi de San Bartolo");
 
         for (String airportName : airports) {
             String address = getFullAddress(airportName);
@@ -274,7 +293,7 @@ public class TaxiLocation extends AppCompatActivity implements OnMapReadyCallbac
                         Log.d(TAG, "Marcador verde añadido: " + airportName + " en " + latLng);
                     } else {
                         Log.w(TAG, "No se encontraron coordenadas para el aeropuerto: " + airportName + " (" + address + ")");
-                        Toast.makeText(this, "No se pudo encontrar el aeropuerto: " + airportName, Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(this, "No se pudo encontrar el aeropuerto: " + airportName, Toast.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "Error de geocodificación para el aeropuerto " + airportName + ": " + e.getMessage());

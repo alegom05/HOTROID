@@ -82,3 +82,4 @@ public class TaxiAlertasAdapter extends RecyclerView.Adapter<TaxiAlertasAdapter.
         notifyDataSetChanged();
     }
 }
+

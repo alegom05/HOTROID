@@ -303,6 +303,7 @@ public class TaxiDashboardActivity extends AppCompatActivity {
         }
     }
 
+    // Método para generar alertas de prueba (MODIFICADO)
     private void generarAlertasEnFirestore() {
         CollectionReference clientesRef = db.collection("clientes");
         CollectionReference hotelesRef = db.collection("hoteles");
@@ -383,29 +384,46 @@ public class TaxiDashboardActivity extends AppCompatActivity {
         });
     }
 
+    // MODIFICADO: Este método ahora genera destinos que NO son aeropuertos de Cusco
     private void crearNuevasAlertas(CollectionReference alertasRef, List<Map<String, String>> clientes, String hotelLibertadorOrigen) {
-        List<String> aeropuertosCusco = Arrays.asList(
-                "Aeropuerto Internacional Alejandro Velasco Astete (CUZ)",
-                "Aeropuerto de Chinchero (CUZ)"
+        // Lista de destinos alternativos que NO sean aeropuertos de Cusco
+        List<String> destinosAlternativos = Arrays.asList(
+                "Centro Histórico de Lima",
+                "Miraflores",
+                "San Isidro",
+                "Barranco",
+                "La Molina",
+                "Surco",
+                "Museo de la Nación",
+                "Estadio Nacional",
+                "Larcomar",
+                "Parque Kennedy"
         );
         Random random = new Random();
 
         for (int i = 0; i < 7; i++) {
             Map<String, String> cliente = clientes.get(random.nextInt(clientes.size()));
-            String aeropuertoDestinoCusco = aeropuertosCusco.get(random.nextInt(aeropuertosCusco.size()));
+            String destinoAleatorio = destinosAlternativos.get(random.nextInt(destinosAlternativos.size()));
+
+            // Opcional: Para simular un caso sin nombre/apellido para prueba, puedes descomentar una línea aquí
+            // if (i == 0) {
+            //     cliente.put("nombres", null);
+            //     cliente.put("apellidos", null);
+            // }
+
 
             TaxiAlertasBeans alerta = new TaxiAlertasBeans(
                     cliente.get("nombres"),
                     cliente.get("apellidos"),
                     hotelLibertadorOrigen,
-                    aeropuertoDestinoCusco,
+                    destinoAleatorio, // Usar destino alternativo
                     null,
-                    "No asignado", // <<<<<<<<<<< CAMBIO AQUI: La alerta inicial debe ser "No asignado"
-                    "Cusco"
+                    "Completado", // <<<<<<<<<<< CAMBIO AQUI: Las alertas de prueba para el dashboard se crean como "Completado"
+                    "Lima" // Cambiamos la región a Lima si los destinos son de Lima
             );
             guardarAlertaEnFirestore(alertasRef, alerta);
         }
-        Toast.makeText(this, "7 Alertas de Cusco generadas desde DB y subidas a Firestore.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "7 Alertas de prueba (Completado) generadas desde DB y subidas a Firestore.", Toast.LENGTH_LONG).show();
     }
 
     private void guardarAlertaEnFirestore(CollectionReference alertasRef, TaxiAlertasBeans alerta) {
@@ -419,15 +437,46 @@ public class TaxiDashboardActivity extends AppCompatActivity {
                 });
     }
 
+    // MODIFICADO: Este método ahora filtra para no mostrar los elementos que quieres ocultar
     private void filtrarViajesTerminados(String textoBusqueda) {
         listaViajesTerminadosFiltrada.clear();
 
-        if (textoBusqueda.isEmpty()) {
-            listaViajesTerminadosFiltrada.addAll(listaViajesTerminadosOriginal);
-        } else {
-            String searchTextLower = textoBusqueda.toLowerCase(Locale.getDefault());
-            for (TaxiAlertasBeans alerta : listaViajesTerminadosOriginal) {
-                if (alerta.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
+        // Lista de destinos de aeropuertos de Cusco para exclusión
+        List<String> aeropuertosCuscoExcluir = Arrays.asList(
+                "aeropuerto internacional alejandro velasco astete (cuz)",
+                "aeropuerto de chinchero (cuz)"
+        );
+
+        String searchTextLower = textoBusqueda.toLowerCase(Locale.getDefault());
+
+        for (TaxiAlertasBeans alerta : listaViajesTerminadosOriginal) {
+            // Condición para excluir:
+            // 1. Si los nombres o apellidos son nulos, vacíos o "No disponible"
+            // 2. Si el destino es un aeropuerto de Cusco
+            boolean exclude = false;
+
+            String nombres = alerta.getNombresCliente();
+            String apellidos = alerta.getApellidosCliente();
+            String destino = alerta.getDestino();
+
+            // 1. Excluir si nombre o apellido no están presentes o son "No disponible"
+            if (nombres == null || nombres.trim().isEmpty() || nombres.equalsIgnoreCase("No disponible") ||
+                    apellidos == null || apellidos.trim().isEmpty() || apellidos.equalsIgnoreCase("No disponible")) {
+                exclude = true;
+            }
+
+            // 2. Excluir si el destino es un aeropuerto de Cusco
+            if (destino != null) {
+                String destinoLower = destino.toLowerCase(Locale.getDefault());
+                if (aeropuertosCuscoExcluir.contains(destinoLower)) {
+                    exclude = true;
+                }
+            }
+
+            // Si no se debe excluir y cumple con el filtro de búsqueda (si lo hay)
+            if (!exclude) {
+                if (textoBusqueda.isEmpty() ||
+                        alerta.getNombresCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
                         alerta.getApellidosCliente().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
                         alerta.getOrigen().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
                         alerta.getDestino().toLowerCase(Locale.getDefault()).contains(searchTextLower) ||
