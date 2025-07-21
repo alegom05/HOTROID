@@ -151,7 +151,7 @@ public class SuperListaAdminActivity extends AppCompatActivity {
             tvRol.setText("Administrador General");
         }
         if (imagenPerfil != null) {
-            imagenPerfil.setImageResource(R.drawable.foto_admin); // Make sure this drawable exists
+            imagenPerfil.setImageResource(R.drawable.foto_super); // Make sure this drawable exists
         }
 
         CardView cardSuper = findViewById(R.id.cardSuper);

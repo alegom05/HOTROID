@@ -115,7 +115,7 @@
                 android:layout_width="100dp"
                 android:layout_height="120dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/foto_admin"
+                android:src="@drawable/foto_super"
                 android:layout_marginStart="12dp"
                 android:scaleType="centerCrop" />
         </RelativeLayout>

@@ -202,7 +202,7 @@ public class SuperListaTaxisActivity extends AppCompatActivity {
             tvRol.setText("Super Administrador");
         }
         if (imagenPerfil != null) {
-            imagenPerfil.setImageResource(R.drawable.foto_admin);
+            imagenPerfil.setImageResource(R.drawable.foto_super);
         }
 
         CardView cardSuper = findViewById(R.id.cardSuper);

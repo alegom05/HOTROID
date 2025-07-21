@@ -42,7 +42,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/foto_admin"
+                android:src="@drawable/foto_super"
                 android:scaleType="centerCrop"
                 android:background="@drawable/border_circle"
                 app:layout_constraintTop_toTopOf="parent"

@@ -361,7 +361,7 @@ public class SuperReservasActivity extends AppCompatActivity {
                 finish(); // Simplemente finaliza esta actividad para volver a la anterior (Lista de Hoteles)
                 return true;
             } else if (itemId == R.id.nav_usuarios) {
-                startActivity(new Intent(this, SuperListaClientesActivity.class));
+                startActivity(new Intent(this, SuperUsuariosActivity.class));
                 finish(); // Finaliza esta actividad para que la nueva sea la única en la pila
                 return true;
             } else if (itemId == R.id.nav_eventos) {

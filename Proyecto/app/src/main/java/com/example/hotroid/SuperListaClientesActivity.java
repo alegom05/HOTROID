@@ -138,7 +138,7 @@ public class SuperListaClientesActivity extends AppCompatActivity {
             tvRol.setText("Administrador General");
         }
         if (imagenPerfil != null) {
-            imagenPerfil.setImageResource(R.drawable.foto_admin); // Assuming 'foto_admin' drawable exists
+            imagenPerfil.setImageResource(R.drawable.foto_super); // Assuming 'foto_admin' drawable exists
         }
 
         // Admin profile card click listener (using cardSuper ID from your XML)

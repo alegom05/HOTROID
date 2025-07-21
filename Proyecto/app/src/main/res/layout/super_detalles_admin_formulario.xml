@@ -62,7 +62,7 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/foto_admin"
+                android:src="@drawable/foto_super"
                 android:scaleType="centerCrop"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
