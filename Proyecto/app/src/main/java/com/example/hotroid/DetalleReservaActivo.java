@@ -31,7 +31,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class DetalleReservaActivo extends AppCompatActivity {
 
@@ -52,6 +57,42 @@ public class DetalleReservaActivo extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         btnSolicitarTaxi = findViewById(R.id.btnSolicitarTaxi);
+
+        btnSolicitarTaxi.setOnClickListener(v -> {
+            new AlertDialog.Builder(DetalleReservaActivo.this)
+                    .setTitle("Solicitar Taxi")
+                    .setMessage("¿Desea solicitar un taxi?")
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        // Obtener Firestore y Auth
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        String uidCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        String idHotel = "yqrBR3OPmiHnWB677l5X";
+
+                        // Construir datos del viaje
+                        Map<String, Object> viaje = new HashMap<>();
+                        viaje.put("estado", "pendiente");
+                        viaje.put("idCliente", uidCliente);
+                        viaje.put("idHotel", idHotel);
+                        viaje.put("solicitadoEn", new Date());
+
+                        // Crear la colección 'viajes'
+                        db.collection("viajes")
+                                .add(viaje)
+                                .addOnSuccessListener(documentReference -> {
+                                    Toast.makeText(DetalleReservaActivo.this, "Viaje solicitado correctamente", Toast.LENGTH_SHORT).show();
+                                    // Ocultar el botón de solicitar taxi
+                                    btnSolicitarTaxi.setVisibility(View.GONE);
+                                    Intent intent = new Intent(DetalleReservaActivo.this, UserServTaxi.class);
+                                    startActivity(intent);
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(DetalleReservaActivo.this, "Error al solicitar viaje", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        });
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -148,6 +189,22 @@ public class DetalleReservaActivo extends AppCompatActivity {
         setupButtons();
     }
 
+    private void verificarViajeExistente() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String uidCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("viajes")
+                .whereEqualTo("idCliente", uidCliente)
+                .whereEqualTo("estado", "pendiente")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // El usuario ya tiene un viaje pendiente
+                        btnSolicitarTaxi.setVisibility(View.GONE);
+                    }
+                });
+    }
+
     private void setupButtons() {
         // Botón Check-In
         btnCheckIn.setOnClickListener(v -> {
@@ -164,25 +221,13 @@ public class DetalleReservaActivo extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btnSolicitarTaxi.setOnClickListener(v -> {
-            showTaxiConfirmationDialog();
-        });
+        verificarViajeExistente();
+
+
     }
 
-    private void showTaxiConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Solicitar Taxi");
-        builder.setMessage("¿Estás seguro de solicitar el servicio de taxi?");
 
-        builder.setPositiveButton("Sí", (dialog, which) -> {
-            Intent intent = new Intent(DetalleReservaActivo.this, UserServTaxi.class);
-            startActivity(intent);
-        });
 
-        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
-
-        builder.show();
-    }
 
     private void showCheckInDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
